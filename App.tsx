@@ -5,22 +5,16 @@
  * @format
  */
 
+import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import {SafeAreaView} from 'react-native';
-import styled from 'styled-components/native';
+import AuthSwitch from './src/navigators/AuthSwitch';
 
 function App(): React.JSX.Element {
   return (
-    <SafeAreaView>
-      <StyledText>Hello</StyledText>
-    </SafeAreaView>
+    <NavigationContainer>
+      <AuthSwitch />
+    </NavigationContainer>
   );
 }
-
-const StyledText = styled.Text`
-  font-size: 40px;
-  font-weight: 600;
-  color: blue;
-`;
 
 export default App;
