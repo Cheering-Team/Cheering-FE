@@ -5,13 +5,21 @@
  * @format
  */
 
-import {NavigationContainer} from '@react-navigation/native';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import AuthSwitch from './src/navigators/AuthSwitch';
 
 function App(): React.JSX.Element {
+  const navTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: 'white',
+    },
+  };
+
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={navTheme}>
       <AuthSwitch />
     </NavigationContainer>
   );

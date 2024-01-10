@@ -1,10 +1,13 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
 
-import SignInScreen from '../screens/SingInScreen';
+import SignInScreen from '../screens/SignInScreen';
 import HomeScreen from '../screens/HomeScreen';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import IntroScreen from '../screens/IntroScreen';
+import SetPassword from '../screens/SetPassword';
+import SetNickname from '../screens/SetNickname';
+import SignUpComplete from '../screens/SignUpComplete';
 
 interface AuthState {
   isLoading: boolean;
@@ -99,7 +102,54 @@ const AuthSwitch = () => {
               component={IntroScreen}
               options={{headerShown: false}}
             />
-            <Stack.Screen name="SignIn" component={SignInScreen} />
+            <Stack.Screen
+              name="SignIn"
+              component={SignInScreen}
+              options={{
+                title: 'Cheering',
+                headerTitleStyle: {
+                  color: '#EF4365',
+                  fontSize: 28,
+                  fontWeight: '700',
+                },
+                contentStyle: {
+                  borderBottomWidth: 0,
+                },
+                headerTitleAlign: 'center',
+                headerBackVisible: false,
+                headerShadowVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="SetPassword"
+              component={SetPassword}
+              options={{
+                headerTitle: '비밀번호 입력',
+                headerTitleAlign: 'center',
+                headerShadowVisible: false,
+                headerBackVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="SetNickname"
+              component={SetNickname}
+              options={{
+                headerTitle: '닉네임 입력',
+                headerTitleAlign: 'center',
+                headerShadowVisible: false,
+                headerBackVisible: false,
+              }}
+            />
+            <Stack.Screen
+              name="SignUpComplete"
+              component={SignUpComplete}
+              options={{
+                headerTitle: '회원가입',
+                headerTitleAlign: 'center',
+                headerShadowVisible: false,
+                headerBackVisible: false,
+              }}
+            />
           </>
         ) : (
           <Stack.Screen name="Home" component={HomeScreen} />
