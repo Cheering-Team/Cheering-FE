@@ -1,14 +1,26 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {StyleSheet, View} from 'react-native';
 import CustomButton from '../components/CustomButton';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {AuthStackParamList} from '../navigations/AuthSwitch';
+import CustomText from '../components/CustomText';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-const IntroScreen = ({navigation}) => {
+type IntroScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'Intro'
+>;
+
+const IntroScreen = ({navigation}: {navigation: IntroScreenNavigationProp}) => {
   return (
-    <SafeAreaView style={styles.main}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>내 최애 운동선수와</Text>
-        <Text style={styles.headerText}>소통하는 커뮤니티</Text>
+    <View style={[styles.main, {paddingTop: useSafeAreaInsets().top + 20}]}>
+      <View>
+        <CustomText style={styles.headerText} fontWeight="600">
+          언제 어디서든
+        </CustomText>
+        <CustomText style={styles.headerText} fontWeight="600">
+          내 선수를 응원할 때
+        </CustomText>
       </View>
       <CustomButton
         text="시작하기"
@@ -16,7 +28,7 @@ const IntroScreen = ({navigation}) => {
           navigation.navigate('SignIn');
         }}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -25,15 +37,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 20,
-  },
-  headerContainer: {
-    marginTop: 30,
+    backgroundColor: 'white',
   },
   headerText: {
-    fontSize: 27,
     textAlign: 'center',
-    fontWeight: '700',
+    fontSize: 35,
   },
 });
 

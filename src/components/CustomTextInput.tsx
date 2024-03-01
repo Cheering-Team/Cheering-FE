@@ -1,77 +1,107 @@
+import {BottomSheetTextInput} from '@gorhom/bottom-sheet';
 import React from 'react';
-import {Text, View, TextInput, StyleSheet, TextInputProps} from 'react-native';
+import {View, TextInput, StyleSheet, TextInputProps} from 'react-native';
+import CustomText from './CustomText';
 
 interface CustomTextInputProps extends TextInputProps {
   label: string;
   valid?: boolean;
   invalidMessage?: string;
+  type?: 'Sheet' | 'Basic';
 }
 
 const CustomTextInput = (props: CustomTextInputProps) => {
-  const {valid = true, label, invalidMessage, ...rest} = props;
+  const {valid = true, label, invalidMessage, type = 'Basic', ...rest} = props;
   const [focus, setFocus] = React.useState(false);
 
   return (
     <View style={styles.emailInput}>
-      <Text style={styles.emailInputLabel}>{label}</Text>
-      <TextInput
-        placeholder="example@email.com"
-        style={
-          !valid
-            ? styles.invalidEmailInput
-            : focus
-            ? styles.emailInputFocus
-            : styles.emailInputBlur
-        }
-        onFocus={() => setFocus(true)}
-        onBlur={() => setFocus(false)}
-        autoCapitalize={'none'}
-        {...rest}
-      />
-      <Text style={!valid ? styles.invalidEmail : styles.validEmail}>
+      <CustomText fontWeight="400" style={styles.emailInputLabel}>
+        {label}
+      </CustomText>
+      {type === 'Sheet' ? (
+        <BottomSheetTextInput
+          placeholder="example@email.com"
+          placeholderTextColor="#C6C6C6"
+          style={
+            !valid
+              ? styles.invalidEmailInput
+              : focus
+              ? styles.emailInputFocus
+              : styles.emailInputBlur
+          }
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+          autoCapitalize="none"
+          {...rest}
+        />
+      ) : (
+        <TextInput
+          placeholder="example@email.com"
+          placeholderTextColor="#C6C6C6"
+          style={
+            !valid
+              ? styles.invalidEmailInput
+              : focus
+              ? styles.emailInputFocus
+              : styles.emailInputBlur
+          }
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+          autoCapitalize="none"
+          {...rest}
+        />
+      )}
+
+      <CustomText
+        fontWeight="500"
+        style={!valid ? styles.invalidEmail : styles.validEmail}>
         {invalidMessage}
-      </Text>
+      </CustomText>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   emailInput: {
-    width: '89%',
-    marginTop: 30,
-    paddingBottom: 6,
+    width: '98%',
+    marginTop: 20,
+  },
+  emailInputLabel: {
+    fontSize: 15,
+    marginBottom: 5,
+    color: '#717478',
   },
   emailInputBlur: {
+    fontSize: 17,
+    padding: 0,
     paddingBottom: 6,
     borderBottomColor: 'lightgray',
     borderBottomWidth: 1,
   },
   emailInputFocus: {
-    paddingBottom: 7,
+    fontSize: 17,
+    padding: 0,
+    paddingBottom: 6,
     borderBottomColor: 'gray',
     borderBottomWidth: 2,
   },
-  emailInputLabel: {
-    fontSize: 14,
-    marginBottom: 10,
-    color: '#717478',
+  invalidEmailInput: {
+    fontSize: 17,
+    padding: 0,
+    paddingBottom: 6,
+    borderBottomColor: '#ff5252',
+    borderBottomWidth: 1,
   },
   validEmail: {
     opacity: 0,
-    fontSize: 12,
+    fontSize: 14,
     marginTop: 5,
-    fontWeight: '400',
   },
   invalidEmail: {
-    color: 'red',
-    fontSize: 12,
-    marginTop: 5,
-    fontWeight: '400',
-  },
-  invalidEmailInput: {
-    paddingBottom: 7,
-    borderBottomColor: 'red',
-    borderBottomWidth: 2,
+    color: '#ff5252',
+    fontSize: 14,
+    marginTop: 4,
   },
 });
 

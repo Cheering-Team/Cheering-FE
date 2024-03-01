@@ -4,7 +4,7 @@ import CloseButtonSvg from '../../assets/images/x.svg';
 import BackBtnSvg from '../../assets/images/chevron-left.svg';
 
 const BackClose = navigation => {
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
         <Pressable onPress={() => navigation.goBack()}>

@@ -1,61 +1,109 @@
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import {Alert, KeyboardAvoidingView, Platform, StyleSheet} from 'react-native';
 import * as React from 'react';
 import {emailRegex} from '../constants/regex';
 import CustomTextInput from '../components/CustomTextInput';
 import CustomButton from '../components/CustomButton';
 import Close from '../hooks/Close';
+import {postEmail, postSignin} from '../apis/user';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {AuthContext, AuthStackParamList} from '../navigations/AuthSwitch';
+import CustomText from '../components/CustomText';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-function SignInScreen({navigation}) {
+type SignInScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'SignIn'
+>;
+
+function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
   const [email, setEmail] = React.useState('');
+  const [pw, setPw] = React.useState('');
+  const [canLogin, setCanLogin] = React.useState(false);
 
   const [emailValid, setEmailValid] = React.useState(true);
 
-  // const authContext = React.useContext(AuthContext);
+  const signIn = React.useContext(AuthContext)?.signIn;
 
   Close(navigation);
 
-  const emailSubmit = () => {
+  const emailSubmit = async () => {
     if (!emailRegex.test(email)) {
       setEmailValid(false);
     } else {
-      // 이메일 중복 확인 요청 !
-      navigation.navigate('SetPassword');
+      const response = await postEmail({email});
+
+      if (response?.data.message === 'not duplicated') {
+        navigation.navigate('SetPassword', {email});
+      } else {
+        setCanLogin(true);
+      }
+    }
+  };
+
+  const emailSignin = async () => {
+    const response = await postSignin({email, password: pw});
+
+    if (response?.data.message === 'login success') {
+      signIn?.(
+        response?.headers['access-token'],
+        response?.headers['refresh-token'],
+      );
+    } else {
+      Alert.alert('이메일과 비밀번호를 확인해주세요');
     }
   };
 
   return (
-    <SafeAreaView style={styles.signInEmailContainer}>
-      <Text style={styles.signInInfo}>로그인 또는 회원가입 해주세요</Text>
-      <CustomTextInput
-        label="이메일"
-        valid={emailValid}
-        placeholder="example@email.com"
-        value={email}
-        invalidMessage="올바르지 않은 이메일 형식입니다."
-        onChangeText={e => {
-          setEmail(e);
-          setEmailValid(true);
-        }}
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={62}>
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        enableAutomaticScroll={false}
+        style={{flex: 1, padding: 20}}
+        contentContainerStyle={{alignItems: 'center'}}>
+        <CustomText fontWeight="600" style={styles.signInInfo}>
+          {canLogin ? '로그인 해주세요' : '로그인 또는 회원가입 해주세요'}
+        </CustomText>
+
+        <CustomTextInput
+          label="이메일"
+          valid={emailValid}
+          placeholder="example@email.com"
+          value={email}
+          invalidMessage="올바르지 않은 이메일 형식입니다."
+          onChangeText={e => {
+            setEmail(e);
+            setEmailValid(true);
+            setCanLogin(false);
+          }}
+        />
+
+        {canLogin && (
+          <CustomTextInput
+            label="비밀번호"
+            placeholder="********"
+            value={pw}
+            secureTextEntry={true}
+            invalidMessage="올바르지 않은 이메일 형식입니다."
+            onChangeText={setPw}
+            autoFocus
+          />
+        )}
+      </KeyboardAwareScrollView>
+      <CustomButton
+        text={!canLogin ? '이메일로 계속하기' : '로그인'}
+        onPress={!canLogin ? emailSubmit : emailSignin}
       />
-      <CustomButton text="이메일로 계속하기" onPress={emailSubmit} />
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  backBtn: {
-    fontSize: 20,
-    fontWeight: '400',
-  },
-  signInEmailContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
   signInInfo: {
-    marginTop: 25,
-    fontSize: 27,
-    fontWeight: '600',
+    fontSize: 26,
+    paddingBottom: 15,
   },
 });
 

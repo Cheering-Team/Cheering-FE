@@ -2,8 +2,8 @@ import React from 'react';
 import {Pressable} from 'react-native';
 import CloseButtonSvg from '../../assets/images/x.svg';
 
-const BackClose = navigation => {
-  React.useEffect(() => {
+const Close = navigation => {
+  React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Pressable onPress={() => navigation.goBack()}>
@@ -14,4 +14,4 @@ const BackClose = navigation => {
   });
 };
 
-export default BackClose;
+export default Close;

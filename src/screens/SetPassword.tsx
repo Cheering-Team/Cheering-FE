@@ -1,11 +1,30 @@
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CustomTextInput from '../components/CustomTextInput';
 import React from 'react';
 import CustomButton from '../components/CustomButton';
 import {passwordRegex} from '../constants/regex';
 import BackClose from '../hooks/BackClose';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {AuthStackParamList} from '../navigations/AuthSwitch';
+import {RouteProp} from '@react-navigation/native';
+import CustomText from '../components/CustomText';
+import Toast from 'react-native-toast-message';
 
-const SetPassword = ({navigation}) => {
+type SetPasswordScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'SetPassword'
+>;
+
+type SetPasswordScreenRouteProp = RouteProp<AuthStackParamList, 'SetPassword'>;
+
+const SetPassword = ({
+  route,
+  navigation,
+}: {
+  route: SetPasswordScreenRouteProp;
+  navigation: SetPasswordScreenNavigationProp;
+}) => {
   const [pw, setPw] = React.useState('');
   const [pwConfirm, setPwConfirm] = React.useState('');
   const [pwValid, setPwValid] = React.useState(true);
@@ -30,22 +49,56 @@ const SetPassword = ({navigation}) => {
   }, [pw, pwConfirm]);
 
   const passwordSubmit = () => {
-    if (pwValid && confirmValid) {
-      navigation.navigate('SetNickname');
+    if (pw.length === 0) {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 30,
+        text1: '비밀번호를 입력해주세요',
+      });
+    } else if (pwConfirm.length === 0) {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 30,
+        text1: '비밀번호 확인을 입력해주세요',
+      });
+    } else if (pwValid && confirmValid) {
+      navigation.navigate('SetNickname', {
+        email: route.params.email,
+        pw,
+        pwConfirm,
+      });
     }
   };
 
   return (
-    <SafeAreaView style={styles.signUpContainer}>
-      <View style={styles.signUpForm}>
-        <Text style={styles.signUpInfo}>비밀번호를 설정해 주세요</Text>
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={62}>
+      <KeyboardAwareScrollView
+        enableOnAndroid
+        enableAutomaticScroll={false}
+        style={{flex: 1, padding: 20}}
+        contentContainerStyle={{alignItems: 'center'}}>
+        <CustomText>
+          <CustomText fontWeight="700" style={styles.signUpInfoEmail}>
+            {route.params.email}
+          </CustomText>
+        </CustomText>
+        <CustomText fontWeight="600" style={styles.signUpInfo}>
+          비밀번호를 설정해 주세요
+        </CustomText>
         <View style={styles.pwInfoBox}>
-          <Text style={styles.pwInfoText}>
+          <CustomText fontWeight="500" style={styles.pwInfoText}>
             영문, 숫자, 특수문자가 반드시 포함된
-          </Text>
-          <Text style={styles.pwInfoText}>
+          </CustomText>
+          <CustomText fontWeight="400" style={styles.pwInfoText}>
             8~20자의 비밀번호만 사용 가능 합니다.
-          </Text>
+          </CustomText>
         </View>
         <CustomTextInput
           label="새 비밀번호"
@@ -65,40 +118,31 @@ const SetPassword = ({navigation}) => {
           secureTextEntry={true}
           invalidMessage="비밀번호가 일치하지 않습니다."
         />
-      </View>
+      </KeyboardAwareScrollView>
 
       <CustomButton text={'다음'} onPress={passwordSubmit} />
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  signUpContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingBottom: 30,
-  },
-  signUpForm: {
-    flex: 1,
-    alignItems: 'center',
-    width: '100%',
+  signUpInfoEmail: {
+    fontSize: 25,
+    color: '#58a04b',
   },
   signUpInfo: {
-    marginTop: 17,
-    fontSize: 25,
-    fontWeight: '700',
+    fontSize: 24,
   },
   pwInfoBox: {
     marginTop: 20,
-    width: '90%',
-    padding: 15,
-    borderRadius: 5,
-    backgroundColor: '#ffe6ea',
+    width: '100%',
+    padding: 12,
+    borderRadius: 7,
+    backgroundColor: '#eff3ee',
   },
   pwInfoText: {
-    color: '#626161',
-    fontSize: 13,
+    color: '#727272',
+    fontSize: 15,
   },
 });
 
