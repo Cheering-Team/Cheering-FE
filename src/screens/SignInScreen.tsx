@@ -60,7 +60,7 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
       keyboardVerticalOffset={62}>
       <KeyboardAwareScrollView
         enableOnAndroid
-        enableAutomaticScroll={false}
+        extraScrollHeight={-200}
         style={{flex: 1, padding: 20}}
         contentContainerStyle={{alignItems: 'center'}}>
         <CustomText fontWeight="600" style={styles.signInInfo}>

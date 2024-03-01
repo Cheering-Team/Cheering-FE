@@ -1,6 +1,7 @@
 import {
   FlatList,
   ImageBackground,
+  KeyboardAvoidingView,
   Platform,
   Pressable,
   SafeAreaView,
@@ -11,7 +12,11 @@ import {
 import CloseButtonSvg from '../../assets/images/x.svg';
 
 import React from 'react';
-import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetTextInput,
+} from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import CustomButton from '../components/CustomButton';
 import CustomTextInput from '../components/CustomTextInput';
@@ -25,6 +30,8 @@ import CustomText from '../components/CustomText';
 import Toast from 'react-native-toast-message';
 import {navigate} from '../navigations/RootNavigation';
 import {HomeStackParamList} from '../navigations/HomeStackNavigator';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {setAdjustPan, setAdjustResize} from 'rn-android-keyboard-adjust';
 
 export interface Community {
   id: number;
@@ -62,9 +69,16 @@ const SearchScreen = ({
   const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
 
   const snapPoints = React.useMemo(
-    () => ['25%', Platform.OS === 'ios' ? '60%' : '65%'],
+    () => ['25%', Platform.OS === 'ios' ? '55%' : '60%'],
     [],
   );
+
+  React.useEffect(() => {
+    setAdjustPan();
+    return () => {
+      setAdjustResize();
+    };
+  }, []);
 
   const handlePresentModalPress = React.useCallback(() => {
     setImageData({uri: '', name: '', type: ''});
@@ -177,7 +191,11 @@ const SearchScreen = ({
             ref={bottomSheetModalRef}
             index={1}
             snapPoints={snapPoints}>
-            <View style={styles.ModalContainer}>
+            <View
+              style={[
+                styles.ModalContainer,
+                {paddingBottom: useSafeAreaInsets().bottom + 20},
+              ]}>
               <CustomText style={styles.ModalName} fontWeight="600">
                 {community?.name}
               </CustomText>
@@ -202,7 +220,11 @@ const SearchScreen = ({
                 placeholder="커뮤니티 닉네임"
                 onChangeText={setNickname}
               />
-              <CustomButton text="시작하기" onPress={handleSubmitNickname} />
+              <CustomButton
+                text="시작하기"
+                type="normal"
+                onPress={handleSubmitNickname}
+              />
             </View>
           </BottomSheetModal>
         </SafeAreaView>
@@ -248,8 +270,8 @@ const styles = StyleSheet.create({
   ModalContainer: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'space-around',
     paddingHorizontal: 25,
-    paddingBottom: 50,
   },
   ModalName: {
     marginTop: 17,

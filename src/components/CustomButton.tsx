@@ -6,10 +6,13 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface CustomButtonProps extends PressableProps {
   text: string;
+  type?: 'normal' | 'bottom';
 }
 
 const CustomButton = (props: CustomButtonProps) => {
-  const {text, ...rest} = props;
+  const {text, type = 'bottom', ...rest} = props;
+
+  const bottomHeight = useSafeAreaInsets().bottom;
   return (
     <LinearGradient
       start={{x: 0, y: 0}}
@@ -17,10 +20,12 @@ const CustomButton = (props: CustomButtonProps) => {
       colors={['#58a04b', '#63cb6d']}
       style={[
         styles.emailBtn,
-        {
-          paddingBottom: useSafeAreaInsets().bottom,
-          height: useSafeAreaInsets().bottom + 55,
-        },
+        type === 'bottom'
+          ? {
+              paddingBottom: bottomHeight,
+              height: bottomHeight + 55,
+            }
+          : {padding: 10, borderRadius: 5},
       ]}>
       <Pressable {...rest}>
         <CustomText style={styles.emailBtnText} fontWeight="500">
