@@ -1,7 +1,6 @@
 import {
   FlatList,
   ImageBackground,
-  KeyboardAvoidingView,
   Platform,
   Pressable,
   SafeAreaView,
@@ -12,11 +11,7 @@ import {
 import CloseButtonSvg from '../../assets/images/x.svg';
 
 import React from 'react';
-import {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-  BottomSheetTextInput,
-} from '@gorhom/bottom-sheet';
+import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import CustomButton from '../components/CustomButton';
 import CustomTextInput from '../components/CustomTextInput';
@@ -31,7 +26,10 @@ import Toast from 'react-native-toast-message';
 import {navigate} from '../navigations/RootNavigation';
 import {HomeStackParamList} from '../navigations/HomeStackNavigator';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {setAdjustPan, setAdjustResize} from 'rn-android-keyboard-adjust';
+
+import {NativeModules} from 'react-native';
+
+const {AdjusterModule} = NativeModules;
 
 export interface Community {
   id: number;
@@ -73,16 +71,17 @@ const SearchScreen = ({
     [],
   );
 
-  React.useEffect(() => {
-    setAdjustPan();
-    return () => {
-      setAdjustResize();
-    };
-  }, []);
-
   const handlePresentModalPress = React.useCallback(() => {
     setImageData({uri: '', name: '', type: ''});
     bottomSheetModalRef.current?.present();
+  }, []);
+
+  React.useEffect(() => {
+    if (Platform.OS === 'android') {
+      AdjusterModule.setAdjustPan();
+
+      return () => AdjusterModule.setAdjustResize();
+    }
   }, []);
 
   const searchCommunity = async (event: any) => {
@@ -199,7 +198,7 @@ const SearchScreen = ({
               <CustomText style={styles.ModalName} fontWeight="600">
                 {community?.name}
               </CustomText>
-              <CustomText style={styles.ModalText} fontWeight="500">
+              <CustomText style={styles.ModalText}>
                 커뮤니티 가입을 환영합니다
               </CustomText>
               <Pressable onPress={handleImageUpload}>
