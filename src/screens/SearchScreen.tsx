@@ -27,10 +27,6 @@ import {navigate} from '../navigations/RootNavigation';
 import {HomeStackParamList} from '../navigations/HomeStackNavigator';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {NativeModules} from 'react-native';
-
-const {AdjusterModule} = NativeModules;
-
 export interface Community {
   id: number;
   name: string;
@@ -74,14 +70,6 @@ const SearchScreen = ({
   const handlePresentModalPress = React.useCallback(() => {
     setImageData({uri: '', name: '', type: ''});
     bottomSheetModalRef.current?.present();
-  }, []);
-
-  React.useEffect(() => {
-    if (Platform.OS === 'android') {
-      AdjusterModule.setAdjustPan();
-
-      return () => AdjusterModule.setAdjustResize();
-    }
   }, []);
 
   const searchCommunity = async (event: any) => {

@@ -1,5 +1,6 @@
 package com.cheering
 
+import android.os.Build
 import android.view.WindowManager
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -18,7 +19,7 @@ class AdjusterModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
     @ReactMethod
     fun setAdjustResize() {
         val activity = currentActivity ?: return
-        activity.runOnUiThread { activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) }
+        activity.runOnUiThread { activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING) }
     }
 }
 
