@@ -177,7 +177,11 @@ const SearchScreen = ({
             keyboardBlurBehavior="restore"
             ref={bottomSheetModalRef}
             index={1}
-            snapPoints={snapPoints}>
+            snapPoints={snapPoints}
+            android_keyboardInputMode="adjustResize"
+            keyboardBehavior={
+              Platform.OS === 'android' ? 'fillParent' : 'interactive'
+            }>
             <View
               style={[
                 styles.ModalContainer,
