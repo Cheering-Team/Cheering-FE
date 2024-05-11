@@ -1,0 +1,19 @@
+diff --git a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/BottomSheet.tsx b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/BottomSheet.tsx
+index f20e3dc..32a5ba6 100644
+--- a/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/BottomSheet.tsx
++++ b/node_modules/@gorhom/bottom-sheet/src/components/bottomSheet/BottomSheet.tsx
+@@ -1403,9 +1403,11 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
+          */
+         animatedKeyboardHeightInContainer.value = $modal
+           ? Math.abs(
+-              _keyboardHeight -
+-                Math.abs(bottomInset - animatedContainerOffset.value.bottom)
+-            )
++            Platform.OS === 'android' &&
++                        android_keyboardInputMode === KEYBOARD_INPUT_MODE.adjustResize ?
++                          0 : _keyboardHeight
++                          - Math.abs(bottomInset - animatedContainerOffset.value.bottom)
++                      )
+           : Math.abs(_keyboardHeight - animatedContainerOffset.value.bottom);
+ 
+         const hasActiveGesture =
