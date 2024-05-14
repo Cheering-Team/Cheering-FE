@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textAlign: 'center',
-    fontSize: 35,
+    fontSize: 32,
   },
 });
 

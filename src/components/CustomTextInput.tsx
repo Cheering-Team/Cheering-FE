@@ -4,7 +4,7 @@ import {View, TextInput, StyleSheet, TextInputProps} from 'react-native';
 import CustomText from './CustomText';
 
 interface CustomTextInputProps extends TextInputProps {
-  label: string;
+  label?: string;
   valid?: boolean;
   invalidMessage?: string;
   type?: 'Sheet' | 'Basic';
@@ -16,12 +16,13 @@ const CustomTextInput = (props: CustomTextInputProps) => {
 
   return (
     <View style={styles.emailInput}>
-      <CustomText fontWeight="400" style={styles.emailInputLabel}>
-        {label}
-      </CustomText>
+      {label && (
+        <CustomText fontWeight="400" style={styles.emailInputLabel}>
+          {label}
+        </CustomText>
+      )}
       {type === 'Sheet' ? (
         <BottomSheetTextInput
-          placeholder="example@email.com"
           placeholderTextColor="#C6C6C6"
           style={
             !valid
@@ -37,7 +38,6 @@ const CustomTextInput = (props: CustomTextInputProps) => {
         />
       ) : (
         <TextInput
-          placeholder="example@email.com"
           placeholderTextColor="#C6C6C6"
           style={
             !valid
@@ -73,25 +73,25 @@ const styles = StyleSheet.create({
     color: '#717478',
   },
   emailInputBlur: {
-    fontSize: 17,
+    fontSize: 19,
     padding: 0,
-    paddingBottom: 6,
+    paddingBottom: 8,
     borderBottomColor: 'lightgray',
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
   },
   emailInputFocus: {
-    fontSize: 17,
+    fontSize: 19,
     padding: 0,
-    paddingBottom: 6,
+    paddingBottom: 8,
     borderBottomColor: 'gray',
     borderBottomWidth: 2,
   },
   invalidEmailInput: {
-    fontSize: 17,
+    fontSize: 19,
     padding: 0,
-    paddingBottom: 6,
+    paddingBottom: 8,
     borderBottomColor: '#ff5252',
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
   },
   validEmail: {
     opacity: 0,

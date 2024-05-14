@@ -1,6 +1,5 @@
 import {Alert, KeyboardAvoidingView, Platform, StyleSheet} from 'react-native';
-import * as React from 'react';
-import {emailRegex} from '../constants/regex';
+import {PHONE_REGEX} from '../constants/regex';
 import CustomTextInput from '../components/CustomTextInput';
 import CustomButton from '../components/CustomButton';
 import Close from '../hooks/Close';
@@ -9,6 +8,8 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AuthContext, AuthStackParamList} from '../navigations/AuthSwitch';
 import CustomText from '../components/CustomText';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useContext, useState} from 'react';
+import React from 'react';
 
 type SignInScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -16,42 +17,39 @@ type SignInScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
-  const [email, setEmail] = React.useState('');
-  const [pw, setPw] = React.useState('');
-  const [canLogin, setCanLogin] = React.useState(false);
+  const [phone, setPhone] = useState('');
+  const [loginStatus, setLoginStatus] = useState<'phone' | 'code'>('phone');
+  const [phoneValid, setPhoneValid] = useState(true);
 
-  const [emailValid, setEmailValid] = React.useState(true);
-
-  const signIn = React.useContext(AuthContext)?.signIn;
+  const signIn = useContext(AuthContext)?.signIn;
 
   Close(navigation);
 
-  const emailSubmit = async () => {
-    if (!emailRegex.test(email)) {
-      setEmailValid(false);
+  const phoneSubmit = async () => {
+    if (!PHONE_REGEX.test(phone)) {
+      setPhoneValid(false);
     } else {
-      const response = await postEmail({email});
-
-      if (response?.data.message === 'not duplicated') {
-        navigation.navigate('SetPassword', {email});
-      } else {
-        setCanLogin(true);
-      }
+      // const response = await postEmail({phone});
+      // if (response?.data.message === 'not duplicated') {
+      //   // navigation.navigate('SetPassword', {phone});
+      // } else {
+      //   setCanLogin(true);
+      // }
     }
   };
 
-  const emailSignin = async () => {
-    const response = await postSignin({email, password: pw});
+  // const emailSignin = async () => {
+  //   const response = await postSignin({email, password: pw});
 
-    if (response?.data.message === 'login success') {
-      signIn?.(
-        response?.headers['access-token'],
-        response?.headers['refresh-token'],
-      );
-    } else {
-      Alert.alert('이메일과 비밀번호를 확인해주세요');
-    }
-  };
+  //   if (response?.data.message === 'login success') {
+  //     signIn?.(
+  //       response?.headers['access-token'],
+  //       response?.headers['refresh-token'],
+  //     );
+  //   } else {
+  //     Alert.alert('이메일과 비밀번호를 확인해주세요');
+  //   }
+  // };
 
   return (
     <KeyboardAvoidingView
@@ -61,49 +59,45 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
       <KeyboardAwareScrollView
         enableOnAndroid
         extraScrollHeight={-200}
-        style={{flex: 1, padding: 20}}
-        contentContainerStyle={{alignItems: 'center'}}>
-        <CustomText fontWeight="600" style={styles.signInInfo}>
-          {canLogin ? '로그인 해주세요' : '로그인 또는 회원가입 해주세요'}
+        style={{flex: 1, padding: 20}}>
+        <CustomText fontWeight="600" style={styles.signInTitle}>
+          {loginStatus
+            ? '로그인 해주세요'
+            : '휴대폰 번호로 바로 시작할 수 있어요.'}
+        </CustomText>
+        <CustomText fontWeight="400" style={styles.signInInfo}>
+          '-' 없이 숫자만 입력해주세요.
         </CustomText>
 
         <CustomTextInput
-          label="이메일"
-          valid={emailValid}
-          placeholder="example@email.com"
-          value={email}
-          invalidMessage="올바르지 않은 이메일 형식입니다."
+          placeholder="휴대폰 번호"
+          value={phone}
+          valid={phoneValid}
+          invalidMessage="휴대폰 번호를 다시 확인해주세요"
           onChangeText={e => {
-            setEmail(e);
-            setEmailValid(true);
-            setCanLogin(false);
+            setPhone(e);
+            setPhoneValid(true);
           }}
         />
-
-        {canLogin && (
-          <CustomTextInput
-            label="비밀번호"
-            placeholder="********"
-            value={pw}
-            secureTextEntry={true}
-            invalidMessage="올바르지 않은 이메일 형식입니다."
-            onChangeText={setPw}
-            autoFocus
-          />
-        )}
       </KeyboardAwareScrollView>
       <CustomButton
-        text={!canLogin ? '이메일로 계속하기' : '로그인'}
-        onPress={!canLogin ? emailSubmit : emailSignin}
+        text={!loginStatus ? '시작하기' : '인증완료'}
+        onPress={phoneSubmit}
       />
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  signInTitle: {
+    marginTop: 20,
+    marginBottom: 5,
+    fontSize: 22,
+  },
   signInInfo: {
-    fontSize: 26,
-    paddingBottom: 15,
+    fontSize: 17,
+    color: 'gray',
+    marginBottom: 5,
   },
 });
 
