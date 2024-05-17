@@ -3,7 +3,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {navigate} from '../navigations/RootNavigation';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://3.37.244.109/api',
+  baseURL: 'http://15.165.150.47/api',
 });
 
 axiosInstance.interceptors.request.use(async config => {
@@ -25,18 +25,19 @@ axiosInstance.interceptors.response.use(
   },
   async error => {
     const {config, response} = error;
+    if (response.status === 400) {
+      return Promise.reject(error.response.data);
+    }
     if (response.status === 401) {
       if (response.data.message === 'expired Access-Token') {
         const accessToken = await reIssueToken();
 
         await EncryptedStorage.setItem('accessToken', `Bearer ${accessToken}`);
-        console.log('Access Token Expired');
 
         return axiosInstance(config);
       } else if (response.data.message === 'expired Refreh-Token') {
         await EncryptedStorage.removeItem('accessToken');
         await EncryptedStorage.removeItem('refreshToken');
-        console.log('Refresh Token Expired');
         navigate('SignOut', null);
       }
     }

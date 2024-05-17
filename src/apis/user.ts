@@ -1,5 +1,20 @@
 import {axiosInstance} from '.';
 
+export interface User {
+  id: number;
+  phone: string;
+  nickname: string;
+}
+
+interface postPhoneSMSRequest {
+  phone: string;
+}
+
+interface postPhoneCodeRequest {
+  phone: string;
+  code: string;
+}
+
 interface postEmailRequest {
   email: string;
 }
@@ -16,13 +31,19 @@ interface postSigninRequest {
   password: string;
 }
 
+export const postPhoneSMS = async (data: postPhoneSMSRequest) => {
+  const response = await axiosInstance.post('/phone/sms', data);
+  return response.data;
+};
+
+export const postPhoneCode = async (data: postPhoneCodeRequest) => {
+  const response = await axiosInstance.post('/phone/code', data);
+  return response.data;
+};
+
 export const postEmail = async (data: postEmailRequest) => {
-  try {
-    const response = await axiosInstance.post('/email', data);
-    return response;
-  } catch (error) {
-    //
-  }
+  const response = await axiosInstance.post('/email', data);
+  return response;
 };
 
 export const postSignup = async (data: postSignupRequest) => {

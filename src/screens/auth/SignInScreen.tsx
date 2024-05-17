@@ -1,15 +1,17 @@
-import {Alert, KeyboardAvoidingView, Platform, StyleSheet} from 'react-native';
-import {PHONE_REGEX} from '../constants/regex';
-import CustomTextInput from '../components/CustomTextInput';
-import CustomButton from '../components/CustomButton';
-import Close from '../hooks/Close';
-import {postEmail, postSignin} from '../apis/user';
+import {KeyboardAvoidingView, Platform, StyleSheet} from 'react-native';
+import {PHONE_REGEX} from '../../constants/regex';
+import CustomTextInput from '../../components/CustomTextInput';
+import CustomButton from '../../components/CustomButton';
+import Close from '../../hooks/Close';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {AuthContext, AuthStackParamList} from '../navigations/AuthSwitch';
-import CustomText from '../components/CustomText';
+import CustomText from '../../components/CustomText';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {useContext, useState} from 'react';
+import {useEffect, useState} from 'react';
 import React from 'react';
+import {AuthStackParamList} from '../../navigations/AuthStack';
+import {postPhoneSMS} from '../../apis/user';
+import {useMutation} from '@tanstack/react-query';
+import Toast from 'react-native-toast-message';
 
 type SignInScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -17,24 +19,45 @@ type SignInScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
-  const [phone, setPhone] = useState('');
-  const [loginStatus, setLoginStatus] = useState<'phone' | 'code'>('phone');
-  const [phoneValid, setPhoneValid] = useState(true);
-
-  const signIn = useContext(AuthContext)?.signIn;
-
   Close(navigation);
+
+  const [phone, setPhone] = useState('');
+  const [phoneValid, setPhoneValid] = useState<'empty' | 'valid' | 'invalid'>(
+    'empty',
+  );
+
+  // const signIn = useContext(AuthContext)?.signIn;
+
+  const mutation = useMutation({mutationFn: postPhoneSMS});
+
+  useEffect(() => {
+    if (phone.length === 0) {
+      setPhoneValid('empty');
+    } else if (!PHONE_REGEX.test(phone)) {
+      setPhoneValid('invalid');
+    } else {
+      setPhoneValid('valid');
+    }
+  }, [phone]);
 
   const phoneSubmit = async () => {
     if (!PHONE_REGEX.test(phone)) {
-      setPhoneValid(false);
+      setPhoneValid('valid');
     } else {
-      // const response = await postEmail({phone});
-      // if (response?.data.message === 'not duplicated') {
-      //   // navigation.navigate('SetPassword', {phone});
-      // } else {
-      //   setCanLogin(true);
-      // }
+      try {
+        const data = await mutation.mutateAsync({phone});
+        if (data.message === '인증번호가 전송되었습니다.') {
+          const user = data.result;
+          Toast.show({
+            type: 'default',
+            position: 'top',
+            visibilityTime: 3000,
+            bottomOffset: 30,
+            text1: '인증번호가 전송되었습니다.',
+          });
+          navigation.navigate('PhoneCode', {user, phone});
+        }
+      } catch (error) {}
     }
   };
 
@@ -61,10 +84,9 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
         extraScrollHeight={-200}
         style={{flex: 1, padding: 20}}>
         <CustomText fontWeight="600" style={styles.signInTitle}>
-          {loginStatus
-            ? '로그인 해주세요'
-            : '휴대폰 번호로 바로 시작할 수 있어요.'}
+          휴대폰 번호로 바로 시작할 수 있어요.
         </CustomText>
+
         <CustomText fontWeight="400" style={styles.signInInfo}>
           '-' 없이 숫자만 입력해주세요.
         </CustomText>
@@ -72,17 +94,18 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
         <CustomTextInput
           placeholder="휴대폰 번호"
           value={phone}
-          valid={phoneValid}
+          valid={phoneValid !== 'invalid'}
           invalidMessage="휴대폰 번호를 다시 확인해주세요"
           onChangeText={e => {
             setPhone(e);
-            setPhoneValid(true);
           }}
         />
       </KeyboardAwareScrollView>
       <CustomButton
-        text={!loginStatus ? '시작하기' : '인증완료'}
+        disabled={phoneValid !== 'valid'}
+        text={'시작하기'}
         onPress={phoneSubmit}
+        isLoading={mutation.isPending}
       />
     </KeyboardAvoidingView>
   );
@@ -93,6 +116,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 5,
     fontSize: 22,
+  },
+  codeTitle: {
+    color: 'green',
+    marginTop: 10,
+    marginBottom: 5,
+    fontSize: 21,
   },
   signInInfo: {
     fontSize: 17,

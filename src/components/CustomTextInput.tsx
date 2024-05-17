@@ -1,5 +1,5 @@
 import {BottomSheetTextInput} from '@gorhom/bottom-sheet';
-import React from 'react';
+import React, {forwardRef} from 'react';
 import {View, TextInput, StyleSheet, TextInputProps} from 'react-native';
 import CustomText from './CustomText';
 
@@ -10,7 +10,7 @@ interface CustomTextInputProps extends TextInputProps {
   type?: 'Sheet' | 'Basic';
 }
 
-const CustomTextInput = (props: CustomTextInputProps) => {
+const CustomTextInput = forwardRef<any, CustomTextInputProps>((props, ref) => {
   const {valid = true, label, invalidMessage, type = 'Basic', ...rest} = props;
   const [focus, setFocus] = React.useState(false);
 
@@ -23,6 +23,7 @@ const CustomTextInput = (props: CustomTextInputProps) => {
       )}
       {type === 'Sheet' ? (
         <BottomSheetTextInput
+          ref={ref}
           placeholderTextColor="#C6C6C6"
           style={
             !valid
@@ -60,11 +61,10 @@ const CustomTextInput = (props: CustomTextInputProps) => {
       </CustomText>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   emailInput: {
-    width: '98%',
     marginTop: 20,
   },
   emailInputLabel: {

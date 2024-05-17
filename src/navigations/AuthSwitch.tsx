@@ -1,30 +1,14 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
-
-import SignInScreen from '../screens/SignInScreen';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import IntroScreen from '../screens/IntroScreen';
-import SetPassword from '../screens/SetPassword';
-import SetNickname from '../screens/SetNickname';
-import SignUpComplete from '../screens/SignUpComplete';
 import SplashScreen from '../screens/SplashScreen';
-import CustomText from '../components/CustomText';
 import Toast from 'react-native-toast-message';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeStackNavigator from './HomeStackNavigator';
-
 import CustomTabBar from '../components/CustomHomeTab';
 import ChatScreen from '../screens/ChatScreen';
 import MyPlayerScreen from '../screens/MyPlayerScreen';
-
-export type AuthStackParamList = {
-  Splash: undefined;
-  Intro: undefined;
-  SignIn: undefined;
-  SetPassword: {email: string};
-  SetNickname: {email: string; pw: string; pwConfirm: string};
-  SignUpComplete: {access: string; refresh: string};
-};
+import AuthStack from './AuthStack';
 
 interface AuthState {
   isLoading: boolean;
@@ -146,7 +130,7 @@ const AuthSwitch = () => {
     [],
   );
 
-  const Stack = createNativeStackNavigator<AuthStackParamList>();
+  const Stack = createNativeStackNavigator<{Splash: undefined}>();
 
   const Tab = createBottomTabNavigator();
 
@@ -161,70 +145,7 @@ const AuthSwitch = () => {
           />
         </Stack.Navigator>
       ) : state.accessToken == null ? (
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Intro"
-            component={IntroScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="SignIn"
-            component={SignInScreen}
-            options={{
-              headerTitle: () => (
-                <CustomText
-                  fontWeight="700"
-                  style={{
-                    fontSize: 30,
-                    letterSpacing: 1.1,
-                  }}>
-                  cheering
-                </CustomText>
-              ),
-              contentStyle: {
-                borderBottomWidth: 0,
-              },
-              headerTitleAlign: 'center',
-              headerBackVisible: false,
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="SetPassword"
-            component={SetPassword}
-            options={{
-              headerTitle: () => (
-                <CustomText fontWeight="500" style={{fontSize: 21}}>
-                  회원가입
-                </CustomText>
-              ),
-              headerTitleAlign: 'center',
-              headerShadowVisible: false,
-              headerBackVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="SetNickname"
-            component={SetNickname}
-            options={{
-              headerTitle: () => (
-                <CustomText fontWeight="500" style={{fontSize: 21}}>
-                  닉네임 입력
-                </CustomText>
-              ),
-              headerTitleAlign: 'center',
-              headerShadowVisible: false,
-              headerBackVisible: false,
-            }}
-          />
-          <Stack.Screen
-            name="SignUpComplete"
-            component={SignUpComplete}
-            options={{
-              headerShown: false,
-            }}
-          />
-        </Stack.Navigator>
+        <AuthStack />
       ) : (
         <Tab.Navigator
           initialRouteName="HomeStack"
