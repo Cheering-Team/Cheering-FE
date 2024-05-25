@@ -3,12 +3,8 @@ import * as React from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import SplashScreen from '../screens/SplashScreen';
 import Toast from 'react-native-toast-message';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import HomeStackNavigator from './HomeStackNavigator';
-import CustomTabBar from '../components/CustomHomeTab';
-import ChatScreen from '../screens/ChatScreen';
-import MyPlayerScreen from '../screens/MyPlayerScreen';
-import AuthStack from './AuthStack';
+import AuthStackNavigator from './AuthStackNavigator';
+import MainTabNavigator from './MainTabNavigator';
 
 interface AuthState {
   isLoading: boolean;
@@ -132,8 +128,6 @@ const AuthSwitch = () => {
 
   const Stack = createNativeStackNavigator<{Splash: undefined}>();
 
-  const Tab = createBottomTabNavigator();
-
   return (
     <AuthContext.Provider value={authContext}>
       {state.isLoading ? (
@@ -145,34 +139,9 @@ const AuthSwitch = () => {
           />
         </Stack.Navigator>
       ) : state.accessToken == null ? (
-        <AuthStack />
+        <AuthStackNavigator />
       ) : (
-        <Tab.Navigator
-          initialRouteName="HomeStack"
-          tabBar={props => <CustomTabBar {...props} />}
-          screenOptions={{
-            tabBarShowLabel: false,
-          }}>
-          <Tab.Screen
-            name="MyPlayer"
-            component={MyPlayerScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Tab.Screen
-            name="HomeStack"
-            component={HomeStackNavigator}
-            options={{headerShown: false}}
-          />
-          <Tab.Screen
-            name="Chat"
-            component={ChatScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-        </Tab.Navigator>
+        <MainTabNavigator />
       )}
     </AuthContext.Provider>
   );

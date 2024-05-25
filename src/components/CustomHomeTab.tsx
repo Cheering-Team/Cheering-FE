@@ -6,46 +6,55 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import CategoryGraySvg from '../../assets/images/category-gray.svg';
+import CategorBlackSvg from '../../assets/images/category-black.svg';
 import HomeSvg from '../../assets/images/home_white.svg';
-import StarSvg from '../../assets/images/star.svg';
-import StarGreenSvg from '../../assets/images/star_green.svg';
-import ChatSvg from '../../assets/images/chat.svg';
-import ChatGreenSvg from '../../assets/images/chat_green.svg';
+import HomeBackGraySvg from '../../assets/images/home-back-gray.svg';
+import StarGraySvg from '../../assets/images/star-gray.svg';
+import StarBlackSvg from '../../assets/images/star-black.svg';
+import ChatGraySvg from '../../assets/images/chat-gray.svg';
+import ChatBlackSvg from '../../assets/images/chat-black.svg';
+import MoreGraySvg from '../../assets/images/more-gray.svg';
+import MoreBlackSvg from '../../assets/images/more-black.svg';
 import PlusSvg from '../../assets/images/plus_white.svg';
 import PencilSvg from '../../assets/images/pencil.svg';
 import LetterSvg from '../../assets/images/letter.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {getCommunitiesMain} from '../apis/community';
+import CustomText from './CustomText';
 
 function CustomTabBar({state, descriptors, navigation}) {
+  // 탭 애니메이션 상태
   const [modeValue, setModeValue] = React.useState(false);
   const mode = React.useRef(new Animated.Value(0)).current;
   const buttonSize = React.useRef(new Animated.Value(1)).current;
 
-  const [curCommunity, setCurCommunity] = React.useState<string | null>(null);
+  // 최근에 접속한 커뮤니티 (이미지 받아오기 위함)
+  // const [curCommunity, setCurCommunity] = React.useState<string | null>(null);
 
+  // 현재 화면 이름
   let routeName = '';
 
   if (state.routes[state.index].state) {
     routeName = state.routes[state.index].state.routes.at(-1).name;
   }
 
-  React.useEffect(() => {
-    const getCommunityMain = async () => {
-      const response = await getCommunitiesMain({
-        id: state.routes[1].state.routes.at(-1)?.params?.communityId,
-      });
+  // React.useEffect(() => {
+  //   const getCommunityMain = async () => {
+  //     const response = await getCommunitiesMain({
+  //       id: state.routes[1].state.routes.at(-1)?.params?.communityId,
+  //     });
 
-      if (response.message === 'get community success') {
-        setCurCommunity(response.data.backgroundImage);
-      }
-    };
-    if (state.routes[1]?.state?.routes.at(-1)?.name === 'Community') {
-      getCommunityMain();
-    } else {
-      setCurCommunity(null);
-    }
-  }, [state.routes]);
+  //     if (response.message === 'get community success') {
+  //       setCurCommunity(response.data.backgroundImage);
+  //     }
+  //   };
+  //   if (state.routes[1]?.state?.routes.at(-1)?.name === 'Community') {
+  //     getCommunityMain();
+  //   } else {
+  //     setCurCommunity(null);
+  //   }
+  // }, [state.routes]);
 
   return (
     <>
@@ -71,12 +80,16 @@ function CustomTabBar({state, descriptors, navigation}) {
       )}
 
       <View
+        // style={[
+        //   routeName === 'Search' ||
+        //   routeName === 'Write' ||
+        //   routeName === 'Post'
+        //     ? {display: 'none'}
+        //     : styles.TabContainer,
+        //   {paddingBottom: useSafeAreaInsets().bottom},
+        // ]}
         style={[
-          routeName === 'Search' ||
-          routeName === 'Write' ||
-          routeName === 'Post'
-            ? {display: 'none'}
-            : styles.TabContainer,
+          styles.TabContainer,
           {paddingBottom: useSafeAreaInsets().bottom},
         ]}>
         {state.routes.map((route, index) => {
@@ -94,6 +107,13 @@ function CustomTabBar({state, descriptors, navigation}) {
             if (!isFocused && !event.defaultPrevented) {
               navigation.navigate(route.name, route.params);
             }
+          };
+
+          const onLongPress = () => {
+            navigation.emit({
+              type: 'tabLongPress',
+              target: route.key,
+            });
           };
 
           const handlePlusPress = () => {
@@ -159,14 +179,7 @@ function CustomTabBar({state, descriptors, navigation}) {
             outputRange: [-55, -90],
           });
 
-          const onLongPress = () => {
-            navigation.emit({
-              type: 'tabLongPress',
-              target: route.key,
-            });
-          };
-
-          if (index === 1 && routeName === 'Community') {
+          if (index === 2 && routeName === 'Community') {
             return (
               <Pressable
                 key={index}
@@ -227,7 +240,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                 </Animated.View>
               </Pressable>
             );
-          } else if (index === 1 && routeName !== 'Community') {
+          } else if (index === 2 && routeName !== 'Community') {
             return (
               <Pressable
                 key={index}
@@ -238,7 +251,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                 onPress={onPress}
                 onLongPress={onLongPress}
                 style={styles.Tab}>
-                {curCommunity && routeName !== 'Home' ? (
+                {/* {curCommunity && routeName !== 'Home' ? (
                   <ImageBackground
                     source={{uri: curCommunity}}
                     imageStyle={{
@@ -254,11 +267,22 @@ function CustomTabBar({state, descriptors, navigation}) {
                   <View style={styles.HomeTab}>
                     <HomeSvg width={30} height={30} />
                   </View>
+                )} */}
+                {isFocused ? (
+                  <View style={styles.HomeTabFocused}>
+                    <HomeSvg width={30} height={30} />
+                  </View>
+                ) : (
+                  <View style={styles.HomeTab}>
+                    <HomeBackGraySvg width={30} height={30} />
+                  </View>
                 )}
               </Pressable>
             );
           } else {
             return (
+              // gray: B7B7B7
+              // black: 323232
               <Pressable
                 key={index}
                 accessibilityRole="button"
@@ -270,14 +294,72 @@ function CustomTabBar({state, descriptors, navigation}) {
                 style={styles.Tab}>
                 {index === 0 ? (
                   isFocused ? (
-                    <StarGreenSvg width={23} height={23} />
+                    <>
+                      <CategorBlackSvg width={21} height={21} />
+                      <CustomText
+                        fontWeight="600"
+                        style={styles.TabLabelFocused}>
+                        카테고리
+                      </CustomText>
+                    </>
                   ) : (
-                    <StarSvg width={23} height={23} />
+                    <>
+                      <CategoryGraySvg width={21} height={21} />
+                      <CustomText fontWeight="600" style={styles.TabLabel}>
+                        카테고리
+                      </CustomText>
+                    </>
+                  )
+                ) : index === 1 ? (
+                  isFocused ? (
+                    <>
+                      <StarBlackSvg width={21} height={21} />
+                      <CustomText
+                        fontWeight="600"
+                        style={styles.TabLabelFocused}>
+                        내 선수
+                      </CustomText>
+                    </>
+                  ) : (
+                    <>
+                      <StarGraySvg width={21} height={21} />
+                      <CustomText fontWeight="600" style={styles.TabLabel}>
+                        내 선수
+                      </CustomText>
+                    </>
+                  )
+                ) : index === 3 ? (
+                  isFocused ? (
+                    <>
+                      <ChatBlackSvg width={21} height={21} />
+                      <CustomText
+                        fontWeight="600"
+                        style={styles.TabLabelFocused}>
+                        채팅
+                      </CustomText>
+                    </>
+                  ) : (
+                    <>
+                      <ChatGraySvg width={21} height={21} />
+                      <CustomText fontWeight="600" style={styles.TabLabel}>
+                        채팅
+                      </CustomText>
+                    </>
                   )
                 ) : isFocused ? (
-                  <ChatGreenSvg width={23} height={23} />
+                  <>
+                    <MoreBlackSvg width={21} height={21} />
+                    <CustomText fontWeight="600" style={styles.TabLabelFocused}>
+                      더보기
+                    </CustomText>
+                  </>
                 ) : (
-                  <ChatSvg width={23} height={23} />
+                  <>
+                    <MoreGraySvg width={21} height={21} />
+                    <CustomText fontWeight="600" style={styles.TabLabel}>
+                      더보기
+                    </CustomText>
+                  </>
                 )}
               </Pressable>
             );
@@ -302,17 +384,37 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 14,
+    paddingTop: 8,
+    paddingBottom: 4,
   },
+  TabLabel: {fontSize: 10, color: '#B7B7B7', marginTop: 3},
+  TabLabelFocused: {fontSize: 10, color: '#323232', marginTop: 3},
   HomeTab: {
-    backgroundColor: '#58a04b',
-    width: 70,
-    height: 70,
+    backgroundColor: '#B7B7B7',
+    width: 62,
+    height: 62,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 37,
     position: 'absolute',
-    top: -34,
+    top: -27,
+    shadowColor: '#B7B7B7',
+    shadowRadius: 5,
+    shadowOffset: {height: 10, width: 0},
+    shadowOpacity: 0.3,
+    elevation: 20,
+    borderWidth: 3,
+    borderColor: 'white',
+  },
+  HomeTabFocused: {
+    backgroundColor: '#58a04b',
+    width: 62,
+    height: 62,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 37,
+    position: 'absolute',
+    top: -27,
     shadowColor: '#58a04b',
     shadowRadius: 5,
     shadowOffset: {height: 10, width: 0},

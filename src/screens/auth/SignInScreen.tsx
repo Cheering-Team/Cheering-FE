@@ -8,7 +8,7 @@ import CustomText from '../../components/CustomText';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useEffect, useState} from 'react';
 import React from 'react';
-import {AuthStackParamList} from '../../navigations/AuthStack';
+import {AuthStackParamList} from '../../navigations/AuthStackNavigator';
 import {postPhoneSMS} from '../../apis/user';
 import {useMutation} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
@@ -25,8 +25,6 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
   const [phoneValid, setPhoneValid] = useState<'empty' | 'valid' | 'invalid'>(
     'empty',
   );
-
-  // const signIn = useContext(AuthContext)?.signIn;
 
   const mutation = useMutation({mutationFn: postPhoneSMS});
 
@@ -60,19 +58,6 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
       } catch (error) {}
     }
   };
-
-  // const emailSignin = async () => {
-  //   const response = await postSignin({email, password: pw});
-
-  //   if (response?.data.message === 'login success') {
-  //     signIn?.(
-  //       response?.headers['access-token'],
-  //       response?.headers['refresh-token'],
-  //     );
-  //   } else {
-  //     Alert.alert('이메일과 비밀번호를 확인해주세요');
-  //   }
-  // };
 
   return (
     <KeyboardAvoidingView

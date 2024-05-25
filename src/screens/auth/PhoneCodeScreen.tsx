@@ -9,14 +9,15 @@ import BackClose from '../../hooks/BackClose';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CustomText from '../../components/CustomText';
 import CustomTextInput from '../../components/CustomTextInput';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import CustomButton from '../../components/CustomButton';
-import {AuthStackParamList} from '../../navigations/AuthStack';
+import {AuthStackParamList} from '../../navigations/AuthStackNavigator';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useMutation} from '@tanstack/react-query';
-import {postPhoneCode, postPhoneSMS} from '../../apis/user';
+import {postPhoneCode, postPhoneSMS, postSignin} from '../../apis/user';
 import Toast from 'react-native-toast-message';
+import {AuthContext} from '../../navigations/AuthSwitch';
 
 type PhoneCodeScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -33,6 +34,7 @@ const PhoneCodeScreen = ({
   navigation: PhoneCodeScreenNavigationProp;
 }) => {
   BackClose(navigation);
+  const signIn = useContext(AuthContext)?.signIn;
 
   const {user, phone} = route.params;
 
@@ -41,6 +43,7 @@ const PhoneCodeScreen = ({
   const [limitTime, setLimitTime] = useState(300);
 
   const codeMutation = useMutation({mutationFn: postPhoneCode});
+  const signinMutation = useMutation({mutationFn: postSignin});
   const sendMutation = useMutation({mutationFn: postPhoneSMS});
 
   useEffect(() => {
@@ -63,16 +66,49 @@ const PhoneCodeScreen = ({
     return () => clearInterval(timer);
   }, [limitTime, navigation]);
 
-  const handleCodeSubmit = async () => {
+  const handleCodeSubmitToSignIn = async () => {
+    try {
+      const data = await signinMutation.mutateAsync({phone, code});
+      if (data.message === '로그인에 성공하였습니다.') {
+        const {accessToken, refreshToken} = data.result;
+
+        Toast.show({
+          type: 'default',
+          position: 'top',
+          visibilityTime: 3000,
+          bottomOffset: 30,
+          text1: '로그인되었습니다.',
+        });
+
+        signIn?.(accessToken, refreshToken);
+      }
+    } catch (error: any) {
+      if (error.message === '인증코드가 일치하지 않습니다.') {
+        setCodeValid(false);
+      } else if (error.message === '인증코드가 만료되었습니다.') {
+        Toast.show({
+          type: 'default',
+          position: 'top',
+          visibilityTime: 3000,
+          bottomOffset: 30,
+          text1: '인증번호가 만료되었습니다.',
+          text2: '다시시도 해주세요.',
+        });
+        navigation.goBack();
+      }
+    }
+  };
+
+  const handleCodeSubmitToSignUp = async () => {
     try {
       const data = await codeMutation.mutateAsync({phone, code});
       if (data.message === '인증번호가 일치합니다.') {
-        navigation.replace('SetNickname', {phone, code});
+        navigation.replace('SetNickname', {phone});
       }
     } catch (error: any) {
-      if (error.message === '인증번호가 일치하지 않습니다.') {
+      if (error.message === '인증코드가 일치하지 않습니다.') {
         setCodeValid(false);
-      } else if (error.message === '인증번호가 만료되었습니다.') {
+      } else if (error.message === '인증코드가 만료되었습니다.') {
         Toast.show({
           type: 'default',
           position: 'top',
@@ -122,22 +158,27 @@ const PhoneCodeScreen = ({
         extraScrollHeight={-200}
         style={{flex: 1, padding: 20}}>
         {user ? (
-          <CustomText fontWeight="600" style={styles.signInTitle}>
-            인증번호를 입력해주세요.
-          </CustomText>
+          <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+            <CustomText fontWeight="700" style={styles.signInTitleNickname}>
+              {user.nickname}
+            </CustomText>
+            <CustomText fontWeight="600" style={styles.signInTitle}>
+              님! 오랜만이에요
+            </CustomText>
+          </View>
         ) : (
           <>
             <CustomText fontWeight="600" style={styles.signInTitle}>
               처음 방문 하셨네요!
             </CustomText>
-            <CustomText fontWeight="400" style={styles.signInInfo}>
-              문자로 받은 인증번호를 입력해주시면
-            </CustomText>
-            <CustomText fontWeight="400" style={styles.signInInfo}>
-              바로 서비스 이용이 가능합니다.
-            </CustomText>
           </>
         )}
+        <CustomText fontWeight="400" style={styles.signInInfo}>
+          문자로 받은 인증번호를 입력해주시면
+        </CustomText>
+        <CustomText fontWeight="400" style={styles.signInInfo}>
+          바로 서비스 이용이 가능합니다.
+        </CustomText>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View style={{flex: 1}}>
             <CustomTextInput
@@ -184,17 +225,23 @@ const PhoneCodeScreen = ({
         text={'인증완료'}
         disabled={code.length !== 6}
         isLoading={codeMutation.isPending}
-        onPress={handleCodeSubmit}
+        onPress={user ? handleCodeSubmitToSignIn : handleCodeSubmitToSignUp}
       />
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
+  signInTitleNickname: {
+    marginTop: 20,
+    marginBottom: 5,
+    fontSize: 23,
+    color: '#58a04b',
+  },
   signInTitle: {
     marginTop: 20,
     marginBottom: 5,
-    fontSize: 22,
+    fontSize: 21,
   },
   codeTitle: {
     color: 'green',

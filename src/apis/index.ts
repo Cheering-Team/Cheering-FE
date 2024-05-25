@@ -10,10 +10,10 @@ axiosInstance.interceptors.request.use(async config => {
   const accessToken = await EncryptedStorage.getItem('accessToken');
   const refreshToken = await EncryptedStorage.getItem('refreshToken');
 
-  if (config.url === '/refresh') {
-    config.headers['Refresh-Token'] = refreshToken;
-  } else {
-    config.headers['Access-Token'] = accessToken;
+  if (config.url === '/refresh' && refreshToken) {
+    config.headers.Authorization = `Bearer ${refreshToken}`;
+  } else if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
 
   return config;
@@ -26,19 +26,27 @@ axiosInstance.interceptors.response.use(
   async error => {
     const {config, response} = error;
     if (response.status === 400) {
-      return Promise.reject(error.response.data);
-    }
-    if (response.status === 401) {
-      if (response.data.message === 'expired Access-Token') {
-        const accessToken = await reIssueToken();
-
-        await EncryptedStorage.setItem('accessToken', `Bearer ${accessToken}`);
-
-        return axiosInstance(config);
-      } else if (response.data.message === 'expired Refreh-Token') {
+      if (response.data.message === '해당 사용자를 찾을 수 없습니다.') {
         await EncryptedStorage.removeItem('accessToken');
         await EncryptedStorage.removeItem('refreshToken');
         navigate('SignOut', null);
+      }
+      return Promise.reject(response.data);
+    }
+
+    if (response.data.message === '토큰이 유효하지 않습니다.') {
+      if (config.url === '/refresh') {
+        await EncryptedStorage.removeItem('accessToken');
+        await EncryptedStorage.removeItem('refreshToken');
+        navigate('SignOut', null);
+      } else {
+        const data = await reIssueToken();
+
+        const {accessToken, refreshToken} = data.result;
+
+        await EncryptedStorage.setItem('accessToken', accessToken);
+        await EncryptedStorage.setItem('refreshToken', refreshToken);
+        return axiosInstance(config);
       }
     }
     return Promise.reject(error);
@@ -46,11 +54,7 @@ axiosInstance.interceptors.response.use(
 );
 
 const reIssueToken = async () => {
-  try {
-    const response = await axiosInstance.get('/refresh');
+  const response = await axiosInstance.get('/refresh');
 
-    return response.data.data;
-  } catch (error) {
-    //
-  }
+  return response.data;
 };
