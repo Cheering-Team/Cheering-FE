@@ -11,8 +11,11 @@ import AuthSwitch from './src/navigations/AuthSwitch';
 import {StatusBar} from 'react-native';
 import {navigationRef} from './src/navigations/RootNavigation';
 import Toast, {BaseToast} from 'react-native-toast-message';
+import {QueryClientProvider, QueryClient} from '@tanstack/react-query';
 
 function App(): React.JSX.Element {
+  const queryClient = new QueryClient();
+
   const navTheme = {
     ...DefaultTheme,
     colors: {
@@ -37,16 +40,24 @@ function App(): React.JSX.Element {
           fontSize: 15,
           color: 'white',
         }}
+        text2Style={{
+          fontWeight: 'normal',
+          fontFamily: 'NotoSansKR-Medium',
+          fontSize: 15,
+          color: 'white',
+        }}
       />
     ),
   };
 
   return (
-    <NavigationContainer theme={navTheme} ref={navigationRef}>
-      <StatusBar barStyle="dark-content" />
-      <AuthSwitch />
-      <Toast config={toastConfig} />
-    </NavigationContainer>
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer theme={navTheme} ref={navigationRef}>
+        <StatusBar barStyle="dark-content" />
+        <AuthSwitch />
+        <Toast config={toastConfig} />
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
 

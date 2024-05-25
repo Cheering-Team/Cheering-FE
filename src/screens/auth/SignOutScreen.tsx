@@ -1,6 +1,6 @@
 import React from 'react';
 import {ActivityIndicator} from 'react-native';
-import {AuthContext} from '../navigations/AuthSwitch';
+import {AuthContext} from '../../navigations/AuthSwitch';
 
 const SignOutScreen = () => {
   const signOut = React.useContext(AuthContext)?.signOut;

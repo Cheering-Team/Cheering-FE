@@ -1,9 +1,9 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import CustomButton from '../components/CustomButton';
+import CustomButton from '../../components/CustomButton';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {AuthStackParamList} from '../navigations/AuthSwitch';
-import CustomText from '../components/CustomText';
+import {AuthStackParamList} from '../../navigations/AuthSwitch';
+import CustomText from '../../components/CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type IntroScreenNavigationProp = NativeStackNavigationProp<
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textAlign: 'center',
-    fontSize: 35,
+    fontSize: 32,
   },
 });
 
