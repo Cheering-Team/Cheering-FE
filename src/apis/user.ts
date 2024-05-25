@@ -36,7 +36,14 @@ export const postPhoneCode = async (data: postPhoneCodeRequest) => {
 };
 
 export const postSignin = async (data: postPhoneCodeRequest) => {
-  const response = await axiosInstance.post('/signin', data);
+  const formData = new FormData();
+  formData.append('phone', data.phone);
+  formData.append('code', data.code);
+  const response = await axiosInstance.post('/signin', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return response.data;
 };
 
