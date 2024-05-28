@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import Avatar from './Avatar';
 import CustomText from './CustomText';
-import formatDate from '../utils/formatDate';
+import formatDate from '../utils/format';
 import EditSvg from '../../assets/images/three_dots.svg';
 
 interface PostHeaderProps {

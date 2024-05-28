@@ -3,15 +3,33 @@ import PlayerList from '../../components/PlayerList';
 import {Image, SafeAreaView, View} from 'react-native';
 import Back from '../../hooks/Back';
 import CustomText from '../../components/CustomText';
+import {useQuery} from '@tanstack/react-query';
+import {getPlayersByTeam} from '../../apis/player';
+import {formatComma} from '../../utils/format';
+import StarOrangeSvg from '../../../assets/images/star-orange.svg';
+import ChevronRightGraySvg from '../../../assets/images/chevron-right-gray.svg';
 
-const PlayerListScreen = ({navigation}) => {
+const PlayerListScreen = ({navigation, route}) => {
   Back(navigation);
+
+  const teamId = route.params.teamId;
+
+  const {data, isLoading} = useQuery({
+    queryKey: ['players', teamId],
+    queryFn: getPlayersByTeam,
+  });
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: '야구 / KBO',
+      title: data
+        ? `${data?.result.sportName} / ${data?.result.leagueName}`
+        : '',
     });
-  }, [navigation]);
+  }, [navigation, data]);
+
+  if (isLoading) {
+    return <></>;
+  }
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -32,7 +50,7 @@ const PlayerListScreen = ({navigation}) => {
         }}>
         <Image
           source={{
-            uri: 'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/lotte.png',
+            uri: data.result.team.image,
           }}
           style={{height: 75, width: 75}}
         />
@@ -44,34 +62,45 @@ const PlayerListScreen = ({navigation}) => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          {/* <CustomText
-            style={{
-              fontSize: 13,
-              color: '#252525',
-              paddingBottom: 0,
-              marginLeft: 1,
-            }}>
-            야구 / KBO
-          </CustomText> */}
           <View>
             <CustomText
               fontWeight="600"
               style={{fontSize: 20, paddingBottom: 0, color: '#2b2b2b'}}>
-              롯데 자이언츠
+              {data.result.team.name}
             </CustomText>
-            <CustomText
-              fontWeight="600"
-              style={{fontSize: 12, color: '#fd5853'}}>
-              12,321+
-            </CustomText>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <StarOrangeSvg width={11} height={11} />
+              <CustomText
+                fontWeight="600"
+                style={{
+                  fontSize: 12,
+                  color: '#F99E35',
+                  marginLeft: 3,
+                  paddingBottom: 2,
+                }}>
+                {formatComma(data.result.team.fanCount)}
+              </CustomText>
+            </View>
           </View>
 
-          <CustomText fontWeight="600" style={{fontSize: 15, color: '#4d4d4d'}}>
-            {'이동하기  >'}
-          </CustomText>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <CustomText
+              fontWeight="600"
+              style={{
+                fontSize: 15,
+                color: '#4d4d4d',
+                marginRight: 3,
+              }}>
+              이동하기
+            </CustomText>
+            <ChevronRightGraySvg width={12} height={12} />
+          </View>
         </View>
       </View>
-      <PlayerList />
+      <PlayerList
+        teamName={data.result.team.name}
+        players={data.result.players}
+      />
     </SafeAreaView>
   );
 };

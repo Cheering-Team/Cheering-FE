@@ -150,7 +150,9 @@ const CategoryScreen = ({navigation}) => {
                   key={item.name}
                   style={{alignItems: 'center', width: 55}}
                   onPress={() => {
-                    navigation.navigate('PlayerList');
+                    navigation.navigate('PlayerList', {
+                      teamId: item.id,
+                    });
                   }}>
                   <Image
                     resizeMode="center"

@@ -4,7 +4,7 @@ import React from 'react';
 import PlayerListScreen from '../screens/categoryStack/PlayerListScreen';
 
 export type CategoryStackParamList = {
-  Category: undefined;
+  Category: {teamId: number};
   PlayerList: undefined;
 };
 
