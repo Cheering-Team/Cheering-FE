@@ -1,5 +1,4 @@
 import React from 'react';
-import HomeScreen from '../screens/HomeScreen';
 import SearchScreen from '../screens/SearchScreen';
 import SignOutScreen from '../screens/auth/SignOutScreen';
 import CommunityScreen from '../screens/CommunityScreen';
@@ -8,6 +7,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import PostScreen from '../screens/PostScreen';
 import ChatRoomScreen from '../screens/ChatRoomScreen';
 import SettingScreen from '../screens/SettingScreen';
+import HomeScreen from '../screens/homeStack/HomeScreen';
 
 export type HomeStackParamList = {
   Home: undefined;
