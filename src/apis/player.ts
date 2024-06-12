@@ -5,3 +5,9 @@ export const getPlayersByTeam = async ({queryKey}) => {
   const response = await axiosInstance.get(`/teams/${teamId}/players`);
   return response.data;
 };
+
+export const getPlayersInfo = async ({queryKey}) => {
+  const [_key, playerId] = queryKey;
+  const response = await axiosInstance.get(`/players/${playerId}`);
+  return response.data;
+};

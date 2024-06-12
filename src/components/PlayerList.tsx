@@ -3,9 +3,12 @@ import CustomText from './CustomText';
 import React from 'react';
 import {formatComma} from '../utils/format';
 import StarOrangeSvg from '../../assets/images/star-orange.svg';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {CategoryStackParamList} from '../navigations/CategoryStackNavigator';
 
 const PlayerList = props => {
   const {teamName, players} = props;
+  const navigation = useNavigation<NavigationProp<CategoryStackParamList>>();
 
   return (
     <FlatList
@@ -13,7 +16,11 @@ const PlayerList = props => {
       contentContainerStyle={{paddingTop: 80}}
       data={players}
       renderItem={({item}) => (
-        <Pressable style={{paddingBottom: 10, backgroundColor: 'white'}}>
+        <Pressable
+          style={{paddingBottom: 10, backgroundColor: 'white'}}
+          onPress={() => {
+            navigation.navigate('Community', {playerId: item.id});
+          }}>
           <Image
             source={{uri: item.image}}
             resizeMode="cover"
@@ -34,7 +41,7 @@ const PlayerList = props => {
                 {teamName}
               </CustomText>
               <CustomText fontWeight="500" style={{fontSize: 16}}>
-                {item.name}
+                {item.koreanName}
               </CustomText>
             </View>
 

@@ -12,6 +12,7 @@ import {StatusBar} from 'react-native';
 import {navigationRef} from './src/navigations/RootNavigation';
 import Toast, {BaseToast} from 'react-native-toast-message';
 import {QueryClientProvider, QueryClient} from '@tanstack/react-query';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 function App(): React.JSX.Element {
   const queryClient = new QueryClient();
@@ -52,11 +53,13 @@ function App(): React.JSX.Element {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NavigationContainer theme={navTheme} ref={navigationRef}>
-        <StatusBar barStyle="dark-content" />
-        <AuthSwitch />
-        <Toast config={toastConfig} />
-      </NavigationContainer>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <NavigationContainer theme={navTheme} ref={navigationRef}>
+          <StatusBar barStyle="dark-content" />
+          <AuthSwitch />
+          <Toast config={toastConfig} />
+        </NavigationContainer>
+      </GestureHandlerRootView>
     </QueryClientProvider>
   );
 }
