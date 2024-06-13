@@ -1,181 +1,3 @@
-// import {
-//   FlatList,
-//   ImageBackground,
-//   Pressable,
-//   StyleSheet,
-//   View,
-// } from 'react-native';
-// import Back from '../hooks/Back';
-// import LinearGradient from 'react-native-linear-gradient';
-// import React from 'react';
-
-// import CustomText from '../components/CustomText';
-// import {getCommunitiesToPosts} from '../apis/community';
-// import ToPost, {Post} from '../components/ToPost';
-// import {HomeStackParamList} from '../navigations/HomeStackNavigator';
-// import {RouteProp} from '@react-navigation/native';
-// import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-
-// type CommunityScreenNavigationProp = NativeStackNavigationProp<
-//   HomeStackParamList,
-//   'Community'
-// >;
-
-// type CommunityScreenRouteProp = RouteProp<HomeStackParamList, 'Community'>;
-
-// const CommunityScreen = ({
-//   navigation,
-//   route,
-// }: {
-//   navigation: CommunityScreenNavigationProp;
-//   route: CommunityScreenRouteProp;
-// }) => {
-//   const communityId = route.params.communityId;
-
-//   const [toData, setToData] = React.useState<Post[]>([]);
-
-//   const [curMenu, setCurMenu] = React.useState<'to' | 'from' | 'live' | 'chat'>(
-//     'to',
-//   );
-//   Back(navigation);
-
-//   React.useEffect(() => {
-//     const getToPosts = async () => {
-//       const response = await getCommunitiesToPosts({id: communityId});
-//       setToData(response.data);
-//     };
-
-//     if (curMenu === 'to') {
-//       getToPosts();
-//     }
-//   }, [curMenu, communityId]);
-
-//   return (
-//     <FlatList
-//       data={toData}
-//       renderItem={({item}) => <ToPost item={item} />}
-//       ListHeaderComponent={() => (
-//         <>
-//
-//           <View style={styles.MenuContainer}>
-//             <Pressable
-//               style={[styles.Menu, curMenu === 'to' && styles.SelectedMenu]}
-//               onPress={() => setCurMenu('to')}>
-//               <CustomText
-//                 style={[
-//                   styles.MenuText,
-//                   curMenu === 'to' && styles.SelectedText,
-//                 ]}
-//                 fontWeight="600">
-//                 To
-//               </CustomText>
-//             </Pressable>
-//             <Pressable
-//               style={[styles.Menu, curMenu === 'from' && styles.SelectedMenu]}
-//               onPress={() => setCurMenu('from')}>
-//               <CustomText
-//                 style={[
-//                   styles.MenuText,
-//                   curMenu === 'from' && styles.SelectedText,
-//                 ]}
-//                 fontWeight="600">
-//                 From
-//               </CustomText>
-//             </Pressable>
-//             <Pressable
-//               style={[styles.Menu, curMenu === 'live' && styles.SelectedMenu]}
-//               onPress={() => setCurMenu('live')}>
-//               <CustomText
-//                 style={[
-//                   styles.MenuText,
-//                   curMenu === 'live' && styles.SelectedText,
-//                 ]}
-//                 fontWeight="600">
-//                 Live
-//               </CustomText>
-//             </Pressable>
-//             <Pressable
-//               style={[styles.Menu, curMenu === 'chat' && styles.SelectedMenu]}
-//               onPress={() => setCurMenu('chat')}>
-//               <CustomText
-//                 style={[
-//                   styles.MenuText,
-//                   curMenu === 'chat' && styles.SelectedText,
-//                 ]}
-//                 fontWeight="600">
-//                 Chat
-//               </CustomText>
-//             </Pressable>
-//           </View>
-//         </>
-//       )}
-//     />
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   // 헤더
-//   CommunityHeader: {
-//     flex: 1,
-//     alignItems: 'center',
-//     height: 350,
-//   },
-//   CommunityHeaderBlur: {
-//     width: '100%',
-//     height: 350,
-//   },
-//   CommunityTitle: {
-//     position: 'absolute',
-//     bottom: -2,
-//     flex: 1,
-//     alignItems: 'center',
-//   },
-//   CommunityName: {
-//     fontSize: 60,
-//     letterSpacing: 2,
-//     color: 'white',
-//   },
-//   CommunityInfo: {
-//     flex: 1,
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     width: '100%',
-//     paddingHorizontal: 15,
-//     bottom: -10,
-//   },
-//   TeamLogo: {
-//     width: 35,
-//     height: 35,
-//   },
-
-//   // 메뉴
-//   MenuContainer: {
-//     height: 42,
-//     flex: 1,
-//     flexDirection: 'row',
-//     backgroundColor: '#242424',
-//     marginBottom: 10,
-//   },
-//   Menu: {
-//     flex: 1,
-//     padding: 5,
-//   },
-//   MenuText: {
-//     textAlign: 'center',
-//     fontSize: 19,
-//     color: 'white',
-//   },
-//   SelectedMenu: {
-//     backgroundColor: 'white',
-//   },
-//   SelectedText: {
-//     color: 'black',
-//   },
-// });
-
-// export default CommunityScreen;
-
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Animated,
@@ -189,6 +11,7 @@ import {
   Modal,
   TouchableOpacity,
   Keyboard,
+  ImageBackground,
 } from 'react-native';
 import CustomText from '../../components/CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -203,13 +26,10 @@ import Avatar from '../../components/Avatar';
 import CameraSvg from '../../../assets/images/camera-01.svg';
 import CustomButton from '../../components/CustomButton';
 import CustomTextInput from '../../components/CustomTextInput';
-
-// type CommunityScreenNavigationProp = NativeStackNavigationProp<
-//   HomeStackParamList,
-//   'Community'
-// >;
-
-// type CommunityScreenRouteProp = RouteProp<HomeStackParamList, 'Community'>;
+import ImagePicker from 'react-native-image-crop-picker';
+import ArrowLeftGraySvg from '../../../assets/images/arrow-left-gray.svg';
+import CheckGraySvg from '../../../assets/images/check-gray.svg';
+import CheckGreenSvg from '../../../assets/images/check-green.svg';
 
 const feedData = [
   {content: '피드입니다'},
@@ -230,21 +50,6 @@ const feedData = [
   {content: '피드입니다'},
   {content: '피드입니다'},
   {content: '피드입니다'},
-];
-
-const teamData = [
-  {
-    name: '롯데 자이언츠',
-    image: 'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/lotte.png',
-  },
-  {
-    name: '한화 이글스',
-    image: 'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/lotte.png',
-  },
-  {
-    name: 'KBO 올스타',
-    image: 'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/lotte.png',
-  },
 ];
 
 const CommunityScreen = ({navigation, route}) => {
@@ -307,14 +112,9 @@ const CommunityScreen = ({navigation, route}) => {
       keyboardDidHide,
     );
 
-    const translateYListener = translateY.addListener(({value}) => {
-      console.log('translateY : ', value);
-    });
-
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
-      translateY.removeListener(translateYListener);
     };
   }, [keyboardDidShow, keyboardDidHide, translateY]);
 
@@ -328,13 +128,54 @@ const CommunityScreen = ({navigation, route}) => {
   };
 
   const closeModal = () => {
+    setImageData({uri: '', name: '', type: ''});
     Animated.timing(translateY, {
       toValue: 500,
       duration: 300,
       useNativeDriver: true,
     }).start(() => {
       setModalVisible(false);
+      setJoinState('profile');
+      setAgreements({one: false, two: false, three: false});
     });
+  };
+
+  const [imageData, setImageData] = useState({
+    uri: '',
+    name: '',
+    type: '',
+  });
+
+  const [nickname, setNickname] = useState('');
+
+  const imageUpload = async () => {
+    const image = await ImagePicker.openPicker({
+      cropperCircleOverlay: true,
+      cropping: true,
+      cropperChooseText: '확인',
+      cropperCancelText: '취소',
+      cropperToolbarTitle: '사진 선택',
+    });
+
+    setImageData({
+      uri: image.path,
+      name: image.filename || '',
+      type: image.mime,
+    });
+  };
+
+  const [joinState, setJoinState] = useState<'profile' | 'term'>('profile');
+  const [agreements, setAgreements] = useState({
+    one: false,
+    two: false,
+    three: false,
+  });
+
+  const toggleAgreement = (agreement: 'one' | 'two' | 'three') => {
+    setAgreements(prev => ({
+      ...prev,
+      [agreement]: !prev[agreement],
+    }));
   };
 
   if (isLoading) {
@@ -631,7 +472,6 @@ const CommunityScreen = ({navigation, route}) => {
               position: 'absolute',
               bottom: 0,
               width: '100%',
-              height: '55%',
               backgroundColor: 'white',
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
@@ -641,65 +481,226 @@ const CommunityScreen = ({navigation, route}) => {
           <View
             style={{
               flexGrow: 1,
-              alignItems: 'center',
               paddingHorizontal: 20,
               justifyContent: 'space-between',
               paddingBottom: insets.bottom + 20,
             }}>
             <View
               style={{
-                alignItems: 'center',
-              }}>
-              <View
-                style={{
-                  width: 50,
-                  height: 4,
-                  backgroundColor: '#eaeaea',
-                  marginTop: 8,
-                  borderRadius: 20,
-                }}
-              />
-              <View style={{flexDirection: 'row', marginTop: 18}}>
-                <CustomText
-                  fontWeight="600"
-                  style={{fontSize: 22, color: '#000000'}}>
-                  {`${data.result.koreanName} `}
-                </CustomText>
-                <CustomText
-                  fontWeight="600"
-                  style={{fontSize: 22, color: '#000000'}}>
-                  커뮤니티
-                </CustomText>
-              </View>
-              <CustomText
-                fontWeight="400"
-                style={{fontSize: 15, color: '#515151', marginTop: 7}}>
-                {`${data.result.koreanName} 선수의 팬이 되신 걸 환영합니다!`}
-              </CustomText>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <Avatar uri={data.result.image} size={85} style={{left: 8}} />
-              <View
-                style={{
-                  right: 8,
-                  width: 85,
-                  height: 85,
-                  borderRadius: 50,
-                  backgroundColor: '#7fb677',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <CameraSvg width={27} height={27} />
-              </View>
-            </View>
-            <View style={{width: '100%'}}>
-              <CustomTextInput
-                label="커뮤니티 닉네임"
-                placeholder="닉네임을 입력해주세요."
-              />
-            </View>
+                alignSelf: 'center',
+                width: 50,
+                height: 4,
+                backgroundColor: '#eaeaea',
+                marginTop: 8,
+                borderRadius: 20,
+              }}
+            />
+            {joinState === 'profile' ? (
+              <>
+                <View
+                  style={{
+                    alignItems: 'center',
+                  }}>
+                  <View style={{flexDirection: 'row', marginTop: 18}}>
+                    <CustomText
+                      fontWeight="600"
+                      style={{fontSize: 22, color: '#000000'}}>
+                      {`${data.result.koreanName} `}
+                    </CustomText>
+                    <CustomText
+                      fontWeight="600"
+                      style={{fontSize: 22, color: '#000000'}}>
+                      커뮤니티
+                    </CustomText>
+                  </View>
+                  <CustomText
+                    fontWeight="400"
+                    style={{fontSize: 15, color: '#515151', marginTop: 7}}>
+                    {`${data.result.koreanName} 선수의 팬이 되신 걸 환영합니다!`}
+                  </CustomText>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginTop: 25,
+                  }}>
+                  <Avatar uri={data.result.image} size={85} style={{left: 8}} />
+                  <Pressable
+                    onPress={imageUpload}
+                    style={{
+                      right: 8,
+                      borderRadius: 85,
+                      backgroundColor: '#7fb677',
+                    }}>
+                    <ImageBackground
+                      source={{
+                        uri:
+                          imageData.uri ||
+                          'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/transparentImage.png',
+                      }}
+                      style={{
+                        width: 85,
+                        height: 85,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                      imageStyle={{borderRadius: 85}}>
+                      <CameraSvg width={27} height={27} />
+                    </ImageBackground>
+                  </Pressable>
+                </View>
+                <View style={{width: '100%', marginBottom: 25, marginTop: 10}}>
+                  <CustomTextInput
+                    label="커뮤니티 닉네임"
+                    placeholder="닉네임을 입력해주세요."
+                    value={nickname}
+                    maxLength={20}
+                    curLength={nickname.length}
+                    onChangeText={e => setNickname(e)}
+                  />
+                </View>
 
-            <CustomButton text="시작하기" type="normal" />
+                <CustomButton
+                  text="시작하기"
+                  type="normal"
+                  onPress={() => {
+                    setJoinState('term');
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <Pressable
+                  style={{position: 'absolute', top: 20, left: 13}}
+                  onPress={() => {
+                    setJoinState('profile');
+                    setAgreements({one: false, two: false, three: false});
+                  }}>
+                  <ArrowLeftGraySvg width={32} height={32} />
+                </Pressable>
+
+                <CustomText
+                  fontWeight="600"
+                  style={{
+                    fontSize: 22,
+                    color: '#000000',
+                    alignSelf: 'center',
+                    marginTop: 18,
+                  }}>
+                  커뮤니티 이용수칙
+                </CustomText>
+
+                <CustomText
+                  style={{
+                    fontSize: 15,
+                    color: '#515151',
+                    marginTop: 5,
+                    alignSelf: 'center',
+                  }}>
+                  커뮤니티 이용 전, 아래의 사항들에 동의해주세요
+                </CustomText>
+                <View style={{paddingLeft: 2, marginTop: 25, marginBottom: 30}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: 10,
+                    }}>
+                    <Pressable
+                      onPress={() => toggleAgreement('one')}
+                      style={{padding: 3}}>
+                      {agreements.one ? (
+                        <CheckGreenSvg width={17} height={17} />
+                      ) : (
+                        <CheckGraySvg width={17} height={17} />
+                      )}
+                    </Pressable>
+
+                    <CustomText
+                      fontWeight="500"
+                      style={{marginLeft: 3, fontSize: 16, color: '#353535'}}>
+                      해당 커뮤니티는 선수와 팬들을 위한 공간입니다.
+                    </CustomText>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginBottom: 10,
+                    }}>
+                    <Pressable
+                      onPress={() => toggleAgreement('two')}
+                      style={{padding: 3}}>
+                      {agreements.two ? (
+                        <CheckGreenSvg
+                          width={17}
+                          height={17}
+                          style={{marginTop: 3}}
+                        />
+                      ) : (
+                        <CheckGraySvg
+                          width={17}
+                          height={17}
+                          style={{marginTop: 3}}
+                        />
+                      )}
+                    </Pressable>
+                    <View>
+                      <CustomText
+                        fontWeight="500"
+                        style={{marginLeft: 3, fontSize: 16, color: '#353535'}}>
+                        선수를 비하하는 등의 글, 댓글, 채팅 작성 시
+                      </CustomText>
+                      <CustomText
+                        fontWeight="500"
+                        style={{marginLeft: 3, fontSize: 16, color: '#353535'}}>
+                        커뮤니티 이용이 정지될 수 있습니다.
+                      </CustomText>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginBottom: 5,
+                    }}>
+                    <Pressable
+                      onPress={() => toggleAgreement('three')}
+                      style={{padding: 3}}>
+                      {agreements.three ? (
+                        <CheckGreenSvg
+                          width={17}
+                          height={17}
+                          style={{marginTop: 3}}
+                        />
+                      ) : (
+                        <CheckGraySvg
+                          width={17}
+                          height={17}
+                          style={{marginTop: 3}}
+                        />
+                      )}
+                    </Pressable>
+                    <View>
+                      <CustomText
+                        fontWeight="500"
+                        style={{marginLeft: 3, fontSize: 16, color: '#353535'}}>
+                        깨끗한 커뮤니티 유지를 위하여 커뮤니티 가입
+                      </CustomText>
+                      <CustomText
+                        fontWeight="500"
+                        style={{marginLeft: 3, fontSize: 16, color: '#353535'}}>
+                        24시간 이후에 글을 작성할 수 있습니다.
+                      </CustomText>
+                    </View>
+                  </View>
+                </View>
+                <CustomButton
+                  text="시작하기"
+                  type="normal"
+                  disabled={!Object.values(agreements).every(Boolean)}
+                />
+              </>
+            )}
           </View>
         </Animated.View>
       </Modal>
