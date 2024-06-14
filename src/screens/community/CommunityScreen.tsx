@@ -18,8 +18,12 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CheveronLeft from '../../../assets/images/chevron-left-white.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import StarOrangeSvg from '../../../assets/images/star-orange.svg';
-import {useQuery} from '@tanstack/react-query';
-import {getPlayersInfo} from '../../apis/player';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {
+  getCheckNickname,
+  getPlayersInfo,
+  postCheckNickname,
+} from '../../apis/player';
 import {formatComma} from '../../utils/format';
 import StarWhite from '../../../assets/images/star-white.svg';
 import Avatar from '../../components/Avatar';
@@ -30,6 +34,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import ArrowLeftGraySvg from '../../../assets/images/arrow-left-gray.svg';
 import CheckGraySvg from '../../../assets/images/check-gray.svg';
 import CheckGreenSvg from '../../../assets/images/check-green.svg';
+import Toast from 'react-native-toast-message';
+import {toastConfig} from '../../../App';
 
 const feedData = [
   {content: '피드입니다'},
@@ -176,6 +182,28 @@ const CommunityScreen = ({navigation, route}) => {
       ...prev,
       [agreement]: !prev[agreement],
     }));
+  };
+
+  const {data: nicknameResult} = useQuery({
+    queryKey: ['nickname', playerId, nickname],
+    queryFn: getCheckNickname,
+    enabled: !!nickname,
+  });
+
+  const checkNickname = () => {
+    if (nickname.length === 0) {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 30,
+        text1: '닉네임을 입력해주세요.',
+      });
+      return;
+    }
+    if (nicknameResult.message === '사용 가능한 닉네임 입니다.') {
+      setJoinState('term');
+    }
   };
 
   if (isLoading) {
@@ -565,7 +593,7 @@ const CommunityScreen = ({navigation, route}) => {
                   text="시작하기"
                   type="normal"
                   onPress={() => {
-                    setJoinState('term');
+                    checkNickname();
                   }}
                 />
               </>
@@ -703,6 +731,7 @@ const CommunityScreen = ({navigation, route}) => {
             )}
           </View>
         </Animated.View>
+        <Toast config={toastConfig} />
       </Modal>
     </SafeAreaView>
   );

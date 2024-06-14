@@ -191,6 +191,7 @@ const PhoneCodeScreen = ({
               }}
               placeholder="인증번호"
               maxLength={6}
+              curLength={code.length}
               keyboardType="number-pad"
             />
           </View>
