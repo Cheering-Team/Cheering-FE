@@ -4,8 +4,6 @@ import IntroScreen from '../screens/auth/IntroScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
 import CustomText from '../components/CustomText';
 import PhoneCodeScreen from '../screens/auth/PhoneCodeScreen';
-import SetPassword from '../screens/SetPassword';
-import SignUpComplete from '../screens/SignUpComplete';
 import {User} from '../apis/user';
 import SetNickNameScreen from '../screens/auth/SetNicknameScreen';
 
@@ -54,6 +52,28 @@ const AuthStack = () => {
       <Stack.Screen
         name="PhoneCode"
         component={PhoneCodeScreen}
+        options={{
+          headerTitle: () => (
+            <CustomText
+              fontWeight="700"
+              style={{
+                fontSize: 30,
+                letterSpacing: 1.1,
+              }}>
+              cheering
+            </CustomText>
+          ),
+          contentStyle: {
+            borderBottomWidth: 0,
+          },
+          headerTitleAlign: 'center',
+          headerBackVisible: false,
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="SetNickname"
+        component={SetNickNameScreen}
         options={{
           headerTitle: () => (
             <CustomText

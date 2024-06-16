@@ -4,8 +4,8 @@ import CustomTabBar from '../components/CustomHomeTab';
 import HomeStackNavigator from './HomeStackNavigator';
 import MyCommunityScreen from '../screens/mainTab/MyCommunityScreen';
 import MyChatScreen from '../screens/mainTab/MyChatScreen';
-import CategoryScreen from '../screens/mainTab/CategoryScreen';
 import MyPageScreen from '../screens/mainTab/MyPageScreen';
+import CategoryStackNavigator from './CategoryStackNavigator';
 
 const MainTabNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -18,8 +18,8 @@ const MainTabNavigator = () => {
         tabBarShowLabel: false,
       }}>
       <Tab.Screen
-        name="Category"
-        component={CategoryScreen}
+        name="CategoryStack"
+        component={CategoryStackNavigator}
         options={{
           headerShown: false,
         }}

@@ -3,7 +3,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {navigate} from '../navigations/RootNavigation';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://15.165.150.47/api',
+  baseURL: 'http://172.30.1.29:8080/api',
 });
 
 axiosInstance.interceptors.request.use(async config => {

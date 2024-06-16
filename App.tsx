@@ -12,6 +12,36 @@ import {StatusBar} from 'react-native';
 import {navigationRef} from './src/navigations/RootNavigation';
 import Toast, {BaseToast} from 'react-native-toast-message';
 import {QueryClientProvider, QueryClient} from '@tanstack/react-query';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+
+export const toastConfig = {
+  /*
+    Overwrite 'success' type,
+    by modifying the existing `BaseToast` component
+  */
+  default: props => (
+    <BaseToast
+      {...props}
+      style={{
+        borderLeftColor: '#4a4a4a',
+        backgroundColor: '#4a4a4a',
+      }}
+      contentContainerStyle={{paddingHorizontal: 15}}
+      text1Style={{
+        fontWeight: 'normal',
+        fontFamily: 'NotoSansKR-Medium',
+        fontSize: 15,
+        color: 'white',
+      }}
+      text2Style={{
+        fontWeight: 'normal',
+        fontFamily: 'NotoSansKR-Medium',
+        fontSize: 15,
+        color: 'white',
+      }}
+    />
+  ),
+};
 
 function App(): React.JSX.Element {
   const queryClient = new QueryClient();
@@ -24,39 +54,15 @@ function App(): React.JSX.Element {
     },
   };
 
-  const toastConfig = {
-    /*
-      Overwrite 'success' type,
-      by modifying the existing `BaseToast` component
-    */
-    default: props => (
-      <BaseToast
-        {...props}
-        style={{borderLeftColor: '#4a4a4a', backgroundColor: '#4a4a4a'}}
-        contentContainerStyle={{paddingHorizontal: 15}}
-        text1Style={{
-          fontWeight: 'normal',
-          fontFamily: 'NotoSansKR-Medium',
-          fontSize: 15,
-          color: 'white',
-        }}
-        text2Style={{
-          fontWeight: 'normal',
-          fontFamily: 'NotoSansKR-Medium',
-          fontSize: 15,
-          color: 'white',
-        }}
-      />
-    ),
-  };
-
   return (
     <QueryClientProvider client={queryClient}>
-      <NavigationContainer theme={navTheme} ref={navigationRef}>
-        <StatusBar barStyle="dark-content" />
-        <AuthSwitch />
-        <Toast config={toastConfig} />
-      </NavigationContainer>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <NavigationContainer theme={navTheme} ref={navigationRef}>
+          <StatusBar barStyle="dark-content" />
+          <AuthSwitch />
+          <Toast config={toastConfig} />
+        </NavigationContainer>
+      </GestureHandlerRootView>
     </QueryClientProvider>
   );
 }

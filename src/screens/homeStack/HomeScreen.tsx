@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   FlatList,
   Image,
@@ -10,19 +10,19 @@ import {
 
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-import PlusGreenSvg from '../../assets/images/plus-green.svg';
-import CustomText from '../components/CustomText';
-import CustomButton from '../components/CustomButton';
-import {axiosInstance} from '../apis';
+import PlusGreenSvg from '../../../assets/images/plus-green.svg';
+import CustomText from '../../components/CustomText';
+import CustomButton from '../../components/CustomButton';
+import {axiosInstance} from '../../apis';
 
-import {GetUsersCommunities, getMyCommunitiesPosts} from '../apis/community';
+import {GetUsersCommunities, getMyCommunitiesPosts} from '../../apis/community';
 import {useFocusEffect} from '@react-navigation/native';
-import {Player} from '../components/PlayerCard';
-import {HomeStackParamList} from '../navigations/HomeStackNavigator';
-import BellSvg from '../../assets/images/bell.svg';
-import PersonSvg from '../../assets/images/person.svg';
-import Post, {PostType} from '../components/Post';
-import {getPostsLike} from '../apis/post';
+import {Player} from '../../components/PlayerCard';
+import {HomeStackParamList} from '../../navigations/HomeStackNavigator';
+import BellSvg from '../../../assets/images/bell.svg';
+import PersonSvg from '../../../assets/images/person.svg';
+import Post, {PostType} from '../../components/Post';
+import {getPostsLike} from '../../apis/post';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,

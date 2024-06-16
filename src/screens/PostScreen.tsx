@@ -32,7 +32,7 @@ import {PostType, Writer} from '../components/Post';
 import Toast from 'react-native-toast-message';
 import Avatar from '../components/Avatar';
 import CloseSvg from '../../assets/images/x_white.svg';
-import formatDate from '../utils/formatDate';
+import formatDate from '../utils/format';
 import EditSvg from '../../assets/images/three_dots.svg';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../navigations/HomeStackNavigator';

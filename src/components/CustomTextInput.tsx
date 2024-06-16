@@ -8,14 +8,25 @@ interface CustomTextInputProps extends TextInputProps {
   valid?: boolean;
   invalidMessage?: string;
   type?: 'Sheet' | 'Basic';
+  curLength?: number;
+  maxLength?: number;
 }
 
 const CustomTextInput = forwardRef<any, CustomTextInputProps>((props, ref) => {
-  const {valid = true, label, invalidMessage, type = 'Basic', ...rest} = props;
+  const {
+    valid = true,
+    label,
+    invalidMessage,
+    type = 'Basic',
+    style,
+    curLength = 0,
+    maxLength = 0,
+    ...rest
+  } = props;
   const [focus, setFocus] = React.useState(false);
 
   return (
-    <View style={styles.emailInput}>
+    <View style={[styles.emailInput, style]}>
       {label && (
         <CustomText fontWeight="400" style={styles.emailInputLabel}>
           {label}
@@ -53,12 +64,22 @@ const CustomTextInput = forwardRef<any, CustomTextInputProps>((props, ref) => {
           {...rest}
         />
       )}
-
-      <CustomText
-        fontWeight="500"
-        style={!valid ? styles.invalidEmail : styles.validEmail}>
-        {invalidMessage}
-      </CustomText>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <CustomText
+          fontWeight="500"
+          style={!valid ? styles.invalidEmail : styles.validEmail}>
+          {invalidMessage}
+        </CustomText>
+        {maxLength !== 0 && (
+          <CustomText
+            fontWeight="400"
+            style={{
+              color: '#a3a3a3',
+              fontSize: 13,
+              marginTop: 4,
+            }}>{`${curLength} / ${maxLength}`}</CustomText>
+        )}
+      </View>
     </View>
   );
 });

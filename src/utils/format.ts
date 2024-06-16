@@ -1,4 +1,4 @@
-const formatDate = (inputDateString: string) => {
+export const formatDate = (inputDateString: string) => {
   const date = new Date(inputDateString);
 
   const formattedDate = `${(date.getMonth() + 1)
@@ -11,4 +11,10 @@ const formatDate = (inputDateString: string) => {
   return formattedDate;
 };
 
-export default formatDate;
+export const formatComma = inputNumber => {
+  if (typeof inputNumber === 'number') {
+    inputNumber = inputNumber.toString();
+  }
+
+  return inputNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
