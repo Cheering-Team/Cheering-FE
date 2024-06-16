@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import PlayerList from '../../components/PlayerList';
 import {Image, SafeAreaView, View} from 'react-native';
 import Back from '../../hooks/Back';

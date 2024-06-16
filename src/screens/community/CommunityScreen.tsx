@@ -309,10 +309,17 @@ const CommunityScreen = ({navigation, route}) => {
             {data.result.englishName}
           </Animated.Text>
         </View>
-        <View style={{width: 25, height: 25}}></View>
+        {data.result.user && (
+          <Avatar
+            uri={data.result.user.image}
+            size={26}
+            style={{borderWidth: 1.5, borderColor: 'white', marginRight: 5}}
+          />
+        )}
       </Animated.View>
       <Animated.ScrollView
-        scrollEnabled={data.result.isJoin}
+        scrollEnabled={!!data.result.user}
+        showsVerticalScrollIndicator={false}
         stickyHeaderIndices={[1]}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
@@ -468,7 +475,7 @@ const CommunityScreen = ({navigation, route}) => {
             )}
           />
         </View>
-        {data.result.isJoin ? (
+        {data.result.user ? (
           feedData.map((f, idx) => (
             <View key={idx} style={{padding: 20, backgroundColor: 'white'}}>
               <CustomText>{f.content}</CustomText>

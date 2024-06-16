@@ -5,6 +5,7 @@ import {formatComma} from '../utils/format';
 import StarOrangeSvg from '../../assets/images/star-orange.svg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {CategoryStackParamList} from '../navigations/CategoryStackNavigator';
+import Avatar from './Avatar';
 
 const PlayerList = props => {
   const {teamName, players} = props;
@@ -64,6 +65,19 @@ const PlayerList = props => {
               </CustomText>
             </View>
           </View>
+          {item.user && (
+            <Avatar
+              uri={item.user.image}
+              size={30}
+              style={{
+                position: 'absolute',
+                bottom: 15,
+                right: 8,
+                borderWidth: 1,
+                borderColor: '#d1d1d1',
+              }}
+            />
+          )}
         </Pressable>
       )}
     />
