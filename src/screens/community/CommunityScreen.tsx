@@ -22,7 +22,7 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   getCheckNickname,
   getPlayersInfo,
-  postCheckNickname,
+  postCommunityJoin,
 } from '../../apis/player';
 import {formatComma} from '../../utils/format';
 import StarWhite from '../../../assets/images/star-white.svg';
@@ -62,6 +62,8 @@ const CommunityScreen = ({navigation, route}) => {
   const scrollY = new Animated.Value(0);
   const insets = useSafeAreaInsets();
 
+  const [refreshKey, setRefreshKey] = useState(0);
+
   const headerBackgroundColor = scrollY.interpolate({
     inputRange: [0, 200],
     outputRange: ['rgba(0, 0, 0, 0)', '#000000'],
@@ -79,7 +81,7 @@ const CommunityScreen = ({navigation, route}) => {
   const playerId = route.params.playerId;
 
   const {data, isLoading} = useQuery({
-    queryKey: ['player', playerId],
+    queryKey: ['player', playerId, refreshKey],
     queryFn: getPlayersInfo,
   });
 
@@ -143,6 +145,7 @@ const CommunityScreen = ({navigation, route}) => {
       setModalVisible(false);
       setJoinState('profile');
       setAgreements({one: false, two: false, three: false});
+      setNickname('');
     });
   };
 
@@ -184,13 +187,20 @@ const CommunityScreen = ({navigation, route}) => {
     }));
   };
 
-  const {data: nicknameResult} = useQuery({
+  const {
+    data: nicknameCheckData,
+    refetch,
+    error,
+    isRefetching,
+    isError,
+  } = useQuery({
     queryKey: ['nickname', playerId, nickname],
     queryFn: getCheckNickname,
-    enabled: !!nickname,
+    enabled: false,
+    retry: 0,
   });
 
-  const checkNickname = () => {
+  const checkNickname = async () => {
     if (nickname.length === 0) {
       Toast.show({
         type: 'default',
@@ -201,8 +211,46 @@ const CommunityScreen = ({navigation, route}) => {
       });
       return;
     }
-    if (nicknameResult.message === '사용 가능한 닉네임 입니다.') {
-      setJoinState('term');
+    refetch();
+  };
+
+  useEffect(() => {
+    if (!isRefetching) {
+      if (isError && error?.message === '이미 존재하는 닉네임입니다.') {
+        Toast.show({
+          type: 'default',
+          position: 'bottom',
+          visibilityTime: 3000,
+          bottomOffset: 30,
+          text1: '이미 존재하는 닉네임입니다.',
+        });
+        return;
+      }
+      if (nicknameCheckData?.message === '사용 가능한 닉네임 입니다.') {
+        setJoinState('term');
+      }
+    }
+  }, [nicknameCheckData, isRefetching, error, isError]);
+
+  const mutation = useMutation({mutationFn: postCommunityJoin});
+
+  const joinCommunity = async () => {
+    const joinData = await mutation.mutateAsync({
+      playerId,
+      nickname,
+      image: imageData,
+    });
+
+    if (joinData.message === '가입이 완료되었습니다.') {
+      closeModal();
+      setRefreshKey(prev => prev + 1);
+      Toast.show({
+        type: 'default',
+        position: 'top',
+        visibilityTime: 3000,
+        bottomOffset: 30,
+        text1: '가입이 완료되었습니다.',
+      });
     }
   };
 
@@ -211,7 +259,7 @@ const CommunityScreen = ({navigation, route}) => {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView key={refreshKey}>
       <Animated.View
         style={[
           {
@@ -726,6 +774,9 @@ const CommunityScreen = ({navigation, route}) => {
                   text="시작하기"
                   type="normal"
                   disabled={!Object.values(agreements).every(Boolean)}
+                  onPress={() => {
+                    joinCommunity();
+                  }}
                 />
               </>
             )}
