@@ -312,8 +312,8 @@ const CommunityScreen = ({navigation, route}) => {
         {data.result.user && (
           <Avatar
             uri={data.result.user.image}
-            size={26}
-            style={{borderWidth: 1.5, borderColor: 'white', marginRight: 5}}
+            size={30}
+            style={{borderWidth: 1.5, borderColor: 'white', marginRight: 3}}
           />
         )}
       </Animated.View>

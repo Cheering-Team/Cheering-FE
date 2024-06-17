@@ -72,7 +72,7 @@ const PlayerList = props => {
               style={{
                 position: 'absolute',
                 bottom: 15,
-                right: 8,
+                right: 5,
                 borderWidth: 1,
                 borderColor: '#d1d1d1',
               }}
