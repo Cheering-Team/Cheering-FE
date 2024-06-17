@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Keyboard,
   ImageBackground,
+  ScrollView,
 } from 'react-native';
 import CustomText from '../../components/CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -34,6 +35,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import ArrowLeftGraySvg from '../../../assets/images/arrow-left-gray.svg';
 import CheckGraySvg from '../../../assets/images/check-gray.svg';
 import CheckGreenSvg from '../../../assets/images/check-green.svg';
+import ChevronDownSvg from '../../../assets/images/chevron-down-black.svg';
+import ChevronTopSvg from '../../../assets/images/chevron-top-black.svg';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '../../../App';
 
@@ -254,6 +257,33 @@ const CommunityScreen = ({navigation, route}) => {
     }
   };
 
+  const [isWrap, setIsWrap] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState({
+    all: true,
+    hot: false,
+    photo: false,
+    view: false,
+    info: false,
+  });
+
+  const selectAll = () => {
+    setSelectedFilter({
+      all: true,
+      hot: false,
+      photo: false,
+      view: false,
+      info: false,
+    });
+  };
+
+  const selectFilter = filter => {
+    setSelectedFilter(prev => ({
+      ...prev,
+      all: false,
+      [filter]: !prev[filter],
+    }));
+  };
+
   if (isLoading) {
     return <></>;
   }
@@ -384,7 +414,7 @@ const CommunityScreen = ({navigation, route}) => {
             }}
           />
         </View>
-        <View style={{position: 'relative', bottom: 50, marginBottom: -30}}>
+        <View style={{position: 'relative', bottom: 50, marginBottom: -40}}>
           <View
             style={{
               height: 50,
@@ -476,11 +506,118 @@ const CommunityScreen = ({navigation, route}) => {
           />
         </View>
         {data.result.user ? (
-          feedData.map((f, idx) => (
-            <View key={idx} style={{padding: 20, backgroundColor: 'white'}}>
-              <CustomText>{f.content}</CustomText>
+          <>
+            <View
+              style={[
+                {
+                  flexDirection: 'row',
+                  paddingHorizontal: 15,
+                  backgroundColor: 'white',
+                },
+                isWrap && {},
+              ]}>
+              <ScrollView
+                horizontal={!isWrap}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={[
+                  {paddingRight: 30},
+                  isWrap && {
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                  },
+                ]}>
+                {[
+                  {name: '전체', filter: 'all'},
+                  {name: '🔥 HOT', filter: 'hot'},
+                  {name: '📸 직찍사', filter: 'photo'},
+                  {name: '👀 직관인증', filter: 'view'},
+                  {name: '🔎 정보', filter: 'info'},
+                ].map(item => (
+                  <Pressable
+                    key={item.filter}
+                    onPress={() => {
+                      item.filter === 'all'
+                        ? selectAll()
+                        : selectFilter(item.filter);
+                    }}
+                    style={[
+                      {
+                        borderWidth: 1,
+                        borderColor: '#dcdcdc',
+                        paddingVertical: 6,
+                        paddingHorizontal: 15,
+                        borderRadius: 20,
+                        marginRight: 6,
+                      },
+                      isWrap && {marginBottom: 10},
+                      selectedFilter[item.filter] && {
+                        backgroundColor: '#3a3a3a',
+                        borderColor: '#3a3a3a',
+                      },
+                    ]}>
+                    <CustomText
+                      fontWeight="500"
+                      style={[
+                        {fontSize: 14},
+                        selectedFilter[item.filter] && {
+                          color: 'white',
+                        },
+                      ]}>
+                      {item.name}
+                    </CustomText>
+                  </Pressable>
+                ))}
+              </ScrollView>
+              <LinearGradient
+                colors={[
+                  'rgba(255,255,255,0.1)',
+                  'rgba(255,255,255,1)',
+                  'rgba(255,255,255,1)',
+                  'rgba(255,255,255,1)',
+                  'rgba(255,255,255,1)',
+                ]}
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 1}}
+                style={[
+                  {
+                    right: 10,
+                    width: 50,
+                    height: 40,
+                    top: -3,
+                    position: 'absolute',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                  },
+                  isWrap && {},
+                ]}>
+                <Pressable
+                  onPress={() => {
+                    setIsWrap(prev => !prev);
+                  }}
+                  style={{
+                    backgroundColor: 'white',
+                    borderWidth: 1,
+                    borderColor: '#e1e1e1',
+                    borderRadius: 20,
+                    padding: 5,
+                  }}>
+                  {isWrap ? (
+                    <ChevronTopSvg width={20} height={20} />
+                  ) : (
+                    <ChevronDownSvg width={20} height={20} />
+                  )}
+                </Pressable>
+              </LinearGradient>
             </View>
-          ))
+
+            {feedData.map((f, idx) => (
+              <View key={idx} style={{padding: 20, backgroundColor: 'white'}}>
+                <CustomText>{f.content}</CustomText>
+              </View>
+            ))}
+          </>
         ) : (
           <View
             style={{
