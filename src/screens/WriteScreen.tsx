@@ -13,7 +13,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import CloseButtonSvg from '../../assets/images/x.svg';
+import CloseButtonSvg from '../../assets/images/close-black.svg';
 import CustomText from '../components/CustomText';
 
 import ImageSvg from '../../assets/images/image.svg';
