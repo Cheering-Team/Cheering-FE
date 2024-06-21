@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Animated,
   ImageBackground,
@@ -80,16 +80,8 @@ function CustomTabBar({state, descriptors, navigation}) {
       )}
 
       <View
-        // style={[
-        //   routeName === 'Search' ||
-        //   routeName === 'Write' ||
-        //   routeName === 'Post'
-        //     ? {display: 'none'}
-        //     : styles.TabContainer,
-        //   {paddingBottom: useSafeAreaInsets().bottom},
-        // ]}
         style={[
-          styles.TabContainer,
+          routeName === 'PostWrite' ? {display: 'none'} : styles.TabContainer,
           {paddingBottom: useSafeAreaInsets().bottom},
         ]}>
         {state.routes.map((route, index) => {

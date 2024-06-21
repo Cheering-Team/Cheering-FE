@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import CloseButtonSvg from '../../assets/images/x.svg';
+import CloseButtonSvg from '../../assets/images/close-black.svg';
 
 import React from 'react';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';

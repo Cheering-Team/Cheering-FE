@@ -2,12 +2,14 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import CategoryScreen from '../screens/categoryStack/CategoryScreen';
 import React from 'react';
 import PlayerListScreen from '../screens/categoryStack/PlayerListScreen';
-import CommunityScreen from '../screens/community/CommunityScreen';
+import CommunityScreen from '../screens/categoryStack/CommunityScreen';
+import PostWriteScreen from '../screens/categoryStack/PostWriteScreen';
 
 export type CategoryStackParamList = {
   Category: {teamId: number};
   PlayerList: undefined;
   Community: {playerId: number};
+  PostWrite: {playerId: number};
 };
 
 const CategoryStackNavigator = () => {
@@ -23,6 +25,11 @@ const CategoryStackNavigator = () => {
       <CategoryStack.Screen
         name="Community"
         component={CommunityScreen}
+        options={{headerShown: false}}
+      />
+      <CategoryStack.Screen
+        name="PostWrite"
+        component={PostWriteScreen}
         options={{headerShown: false}}
       />
     </CategoryStack.Navigator>
