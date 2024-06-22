@@ -105,7 +105,7 @@ const PostWriteScreen = ({navigation, route}) => {
       images,
     });
 
-    if (writeData.message === '포스트가 작성되었습니다.') {
+    if (writeData.message === '게시글이 작성되었습니다.') {
       navigation.replace('Post', {postId: writeData.result.id});
     }
   };
