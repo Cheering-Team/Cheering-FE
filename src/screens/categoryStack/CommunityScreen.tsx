@@ -13,44 +13,34 @@ import FeedFilter from '../../components/category/community/FeedFilter';
 import FeedPost from '../../components/category/community/FeedPost';
 import NotJoin from '../../components/category/community/NotJoin';
 import JoinModal from '../../components/category/community/JoinModal';
-
-const feedData = [
-  {
-    content: '피드입니다',
-    createdAt: '06.13 09:04',
-    writer: {id: 1, name: '전준우짱', image: ''},
-  },
-  {
-    content: '피드입니다',
-    createdAt: '06.13 09:04',
-    writer: {id: 1, name: '전준우짱', image: ''},
-  },
-  {
-    content: '피드입니다',
-    createdAt: '06.13 09:04',
-    writer: {id: 1, name: '전준우짱', image: ''},
-  },
-  {
-    content: '피드입니다',
-    createdAt: '06.13 09:04',
-    writer: {id: 1, name: '전준우짱', image: ''},
-  },
-];
+import {getPosts} from '../../apis/post';
+import {useIsFocused} from '@react-navigation/native';
 
 const CommunityScreen = ({navigation, route}) => {
+  const isFocused = useIsFocused();
   const scrollY = new Animated.Value(0);
   const insets = useSafeAreaInsets();
 
   const [refreshKey, setRefreshKey] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState('all');
 
   const playerId = route.params.playerId;
 
   const translateY = useRef(new Animated.Value(500)).current;
 
-  const {data, isLoading} = useQuery({
+  const {data: playerData, isLoading: playerIsLoading} = useQuery({
     queryKey: ['player', playerId, refreshKey],
     queryFn: getPlayersInfo,
+  });
+
+  const {
+    data: feedData,
+    isLoading: feedIsLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['posts', playerId, selectedFilter],
+    queryFn: getPosts,
   });
 
   const keyboardDidShow = useCallback(
@@ -91,6 +81,12 @@ const CommunityScreen = ({navigation, route}) => {
     };
   }, [keyboardDidShow, keyboardDidHide, translateY]);
 
+  useEffect(() => {
+    if (isFocused) {
+      refetch();
+    }
+  }, [isFocused, refetch]);
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scrollTimeout = useRef(null);
   const scrollViewRef = useRef(null);
@@ -119,17 +115,17 @@ const CommunityScreen = ({navigation, route}) => {
 
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-  if (isLoading) {
+  if (playerIsLoading) {
     return <></>;
   }
 
   return (
     <>
       <SafeAreaView key={refreshKey}>
-        <CommunityHeader scrollY={scrollY} playerData={data} />
+        <CommunityHeader scrollY={scrollY} playerData={playerData} />
         <Animated.ScrollView
           ref={scrollViewRef}
-          scrollEnabled={!!data.result.user}
+          scrollEnabled={!!playerData.result.user}
           showsVerticalScrollIndicator={false}
           stickyHeaderIndices={[1]}
           onScroll={Animated.event(
@@ -140,27 +136,36 @@ const CommunityScreen = ({navigation, route}) => {
           )}
           onScrollBeginDrag={handleScrollBeginDrag}
           onScrollEndDrag={handleScrollEndDrag}
-          scrollEventThrottle={16}>
-          <CommunityProfile playerData={data} />
+          scrollEventThrottle={16}
+          contentContainerStyle={{paddingBottom: 50}}>
+          <CommunityProfile playerData={playerData} />
           <View style={{position: 'relative', bottom: 50, marginBottom: -40}}>
-            <TeamList playerData={data} />
+            <TeamList playerData={playerData} />
             <CommunityTopTab />
           </View>
-          {data.result.user ? (
+          {playerData.result.user ? (
             <>
-              <FeedFilter />
-              {feedData.map((feed, idx) => (
-                <Pressable
-                  onPress={() => {
-                    navigation.navigate('Post', {postId: 1});
-                  }}>
-                  <FeedPost feed={feed} idx={idx} key={idx} />
-                </Pressable>
-              ))}
+              <FeedFilter
+                selectedFilter={selectedFilter}
+                setSelectedFilter={setSelectedFilter}
+              />
+              {feedIsLoading ? (
+                <></>
+              ) : (
+                feedData.result.posts.map(feed => (
+                  <Pressable
+                    key={feed.id}
+                    onPress={() => {
+                      navigation.navigate('Post', {postId: feed.id});
+                    }}>
+                    <FeedPost feed={feed} />
+                  </Pressable>
+                ))
+              )}
             </>
           ) : (
             <NotJoin
-              playerData={data}
+              playerData={playerData}
               setIsModalOpen={setIsModalOpen}
               translateY={translateY}
             />
@@ -168,14 +173,14 @@ const CommunityScreen = ({navigation, route}) => {
         </Animated.ScrollView>
         <JoinModal
           playerId={playerId}
-          playerData={data}
+          playerData={playerData}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           translateY={translateY}
           setRefreshKey={setRefreshKey}
         />
       </SafeAreaView>
-      {data.result.user && (
+      {playerData.result.user && (
         <View
           style={{
             alignItems: 'center',

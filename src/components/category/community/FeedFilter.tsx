@@ -6,55 +6,27 @@ import {useState} from 'react';
 import ChevronTopSvg from '../../../../assets/images/chevron-top-black.svg';
 import ChevronDownSvg from '../../../../assets/images/chevron-down-black.svg';
 
-interface FilterType {
-  all: boolean;
-  hot: boolean;
-  photo: boolean;
-  view: boolean;
-  info: boolean;
-}
-
 interface FilterDataType {
   name: string;
-  filter: 'all' | 'hot' | 'photo' | 'view' | 'info';
+  filter: 'all' | 'hot' | 'photo' | 'viewing' | 'information';
 }
 
 const FeedFilterData: FilterDataType[] = [
   {name: '전체', filter: 'all'},
   {name: '🔥 HOT', filter: 'hot'},
   {name: '📸 직찍사', filter: 'photo'},
-  {name: '👀 직관인증', filter: 'view'},
-  {name: '🔎 정보', filter: 'info'},
+  {name: '👀 직관인증', filter: 'viewing'},
+  {name: '🔎 정보', filter: 'information'},
 ];
 
-const FeedFilter = () => {
+interface FeedFilterProps {
+  selectedFilter: string;
+  setSelectedFilter: any;
+}
+
+const FeedFilter = (props: FeedFilterProps) => {
+  const {selectedFilter, setSelectedFilter} = props;
   const [isOpen, setIsOpen] = useState(false);
-
-  const [selectedFilter, setSelectedFilter] = useState<FilterType>({
-    all: true,
-    hot: false,
-    photo: false,
-    view: false,
-    info: false,
-  });
-
-  const selectAll = () => {
-    setSelectedFilter({
-      all: true,
-      hot: false,
-      photo: false,
-      view: false,
-      info: false,
-    });
-  };
-
-  const selectFilter = (filter: 'hot' | 'photo' | 'view' | 'info') => {
-    setSelectedFilter(prev => ({
-      ...prev,
-      all: false,
-      [filter]: !prev[filter],
-    }));
-  };
 
   return (
     <View style={styles.container}>
@@ -70,18 +42,20 @@ const FeedFilter = () => {
           <Pressable
             key={item.filter}
             onPress={() => {
-              item.filter === 'all' ? selectAll() : selectFilter(item.filter);
+              if (item.filter !== selectedFilter) {
+                setSelectedFilter(item.filter);
+              }
             }}
             style={[
               styles.filterItem,
               isOpen && styles.openedFilterItem,
-              selectedFilter[item.filter] && styles.selectedFilterItem,
+              item.filter === selectedFilter && styles.selectedFilterItem,
             ]}>
             <CustomText
               fontWeight="500"
               style={[
                 styles.filterName,
-                selectedFilter[item.filter] && styles.selectedFilterNmae,
+                item.filter === selectedFilter && styles.selectedFilterNmae,
               ]}>
               {item.name}
             </CustomText>

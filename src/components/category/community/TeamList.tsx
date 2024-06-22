@@ -20,7 +20,7 @@ const TeamList = (props: TeamListProps) => {
         data={playerData.result.teams}
         showsHorizontalScrollIndicator={false}
         renderItem={({item}) => (
-          <Pressable style={styles.teamContainer}>
+          <Pressable style={styles.teamContainer} key={item.teamName}>
             <Image
               source={{
                 uri: item.image,

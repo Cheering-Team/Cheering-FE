@@ -35,6 +35,20 @@ export const postPlayersPosts = async (data: postPlayersPostsRequest) => {
   return response.data;
 };
 
+export const getPosts = async ({queryKey}) => {
+  let [_key, playerId, selectedFilter] = queryKey;
+
+  if (selectedFilter === 'all') {
+    selectedFilter = '';
+  }
+
+  const response = await axiosInstance.get(
+    `/players/${playerId}/posts?tag=${selectedFilter}`,
+  );
+
+  return response.data;
+};
+
 export const getPostById = async ({queryKey}) => {
   const [_key, postId] = queryKey;
 

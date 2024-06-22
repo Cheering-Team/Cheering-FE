@@ -94,10 +94,7 @@ const PostWriteScreen = ({navigation, route}) => {
 
   const handleWritePost = async () => {
     const tags = Object.keys(selectedTag).filter(key => selectedTag[key]);
-    const images = imageData.map(({width, height, ...rest}) => {
-      console.log(JSON.stringify(rest));
-      return rest;
-    });
+    const images = imageData.map(({width, height, ...rest}) => rest);
     const writeData = await mutation.mutateAsync({
       playerId,
       content,

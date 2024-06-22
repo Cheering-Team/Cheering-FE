@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -38,6 +38,7 @@ const PostScreen = ({navigation, route}) => {
     queryKey: ['post', postId],
     queryFn: getPostById,
   });
+
   const mutation = useMutation({
     mutationFn: postPostsLikes,
     onSuccess: () => {
@@ -46,9 +47,7 @@ const PostScreen = ({navigation, route}) => {
   });
 
   const toggleLike = async () => {
-    const response = await mutation.mutateAsync({postId});
-
-    console.log(JSON.stringify(response));
+    await mutation.mutateAsync({postId});
   };
 
   if (isLoading) {
@@ -114,7 +113,7 @@ const PostScreen = ({navigation, route}) => {
                   borderRadius: 20,
                   marginRight: 6,
                 }}>
-                <CustomText>
+                <CustomText fontWeight="500">
                   {tag === 'photo'
                     ? '📸 직찍사'
                     : tag === 'viewing'
