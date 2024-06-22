@@ -152,7 +152,7 @@ const CommunityScreen = ({navigation, route}) => {
               {feedData.map((feed, idx) => (
                 <Pressable
                   onPress={() => {
-                    navigation.navigate('Post', {postId: idx});
+                    navigation.navigate('Post', {postId: 1});
                   }}>
                   <FeedPost feed={feed} idx={idx} key={idx} />
                 </Pressable>

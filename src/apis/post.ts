@@ -8,6 +8,10 @@ interface postPlayersPostsRequest {
   images: Image[];
 }
 
+interface postPostsLikesRequest {
+  postId: number;
+}
+
 export const postPlayersPosts = async (data: postPlayersPostsRequest) => {
   const {playerId, content, tags, images} = data;
 
@@ -35,6 +39,14 @@ export const getPostById = async ({queryKey}) => {
   const [_key, postId] = queryKey;
 
   const response = await axiosInstance.get(`/posts/${postId}`);
+
+  return response.data;
+};
+
+export const postPostsLikes = async (data: postPostsLikesRequest) => {
+  const {postId} = data;
+
+  const response = await axiosInstance.post(`/posts/${postId}/likes`);
 
   return response.data;
 };
