@@ -1,8 +1,8 @@
 import {axiosInstance} from '.';
 
-interface Image {
+export interface Image {
   uri: string;
-  name: string;
+  name: string | undefined;
   type: string;
 }
 

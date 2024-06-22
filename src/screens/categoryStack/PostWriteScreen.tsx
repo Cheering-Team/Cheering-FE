@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -12,25 +13,28 @@ import {
 import CustomText from '../../components/CustomText';
 import CloseSvg from '../../../assets/images/close-black.svg';
 import CameraSvg from '../../../assets/images/image.svg';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {TextInput} from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-crop-picker';
+import {postPlayersPosts} from '../../apis/post';
+import {useMutation} from '@tanstack/react-query';
+import Toast from 'react-native-toast-message';
+import {convertImage} from 'react-native-simple-heic2jpg';
 
 interface FilterType {
   photo: boolean;
-  view: boolean;
-  info: boolean;
+  viewing: boolean;
+  information: boolean;
 }
 
 interface FilterDataType {
   name: string;
-  filter: 'photo' | 'view' | 'info';
+  filter: 'photo' | 'viewing' | 'information';
 }
 
 const TagData: FilterDataType[] = [
   {name: '📸 직찍사', filter: 'photo'},
-  {name: '👀 직관인증', filter: 'view'},
-  {name: '🔎 정보', filter: 'info'},
+  {name: '👀 직관인증', filter: 'viewing'},
+  {name: '🔎 정보', filter: 'information'},
 ];
 
 interface SizeImage {
@@ -42,18 +46,23 @@ interface SizeImage {
 }
 
 const PostWriteScreen = ({navigation, route}) => {
+  const playerId = route.params.playerId;
+
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState<FilterType>({
     photo: false,
-    view: false,
-    info: false,
+    viewing: false,
+    information: false,
   });
-  const [imageData, setImageData] = React.useState<SizeImage[]>([]);
 
-  const selectTag = (tag: 'photo' | 'view' | 'info') => {
+  const [content, setContent] = useState<string>('');
+  const [imageData, setImageData] = useState<SizeImage[]>([]);
+
+  const mutation = useMutation({mutationFn: postPlayersPosts});
+
+  const selectTag = (tag: 'photo' | 'viewing' | 'information') => {
     setSelectedTag(prev => ({
       ...prev,
-      all: false,
       [tag]: !prev[tag],
     }));
   };
@@ -63,6 +72,7 @@ const PostWriteScreen = ({navigation, route}) => {
       const images = await ImagePicker.openPicker({
         multiple: true,
         mediaType: 'photo',
+        forceJpg: true,
       });
 
       const imageObj = images.map(image => ({
@@ -79,6 +89,24 @@ const PostWriteScreen = ({navigation, route}) => {
       if (error.code === 'E_PICKER_CANCELLED') {
         return;
       }
+    }
+  };
+
+  const handleWritePost = async () => {
+    const tags = Object.keys(selectedTag).filter(key => selectedTag[key]);
+    const images = imageData.map(({width, height, ...rest}) => {
+      console.log(JSON.stringify(rest));
+      return rest;
+    });
+    const writeData = await mutation.mutateAsync({
+      playerId,
+      content,
+      tags,
+      images,
+    });
+
+    if (writeData.message === '포스트가 작성되었습니다.') {
+      navigation.replace('Post', {postId: writeData.result.id});
     }
   };
 
@@ -106,6 +134,41 @@ const PostWriteScreen = ({navigation, route}) => {
             }}
           />
         )}
+        {mutation.isPending && (
+          <View
+            style={[
+              {
+                zIndex: 1,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(240, 240, 240, 0.5)',
+              },
+              {
+                width: Dimensions.get('window').width,
+                height: Dimensions.get('window').height,
+              },
+            ]}>
+            <View
+              style={{
+                width: 200,
+                height: 100,
+                backgroundColor: 'rgba(0, 0, 0, 0.763)',
+                borderRadius: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <CustomText
+                fontWeight="500"
+                style={{color: 'white', fontSize: 16, marginBottom: 15}}>
+                글을 등록하고 있어요
+              </CustomText>
+              <ActivityIndicator color={'white'} />
+            </View>
+          </View>
+        )}
         {/* 헤더 */}
         <View
           style={{
@@ -124,7 +187,10 @@ const PostWriteScreen = ({navigation, route}) => {
             }}>
             <CloseSvg width={30} height={30} />
           </Pressable>
-          <Pressable>
+          <Pressable
+            onPress={() => {
+              handleWritePost();
+            }}>
             <CustomText
               fontWeight="500"
               style={{fontSize: 19, color: '#58a04b'}}>
@@ -198,6 +264,8 @@ const PostWriteScreen = ({navigation, route}) => {
             placeholder="글을 작성해보세요"
             multiline
             placeholderTextColor={'#b4b4b4'}
+            value={content}
+            onChangeText={setContent}
             style={{
               fontSize: 18,
             }}

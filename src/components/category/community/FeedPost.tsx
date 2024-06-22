@@ -4,6 +4,7 @@ import Avatar from '../../Avatar';
 import CustomText from '../../CustomText';
 import HeartSvg from '../../../../assets/images/heart.svg';
 import CommentSvg from '../../../../assets/images/comment.svg';
+import PostWriter from '../post/PostWriter';
 
 interface FeedPostProps {
   feed: any;
@@ -15,15 +16,7 @@ const FeedPost = (props: FeedPostProps) => {
 
   return (
     <View key={idx} style={styles.container}>
-      <View style={styles.writerContainer}>
-        <Avatar uri={feed.writer.image} size={36} />
-        <View style={styles.writerNameContainer}>
-          <CustomText fontWeight="600" style={styles.writerName}>
-            {feed.writer.name}
-          </CustomText>
-          <CustomText style={styles.createAt}>{feed.createdAt}</CustomText>
-        </View>
-      </View>
+      <PostWriter writer={feed.writer} createdAt={feed.createdAt} />
       <CustomText style={styles.content}>{feed.content}</CustomText>
       <View style={styles.interactContainer}>
         <HeartSvg width={21} height={21} />

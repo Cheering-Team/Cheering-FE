@@ -18,22 +18,22 @@ const feedData = [
   {
     content: '피드입니다',
     createdAt: '06.13 09:04',
-    writer: {name: '전준우짱', image: ''},
+    writer: {id: 1, name: '전준우짱', image: ''},
   },
   {
     content: '피드입니다',
     createdAt: '06.13 09:04',
-    writer: {name: '전준우짱', image: ''},
+    writer: {id: 1, name: '전준우짱', image: ''},
   },
   {
     content: '피드입니다',
     createdAt: '06.13 09:04',
-    writer: {name: '전준우짱', image: ''},
+    writer: {id: 1, name: '전준우짱', image: ''},
   },
   {
     content: '피드입니다',
     createdAt: '06.13 09:04',
-    writer: {name: '전준우짱', image: ''},
+    writer: {id: 1, name: '전준우짱', image: ''},
   },
 ];
 
@@ -150,7 +150,12 @@ const CommunityScreen = ({navigation, route}) => {
             <>
               <FeedFilter />
               {feedData.map((feed, idx) => (
-                <FeedPost feed={feed} idx={idx} key={idx} />
+                <Pressable
+                  onPress={() => {
+                    navigation.navigate('Post', {postId: idx});
+                  }}>
+                  <FeedPost feed={feed} idx={idx} key={idx} />
+                </Pressable>
               ))}
             </>
           ) : (
