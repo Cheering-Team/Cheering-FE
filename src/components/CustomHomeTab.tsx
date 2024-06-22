@@ -81,7 +81,9 @@ function CustomTabBar({state, descriptors, navigation}) {
 
       <View
         style={[
-          routeName === 'PostWrite' ? {display: 'none'} : styles.TabContainer,
+          routeName === 'PostWrite' || routeName === 'Post'
+            ? {display: 'none'}
+            : styles.TabContainer,
           {paddingBottom: useSafeAreaInsets().bottom},
         ]}>
         {state.routes.map((route, index) => {

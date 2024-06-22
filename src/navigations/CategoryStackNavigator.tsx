@@ -4,12 +4,14 @@ import React from 'react';
 import PlayerListScreen from '../screens/categoryStack/PlayerListScreen';
 import CommunityScreen from '../screens/categoryStack/CommunityScreen';
 import PostWriteScreen from '../screens/categoryStack/PostWriteScreen';
+import PostScreen from '../screens/categoryStack/PostScreen';
 
 export type CategoryStackParamList = {
   Category: {teamId: number};
   PlayerList: undefined;
   Community: {playerId: number};
   PostWrite: {playerId: number};
+  Post: {postId: number};
 };
 
 const CategoryStackNavigator = () => {
@@ -30,6 +32,11 @@ const CategoryStackNavigator = () => {
       <CategoryStack.Screen
         name="PostWrite"
         component={PostWriteScreen}
+        options={{headerShown: false}}
+      />
+      <CategoryStack.Screen
+        name="Post"
+        component={PostScreen}
         options={{headerShown: false}}
       />
     </CategoryStack.Navigator>
