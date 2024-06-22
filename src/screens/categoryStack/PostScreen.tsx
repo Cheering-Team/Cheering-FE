@@ -14,9 +14,10 @@ import CustomText from '../../components/CustomText';
 import ChevronLeftSvg from '../../../assets/images/chevron-left.svg';
 import ThreeDotSvg from '../../../assets/images/three-dots-black.svg';
 import HeartSvg from '../../../assets/images/heart.svg';
+import HeartFillSvg from '../../../assets/images/heart_fill.svg';
 import ArrowUpSvg from '../../../assets/images/arrow_up.svg';
-import {useQuery} from '@tanstack/react-query';
-import {getPostById} from '../../apis/post';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {getPostById, postPostsLikes} from '../../apis/post';
 import PostWriter from '../../components/category/post/PostWriter';
 import ImageView from 'react-native-image-viewing';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -31,10 +32,24 @@ const PostScreen = ({navigation, route}) => {
   const [imageIndex, setImageIndex] = useState(0);
   const [commentContent, setCommentContent] = useState<string>('');
 
+  const queryClient = useQueryClient();
+
   const {data, isLoading} = useQuery({
     queryKey: ['post', postId],
     queryFn: getPostById,
   });
+  const mutation = useMutation({
+    mutationFn: postPostsLikes,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['post', postId]});
+    },
+  });
+
+  const toggleLike = async () => {
+    const response = await mutation.mutateAsync({postId});
+
+    console.log(JSON.stringify(response));
+  };
 
   if (isLoading) {
     return <></>;
@@ -157,20 +172,19 @@ const PostScreen = ({navigation, route}) => {
             padding: 6,
           }}>
           <Pressable
-            // onPress={postLike}
+            onPress={toggleLike}
             style={{
               alignItems: 'center',
               marginLeft: 7,
               marginRight: 15,
             }}>
-            {/* {postData.likeStatus === 'TRUE' ? (
-              <HeartFillSvg width={23} height={23} />
+            {data.result.post.isLike ? (
+              <HeartFillSvg width={21} height={21} />
             ) : (
-              <HeartSvg width={23} height={23} />
-            )} */}
-            <HeartSvg width={21} height={21} />
+              <HeartSvg width={21} height={21} />
+            )}
             <CustomText style={{fontSize: 11, marginTop: 1, color: '#3a3a3a'}}>
-              1,024
+              {data.result.post.likeCount}
             </CustomText>
           </Pressable>
           <View
