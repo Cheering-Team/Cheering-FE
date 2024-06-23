@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -21,6 +21,7 @@ import {getPostById, postPostsLikes} from '../../apis/post';
 import PostWriter from '../../components/category/post/PostWriter';
 import ImageView from 'react-native-image-viewing';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import FastImage from 'react-native-fast-image';
 
 const PostScreen = ({navigation, route}) => {
   const {postId} = route.params;
@@ -30,6 +31,7 @@ const PostScreen = ({navigation, route}) => {
 
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+
   const [commentContent, setCommentContent] = useState<string>('');
 
   const queryClient = useQueryClient();
@@ -39,12 +41,36 @@ const PostScreen = ({navigation, route}) => {
     queryFn: getPostById,
   });
 
+  const [loading, setLoading] = useState([]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setLoading(data.result.post.images.map(() => true));
+    }
+  }, [isLoading, setLoading, data]);
+
   const mutation = useMutation({
     mutationFn: postPostsLikes,
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['post', postId]});
     },
   });
+
+  const handleLoadStart = index => {
+    setLoading(prevLoading => {
+      const newLoading = [...prevLoading];
+      newLoading[index] = true;
+      return newLoading;
+    });
+  };
+
+  const handleLoadEnd = index => {
+    setLoading(prevLoading => {
+      const newLoading = [...prevLoading];
+      newLoading[index] = false;
+      return newLoading;
+    });
+  };
 
   const toggleLike = async () => {
     await mutation.mutateAsync({postId});
@@ -146,8 +172,10 @@ const PostScreen = ({navigation, route}) => {
                     setImageIndex(index);
                     setIsImageOpen(true);
                   }}>
-                  <Image
+                  <FastImage
                     source={{uri: image.url}}
+                    onLoadStart={() => handleLoadStart(index)}
+                    onLoadEnd={() => handleLoadEnd(index)}
                     style={{
                       width: '100%',
                       height:
@@ -156,8 +184,20 @@ const PostScreen = ({navigation, route}) => {
                       borderRadius: 10,
                       marginVertical: 5,
                     }}
-                    resizeMode="cover"
-                  />
+                    resizeMode={FastImage.resizeMode.cover}>
+                    {loading[index] && (
+                      <View
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          position: 'absolute',
+                          zIndex: 1,
+                          borderRadius: 10,
+                          backgroundColor: '#eaedf2',
+                        }}
+                      />
+                    )}
+                  </FastImage>
                 </Pressable>
               ))}
           </View>

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, ImageBackground, StyleSheet, View} from 'react-native';
 import CustomText from '../../CustomText';
 import HeartSvg from '../../../../assets/images/heart.svg';
 import HeartFillSvg from '../../../../assets/images/heart_fill.svg';
 import CommentSvg from '../../../../assets/images/comment.svg';
 import PostWriter from '../post/PostWriter';
+import FastImage from 'react-native-fast-image';
 
 interface FeedPostProps {
   feed: any;
@@ -12,6 +13,24 @@ interface FeedPostProps {
 
 const FeedPost = (props: FeedPostProps) => {
   const {feed} = props;
+
+  const [loading, setLoading] = useState([true, true]);
+
+  const handleLoadStart = index => {
+    setLoading(prevLoading => {
+      const newLoading = [...prevLoading];
+      newLoading[index] = true;
+      return newLoading;
+    });
+  };
+
+  const handleLoadEnd = index => {
+    setLoading(prevLoading => {
+      const newLoading = [...prevLoading];
+      newLoading[index] = false;
+      return newLoading;
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -39,17 +58,31 @@ const FeedPost = (props: FeedPostProps) => {
       <CustomText style={styles.content}>{feed.content}</CustomText>
       {feed.images.length !== 0 &&
         (feed.images.length === 1 ? (
-          <Image
+          <FastImage
             source={{uri: feed.images[0].url}}
-            resizeMode="cover"
+            resizeMode={FastImage.resizeMode.cover}
+            onLoadStart={() => handleLoadStart(0)}
+            onLoadEnd={() => handleLoadEnd(0)}
             style={{
               width: '100%',
               height: 'auto',
               aspectRatio: 1,
               borderRadius: 10,
               marginTop: 12,
-            }}
-          />
+            }}>
+            {loading[0] && (
+              <View
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  position: 'absolute',
+                  zIndex: 1,
+                  borderRadius: 10,
+                  backgroundColor: '#eaedf2',
+                }}
+              />
+            )}
+          </FastImage>
         ) : (
           <View
             style={{
@@ -58,35 +91,63 @@ const FeedPost = (props: FeedPostProps) => {
               justifyContent: 'space-between',
               marginTop: 12,
             }}>
-            <Image
+            <FastImage
               source={{uri: feed.images[0].url}}
-              resizeMode="cover"
+              onLoadStart={() => handleLoadStart(0)}
+              onLoadEnd={() => handleLoadEnd(0)}
+              resizeMode={FastImage.resizeMode.cover}
               style={{
                 flex: 1,
-                // width: (screenWidth - 40) / 2,
                 height: 'auto',
                 aspectRatio: 1,
                 borderRadius: 10,
-              }}
-            />
+              }}>
+              {loading[0] && (
+                <View
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    zIndex: 1,
+                    borderRadius: 10,
+                    backgroundColor: '#eaedf2',
+                  }}
+                />
+              )}
+            </FastImage>
             <View style={{width: 2}} />
             <View
               style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-              <ImageBackground
+              <FastImage
                 source={{uri: feed.images[1].url}}
+                onLoadStart={() => handleLoadStart(1)}
+                onLoadEnd={() => handleLoadEnd(1)}
                 style={{
                   width: '100%',
                   height: 'auto',
                   aspectRatio: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
-                }}
-                imageStyle={{borderRadius: 10}}>
+                  borderRadius: 10,
+                }}>
+                {loading[1] && (
+                  <View
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      position: 'absolute',
+                      zIndex: 1,
+                      borderRadius: 10,
+                      backgroundColor: '#eaedf2',
+                    }}
+                  />
+                )}
                 <View
                   style={{
                     position: 'absolute',
                     width: '100%',
                     height: '100%',
+                    zIndex: 2,
                     backgroundColor: 'rgba(0, 0, 0, 0.667)',
                     borderRadius: 10,
                   }}
@@ -96,7 +157,7 @@ const FeedPost = (props: FeedPostProps) => {
                   fontWeight="500">
                   +{feed.images.length - 1}
                 </CustomText>
-              </ImageBackground>
+              </FastImage>
             </View>
           </View>
         ))}

@@ -4,6 +4,7 @@ import CustomText from '../../CustomText';
 import {formatComma} from '../../../utils/format';
 import LinearGradient from 'react-native-linear-gradient';
 import StarOrangeSvg from '../../../../assets/images/star-orange.svg';
+import FastImage from 'react-native-fast-image';
 
 interface CommunityProfileProps {
   playerData: any;
@@ -34,9 +35,10 @@ const CommunityProfile = (props: CommunityProfileProps) => {
         </View>
       </View>
 
-      <Image
+      <FastImage
         source={{
           uri: playerData.result.backgroundImage,
+          priority: FastImage.priority.high,
         }}
         style={styles.backgroundImage}
       />

@@ -17,8 +17,7 @@ import {TextInput} from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-crop-picker';
 import {postPlayersPosts} from '../../apis/post';
 import {useMutation} from '@tanstack/react-query';
-import Toast from 'react-native-toast-message';
-import {convertImage} from 'react-native-simple-heic2jpg';
+import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 interface FilterType {
   photo: boolean;
@@ -94,7 +93,29 @@ const PostWriteScreen = ({navigation, route}) => {
 
   const handleWritePost = async () => {
     const tags = Object.keys(selectedTag).filter(key => selectedTag[key]);
-    const images = imageData.map(({width, height, ...rest}) => rest);
+
+    const images = [];
+
+    for (let image of imageData) {
+      const resizerImage = await ImageResizer.createResizedImage(
+        image.uri,
+        image.width || 360,
+        image.height || 360,
+        'JPEG',
+        50,
+        0,
+        null,
+        false,
+        {onlyScaleDown: true},
+      );
+
+      images.push({
+        uri: resizerImage.uri,
+        name: image.name,
+        type: 'image/jpeg',
+      });
+    }
+
     const writeData = await mutation.mutateAsync({
       playerId,
       content,
