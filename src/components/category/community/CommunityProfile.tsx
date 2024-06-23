@@ -5,6 +5,7 @@ import {formatComma} from '../../../utils/format';
 import LinearGradient from 'react-native-linear-gradient';
 import StarOrangeSvg from '../../../../assets/images/star-orange.svg';
 import FastImage from 'react-native-fast-image';
+import TeamList from './TeamList';
 
 interface CommunityProfileProps {
   playerData: any;
@@ -48,6 +49,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
           ...StyleSheet.absoluteFillObject,
         }}
       />
+      <TeamList playerData={playerData} />
     </View>
   );
 };

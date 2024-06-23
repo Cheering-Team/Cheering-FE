@@ -45,6 +45,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 17,
+    position: 'absolute',
+    bottom: 0,
   },
   title: {color: '#d2d2d2', fontSize: 16, paddingBottom: 4},
   teamContainer: {

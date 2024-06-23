@@ -179,7 +179,7 @@ const FeedPost = (props: FeedPostProps) => {
                   }}
                 />
                 <CustomText
-                  style={{color: 'white', fontSize: 30}}
+                  style={{color: 'white', fontSize: 30, zIndex: 3}}
                   fontWeight="500">
                   +{feed.images.length - 1}
                 </CustomText>

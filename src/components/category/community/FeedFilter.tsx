@@ -91,10 +91,11 @@ const FeedFilter = (props: FeedFilterProps) => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 55,
     flexDirection: 'row',
     paddingHorizontal: 15,
     backgroundColor: 'white',
-    marginBottom: 10,
+    marginBottom: -35,
   },
   scrollContainer: {paddingRight: 30},
   openedScrollContainer: {flexDirection: 'row', flexWrap: 'wrap'},

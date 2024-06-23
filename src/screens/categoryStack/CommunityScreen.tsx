@@ -1,29 +1,20 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Animated, Pressable, SafeAreaView, View, Keyboard} from 'react-native';
+import {FlatList as FlatListType} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useQuery} from '@tanstack/react-query';
 import {getPlayersInfo} from '../../apis/player';
 import ChevronTopSvg from '../../../assets/images/chevron-top-black.svg';
 import PencilSvg from '../../../assets/images/pencil.svg';
-import CommunityHeader from '../../components/category/community/CommunityHeader';
-import CommunityProfile from '../../components/category/community/CommunityProfile';
-import TeamList from '../../components/category/community/TeamList';
-import CommunityTopTab from '../../components/category/community/CommunityTab';
-import FeedFilter from '../../components/category/community/FeedFilter';
-import FeedPost from '../../components/category/community/FeedPost';
-import NotJoin from '../../components/category/community/NotJoin';
 import JoinModal from '../../components/category/community/JoinModal';
-import {getPosts} from '../../apis/post';
-import {useIsFocused} from '@react-navigation/native';
+import CommunityFlatList from '../../components/category/community/CommunityFlatList/CommunityFlatList';
+CommunityFlatList;
 
 const CommunityScreen = ({navigation, route}) => {
-  const isFocused = useIsFocused();
-  const scrollY = new Animated.Value(0);
   const insets = useSafeAreaInsets();
 
   const [refreshKey, setRefreshKey] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState('all');
 
   const playerId = route.params.playerId;
 
@@ -32,15 +23,6 @@ const CommunityScreen = ({navigation, route}) => {
   const {data: playerData, isLoading: playerIsLoading} = useQuery({
     queryKey: ['player', playerId, refreshKey],
     queryFn: getPlayersInfo,
-  });
-
-  const {
-    data: feedData,
-    isLoading: feedIsLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ['posts', playerId, selectedFilter],
-    queryFn: getPosts,
   });
 
   const keyboardDidShow = useCallback(
@@ -81,15 +63,9 @@ const CommunityScreen = ({navigation, route}) => {
     };
   }, [keyboardDidShow, keyboardDidHide, translateY]);
 
-  useEffect(() => {
-    if (isFocused) {
-      refetch();
-    }
-  }, [isFocused, refetch]);
-
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scrollTimeout = useRef(null);
-  const scrollViewRef = useRef(null);
+  const flatListRef = useRef<FlatListType<any>>(null);
 
   const handleScrollBeginDrag = () => {
     if (scrollTimeout.current) {
@@ -121,61 +97,16 @@ const CommunityScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView key={refreshKey}>
-        <CommunityHeader scrollY={scrollY} playerData={playerData} />
-        <Animated.ScrollView
-          ref={scrollViewRef}
-          scrollEnabled={!!playerData.result.user}
-          showsVerticalScrollIndicator={false}
-          stickyHeaderIndices={[1]}
-          onScroll={Animated.event(
-            [{nativeEvent: {contentOffset: {y: scrollY}}}],
-            {
-              useNativeDriver: false,
-            },
-          )}
-          onScrollBeginDrag={handleScrollBeginDrag}
-          onScrollEndDrag={handleScrollEndDrag}
-          scrollEventThrottle={16}
-          contentContainerStyle={{paddingBottom: 50}}>
-          <CommunityProfile playerData={playerData} />
-          <View style={{position: 'relative', bottom: 50, marginBottom: -40}}>
-            <TeamList playerData={playerData} />
-            <CommunityTopTab />
-          </View>
-          {playerData.result.user ? (
-            <>
-              <FeedFilter
-                selectedFilter={selectedFilter}
-                setSelectedFilter={setSelectedFilter}
-              />
-              {feedIsLoading ? (
-                <></>
-              ) : (
-                feedData.result.posts.map(feed => (
-                  <Pressable
-                    key={feed.id}
-                    onPress={() => {
-                      navigation.navigate('Post', {postId: feed.id});
-                    }}>
-                    <FeedPost
-                      feed={feed}
-                      playerId={playerId}
-                      postId={feed.id}
-                      selectedFilter={selectedFilter}
-                    />
-                  </Pressable>
-                ))
-              )}
-            </>
-          ) : (
-            <NotJoin
-              playerData={playerData}
-              setIsModalOpen={setIsModalOpen}
-              translateY={translateY}
-            />
-          )}
-        </Animated.ScrollView>
+      <SafeAreaView key={refreshKey} style={{flex: 1}}>
+        <CommunityFlatList
+          ref={flatListRef}
+          playerData={playerData}
+          playerId={playerId}
+          translateY={translateY}
+          setIsModalOpen={setIsModalOpen}
+          handleScrollBeginDrag={handleScrollBeginDrag}
+          handleScrollEndDrag={handleScrollEndDrag}
+        />
         <JoinModal
           playerId={playerId}
           playerData={playerData}
@@ -212,8 +143,8 @@ const CommunityScreen = ({navigation, route}) => {
               {opacity: fadeAnim},
             ]}
             onPress={() => {
-              if (scrollViewRef.current) {
-                scrollViewRef.current.scrollTo({y: 0, animated: true});
+              if (flatListRef.current) {
+                flatListRef.current.scrollToOffset({offset: 0, animated: true});
               }
             }}>
             <ChevronTopSvg width={25} height={25} />

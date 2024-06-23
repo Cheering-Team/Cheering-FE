@@ -3,7 +3,6 @@ import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import CheveronLeft from '../../../../assets/images/chevron-left-white.svg';
 import {useNavigation} from '@react-navigation/native';
 import Avatar from '../../Avatar';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface CommunityHeaderProps {
   scrollY: any;
@@ -14,16 +13,15 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
   const {scrollY, playerData} = props;
 
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
 
   const headerBackgroundColor = scrollY.interpolate({
-    inputRange: [0, 200],
+    inputRange: [0, 250],
     outputRange: ['rgba(0, 0, 0, 0)', '#000000'],
     extrapolate: 'clamp',
   });
 
   const headerTitleColor = scrollY.interpolate({
-    inputRange: [0, 200],
+    inputRange: [0, 250],
     outputRange: ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)'],
     extrapolate: 'clamp',
   });
@@ -32,7 +30,9 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
     <Animated.View
       style={[
         styles.headerContainer,
-        {marginTop: insets.top, backgroundColor: headerBackgroundColor},
+        {
+          backgroundColor: headerBackgroundColor,
+        },
       ]}>
       <Pressable
         onPress={() => {
