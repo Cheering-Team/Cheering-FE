@@ -42,12 +42,14 @@ const PostScreen = ({navigation, route}) => {
   });
 
   const [loading, setLoading] = useState([]);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && !hasLoadedOnce) {
       setLoading(data.result.post.images.map(() => true));
+      setHasLoadedOnce(true);
     }
-  }, [isLoading, setLoading, data]);
+  }, [isLoading, hasLoadedOnce, setLoading, data]);
 
   const mutation = useMutation({
     mutationFn: postPostsLikes,

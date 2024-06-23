@@ -1,20 +1,46 @@
 import React, {useState} from 'react';
-import {Image, ImageBackground, StyleSheet, View} from 'react-native';
+import {
+  Image,
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import CustomText from '../../CustomText';
 import HeartSvg from '../../../../assets/images/heart.svg';
 import HeartFillSvg from '../../../../assets/images/heart_fill.svg';
 import CommentSvg from '../../../../assets/images/comment.svg';
 import PostWriter from '../post/PostWriter';
 import FastImage from 'react-native-fast-image';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {postPostsLikes} from '../../../apis/post';
 
 interface FeedPostProps {
   feed: any;
+  playerId: number;
+  postId: number;
+  selectedFilter: any;
 }
 
 const FeedPost = (props: FeedPostProps) => {
-  const {feed} = props;
+  const {feed, playerId, postId, selectedFilter} = props;
+
+  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState([true, true]);
+
+  const mutation = useMutation({
+    mutationFn: postPostsLikes,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['posts', playerId, selectedFilter],
+      });
+    },
+  });
+
+  const toggleLike = async () => {
+    await mutation.mutateAsync({postId});
+  };
 
   const handleLoadStart = index => {
     setLoading(prevLoading => {
@@ -161,41 +187,15 @@ const FeedPost = (props: FeedPostProps) => {
             </View>
           </View>
         ))}
-
-      {/* <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          marginVertical: 15,
-        }}>
-        {feed.tags.map(tag => (
-          <View
-            key={tag}
-            style={{
-              borderWidth: 1,
-              backgroundColor: '#3a3a3a',
-              borderColor: '#3a3a3a',
-              paddingVertical: 6,
-              paddingHorizontal: 15,
-              borderRadius: 20,
-              marginRight: 6,
-            }}>
-            <CustomText fontWeight="500" style={{color: 'white'}}>
-              {tag === 'photo'
-                ? '📸 직찍사'
-                : tag === 'viewing'
-                ? '👀 직관인증'
-                : '🔎 정보'}
-            </CustomText>
-          </View>
-        ))}
-      </View> */}
       <View style={styles.interactContainer}>
-        {feed.isLike ? (
-          <HeartFillSvg width={21} height={21} />
-        ) : (
-          <HeartSvg width={21} height={21} />
-        )}
+        <Pressable onPress={toggleLike}>
+          {feed.isLike ? (
+            <HeartFillSvg width={21} height={21} />
+          ) : (
+            <HeartSvg width={21} height={21} />
+          )}
+        </Pressable>
+
         <CustomText style={styles.likeCount}>{feed.likeCount}</CustomText>
         <CommentSvg width={21} height={21} style={styles.commentSvg} />
         <CustomText style={styles.commentCount}>40</CustomText>

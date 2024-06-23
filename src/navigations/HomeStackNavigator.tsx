@@ -4,7 +4,6 @@ import SignOutScreen from '../screens/auth/SignOutScreen';
 import CommunityScreen from '../screens/categoryStack/CommunityScreen';
 import WriteScreen from '../screens/WriteScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import PostScreen from '../screens/PostScreen';
 import ChatRoomScreen from '../screens/ChatRoomScreen';
 import SettingScreen from '../screens/SettingScreen';
 import HomeScreen from '../screens/homeStack/HomeScreen';
@@ -43,11 +42,6 @@ const HomeStackNavigator = () => {
         options={{
           headerTransparent: true,
         }}
-      />
-      <HomeStack.Screen
-        name="Post"
-        component={PostScreen}
-        options={{headerStyle: {backgroundColor: 'red'}}}
       />
       <HomeStack.Screen
         name="Write"

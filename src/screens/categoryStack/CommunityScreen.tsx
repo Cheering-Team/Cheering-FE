@@ -158,7 +158,12 @@ const CommunityScreen = ({navigation, route}) => {
                     onPress={() => {
                       navigation.navigate('Post', {postId: feed.id});
                     }}>
-                    <FeedPost feed={feed} />
+                    <FeedPost
+                      feed={feed}
+                      playerId={playerId}
+                      postId={feed.id}
+                      selectedFilter={selectedFilter}
+                    />
                   </Pressable>
                 ))
               )}
