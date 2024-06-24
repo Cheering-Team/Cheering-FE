@@ -43,7 +43,7 @@ export const getPosts = async ({pageParam, queryKey}) => {
   }
 
   const response = await axiosInstance.get(
-    `/players/${playerId}/posts?tag=${selectedFilter}&page=${pageParam}&size=3`,
+    `/players/${playerId}/posts?tag=${selectedFilter}&page=${pageParam}&size=5`,
   );
 
   return response.data;

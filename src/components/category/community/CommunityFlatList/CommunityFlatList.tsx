@@ -103,10 +103,6 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
     }
   };
 
-  if (isLoading) {
-    return <></>;
-  }
-
   return (
     <SafeAreaView edges={['bottom']} style={{}}>
       <CommunityHeader playerData={playerData} scrollY={scrollY} />
@@ -152,8 +148,8 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
         onEndReached={playerData.result.user && loadFeed}
         onEndReachedThreshold={playerData.result.user && 0}
         ListFooterComponent={
-          isFetchingNextPage && playerData.result.user ? (
-            <View style={{marginTop: 20}}>
+          isLoading || (isFetchingNextPage && playerData.result.user) ? (
+            <View style={{marginTop: 50}}>
               <ActivityIndicator size={'large'} />
             </View>
           ) : null
