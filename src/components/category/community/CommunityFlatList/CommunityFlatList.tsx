@@ -120,6 +120,7 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
         }
         contentContainerStyle={{paddingBottom: 30}}
         renderItem={renderFeed}
+        scrollEnabled={!!playerData.result.user}
         ListHeaderComponent={
           <Animated.View onLayout={onLayoutHeaderElement}>
             <CommunityProfile playerData={playerData} />
