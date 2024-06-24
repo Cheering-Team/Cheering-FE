@@ -18,6 +18,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {postPlayersPosts} from '../../apis/post';
 import {useMutation} from '@tanstack/react-query';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
+import Toast from 'react-native-toast-message';
 
 interface FilterType {
   photo: boolean;
@@ -92,6 +93,17 @@ const PostWriteScreen = ({navigation, route}) => {
   };
 
   const handleWritePost = async () => {
+    if (content.length === 0) {
+      Toast.show({
+        type: 'default',
+        position: 'top',
+        visibilityTime: 3000,
+        bottomOffset: 30,
+        text1: '내용을 입력해주세요.',
+      });
+
+      return;
+    }
     const tags = Object.keys(selectedTag).filter(key => selectedTag[key]);
 
     const images = [];
