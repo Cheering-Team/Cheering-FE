@@ -37,14 +37,20 @@ export const useCommunityFlatListHook = (): TUseCommunityFlastListHook => {
     },
     stickyElement: {
       width: '100%',
-      marginTop: heights.header - 60,
+      marginTop: Dimensions.get('window').height / 2.6,
       position: 'absolute',
       transform: [
         {
           translateY: nativeScrollY.interpolate({
             extrapolate: 'clamp',
-            inputRange: [-window.height, heights.header - 110],
-            outputRange: [window.height, -heights.header + 110],
+            inputRange: [
+              -window.height,
+              Dimensions.get('window').height / 2.6 - 50,
+            ],
+            outputRange: [
+              window.height,
+              -(Dimensions.get('window').height / 2.6) + 50,
+            ],
           }),
         },
       ],

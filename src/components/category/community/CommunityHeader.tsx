@@ -1,5 +1,5 @@
 import React from 'react';
-import {Animated, Pressable, StyleSheet, View} from 'react-native';
+import {Animated, Dimensions, Pressable, StyleSheet, View} from 'react-native';
 import CheveronLeft from '../../../../assets/images/chevron-left-white.svg';
 import {useNavigation} from '@react-navigation/native';
 import Avatar from '../../Avatar';
@@ -15,13 +15,13 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
   const navigation = useNavigation();
 
   const headerBackgroundColor = scrollY.interpolate({
-    inputRange: [0, 250],
+    inputRange: [0, Dimensions.get('window').height / 3],
     outputRange: ['rgba(0, 0, 0, 0)', '#000000'],
     extrapolate: 'clamp',
   });
 
   const headerTitleColor = scrollY.interpolate({
-    inputRange: [0, 250],
+    inputRange: [0, Dimensions.get('window').height / 3],
     outputRange: ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)'],
     extrapolate: 'clamp',
   });

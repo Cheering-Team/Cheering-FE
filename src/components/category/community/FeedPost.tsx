@@ -206,7 +206,8 @@ const FeedPost = (props: FeedPostProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 18,
+    paddingHorizontal: 15,
+    paddingBottom: 18,
     paddingTop: 10,
     borderBottomWidth: 1.5,
     borderColor: '#f3f3f3',

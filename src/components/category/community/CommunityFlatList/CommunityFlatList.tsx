@@ -3,7 +3,7 @@ import {ActivityIndicator, Animated, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useCommunityFlatListHook} from './hooks/useCommunityFlatListHook';
 import CommunityHeader from '../CommunityHeader';
-import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
+import {useInfiniteQuery} from '@tanstack/react-query';
 import {getPosts} from '../../../../apis/post';
 import CommunityProfile from '../CommunityProfile';
 import CommunityTopTab from '../CommunityTab';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Dimensions, Image, StyleSheet, View} from 'react-native';
 import CustomText from '../../CustomText';
 import {formatComma} from '../../../utils/format';
@@ -13,6 +13,7 @@ interface CommunityProfileProps {
 
 const CommunityProfile = (props: CommunityProfileProps) => {
   const {playerData} = props;
+
   return (
     <View
       style={[
