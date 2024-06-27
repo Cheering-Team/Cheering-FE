@@ -1,5 +1,5 @@
 import React from 'react';
-import {Animated, StyleSheet, View} from 'react-native';
+import {Animated, Dimensions, StyleSheet, View} from 'react-native';
 import Avatar from '../../Avatar';
 import CustomText from '../../CustomText';
 import StarWhiteSvg from '../../../../assets/images/star-white.svg';
@@ -23,7 +23,11 @@ const NotJoin = (props: NotJoinProps) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {height: Dimensions.get('window').height * 0.3 + 20},
+      ]}>
       <View style={styles.imageContainer}>
         <Avatar
           uri={playerData.result.image}
@@ -60,8 +64,8 @@ const NotJoin = (props: NotJoinProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 30,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   imageContainer: {
     flexDirection: 'row',

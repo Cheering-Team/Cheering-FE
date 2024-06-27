@@ -1,5 +1,11 @@
 import React, {forwardRef, useEffect, useRef, useState} from 'react';
-import {ActivityIndicator, Animated, Pressable, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Animated,
+  Dimensions,
+  Pressable,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useCommunityFlatListHook} from './hooks/useCommunityFlatListHook';
 import CommunityHeader from '../CommunityHeader';
@@ -11,6 +17,7 @@ import FeedFilter from '../FeedFilter';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import FeedPost from '../FeedPost';
 import NotJoin from '../NotJoin';
+import CustomText from '../../../CustomText';
 
 interface CommunityFlatListProps {
   playerId: number;
@@ -120,7 +127,7 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
         }
         contentContainerStyle={{paddingBottom: 30}}
         renderItem={renderFeed}
-        scrollEnabled={!!playerData.result.user}
+        scrollEnabled={!!playerData.result.user || feedData?.pages.length === 0}
         ListHeaderComponent={
           <Animated.View onLayout={onLayoutHeaderElement}>
             <CommunityProfile playerData={playerData} />
@@ -150,10 +157,38 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
         onEndReachedThreshold={playerData.result.user && 0}
         ListFooterComponent={
           isLoading || (isFetchingNextPage && playerData.result.user) ? (
-            <View style={{marginTop: 50}}>
+            <View
+              style={{
+                height: Dimensions.get('window').height * 0.3 + 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
               <ActivityIndicator size={'large'} />
             </View>
           ) : null
+        }
+        ListEmptyComponent={
+          <View
+            style={{
+              height: Dimensions.get('window').height * 0.3 + 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            {isLoading ? (
+              <ActivityIndicator size={'large'} />
+            ) : (
+              <>
+                <CustomText
+                  fontWeight="600"
+                  style={{fontSize: 23, marginBottom: 5}}>
+                  아직 게시글이 없어요
+                </CustomText>
+                <CustomText style={{color: '#5b5b5b'}}>
+                  가장 먼저 게시글을 작성해보세요
+                </CustomText>
+              </>
+            )}
+          </View>
         }
       />
     </SafeAreaView>
