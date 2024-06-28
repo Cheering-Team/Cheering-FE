@@ -290,7 +290,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                 {index === 0 ? (
                   isFocused ? (
                     <>
-                      <CategorBlackSvg width={21} height={21} />
+                      <CategorBlackSvg width={20} height={20} />
                       <CustomText
                         fontWeight="600"
                         style={styles.TabLabelFocused}>
@@ -299,7 +299,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                     </>
                   ) : (
                     <>
-                      <CategoryGraySvg width={21} height={21} />
+                      <CategoryGraySvg width={20} height={20} />
                       <CustomText fontWeight="600" style={styles.TabLabel}>
                         카테고리
                       </CustomText>
@@ -308,7 +308,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                 ) : index === 1 ? (
                   isFocused ? (
                     <>
-                      <StarBlackSvg width={21} height={21} />
+                      <StarBlackSvg width={20} height={20} />
                       <CustomText
                         fontWeight="600"
                         style={styles.TabLabelFocused}>
@@ -317,7 +317,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                     </>
                   ) : (
                     <>
-                      <StarGraySvg width={21} height={21} />
+                      <StarGraySvg width={20} height={20} />
                       <CustomText fontWeight="600" style={styles.TabLabel}>
                         내 선수
                       </CustomText>
@@ -326,7 +326,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                 ) : index === 3 ? (
                   isFocused ? (
                     <>
-                      <ChatBlackSvg width={21} height={21} />
+                      <ChatBlackSvg width={20} height={20} />
                       <CustomText
                         fontWeight="600"
                         style={styles.TabLabelFocused}>
@@ -335,7 +335,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                     </>
                   ) : (
                     <>
-                      <ChatGraySvg width={21} height={21} />
+                      <ChatGraySvg width={20} height={20} />
                       <CustomText fontWeight="600" style={styles.TabLabel}>
                         채팅
                       </CustomText>
@@ -343,14 +343,14 @@ function CustomTabBar({state, descriptors, navigation}) {
                   )
                 ) : isFocused ? (
                   <>
-                    <MoreBlackSvg width={21} height={21} />
+                    <MoreBlackSvg width={20} height={20} />
                     <CustomText fontWeight="600" style={styles.TabLabelFocused}>
                       더보기
                     </CustomText>
                   </>
                 ) : (
                   <>
-                    <MoreGraySvg width={21} height={21} />
+                    <MoreGraySvg width={20} height={20} />
                     <CustomText fontWeight="600" style={styles.TabLabel}>
                       더보기
                     </CustomText>
@@ -386,13 +386,13 @@ const styles = StyleSheet.create({
   TabLabelFocused: {fontSize: 10, color: '#323232', marginTop: 3},
   HomeTab: {
     backgroundColor: '#B7B7B7',
-    width: 62,
-    height: 62,
+    width: 58,
+    height: 58,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 37,
     position: 'absolute',
-    top: -27,
+    top: -20,
     shadowColor: '#B7B7B7',
     shadowRadius: 5,
     shadowOffset: {height: 10, width: 0},
@@ -403,13 +403,13 @@ const styles = StyleSheet.create({
   },
   HomeTabFocused: {
     backgroundColor: '#58a04b',
-    width: 62,
-    height: 62,
+    width: 58,
+    height: 58,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 37,
     position: 'absolute',
-    top: -27,
+    top: -20,
     shadowColor: '#58a04b',
     shadowRadius: 5,
     shadowOffset: {height: 10, width: 0},

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Dimensions, Image, StyleSheet, View} from 'react-native';
 import CustomText from '../../CustomText';
 import {formatComma} from '../../../utils/format';
 import LinearGradient from 'react-native-linear-gradient';
 import StarOrangeSvg from '../../../../assets/images/star-orange.svg';
+import FastImage from 'react-native-fast-image';
+import TeamList from './TeamList';
 
 interface CommunityProfileProps {
   playerData: any;
@@ -11,6 +13,7 @@ interface CommunityProfileProps {
 
 const CommunityProfile = (props: CommunityProfileProps) => {
   const {playerData} = props;
+
   return (
     <View
       style={[
@@ -34,9 +37,10 @@ const CommunityProfile = (props: CommunityProfileProps) => {
         </View>
       </View>
 
-      <Image
+      <FastImage
         source={{
           uri: playerData.result.backgroundImage,
+          priority: FastImage.priority.high,
         }}
         style={styles.backgroundImage}
       />
@@ -46,6 +50,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
           ...StyleSheet.absoluteFillObject,
         }}
       />
+      <TeamList playerData={playerData} />
     </View>
   );
 };

@@ -1,44 +1,16 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Animated, Pressable, SafeAreaView, View, Keyboard} from 'react-native';
+import {FlatList as FlatListType} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useQuery} from '@tanstack/react-query';
 import {getPlayersInfo} from '../../apis/player';
 import ChevronTopSvg from '../../../assets/images/chevron-top-black.svg';
 import PencilSvg from '../../../assets/images/pencil.svg';
-import CommunityHeader from '../../components/category/community/CommunityHeader';
-import CommunityProfile from '../../components/category/community/CommunityProfile';
-import TeamList from '../../components/category/community/TeamList';
-import CommunityTopTab from '../../components/category/community/CommunityTab';
-import FeedFilter from '../../components/category/community/FeedFilter';
-import FeedPost from '../../components/category/community/FeedPost';
-import NotJoin from '../../components/category/community/NotJoin';
 import JoinModal from '../../components/category/community/JoinModal';
-
-const feedData = [
-  {
-    content: '피드입니다',
-    createdAt: '06.13 09:04',
-    writer: {id: 1, name: '전준우짱', image: ''},
-  },
-  {
-    content: '피드입니다',
-    createdAt: '06.13 09:04',
-    writer: {id: 1, name: '전준우짱', image: ''},
-  },
-  {
-    content: '피드입니다',
-    createdAt: '06.13 09:04',
-    writer: {id: 1, name: '전준우짱', image: ''},
-  },
-  {
-    content: '피드입니다',
-    createdAt: '06.13 09:04',
-    writer: {id: 1, name: '전준우짱', image: ''},
-  },
-];
+import CommunityFlatList from '../../components/category/community/CommunityFlatList/CommunityFlatList';
+CommunityFlatList;
 
 const CommunityScreen = ({navigation, route}) => {
-  const scrollY = new Animated.Value(0);
   const insets = useSafeAreaInsets();
 
   const [refreshKey, setRefreshKey] = useState(0);
@@ -48,7 +20,7 @@ const CommunityScreen = ({navigation, route}) => {
 
   const translateY = useRef(new Animated.Value(500)).current;
 
-  const {data, isLoading} = useQuery({
+  const {data: playerData, isLoading: playerIsLoading} = useQuery({
     queryKey: ['player', playerId, refreshKey],
     queryFn: getPlayersInfo,
   });
@@ -93,7 +65,7 @@ const CommunityScreen = ({navigation, route}) => {
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scrollTimeout = useRef(null);
-  const scrollViewRef = useRef(null);
+  const flatListRef = useRef<FlatListType<any>>(null);
 
   const handleScrollBeginDrag = () => {
     if (scrollTimeout.current) {
@@ -119,63 +91,32 @@ const CommunityScreen = ({navigation, route}) => {
 
   const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-  if (isLoading) {
+  if (playerIsLoading) {
     return <></>;
   }
 
   return (
     <>
-      <SafeAreaView key={refreshKey}>
-        <CommunityHeader scrollY={scrollY} playerData={data} />
-        <Animated.ScrollView
-          ref={scrollViewRef}
-          scrollEnabled={!!data.result.user}
-          showsVerticalScrollIndicator={false}
-          stickyHeaderIndices={[1]}
-          onScroll={Animated.event(
-            [{nativeEvent: {contentOffset: {y: scrollY}}}],
-            {
-              useNativeDriver: false,
-            },
-          )}
-          onScrollBeginDrag={handleScrollBeginDrag}
-          onScrollEndDrag={handleScrollEndDrag}
-          scrollEventThrottle={16}>
-          <CommunityProfile playerData={data} />
-          <View style={{position: 'relative', bottom: 50, marginBottom: -40}}>
-            <TeamList playerData={data} />
-            <CommunityTopTab />
-          </View>
-          {data.result.user ? (
-            <>
-              <FeedFilter />
-              {feedData.map((feed, idx) => (
-                <Pressable
-                  onPress={() => {
-                    navigation.navigate('Post', {postId: 1});
-                  }}>
-                  <FeedPost feed={feed} idx={idx} key={idx} />
-                </Pressable>
-              ))}
-            </>
-          ) : (
-            <NotJoin
-              playerData={data}
-              setIsModalOpen={setIsModalOpen}
-              translateY={translateY}
-            />
-          )}
-        </Animated.ScrollView>
+      <SafeAreaView key={refreshKey} style={{flex: 1}}>
+        <CommunityFlatList
+          ref={flatListRef}
+          playerData={playerData}
+          playerId={playerId}
+          translateY={translateY}
+          setIsModalOpen={setIsModalOpen}
+          handleScrollBeginDrag={handleScrollBeginDrag}
+          handleScrollEndDrag={handleScrollEndDrag}
+        />
         <JoinModal
           playerId={playerId}
-          playerData={data}
+          playerData={playerData}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           translateY={translateY}
           setRefreshKey={setRefreshKey}
         />
       </SafeAreaView>
-      {data.result.user && (
+      {playerData.result.user && (
         <View
           style={{
             alignItems: 'center',
@@ -202,8 +143,8 @@ const CommunityScreen = ({navigation, route}) => {
               {opacity: fadeAnim},
             ]}
             onPress={() => {
-              if (scrollViewRef.current) {
-                scrollViewRef.current.scrollTo({y: 0, animated: true});
+              if (flatListRef.current) {
+                flatListRef.current.scrollToOffset({offset: 0, animated: true});
               }
             }}>
             <ChevronTopSvg width={25} height={25} />

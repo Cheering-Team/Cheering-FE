@@ -21,6 +21,7 @@ import {getPostById, postPostsLikes} from '../../apis/post';
 import PostWriter from '../../components/category/post/PostWriter';
 import ImageView from 'react-native-image-viewing';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import FastImage from 'react-native-fast-image';
 
 const PostScreen = ({navigation, route}) => {
   const {postId} = route.params;
@@ -30,6 +31,7 @@ const PostScreen = ({navigation, route}) => {
 
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+
   const [commentContent, setCommentContent] = useState<string>('');
 
   const queryClient = useQueryClient();
@@ -38,6 +40,17 @@ const PostScreen = ({navigation, route}) => {
     queryKey: ['post', postId],
     queryFn: getPostById,
   });
+
+  const [loading, setLoading] = useState([]);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && !hasLoadedOnce) {
+      setLoading(data.result.post.images.map(() => true));
+      setHasLoadedOnce(true);
+    }
+  }, [isLoading, hasLoadedOnce, setLoading, data]);
+
   const mutation = useMutation({
     mutationFn: postPostsLikes,
     onSuccess: () => {
@@ -45,10 +58,24 @@ const PostScreen = ({navigation, route}) => {
     },
   });
 
-  const toggleLike = async () => {
-    const response = await mutation.mutateAsync({postId});
+  const handleLoadStart = index => {
+    setLoading(prevLoading => {
+      const newLoading = [...prevLoading];
+      newLoading[index] = true;
+      return newLoading;
+    });
+  };
 
-    console.log(JSON.stringify(response));
+  const handleLoadEnd = index => {
+    setLoading(prevLoading => {
+      const newLoading = [...prevLoading];
+      newLoading[index] = false;
+      return newLoading;
+    });
+  };
+
+  const toggleLike = async () => {
+    await mutation.mutateAsync({postId});
   };
 
   if (isLoading) {
@@ -114,7 +141,7 @@ const PostScreen = ({navigation, route}) => {
                   borderRadius: 20,
                   marginRight: 6,
                 }}>
-                <CustomText>
+                <CustomText fontWeight="500">
                   {tag === 'photo'
                     ? '📸 직찍사'
                     : tag === 'viewing'
@@ -147,8 +174,10 @@ const PostScreen = ({navigation, route}) => {
                     setImageIndex(index);
                     setIsImageOpen(true);
                   }}>
-                  <Image
+                  <FastImage
                     source={{uri: image.url}}
+                    onLoadStart={() => handleLoadStart(index)}
+                    onLoadEnd={() => handleLoadEnd(index)}
                     style={{
                       width: '100%',
                       height:
@@ -157,8 +186,20 @@ const PostScreen = ({navigation, route}) => {
                       borderRadius: 10,
                       marginVertical: 5,
                     }}
-                    resizeMode="cover"
-                  />
+                    resizeMode={FastImage.resizeMode.cover}>
+                    {loading[index] && (
+                      <View
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          position: 'absolute',
+                          zIndex: 1,
+                          borderRadius: 10,
+                          backgroundColor: '#eaedf2',
+                        }}
+                      />
+                    )}
+                  </FastImage>
                 </Pressable>
               ))}
           </View>
