@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Animated,
   Dimensions,
   Image,
   KeyboardAvoidingView,
@@ -22,9 +23,11 @@ import PostWriter from '../../components/category/post/PostWriter';
 import ImageView from 'react-native-image-viewing';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
+import CommentModal from '../../components/category/post/CommentModal';
 
 const PostScreen = ({navigation, route}) => {
   const {postId} = route.params;
+  const insets = useSafeAreaInsets();
 
   const commentInputRef = useRef<TextInput>(null);
   const {width: screenWidth} = Dimensions.get('window');
@@ -83,191 +86,196 @@ const PostScreen = ({navigation, route}) => {
   }
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <KeyboardAvoidingView
-        style={{flex: 1}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        {/* 헤더 */}
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            height: 45,
-            paddingRight: 17,
-            paddingLeft: 10,
+    <View style={{flex: 1, paddingTop: insets.top}}>
+      {/* 헤더 */}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          height: 45,
+          paddingRight: 17,
+          paddingLeft: 10,
+        }}>
+        <Pressable
+          onPress={() => {
+            navigation.goBack();
           }}>
-          <Pressable
-            onPress={() => {
-              navigation.goBack();
-            }}>
-            <ChevronLeftSvg width={33} height={33} />
-          </Pressable>
-          <View style={{flexDirection: 'row'}}>
-            <CustomText
-              fontWeight="500"
-              style={{
-                fontSize: 18,
-                paddingBottom: 2,
-              }}>{`${data.result.player.koreanName} / `}</CustomText>
-            <CustomText
-              fontWeight="500"
-              style={{fontSize: 18, paddingBottom: 2}}>
-              {data.result.player.englishName}
-            </CustomText>
-          </View>
-          <Pressable>
-            <ThreeDotSvg width={19} height={19} />
-          </Pressable>
+          <ChevronLeftSvg width={33} height={33} />
+        </Pressable>
+        <View style={{flexDirection: 'row'}}>
+          <CustomText
+            fontWeight="500"
+            style={{
+              fontSize: 18,
+              paddingBottom: 2,
+            }}>{`${data.result.player.koreanName} / `}</CustomText>
+          <CustomText fontWeight="500" style={{fontSize: 18, paddingBottom: 2}}>
+            {data.result.player.englishName}
+          </CustomText>
         </View>
-        {/* 본문 */}
-        <ScrollView style={{flex: 1}}>
-          {/* 태그 */}
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              paddingTop: 10,
-              paddingHorizontal: 15,
-            }}>
-            {data.result.post.tags.map(tag => (
-              <View
-                key={tag}
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#e1e1e1',
-                  paddingVertical: 6,
-                  paddingHorizontal: 15,
-                  borderRadius: 20,
-                  marginRight: 6,
-                }}>
-                <CustomText fontWeight="500">
-                  {tag === 'photo'
-                    ? '📸 직찍사'
-                    : tag === 'viewing'
-                    ? '👀 직관인증'
-                    : '🔎 정보'}
-                </CustomText>
-              </View>
-            ))}
-          </View>
-          {/* 작성자 */}
-          <View style={{paddingHorizontal: 15, marginTop: 15}}>
-            <PostWriter
-              writer={data.result.post.writer}
-              createdAt={data.result.post.createdAt}
-            />
-            <CustomText
-              style={{
-                paddingTop: 13,
-                paddingHorizontal: 1,
-                fontSize: 17,
-                marginBottom: 10,
-              }}>
-              {data.result.post.content}
-            </CustomText>
-            {data.result.post.images.length !== 0 &&
-              data.result.post.images.map((image, index) => (
-                <Pressable
-                  key={index}
-                  onPress={() => {
-                    setImageIndex(index);
-                    setIsImageOpen(true);
-                  }}>
-                  <FastImage
-                    source={{uri: image.url}}
-                    onLoadStart={() => handleLoadStart(index)}
-                    onLoadEnd={() => handleLoadEnd(index)}
-                    style={{
-                      width: '100%',
-                      height:
-                        (image.height || 0) *
-                        ((screenWidth - 20) / (image.width || 1)),
-                      borderRadius: 10,
-                      marginVertical: 5,
-                    }}
-                    resizeMode={FastImage.resizeMode.cover}>
-                    {loading[index] && (
-                      <View
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          position: 'absolute',
-                          zIndex: 1,
-                          borderRadius: 10,
-                          backgroundColor: '#eaedf2',
-                        }}
-                      />
-                    )}
-                  </FastImage>
-                </Pressable>
-              ))}
-          </View>
-        </ScrollView>
+        <Pressable>
+          <ThreeDotSvg width={19} height={19} />
+        </Pressable>
+      </View>
+      {/* 본문 */}
+      <ScrollView style={{flex: 1}}>
+        {/* 태그 */}
         <View
           style={{
             flexDirection: 'row',
-            alignItems: 'center',
-            borderTopColor: '#e0e0e0',
-            borderTopWidth: 1,
-            padding: 6,
+            flexWrap: 'wrap',
+            paddingTop: 10,
+            paddingHorizontal: 15,
           }}>
-          <Pressable
-            onPress={toggleLike}
+          {data.result.post.tags.map(tag => (
+            <View
+              key={tag}
+              style={{
+                borderWidth: 1,
+                borderColor: '#e1e1e1',
+                paddingVertical: 6,
+                paddingHorizontal: 15,
+                borderRadius: 20,
+                marginRight: 6,
+              }}>
+              <CustomText fontWeight="500">
+                {tag === 'photo'
+                  ? '📸 직찍사'
+                  : tag === 'viewing'
+                  ? '👀 직관인증'
+                  : '🔎 정보'}
+              </CustomText>
+            </View>
+          ))}
+        </View>
+        {/* 작성자 */}
+        <View style={{paddingHorizontal: 15, marginTop: 15}}>
+          <PostWriter
+            writer={data.result.post.writer}
+            createdAt={data.result.post.createdAt}
+          />
+          <CustomText
             style={{
-              alignItems: 'center',
-              marginLeft: 7,
-              marginRight: 15,
+              paddingTop: 13,
+              paddingHorizontal: 1,
+              fontSize: 17,
+              marginBottom: 10,
             }}>
-            {data.result.post.isLike ? (
-              <HeartFillSvg width={21} height={21} />
-            ) : (
-              <HeartSvg width={21} height={21} />
-            )}
-            <CustomText style={{fontSize: 11, marginTop: 1, color: '#3a3a3a'}}>
-              {data.result.post.likeCount}
-            </CustomText>
-          </Pressable>
-          <View
+            {data.result.post.content}
+          </CustomText>
+          {data.result.post.images.length !== 0 &&
+            data.result.post.images.map((image, index) => (
+              <Pressable
+                key={index}
+                onPress={() => {
+                  setImageIndex(index);
+                  setIsImageOpen(true);
+                }}>
+                <FastImage
+                  source={{uri: image.url}}
+                  onLoadStart={() => handleLoadStart(index)}
+                  onLoadEnd={() => handleLoadEnd(index)}
+                  style={{
+                    width: '100%',
+                    height:
+                      (image.height || 0) *
+                      ((screenWidth - 20) / (image.width || 1)),
+                    borderRadius: 10,
+                    marginVertical: 5,
+                  }}
+                  resizeMode={FastImage.resizeMode.cover}>
+                  {loading[index] && (
+                    <View
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        zIndex: 1,
+                        borderRadius: 10,
+                        backgroundColor: '#eaedf2',
+                      }}
+                    />
+                  )}
+                </FastImage>
+              </Pressable>
+            ))}
+        </View>
+      </ScrollView>
+      <CommentModal />
+
+      <View
+        style={{
+          height: 55 + insets.bottom,
+          flexDirection: 'row',
+          alignItems: 'center',
+          borderTopColor: '#e0e0e0',
+          backgroundColor: 'white',
+          borderTopWidth: 1,
+          padding: 6,
+          paddingBottom: insets.bottom + 6,
+        }}>
+        <Pressable
+          onPress={toggleLike}
+          style={{
+            alignItems: 'center',
+            marginLeft: 7,
+            marginRight: 15,
+          }}>
+          {data.result.post.isLike ? (
+            <HeartFillSvg width={21} height={21} />
+          ) : (
+            <HeartSvg width={21} height={21} />
+          )}
+          <CustomText style={{fontSize: 11, marginTop: 1, color: '#3a3a3a'}}>
+            {data.result.post.likeCount}
+          </CustomText>
+        </Pressable>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: '#f3f3f3',
+            borderRadius: 30,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingTop: 4,
+            paddingBottom: 5,
+          }}>
+          <TextInput
+            autoCapitalize="none"
+            multiline
+            ref={commentInputRef}
+            placeholder="댓글을 입력해주세요"
+            placeholderTextColor={'#747474'}
+            value={commentContent}
+            onChangeText={setCommentContent}
             style={{
               flex: 1,
-              backgroundColor: '#f3f3f3',
-              borderRadius: 30,
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingTop: 4,
-              paddingBottom: 5,
+              height: 30,
+              paddingHorizontal: 17,
+              fontFamily: 'NotoSansKR-Regular',
+              includeFontPadding: false,
+              color: 'black',
+            }}
+          />
+          <Pressable
+            style={{
+              backgroundColor: '#58a04b',
+              paddingVertical: 8,
+              paddingHorizontal: 14,
+              borderRadius: 23,
+              marginRight: 8,
             }}>
-            <TextInput
-              autoCapitalize="none"
-              multiline
-              ref={commentInputRef}
-              placeholder="댓글을 입력해주세요"
-              placeholderTextColor={'#747474'}
-              value={commentContent}
-              onChangeText={setCommentContent}
-              style={{
-                flex: 1,
-                height: 30,
-                paddingHorizontal: 17,
-                fontFamily: 'NotoSansKR-Regular',
-                includeFontPadding: false,
-                color: 'black',
-              }}
-            />
-            <Pressable
-              style={{
-                backgroundColor: '#58a04b',
-                paddingVertical: 8,
-                paddingHorizontal: 14,
-                borderRadius: 23,
-                marginRight: 8,
-              }}>
-              <ArrowUpSvg width={16} height={16} />
-            </Pressable>
-          </View>
+            <ArrowUpSvg width={16} height={16} />
+          </Pressable>
         </View>
-      </KeyboardAvoidingView>
+      </View>
+
+      {/* <CommentModal
+        translateY={translateY}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      /> */}
       {/* 이미지 뷰어 */}
       <ImageView
         images={data.result.post.images.map(item => ({uri: item.url}))}
@@ -279,7 +287,7 @@ const PostScreen = ({navigation, route}) => {
             style={{
               flex: 1,
               alignItems: 'center',
-              paddingBottom: useSafeAreaInsets().bottom + 100,
+              paddingBottom: insets.bottom + 100,
             }}>
             <View
               style={{
@@ -307,7 +315,7 @@ const PostScreen = ({navigation, route}) => {
           </View>
         )}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
