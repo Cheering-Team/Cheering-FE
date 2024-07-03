@@ -1,5 +1,13 @@
-import React, {useRef, useState} from 'react';
-import {Animated, Dimensions, FlatList, Pressable, View} from 'react-native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  FlatList,
+  Keyboard,
+  Pressable,
+  View,
+} from 'react-native';
 import CustomText from '../../CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -9,11 +17,14 @@ const CommentModal = () => {
   const translateY = useRef(new Animated.Value(0)).current;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
     Animated.timing(translateY, {
-      toValue: -Dimensions.get('window').height * 0.6,
+      toValue: isKeyboardOpen
+        ? -(Dimensions.get('window').height - insets.bottom - insets.top - 70)
+        : -Dimensions.get('window').height * 0.6,
       duration: 300,
       useNativeDriver: true,
     }).start();
@@ -28,6 +39,50 @@ const CommentModal = () => {
       setIsModalOpen(false);
     });
   };
+
+  const keyboardDidShow = useCallback(
+    e => {
+      setIsKeyboardOpen(true);
+      Animated.timing(translateY, {
+        toValue: isModalOpen
+          ? -(Dimensions.get('window').height - insets.bottom - insets.top - 70)
+          : -e.endCoordinates.height + insets.bottom,
+        duration: e.duration,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }).start();
+    },
+    [translateY, isModalOpen, insets],
+  );
+
+  const keyboardDidHide = useCallback(
+    e => {
+      setIsKeyboardOpen(false);
+      Animated.timing(translateY, {
+        toValue: isModalOpen ? -Dimensions.get('window').height * 0.6 : 0,
+        duration: e.duration,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }).start();
+    },
+    [translateY, isModalOpen],
+  );
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardWillShow',
+      keyboardDidShow,
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardWillHide',
+      keyboardDidHide,
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, [keyboardDidShow, keyboardDidHide, translateY]);
 
   return (
     <>
