@@ -20,7 +20,7 @@ interface postCommentsRequest {
 interface postReCommentsRequest {
   commentId: number | null;
   content: string;
-  toId: number | null;
+  toId: number;
 }
 
 export const postPlayersPosts = async (data: postPlayersPostsRequest) => {
@@ -101,6 +101,14 @@ export const postReComments = async (data: postReCommentsRequest) => {
     content,
     toId,
   });
+
+  return response.data;
+};
+
+export const getReComments = async ({queryKey}) => {
+  const [_key, commentId] = queryKey;
+
+  const response = await axiosInstance.get(`/comments/${commentId}/re`);
 
   return response.data;
 };

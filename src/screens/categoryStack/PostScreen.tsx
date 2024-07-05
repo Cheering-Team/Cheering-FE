@@ -39,6 +39,8 @@ const PostScreen = ({navigation, route}) => {
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
 
+  const [reIdx, setReIdx] = useState<number | null>(null);
+
   const [loading, setLoading] = useState([]);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
@@ -74,7 +76,11 @@ const PostScreen = ({navigation, route}) => {
   const reCommentMutation = useMutation({
     mutationFn: postReComments,
     onSuccess: () => {
-      // queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
+      queryClient.invalidateQueries({
+        queryKey: ['comments', underCommentId, 'reComments'],
+      });
+      queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
+      setReIdx(underCommentId);
     },
   });
 
@@ -135,34 +141,36 @@ const PostScreen = ({navigation, route}) => {
   };
 
   const writeReComment = async () => {
-    const data = await reCommentMutation.mutateAsync({
-      commentId: underCommentId,
-      content: commentContent,
-      toId: toComment?.id ?? null,
-    });
-
-    if (data.message === '답글이 작성되었습니다.') {
-      Toast.show({
-        type: 'default',
-        position: 'top',
-        visibilityTime: 3000,
-        bottomOffset: 30,
-        text1: '댓글을 작성하였습니다.',
+    if (toComment && underCommentId) {
+      const data = await reCommentMutation.mutateAsync({
+        commentId: underCommentId,
+        content: commentContent,
+        toId: toComment.id,
       });
 
-      setCommentContent('');
-      setToComment(null);
-      setUnderCommentId(null);
+      if (data.message === '답글이 작성되었습니다.') {
+        Toast.show({
+          type: 'default',
+          position: 'top',
+          visibilityTime: 3000,
+          bottomOffset: 30,
+          text1: '댓글을 작성하였습니다.',
+        });
 
-      return;
-    } else {
-      Toast.show({
-        type: 'default',
-        position: 'top',
-        visibilityTime: 3000,
-        bottomOffset: 30,
-        text1: '잠시 후 다시 시도해 주세요.',
-      });
+        setCommentContent('');
+        setToComment(null);
+        setUnderCommentId(null);
+
+        return;
+      } else {
+        Toast.show({
+          type: 'default',
+          position: 'top',
+          visibilityTime: 3000,
+          bottomOffset: 30,
+          text1: '잠시 후 다시 시도해 주세요.',
+        });
+      }
     }
   };
 
@@ -298,6 +306,8 @@ const PostScreen = ({navigation, route}) => {
           setToComment={setToComment}
           setCommentContent={setCommentContent}
           setUnderCommentId={setUnderCommentId}
+          reIdx={reIdx}
+          setReIdx={setReIdx}
         />
 
         {toComment && (
