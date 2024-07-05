@@ -14,8 +14,14 @@ import ThreeDotSvg from '../../../assets/images/three-dots-black.svg';
 import HeartSvg from '../../../assets/images/heart.svg';
 import HeartFillSvg from '../../../assets/images/heart_fill.svg';
 import ArrowUpSvg from '../../../assets/images/arrow_up.svg';
+import CloseWhiteSvg from '../../../assets/images/x_white.svg';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {getPostById, postComments, postPostsLikes} from '../../apis/post';
+import {
+  getPostById,
+  postComments,
+  postPostsLikes,
+  postReComments,
+} from '../../apis/post';
 import PostWriter from '../../components/category/post/PostWriter';
 import ImageView from 'react-native-image-viewing';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -37,6 +43,12 @@ const PostScreen = ({navigation, route}) => {
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   const [commentContent, setCommentContent] = useState<string>('');
+  const [underCommentId, setUnderCommentId] = useState<number | null>(null);
+  const [toComment, setToComment] = useState<{
+    id: number;
+    name: string;
+    image: string;
+  } | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -55,7 +67,14 @@ const PostScreen = ({navigation, route}) => {
   const commentMutation = useMutation({
     mutationFn: postComments,
     onSuccess: () => {
-      // queryClient.invalidateQueries({queryKey: ['post', postId]});
+      queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
+    },
+  });
+
+  const reCommentMutation = useMutation({
+    mutationFn: postReComments,
+    onSuccess: () => {
+      // queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
     },
   });
 
@@ -100,6 +119,40 @@ const PostScreen = ({navigation, route}) => {
         bottomOffset: 30,
         text1: '댓글을 작성하였습니다.',
       });
+
+      setCommentContent('');
+
+      return;
+    } else {
+      Toast.show({
+        type: 'default',
+        position: 'top',
+        visibilityTime: 3000,
+        bottomOffset: 30,
+        text1: '잠시 후 다시 시도해 주세요.',
+      });
+    }
+  };
+
+  const writeReComment = async () => {
+    const data = await reCommentMutation.mutateAsync({
+      commentId: underCommentId,
+      content: commentContent,
+      toId: toComment?.id ?? null,
+    });
+
+    if (data.message === '답글이 작성되었습니다.') {
+      Toast.show({
+        type: 'default',
+        position: 'top',
+        visibilityTime: 3000,
+        bottomOffset: 30,
+        text1: '댓글을 작성하였습니다.',
+      });
+
+      setCommentContent('');
+      setToComment(null);
+      setUnderCommentId(null);
 
       return;
     } else {
@@ -240,8 +293,41 @@ const PostScreen = ({navigation, route}) => {
               ))}
           </View>
         </ScrollView>
-        <CommentModal />
+        <CommentModal
+          postId={postId}
+          setToComment={setToComment}
+          setCommentContent={setCommentContent}
+          setUnderCommentId={setUnderCommentId}
+        />
 
+        {toComment && (
+          <View
+            style={{
+              backgroundColor: '#58a04b',
+              borderTopLeftRadius: 15,
+              borderTopRightRadius: 15,
+              paddingLeft: 17,
+              paddingRight: 14,
+              paddingVertical: 6,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <CustomText
+              fontWeight="500"
+              style={{
+                color: 'white',
+              }}>{`${toComment.name} 님에게 답글 남기는 중`}</CustomText>
+            <Pressable
+              style={{padding: 3}}
+              onPress={() => {
+                setToComment(null);
+                setCommentContent('');
+              }}>
+              <CloseWhiteSvg width={11} height={11} />
+            </Pressable>
+          </View>
+        )}
         <View
           style={{
             height: 55 + insets.bottom,
@@ -304,7 +390,7 @@ const PostScreen = ({navigation, route}) => {
                 borderRadius: 23,
                 marginRight: 8,
               }}
-              onPress={writeComment}>
+              onPress={underCommentId ? writeReComment : writeComment}>
               <ArrowUpSvg width={16} height={16} />
             </Pressable>
           </View>

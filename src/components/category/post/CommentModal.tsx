@@ -10,14 +10,33 @@ import {
 } from 'react-native';
 import CustomText from '../../CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useQuery} from '@tanstack/react-query';
+import {getComments} from '../../../apis/post';
+import Avatar from '../../Avatar';
+import {formatDate} from '../../../utils/format';
 
-const CommentModal = () => {
+interface CommentModalProps {
+  postId: number;
+  setToComment: any;
+  setUnderCommentId: any;
+  setCommentContent: any;
+}
+
+const CommentModal = (props: CommentModalProps) => {
+  const {postId, setToComment, setCommentContent, setUnderCommentId} = props;
+
   const insets = useSafeAreaInsets();
 
   const translateY = useRef(new Animated.Value(0)).current;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
+  const {data: commentsData, refetch} = useQuery({
+    queryKey: ['post', postId, 'comments'],
+    queryFn: getComments,
+    enabled: false,
+  });
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -27,10 +46,14 @@ const CommentModal = () => {
         : -Dimensions.get('window').height * 0.6,
       duration: 300,
       useNativeDriver: true,
-    }).start();
+    }).start(() => {
+      refetch();
+    });
   };
 
   const closeModal = () => {
+    setToComment(null);
+    setCommentContent('');
     Animated.timing(translateY, {
       toValue: 0,
       duration: 300,
@@ -139,8 +162,55 @@ const CommentModal = () => {
           />
         )}
         <FlatList
-          data={[]}
-          renderItem={({item}) => <></>}
+          data={commentsData?.result.comments}
+          contentContainerStyle={{paddingTop: 20, paddingBottom: 40}}
+          renderItem={({item}) => (
+            <View
+              style={{paddingHorizontal: 15, paddingVertical: 10}}
+              key={item.id}>
+              <View style={{flexDirection: 'row'}}>
+                <Avatar
+                  uri={item.writer.image}
+                  size={36}
+                  style={{marginTop: 2}}
+                />
+                <View style={{marginLeft: 8}}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <CustomText
+                      fontWeight="500"
+                      style={{color: '#1b1b1b', fontSize: 12}}>
+                      {item.writer.name}
+                    </CustomText>
+                    <CustomText
+                      style={{
+                        color: '#797979',
+                        marginLeft: 6,
+                        fontSize: 13,
+                        paddingBottom: 2,
+                      }}>
+                      {formatDate(item.createdAt)}
+                    </CustomText>
+                  </View>
+                  <CustomText
+                    fontWeight="300"
+                    style={{marginTop: 1, fontSize: 14}}>
+                    {item.content}
+                  </CustomText>
+                  <Pressable
+                    onPress={() => {
+                      setToComment(item.writer);
+                      setUnderCommentId(item.id);
+                    }}>
+                    <CustomText
+                      fontWeight="500"
+                      style={{marginTop: 4, fontSize: 12, color: '#888888'}}>
+                      답글 달기
+                    </CustomText>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+          )}
           style={{
             height: Dimensions.get('window').height * 0.6,
             width: '100%',

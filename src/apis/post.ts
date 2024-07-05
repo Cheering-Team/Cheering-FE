@@ -17,6 +17,12 @@ interface postCommentsRequest {
   content: string;
 }
 
+interface postReCommentsRequest {
+  commentId: number | null;
+  content: string;
+  toId: number | null;
+}
+
 export const postPlayersPosts = async (data: postPlayersPostsRequest) => {
   const {playerId, content, tags, images} = data;
 
@@ -75,6 +81,25 @@ export const postComments = async (data: postCommentsRequest) => {
 
   const response = await axiosInstance.post(`/posts/${postId}/comments`, {
     content,
+  });
+
+  return response.data;
+};
+
+export const getComments = async ({queryKey}) => {
+  const [_key, postId] = queryKey;
+
+  const response = await axiosInstance.get(`/posts/${postId}/comments`);
+
+  return response.data;
+};
+
+export const postReComments = async (data: postReCommentsRequest) => {
+  const {commentId, content, toId} = data;
+
+  const response = await axiosInstance.post(`/comments/${commentId}/re`, {
+    content,
+    toId,
   });
 
   return response.data;
