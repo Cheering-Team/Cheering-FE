@@ -15,6 +15,7 @@ import {getComments} from '../../../apis/post';
 import Comment from './Comment';
 
 interface CommentModalProps {
+  commentCount: number;
   postId: number;
   setToComment: any;
   setUnderCommentId: any;
@@ -25,6 +26,7 @@ interface CommentModalProps {
 
 const CommentModal = (props: CommentModalProps) => {
   const {
+    commentCount,
     postId,
     setToComment,
     setCommentContent,
@@ -156,7 +158,7 @@ const CommentModal = (props: CommentModalProps) => {
             }}
             onPress={openModal}>
             <CustomText fontWeight="600" style={{color: 'white', fontSize: 16}}>
-              댓글 100개 모두 보기
+              {`댓글 ${commentCount}개 모두 보기`}
             </CustomText>
           </Pressable>
         ) : (

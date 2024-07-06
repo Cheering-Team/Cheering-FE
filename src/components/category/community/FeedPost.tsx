@@ -198,7 +198,7 @@ const FeedPost = (props: FeedPostProps) => {
 
         <CustomText style={styles.likeCount}>{feed.likeCount}</CustomText>
         <CommentSvg width={21} height={21} style={styles.commentSvg} />
-        <CustomText style={styles.commentCount}>40</CustomText>
+        <CustomText style={styles.commentCount}>{feed.commentCount}</CustomText>
       </View>
     </View>
   );

@@ -312,6 +312,7 @@ const PostScreen = ({navigation, route}) => {
           </View>
         </ScrollView>
         <CommentModal
+          commentCount={data.result.post.commentCount}
           postId={postId}
           setToComment={setToComment}
           setCommentContent={setCommentContent}
