@@ -195,6 +195,18 @@ const CommentModal = (props: CommentModalProps) => {
             height: Dimensions.get('window').height * 0.6,
             width: '100%',
           }}
+          ListEmptyComponent={
+            <View style={{alignItems: 'center', marginTop: 50}}>
+              <CustomText
+                fontWeight="600"
+                style={{fontSize: 23, marginBottom: 5}}>
+                아직 댓글이 없어요
+              </CustomText>
+              <CustomText style={{color: '#5b5b5b'}}>
+                가장 먼저 댓글을 작성해보세요
+              </CustomText>
+            </View>
+          }
         />
       </Animated.View>
     </>
