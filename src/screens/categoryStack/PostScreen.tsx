@@ -112,6 +112,10 @@ const PostScreen = ({navigation, route}) => {
   };
 
   const writeComment = async () => {
+    if (commentContent === '') {
+      return;
+    }
+
     const data = await commentMutation.mutateAsync({
       postId,
       content: commentContent,
@@ -141,6 +145,10 @@ const PostScreen = ({navigation, route}) => {
   };
 
   const writeReComment = async () => {
+    if (commentContent === '') {
+      return;
+    }
+
     if (toComment && underCommentId) {
       const data = await reCommentMutation.mutateAsync({
         commentId: underCommentId,
@@ -218,7 +226,9 @@ const PostScreen = ({navigation, route}) => {
           </Pressable>
         </View>
         {/* 본문 */}
-        <ScrollView style={{flex: 1}}>
+        <ScrollView
+          style={{flex: 1}}
+          contentContainerStyle={{paddingBottom: 70}}>
           {/* 태그 */}
           <View
             style={{
@@ -393,8 +403,14 @@ const PostScreen = ({navigation, route}) => {
               }}
             />
             <Pressable
+              disabled={
+                commentMutation.isPending || reCommentMutation.isPending
+              }
               style={{
-                backgroundColor: '#58a04b',
+                backgroundColor:
+                  commentMutation.isPending || reCommentMutation.isPending
+                    ? '#d7d7d7'
+                    : '#58a04b',
                 paddingVertical: 8,
                 paddingHorizontal: 14,
                 borderRadius: 23,

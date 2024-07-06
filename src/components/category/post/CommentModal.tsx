@@ -173,6 +173,7 @@ const CommentModal = (props: CommentModalProps) => {
         <FlatList
           key={modalKey}
           data={commentsData?.result.comments}
+          keyboardShouldPersistTaps="handled"
           contentContainerStyle={{
             paddingTop: 20,
             paddingBottom: 40,
@@ -181,6 +182,7 @@ const CommentModal = (props: CommentModalProps) => {
           renderItem={({item}) => (
             <Comment
               comment={item}
+              setCommentContent={setCommentContent}
               setToComment={setToComment}
               setUnderCommentId={setUnderCommentId}
               reIdx={reIdx}

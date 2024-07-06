@@ -8,6 +8,7 @@ import {getReComments} from '../../../apis/post';
 
 interface CommentProps {
   comment: any;
+  setCommentContent: any;
   setToComment: any;
   setUnderCommentId: any;
   reIdx: number | null;
@@ -15,7 +16,14 @@ interface CommentProps {
 }
 
 const Comment = (props: CommentProps) => {
-  const {comment, setToComment, setUnderCommentId, reIdx, setReIdx} = props;
+  const {
+    comment,
+    setCommentContent,
+    setToComment,
+    setUnderCommentId,
+    reIdx,
+    setReIdx,
+  } = props;
 
   const [isReCommentOpen, setIsReCommentOpen] = useState(false);
 
@@ -73,6 +81,7 @@ const Comment = (props: CommentProps) => {
           </CustomText>
           <Pressable
             onPress={() => {
+              setCommentContent('');
               setToComment(comment.writer);
               setUnderCommentId(comment.id);
             }}>
@@ -121,6 +130,7 @@ const Comment = (props: CommentProps) => {
                   </CustomText>
                   <Pressable
                     onPress={() => {
+                      setCommentContent('');
                       setToComment(reComment.writer);
                       setUnderCommentId(comment.id);
                     }}>
