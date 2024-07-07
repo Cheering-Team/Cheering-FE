@@ -59,6 +59,16 @@ const PostScreen = ({navigation, route}) => {
     queryFn: getPostById,
   });
 
+  const [likeStatus, setLikeStatus] = useState<boolean>(false);
+  const [likeCount, setLikeCount] = useState<number>(0);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setLikeStatus(data.result.post.isLike);
+      setLikeCount(data.result.post.likeCount);
+    }
+  }, [data, isLoading]);
+
   const likeMutation = useMutation({
     mutationFn: postPostsLikes,
     onSuccess: () => {
@@ -108,7 +118,23 @@ const PostScreen = ({navigation, route}) => {
   };
 
   const toggleLike = async () => {
-    await likeMutation.mutateAsync({postId});
+    setLikeCount(prev => (likeStatus ? prev - 1 : prev + 1));
+    setLikeStatus(prev => !prev);
+
+    const response = await likeMutation.mutateAsync({postId});
+
+    if (response.code !== 200) {
+      setLikeCount(prev => (likeStatus ? prev - 1 : prev + 1));
+      setLikeStatus(prev => !prev);
+
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 30,
+        text1: '일시적인 오류입니다. 잠시 후 다시 시도해주세요.',
+      });
+    }
   };
 
   const writeComment = async () => {
@@ -367,13 +393,13 @@ const PostScreen = ({navigation, route}) => {
               marginLeft: 7,
               marginRight: 15,
             }}>
-            {data.result.post.isLike ? (
+            {likeStatus ? (
               <HeartFillSvg width={21} height={21} />
             ) : (
               <HeartSvg width={21} height={21} />
             )}
             <CustomText style={{fontSize: 11, marginTop: 1, color: '#3a3a3a'}}>
-              {data.result.post.likeCount}
+              {likeCount}
             </CustomText>
           </Pressable>
           <View

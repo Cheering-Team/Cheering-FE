@@ -1,11 +1,5 @@
-import React, {useState} from 'react';
-import {
-  Image,
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Pressable, StyleSheet, View} from 'react-native';
 import CustomText from '../../CustomText';
 import HeartSvg from '../../../../assets/images/heart.svg';
 import HeartFillSvg from '../../../../assets/images/heart_fill.svg';
@@ -14,6 +8,7 @@ import PostWriter from '../post/PostWriter';
 import FastImage from 'react-native-fast-image';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {postPostsLikes} from '../../../apis/post';
+import Toast from 'react-native-toast-message';
 
 interface FeedPostProps {
   feed: any;
@@ -24,6 +19,14 @@ interface FeedPostProps {
 
 const FeedPost = (props: FeedPostProps) => {
   const {feed, playerId, postId, selectedFilter} = props;
+
+  const [likeStatus, setLikeStatus] = useState<boolean>(false);
+  const [likeCount, setLikeCount] = useState<number>(0);
+
+  useEffect(() => {
+    setLikeStatus(feed.isLike);
+    setLikeCount(feed.likeCount);
+  }, [feed.isLike, feed.likeCount]);
 
   const queryClient = useQueryClient();
 
@@ -39,7 +42,23 @@ const FeedPost = (props: FeedPostProps) => {
   });
 
   const toggleLike = async () => {
-    await mutation.mutateAsync({postId});
+    setLikeCount(prev => (likeStatus ? prev - 1 : prev + 1));
+    setLikeStatus(prev => !prev);
+
+    const response = await mutation.mutateAsync({postId});
+
+    if (response.code !== 200) {
+      setLikeCount(prev => (likeStatus ? prev - 1 : prev + 1));
+      setLikeStatus(prev => !prev);
+
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 30,
+        text1: '일시적인 오류입니다. 잠시 후 다시 시도해주세요.',
+      });
+    }
   };
 
   const handleLoadStart = index => {
@@ -189,14 +208,14 @@ const FeedPost = (props: FeedPostProps) => {
         ))}
       <View style={styles.interactContainer}>
         <Pressable onPress={toggleLike}>
-          {feed.isLike ? (
+          {likeStatus ? (
             <HeartFillSvg width={21} height={21} />
           ) : (
             <HeartSvg width={21} height={21} />
           )}
         </Pressable>
 
-        <CustomText style={styles.likeCount}>{feed.likeCount}</CustomText>
+        <CustomText style={styles.likeCount}>{likeCount}</CustomText>
         <CommentSvg width={21} height={21} style={styles.commentSvg} />
         <CustomText style={styles.commentCount}>{feed.commentCount}</CustomText>
       </View>
