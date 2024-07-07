@@ -12,6 +12,17 @@ interface postPostsLikesRequest {
   postId: number;
 }
 
+interface postCommentsRequest {
+  postId: number;
+  content: string;
+}
+
+interface postReCommentsRequest {
+  commentId: number | null;
+  content: string;
+  toId: number;
+}
+
 export const postPlayersPosts = async (data: postPlayersPostsRequest) => {
   const {playerId, content, tags, images} = data;
 
@@ -65,130 +76,39 @@ export const postPostsLikes = async (data: postPostsLikesRequest) => {
   return response.data;
 };
 
-// // 커뮤니티 게시글 작성
-// export const postCommunitiesPosts = async (
-//   query: {id: number},
-//   data: FormData,
-// ) => {
-//   const {id} = query;
-//   try {
-//     const response = await axiosInstance.post(
-//       `/communities/${id}/posts`,
-//       data,
-//       {
-//         headers: {
-//           'content-type': 'multipart/form-data',
-//         },
-//       },
-//     );
+export const postComments = async (data: postCommentsRequest) => {
+  const {postId, content} = data;
 
-//     return response.data;
-//   } catch (error: any) {}
-// };
+  const response = await axiosInstance.post(`/posts/${postId}/comments`, {
+    content,
+  });
 
-// // 커뮤니티 게시글 상세
-// export const getCommunitiesPosts = async (query: {
-//   communityId: number;
-//   postId: number;
-// }) => {
-//   const {communityId, postId} = query;
-//   try {
-//     const response = await axiosInstance.get(
-//       `/communities/${communityId}/posts/${postId}`,
-//     );
+  return response.data;
+};
 
-//     return response.data;
-//   } catch (error) {
-//     //
-//   }
-// };
+export const getComments = async ({queryKey}) => {
+  const [_key, postId] = queryKey;
 
-// // 댓글 작성
-// export const postComments = async (
-//   query: {communityId: number; postId: number},
-//   data: {content: string},
-// ) => {
-//   const {communityId, postId} = query;
-//   try {
-//     const response = await axiosInstance.post(
-//       `/communities/${communityId}/posts/${postId}/comments`,
-//       data,
-//     );
+  const response = await axiosInstance.get(`/posts/${postId}/comments`);
 
-//     return response.data;
-//   } catch (error: any) {
-//     //
-//     console.log(JSON.stringify(error.response));
-//   }
-// };
+  return response.data;
+};
 
-// // 댓글 조회
-// export const getComments = async (query: {
-//   communityId: number;
-//   postId: number;
-// }) => {
-//   const {communityId, postId} = query;
-//   try {
-//     const response = await axiosInstance.get(
-//       `/communities/${communityId}/posts/${postId}/comments`,
-//     );
+export const postReComments = async (data: postReCommentsRequest) => {
+  const {commentId, content, toId} = data;
 
-//     return response.data;
-//   } catch (error: any) {
-//     //
-//   }
-// };
+  const response = await axiosInstance.post(`/comments/${commentId}/re`, {
+    content,
+    toId,
+  });
 
-// // 답글 작성
-// export const postRecomments = async (
-//   query: {communityId: number; postId: number; commentId: number},
-//   data: {content: string},
-// ) => {
-//   const {communityId, postId, commentId} = query;
-//   try {
-//     const response = await axiosInstance.post(
-//       `/communities/${communityId}/posts/${postId}/comments/${commentId}/recomments`,
-//       data,
-//     );
+  return response.data;
+};
 
-//     return response.data;
-//   } catch (error: any) {
-//     //
-//     console.log(JSON.stringify(error.response));
-//   }
-// };
+export const getReComments = async ({queryKey}) => {
+  const [_key, commentId] = queryKey;
 
-// // 답글 조회
-// export const getRecomments = async (query: {
-//   communityId: number;
-//   postId: number;
-//   commentId: number;
-// }) => {
-//   const {communityId, postId, commentId} = query;
-//   try {
-//     const response = await axiosInstance.get(
-//       `/communities/${communityId}/posts/${postId}/comments/${commentId}/recomments`,
-//     );
+  const response = await axiosInstance.get(`/comments/${commentId}/re`);
 
-//     return response.data;
-//   } catch (error: any) {
-//     //
-//   }
-// };
-
-// // 게시글 좋아요
-// export const getPostsLike = async (query: {
-//   communityId: number;
-//   postId: number;
-// }) => {
-//   const {communityId, postId} = query;
-//   try {
-//     const response = await axiosInstance.post(
-//       `/communities/${communityId}/posts/${postId}/like`,
-//     );
-
-//     return response.data;
-//   } catch (error: any) {
-//     //
-//   }
-// };
+  return response.data;
+};
