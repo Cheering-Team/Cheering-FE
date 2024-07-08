@@ -2,10 +2,10 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import CustomTabBar from '../components/CustomHomeTab';
 import HomeStackNavigator from './HomeStackNavigator';
-import MyCommunityScreen from '../screens/mainTab/MyCommunityScreen';
 import MyChatScreen from '../screens/mainTab/MyChatScreen';
 import MyPageScreen from '../screens/mainTab/MyPageScreen';
 import CategoryStackNavigator from './CategoryStackNavigator';
+import MyPlayerStackNavigator from './MyPlayerStackNavigator';
 
 const MainTabNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -25,8 +25,8 @@ const MainTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="MyCommunity"
-        component={MyCommunityScreen}
+        name="MyPlayerStack"
+        component={MyPlayerStackNavigator}
         options={{
           headerShown: false,
         }}

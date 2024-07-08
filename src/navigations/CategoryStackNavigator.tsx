@@ -12,7 +12,6 @@ export type CategoryStackParamList = {
   Community: {playerId: number};
   PostWrite: {playerId: number};
   Post: {postId: number};
-  Test: undefined;
 };
 
 const CategoryStackNavigator = () => {
