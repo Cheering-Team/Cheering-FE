@@ -1,28 +1,24 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
+  Animated,
+  Dimensions,
   FlatList,
-  Image,
   Pressable,
-  SafeAreaView,
-  StyleSheet,
   View,
 } from 'react-native';
-
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-
-import PlusGreenSvg from '../../../assets/images/plus-green.svg';
-import CustomText from '../../components/CustomText';
-import CustomButton from '../../components/CustomButton';
-import {axiosInstance} from '../../apis';
-
-import {GetUsersCommunities, getMyCommunitiesPosts} from '../../apis/community';
-import {useFocusEffect} from '@react-navigation/native';
-import {Player} from '../../components/PlayerCard';
 import {HomeStackParamList} from '../../navigations/HomeStackNavigator';
-import BellSvg from '../../../assets/images/bell.svg';
-import PersonSvg from '../../../assets/images/person.svg';
-import Post, {PostType} from '../../components/Post';
-import {getPostsLike} from '../../apis/post';
+import CustomText from '../../components/CustomText';
+import {getMyPlayers} from '../../apis/player';
+import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
+import Avatar from '../../components/Avatar';
+import {useHomeFlatListHook} from '../../components/home/useHomeFlatListHook';
+import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
+import {getMyPlayersPosts} from '../../apis/post';
+import FeedPost from '../../components/category/community/FeedPost';
+import {useIsFocused} from '@react-navigation/native';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -30,340 +26,247 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
-  const [myCommunity, setMyCommunity] = React.useState<Player[]>([]);
-  const [myPost, setMyPost] = React.useState<PostType[]>([]);
+  const isFocused = useIsFocused();
+  const [hotTab, setHotTab] = useState<number>(0);
 
-  const setData = async () => {
-    try {
-      const response = await axiosInstance.get(`/set-data`);
-      return response.data;
-    } catch (error) {
-      //
+  const [scrollY, styles, onLayoutHeaderElement, onLayoutStickyElement] =
+    useHomeFlatListHook();
+
+  const {data: playerData, isLoading: playerIsLoadling} = useQuery({
+    queryKey: ['my', 'players'],
+    queryFn: getMyPlayers,
+  });
+
+  const {
+    data: feedData,
+    isLoading: feedIsLoading,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['my', 'posts', hotTab],
+    queryFn: getMyPlayersPosts,
+    initialPageParam: 0,
+    getNextPageParam: (lastpage, pages) => {
+      if (lastpage.result.last) {
+        return undefined;
+      }
+      return pages.length;
+    },
+  });
+
+  useEffect(() => {
+    if (isFocused) {
+      refetch();
     }
-  };
+  }, [isFocused, refetch]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      let isActive = true;
-
-      const getCommunities = async () => {
-        try {
-          const communityData = await GetUsersCommunities();
-          const postData = await getMyCommunitiesPosts();
-
-          if (isActive) {
-            setMyCommunity(communityData || []);
-            setMyPost(postData.data || []);
-          }
-        } catch (error) {
-          //
-        }
-      };
-
-      getCommunities();
-
-      return () => {
-        isActive = false;
-      };
-    }, []),
-  );
-
-  const postLike = async (
-    postId: number,
-    index: number,
-    communityId: number,
-  ) => {
-    const response = await getPostsLike({
-      communityId: communityId,
-      postId: postId,
-    });
-
-    if (response.message === 'like success') {
-      const newData = [...myPost];
-      newData[index] = {
-        ...newData[index],
-        likeStatus: 'TRUE',
-        likeCount: newData[index].likeCount + 1,
-      };
-
-      setMyPost(newData);
-
-      return;
-    }
-    if (response.message === 'like cancel success') {
-      const newData = [...myPost];
-      newData[index] = {
-        ...newData[index],
-        likeStatus: 'FALSE',
-        likeCount: newData[index].likeCount - 1,
-      };
-
-      setMyPost(newData);
-
-      return;
+  const loadFeed = () => {
+    if (hasNextPage) {
+      fetchNextPage();
     }
   };
 
   return (
-    <SafeAreaView>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingHorizontal: 5}}
-        ListHeaderComponentStyle={{
-          paddingHorizontal: 15,
-          borderBottomWidth: 2,
-          borderColor: '#f3f3f3',
-          paddingBottom: 15,
-          marginBottom: 5,
-        }}
-        ListHeaderComponent={
-          <>
-            {/* header */}
-            <View
+    <SafeAreaView style={{flex: 1}}>
+      <View
+        style={{
+          height: 55,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'white',
+        }}>
+        <CustomText
+          fontWeight="600"
+          style={{
+            fontSize: 28,
+          }}>
+          Cheering
+        </CustomText>
+      </View>
+      <Animated.View
+        style={styles.stickyElement}
+        onLayout={onLayoutStickyElement}>
+        {!playerIsLoadling && (
+          <FlatList
+            style={{
+              flexGrow: 0,
+              paddingHorizontal: 8,
+              backgroundColor: 'white',
+            }}
+            data={[{id: 0, koreanName: '전체'}, ...playerData?.result]}
+            horizontal={true}
+            renderItem={({item}) => (
+              <Pressable
+                onPress={() => setHotTab(item.id)}
+                style={[
+                  {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    margin: 12,
+                    marginBottom: 0,
+                    paddingBottom: 12,
+                  },
+                ]}>
+                {item.id !== 0 && (
+                  <Avatar
+                    uri={item.image}
+                    size={23}
+                    style={{borderWidth: 1, borderColor: '#e2e2e2'}}
+                  />
+                )}
+
+                <CustomText
+                  fontWeight="500"
+                  style={{
+                    marginLeft: item.id ? 7 : 0,
+                    fontSize: 17,
+                    color: item.id === hotTab ? '#58a04b' : 'black',
+                  }}>
+                  {item === '전체' ? '전체' : item.koreanName}
+                </CustomText>
+                {item.id === hotTab && (
+                  <View
+                    style={{
+                      position: 'absolute',
+                      right: 0,
+                      bottom: 0,
+                      left: 0,
+                      backgroundColor: '#58a04b',
+                      height: 3,
+                    }}
+                  />
+                )}
+              </Pressable>
+            )}
+          />
+        )}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 16,
+            paddingVertical: 7,
+            backgroundColor: 'white',
+            borderBottomWidth: 1,
+            borderColor: '#e7e7e7',
+          }}>
+          <CustomText
+            fontWeight="500"
+            style={{color: '#686868', fontSize: 15, paddingBottom: 2}}>
+            🔥 실시간 인기 게시글
+          </CustomText>
+          {hotTab !== 0 && (
+            <Pressable
+              onPress={() => {
+                navigation.navigate('Community', {playerId: hotTab});
+              }}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                paddingVertical: 10,
+                backgroundColor: '#eeeeee',
+                borderRadius: 15,
+                paddingHorizontal: 8,
+                paddingVertical: 3,
               }}>
               <CustomText
-                fontWeight="700"
+                fontWeight="500"
                 style={{
-                  fontSize: 30,
-                  flex: 1,
-                  marginBottom: 5,
+                  color: '#686868',
+                  fontSize: 14,
+                  paddingBottom: 2,
+                  marginRight: 3,
                 }}>
-                Cheering
+                커뮤니티 바로가기
               </CustomText>
-              <View
-                style={{
-                  backgroundColor: '#58a04b',
-                  padding: 10,
-                  borderRadius: 30,
-                  marginRight: 15,
-                }}>
-                <BellSvg width={20} height={20} />
-              </View>
-              <Pressable
-                onPress={() => {
-                  navigation.navigate('Setting');
-                }}
-                style={{
-                  backgroundColor: '#58a04b',
-                  padding: 9,
-                  borderRadius: 30,
-                }}>
-                <PersonSvg width={22} height={22} />
-              </Pressable>
-            </View>
-            {/* <Pressable
-        style={styles.SearchSection}
-        onPress={() => navigation.navigate('Search')}>
-        <View style={styles.SearchBar}>
-          <Text style={styles.SearchText}>선수 또는 소속팀 검색</Text>
-          <SearchSvg width={23} />
+              <ChevronRightSvg width={10} height={10} />
+            </Pressable>
+          )}
         </View>
-      </Pressable> */}
-            {/* <FlatList horizontal={true} data={[]} renderItem={({item}) => <></>} /> */}
+      </Animated.View>
 
-            {/* <View style={{flex: 0, flexDirection: 'row'}}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: '75%',
-              height: 200,
-              borderRadius: 20,
-              shadowColor: '#7a7a7a',
-              shadowOffset: {
-                width: 10,
-                height: 10,
+      <Animated.FlatList
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 50}}
+        onScroll={Animated.event(
+          [
+            {
+              nativeEvent: {
+                contentOffset: {
+                  y: scrollY,
+                },
               },
-              shadowOpacity: 0.15,
-              shadowRadius: 15,
-
-              elevation: 20,
-            }}></View>
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: '15%',
-              height: 200,
-              borderRadius: 20,
-              marginLeft: 20,
-              shadowColor: '#7a7a7a',
-              shadowOffset: {
-                width: 5,
-                height: 10,
-              },
-              shadowOpacity: 0.15,
-              shadowRadius: 15,
-
-              elevation: 20,
-            }}></View>
-          <View
-            style={{
-              backgroundColor: 'white',
-              width: '15%',
-              height: 200,
-              borderRadius: 20,
-              marginHorizontal: 20,
-              shadowColor: '#7a7a7a',
-              shadowOffset: {
-                width: 10,
-                height: 10,
-              },
-              shadowOpacity: 0.1,
-              shadowRadius: 15,
-
-              elevation: 20,
-            }}></View>
-        </View> */}
-
-            <View>
-              <View style={styles.MyPlayerHeader}>
-                <CustomText fontWeight="500" style={styles.MyPlayerTitle}>
-                  나의 선수들
-                </CustomText>
-                {/* <Pressable onPress={() => navigation.navigate('Search')}>
-              <PlusSvg width={25} />
-            </Pressable> */}
-              </View>
-
-              <View style={styles.MyPlayerList}>
-                <Pressable
-                  onPress={() => navigation.navigate('Search')}
-                  style={styles.Player}>
-                  <View style={styles.PlayerAddBtn}>
-                    <PlusGreenSvg width={35} height={35} />
-                  </View>
-                  <CustomText fontWeight="500" style={styles.PlayerName}>
-                    추가
-                  </CustomText>
-                </Pressable>
-                {myCommunity.map(community => (
-                  <Pressable
-                    key={community.id}
-                    onPress={() =>
-                      navigation.navigate('Community', {
-                        communityId: community.id,
-                      })
-                    }
-                    style={styles.Player}>
-                    <Image
-                      source={{uri: community.image}}
-                      style={styles.PlayerImage}
-                      resizeMode="cover"
-                    />
-                    <CustomText fontWeight="500" style={styles.PlayerName}>
-                      {community.name}
-                    </CustomText>
-                  </Pressable>
-                ))}
-              </View>
-            </View>
-          </>
+            },
+          ],
+          {useNativeDriver: true},
+        )}
+        ListHeaderComponent={
+          <Animated.View onLayout={onLayoutHeaderElement}>
+            {/* header */}
+            <View
+              style={{
+                height: 200,
+                backgroundColor: '#eeeeee',
+              }}></View>
+          </Animated.View>
         }
-        ListFooterComponentStyle={{paddingHorizontal: 15, marginTop: 100}}
-        ListFooterComponent={
-          <>
-            <CustomButton onPress={setData} text="setData" />
-          </>
-        }
-        data={myPost}
-        renderItem={({item, index}) => (
+        ListHeaderComponentStyle={styles.header}
+        data={feedData?.pages.flatMap(page => page.result.posts)}
+        renderItem={({item}) => (
           <Pressable
-            onPress={() =>
-              navigation.navigate('Post', {
-                communityId: item.communityId,
-                postId: item.id,
-                type: 'From',
-              })
-            }>
-            <Post
-              item={item}
-              index={index}
-              postLike={postLike}
-              communityId={item.communityId}
+            key={item.id}
+            onPress={() => {
+              navigation.navigate('Post', {postId: item.id});
+            }}>
+            <FeedPost
+              feed={item}
+              playerId={hotTab}
+              postId={item.id}
+              hotTab={hotTab}
             />
           </Pressable>
         )}
+        ListFooterComponent={
+          feedIsLoading || isFetchingNextPage ? (
+            <View
+              style={{
+                height: Dimensions.get('window').height * 0.3 + 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator size={'large'} />
+            </View>
+          ) : null
+        }
+        onEndReached={loadFeed}
+        onEndReachedThreshold={0}
+        ListEmptyComponent={
+          !feedIsLoading ? (
+            <View
+              style={{
+                height: Dimensions.get('window').height * 0.3 + 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <CustomText
+                fontWeight="600"
+                style={{fontSize: 23, marginBottom: 5}}>
+                아직 인기 게시글이 없어요
+              </CustomText>
+              <CustomText style={{color: '#5b5b5b'}}>
+                게시글을 작성해보세요
+              </CustomText>
+            </View>
+          ) : (
+            <></>
+          )
+        }
       />
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  ScreenContainer: {
-    paddingHorizontal: 15,
-  },
-  ADCarousel: {
-    height: '35%',
-    backgroundColor: 'black',
-  },
-  ADCarouselText: {
-    color: 'white',
-  },
-  SearchSection: {padding: 11},
-  SearchBar: {
-    flex: 0,
-    alignItems: 'center',
-    flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: '#D2D2D2',
-    borderRadius: 20,
-    paddingVertical: 6,
-    paddingLeft: 15,
-    paddingRight: 10,
-  },
-  SearchText: {
-    flex: 1,
-    color: 'gray',
-    fontSize: 15,
-  },
-  MyPlayerHeader: {
-    flexDirection: 'row',
-    flex: 0,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 15,
-    marginBottom: 5,
-    paddingHorizontal: 2,
-  },
-  MyPlayerTitle: {
-    fontSize: 19,
-    color: '#000000',
-  },
-  MyPlayerList: {
-    flex: 0,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    width: '100%',
-  },
-  Player: {
-    width: '25%',
-    flex: 0,
-    padding: 5,
-    alignItems: 'center',
-  },
-  PlayerAddBtn: {
-    backgroundColor: '#ebf1e9',
-    width: 67,
-    height: 67,
-    borderRadius: 100,
-    marginBottom: 5,
-    flex: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  PlayerImage: {
-    backgroundColor: '#e5e5e5',
-    width: 67,
-    height: 67,
-    borderRadius: 100,
-    marginBottom: 5,
-  },
-  PlayerName: {
-    color: '#3a3a3a',
-  },
-});
 
 export default HomeScreen;

@@ -111,7 +111,7 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
   };
 
   return (
-    <SafeAreaView edges={['bottom']} style={{}}>
+    <SafeAreaView edges={['bottom']}>
       <CommunityHeader playerData={playerData} scrollY={scrollY} />
       <Animated.View
         style={styles.stickyElement}
@@ -168,27 +168,25 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
           ) : null
         }
         ListEmptyComponent={
-          <View
-            style={{
-              height: Dimensions.get('window').height * 0.3 + 20,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            {isLoading ? (
-              <ActivityIndicator size={'large'} />
-            ) : (
-              <>
-                <CustomText
-                  fontWeight="600"
-                  style={{fontSize: 23, marginBottom: 5}}>
-                  아직 게시글이 없어요
-                </CustomText>
-                <CustomText style={{color: '#5b5b5b'}}>
-                  가장 먼저 게시글을 작성해보세요
-                </CustomText>
-              </>
-            )}
-          </View>
+          !isLoading ? (
+            <View
+              style={{
+                height: Dimensions.get('window').height * 0.3 + 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <CustomText
+                fontWeight="600"
+                style={{fontSize: 23, marginBottom: 5}}>
+                아직 게시글이 없어요
+              </CustomText>
+              <CustomText style={{color: '#5b5b5b'}}>
+                가장 먼저 게시글을 작성해보세요
+              </CustomText>
+            </View>
+          ) : (
+            <></>
+          )
         }
       />
     </SafeAreaView>

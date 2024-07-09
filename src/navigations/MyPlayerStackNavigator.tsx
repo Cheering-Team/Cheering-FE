@@ -1,6 +1,6 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import MyPlayerScreen from '../screens/mainTab/MyPlayerScreen';
+import MyPlayerScreen from '../screens/myPlayerStack/MyPlayerScreen';
 import CommunityScreen from '../screens/categoryStack/CommunityScreen';
 
 export type MyPlayerStackParamList = {
