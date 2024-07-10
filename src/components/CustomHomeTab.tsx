@@ -1,11 +1,5 @@
-import React, {useEffect} from 'react';
-import {
-  Animated,
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import React from 'react';
+import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import CategoryGraySvg from '../../assets/images/category-gray.svg';
 import CategorBlackSvg from '../../assets/images/category-black.svg';
 import HomeSvg from '../../assets/images/home_white.svg';
@@ -16,18 +10,13 @@ import ChatGraySvg from '../../assets/images/chat-gray.svg';
 import ChatBlackSvg from '../../assets/images/chat-black.svg';
 import MoreGraySvg from '../../assets/images/more-gray.svg';
 import MoreBlackSvg from '../../assets/images/more-black.svg';
-import PlusSvg from '../../assets/images/plus_white.svg';
-import PencilSvg from '../../assets/images/pencil.svg';
-import LetterSvg from '../../assets/images/letter.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {getCommunitiesMain} from '../apis/community';
 import CustomText from './CustomText';
 
 function CustomTabBar({state, descriptors, navigation}) {
   // 탭 애니메이션 상태
   const [modeValue, setModeValue] = React.useState(false);
   const mode = React.useRef(new Animated.Value(0)).current;
-  const buttonSize = React.useRef(new Animated.Value(1)).current;
 
   // 최근에 접속한 커뮤니티 (이미지 받아오기 위함)
   // const [curCommunity, setCurCommunity] = React.useState<string | null>(null);
@@ -109,69 +98,6 @@ function CustomTabBar({state, descriptors, navigation}) {
               target: route.key,
             });
           };
-
-          const handlePlusPress = () => {
-            const toValue = modeValue ? 0 : 1;
-
-            Animated.sequence([
-              Animated.timing(buttonSize, {
-                toValue: 0.95,
-                duration: 50,
-                useNativeDriver: true,
-              }),
-              Animated.timing(buttonSize, {
-                toValue: 1,
-                duration: 50,
-                useNativeDriver: true,
-              }),
-              Animated.timing(mode, {
-                toValue: toValue,
-                duration: 350,
-                useNativeDriver: true,
-              }),
-            ]).start(() => {
-              setModeValue(!modeValue);
-            });
-          };
-
-          const sizeStyle = {
-            transform: [{scale: buttonSize}],
-          };
-
-          const rotation = mode.interpolate({
-            inputRange: [0, 1],
-            outputRange: ['0deg', '45deg'],
-          });
-
-          const writeX = mode.interpolate({
-            inputRange: [0, 1],
-            outputRange: [-25, -90],
-          });
-
-          const writeY = mode.interpolate({
-            inputRange: [0, 1],
-            outputRange: [-55, -90],
-          });
-
-          const homeX = mode.interpolate({
-            inputRange: [0, 1],
-            outputRange: [-25, -25],
-          });
-
-          const homeY = mode.interpolate({
-            inputRange: [0, 1],
-            outputRange: [-55, -135],
-          });
-
-          const letterX = mode.interpolate({
-            inputRange: [0, 1],
-            outputRange: [-25, 40],
-          });
-
-          const letterY = mode.interpolate({
-            inputRange: [0, 1],
-            outputRange: [-55, -90],
-          });
 
           // if (index === 2 && routeName === 'Community') {
           //   return (

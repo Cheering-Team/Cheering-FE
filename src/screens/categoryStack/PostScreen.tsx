@@ -80,6 +80,7 @@ const PostScreen = ({navigation, route}) => {
     mutationFn: postComments,
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
+      queryClient.invalidateQueries({queryKey: ['post', postId]});
     },
   });
 
@@ -148,16 +149,7 @@ const PostScreen = ({navigation, route}) => {
     });
 
     if (data.message === '댓글이 작성되었습니다.') {
-      Toast.show({
-        type: 'default',
-        position: 'top',
-        visibilityTime: 3000,
-        bottomOffset: 30,
-        text1: '댓글을 작성하였습니다.',
-      });
-
       setCommentContent('');
-
       return;
     } else {
       Toast.show({

@@ -60,6 +60,24 @@ export const getPosts = async ({pageParam, queryKey}) => {
   return response.data;
 };
 
+export const getMyPlayersPosts = async ({pageParam, queryKey}) => {
+  let [_key1, _key2, hotTab] = queryKey;
+
+  let response;
+
+  if (hotTab === 0) {
+    response = await axiosInstance.get(
+      `my/players/posts?page=${pageParam}&size=5`,
+    );
+  } else {
+    response = await axiosInstance.get(
+      `/players/${hotTab}/posts?tag=&page=${pageParam}&size=5`,
+    );
+  }
+
+  return response.data;
+};
+
 export const getPostById = async ({queryKey}) => {
   const [_key, postId] = queryKey;
 

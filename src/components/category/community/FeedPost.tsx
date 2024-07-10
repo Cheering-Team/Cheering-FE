@@ -9,16 +9,21 @@ import FastImage from 'react-native-fast-image';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {postPostsLikes} from '../../../apis/post';
 import Toast from 'react-native-toast-message';
+import Avatar from '../../Avatar';
+import {useNavigation} from '@react-navigation/native';
 
 interface FeedPostProps {
   feed: any;
   playerId: number;
   postId: number;
-  selectedFilter: any;
+  selectedFilter?: any;
+  hotTab?: any;
 }
 
 const FeedPost = (props: FeedPostProps) => {
-  const {feed, playerId, postId, selectedFilter} = props;
+  const navigation = useNavigation();
+
+  const {feed, playerId, postId, selectedFilter, hotTab} = props;
 
   const [likeStatus, setLikeStatus] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
@@ -37,6 +42,9 @@ const FeedPost = (props: FeedPostProps) => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['posts', playerId, selectedFilter],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['my', 'posts', hotTab],
       });
     },
   });
@@ -206,18 +214,43 @@ const FeedPost = (props: FeedPostProps) => {
             </View>
           </View>
         ))}
-      <View style={styles.interactContainer}>
-        <Pressable onPress={toggleLike}>
-          {likeStatus ? (
-            <HeartFillSvg width={21} height={21} />
-          ) : (
-            <HeartSvg width={21} height={21} />
-          )}
-        </Pressable>
-
-        <CustomText style={styles.likeCount}>{likeCount}</CustomText>
-        <CommentSvg width={21} height={21} style={styles.commentSvg} />
-        <CustomText style={styles.commentCount}>{feed.commentCount}</CustomText>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginTop: 30,
+        }}>
+        <View style={styles.interactContainer}>
+          <Pressable onPress={toggleLike}>
+            {likeStatus ? (
+              <HeartFillSvg width={21} height={21} />
+            ) : (
+              <HeartSvg width={21} height={21} />
+            )}
+          </Pressable>
+          <CustomText style={styles.likeCount}>{likeCount}</CustomText>
+          <CommentSvg width={21} height={21} style={styles.commentSvg} />
+          <CustomText style={styles.commentCount}>
+            {feed.commentCount}
+          </CustomText>
+        </View>
+        {feed.player && (
+          <Pressable
+            onPress={() =>
+              navigation.navigate('Community', {playerId: feed.player.id})
+            }
+            style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Avatar
+              uri={feed.player.image}
+              size={21}
+              style={{borderWidth: 1, borderColor: '#e2e2e2'}}
+            />
+            <CustomText style={{fontSize: 15, marginLeft: 7}}>
+              {feed.player.koreanName}
+            </CustomText>
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -239,7 +272,6 @@ const styles = StyleSheet.create({
   interactContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 30,
   },
   likeCount: {fontSize: 15, marginLeft: 6, paddingBottom: 1, color: '#333436'},
   commentSvg: {marginLeft: 25, top: 1},
