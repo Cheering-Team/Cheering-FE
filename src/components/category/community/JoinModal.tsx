@@ -21,7 +21,7 @@ import ArrowLeftGraySvg from '../../../../assets/images/arrow-left-gray.svg';
 import CheckGraySvg from '../../../../assets/images/check-gray.svg';
 import CheckGreenSvg from '../../../../assets/images/check-green.svg';
 import {getCheckNickname, postCommunityJoin} from '../../../apis/player';
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {StyleSheet} from 'react-native';
 
 interface JoinModalProps {
@@ -44,6 +44,7 @@ const JoinModal = (props: JoinModalProps) => {
   } = props;
 
   const insets = useSafeAreaInsets();
+  const queryClient = useQueryClient();
 
   const [joinState, setJoinState] = useState<'profile' | 'term'>('profile');
   const [agreements, setAgreements] = useState({
@@ -70,7 +71,14 @@ const JoinModal = (props: JoinModalProps) => {
     enabled: false,
     retry: 0,
   });
-  const mutation = useMutation({mutationFn: postCommunityJoin});
+  const mutation = useMutation({
+    mutationFn: postCommunityJoin,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['my', 'players'],
+      });
+    },
+  });
 
   useEffect(() => {
     if (!isRefetching) {

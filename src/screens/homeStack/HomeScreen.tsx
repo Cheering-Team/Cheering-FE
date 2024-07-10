@@ -18,7 +18,7 @@ import {useHomeFlatListHook} from '../../components/home/useHomeFlatListHook';
 import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
 import {getMyPlayersPosts} from '../../apis/post';
 import FeedPost from '../../components/category/community/FeedPost';
-import {useIsFocused} from '@react-navigation/native';
+import {CommonActions, useIsFocused} from '@react-navigation/native';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -154,11 +154,14 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
             borderBottomWidth: 1,
             borderColor: '#e7e7e7',
           }}>
-          <CustomText
-            fontWeight="500"
-            style={{color: '#686868', fontSize: 15, paddingBottom: 2}}>
-            🔥 실시간 인기 게시글
-          </CustomText>
+          {playerData?.result.length > 0 && (
+            <CustomText
+              fontWeight="500"
+              style={{color: '#686868', fontSize: 15, paddingBottom: 2}}>
+              🔥 실시간 인기 게시글
+            </CustomText>
+          )}
+
           {hotTab !== 0 && (
             <Pressable
               onPress={() => {
@@ -170,7 +173,7 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
                 backgroundColor: '#eeeeee',
                 borderRadius: 15,
                 paddingHorizontal: 8,
-                paddingVertical: 3,
+                paddingVertical: 2,
               }}>
               <CustomText
                 fontWeight="500"
@@ -245,21 +248,55 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
         onEndReachedThreshold={0}
         ListEmptyComponent={
           !feedIsLoading ? (
-            <View
-              style={{
-                height: Dimensions.get('window').height * 0.3 + 20,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <CustomText
-                fontWeight="600"
-                style={{fontSize: 23, marginBottom: 5}}>
-                아직 인기 게시글이 없어요
-              </CustomText>
-              <CustomText style={{color: '#5b5b5b'}}>
-                게시글을 작성해보세요
-              </CustomText>
-            </View>
+            playerData?.result.length > 0 ? (
+              <View
+                style={{
+                  height: Dimensions.get('window').height * 0.3 + 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <CustomText
+                  fontWeight="600"
+                  style={{fontSize: 23, marginBottom: 5}}>
+                  아직 인기 게시글이 없어요
+                </CustomText>
+                <CustomText style={{color: '#5b5b5b'}}>
+                  게시글을 작성해보세요
+                </CustomText>
+              </View>
+            ) : (
+              <View
+                style={{
+                  height: Dimensions.get('window').height * 0.3 + 20,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <CustomText
+                  fontWeight="600"
+                  style={{fontSize: 23, marginBottom: 5}}>
+                  아직 가입한 커뮤니티가 없어요
+                </CustomText>
+                <CustomText style={{color: '#5b5b5b'}}>
+                  좋아하는 선수를 찾아보세요
+                </CustomText>
+                <Pressable
+                  style={{marginTop: 10}}
+                  onPress={() =>
+                    navigation.dispatch(
+                      CommonActions.reset({
+                        index: 0,
+                        routes: [{name: 'CategoryStack'}],
+                      }),
+                    )
+                  }>
+                  <CustomText
+                    fontWeight="500"
+                    style={{color: '#58a04b', fontSize: 15}}>
+                    선수 찾기
+                  </CustomText>
+                </Pressable>
+              </View>
+            )
           ) : (
             <></>
           )
