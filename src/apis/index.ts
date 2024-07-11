@@ -1,6 +1,6 @@
 import axios from 'axios';
+import * as RootNavigation from '../navigations/RootNavigation';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {navigate} from '../navigations/RootNavigation';
 
 export const axiosInstance = axios.create({
   baseURL: 'http://172.30.1.69:8080/api',
@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(
       if (response.data.message === '해당 사용자를 찾을 수 없습니다.') {
         await EncryptedStorage.removeItem('accessToken');
         await EncryptedStorage.removeItem('refreshToken');
-        navigate('SignOut', null);
+        RootNavigation.navigate('SettingStack', {screen: 'SignOut'});
       }
       return Promise.reject(response.data);
     }
@@ -38,7 +38,7 @@ axiosInstance.interceptors.response.use(
       if (config.url === '/refresh') {
         await EncryptedStorage.removeItem('accessToken');
         await EncryptedStorage.removeItem('refreshToken');
-        navigate('SignOut', null);
+        RootNavigation.navigate('SettingStack', {screen: 'SignOut'});
       } else {
         const data = await reIssueToken();
 
@@ -46,6 +46,7 @@ axiosInstance.interceptors.response.use(
 
         await EncryptedStorage.setItem('accessToken', accessToken);
         await EncryptedStorage.setItem('refreshToken', refreshToken);
+
         return axiosInstance(config);
       }
     }

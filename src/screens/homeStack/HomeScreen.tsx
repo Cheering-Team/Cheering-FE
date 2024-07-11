@@ -19,6 +19,7 @@ import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
 import {getMyPlayersPosts} from '../../apis/post';
 import FeedPost from '../../components/category/community/FeedPost';
 import {CommonActions, useIsFocused} from '@react-navigation/native';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
