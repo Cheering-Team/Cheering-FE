@@ -70,7 +70,9 @@ function CustomTabBar({state, descriptors, navigation}) {
 
       <View
         style={[
-          routeName === 'PostWrite' || routeName === 'Post'
+          routeName === 'PostWrite' ||
+          routeName === 'Post' ||
+          routeName === 'Search'
             ? {display: 'none'}
             : styles.TabContainer,
           {paddingBottom: useSafeAreaInsets().bottom},
@@ -99,68 +101,6 @@ function CustomTabBar({state, descriptors, navigation}) {
             });
           };
 
-          // if (index === 2 && routeName === 'Community') {
-          //   return (
-          //     <Pressable
-          //       key={index}
-          //       accessibilityRole="button"
-          //       accessibilityState={isFocused ? {selected: true} : {}}
-          //       accessibilityLabel={options.tabBarAccessibilityLabel}
-          //       testID={options.tabBarTestID}
-          //       onPress={handlePlusPress}
-          //       onLongPress={onLongPress}
-          //       style={styles.Tab}>
-          //       <Animated.View
-          //         style={{
-          //           position: 'absolute',
-          //           transform: [{translateX: writeX}, {translateY: writeY}],
-          //         }}>
-          //         <Pressable style={styles.secondaryButton}>
-          //           <LetterSvg width={23} height={23} />
-          //         </Pressable>
-          //       </Animated.View>
-          //       <Animated.View
-          //         style={{
-          //           position: 'absolute',
-          //           transform: [{translateX: homeX}, {translateY: homeY}],
-          //         }}>
-          //         <Pressable
-          //           style={styles.secondaryButton}
-          //           onPress={() => {
-          //             mode.setValue(0);
-          //             setModeValue(false);
-          //             navigation.navigate('Write', {
-          //               communityId:
-          //                 state.routes[state.index].state.routes.at(-1).params
-          //                   .communityId,
-          //             });
-          //           }}>
-          //           <PencilSvg width={23} height={23} />
-          //         </Pressable>
-          //       </Animated.View>
-          //       <Animated.View
-          //         style={{
-          //           position: 'absolute',
-          //           transform: [{translateX: letterX}, {translateY: letterY}],
-          //         }}>
-          //         <Pressable
-          //           style={styles.secondaryButton}
-          //           onPress={() => {
-          //             mode.setValue(0);
-          //             setModeValue(false);
-          //             navigation.navigate('Home');
-          //           }}>
-          //           <HomeSvg width={25} height={25} />
-          //         </Pressable>
-          //       </Animated.View>
-          //       <Animated.View style={[styles.HomeTab, sizeStyle]}>
-          //         <Animated.View style={{transform: [{rotate: rotation}]}}>
-          //           <PlusSvg width={25} height={25} />
-          //         </Animated.View>
-          //       </Animated.View>
-          //     </Pressable>
-          //   );
-          // } else
           if (index === 2) {
             return (
               <Pressable
@@ -172,23 +112,6 @@ function CustomTabBar({state, descriptors, navigation}) {
                 onPress={onPress}
                 onLongPress={onLongPress}
                 style={styles.Tab}>
-                {/* {curCommunity && routeName !== 'Home' ? (
-                  <ImageBackground
-                    source={{uri: curCommunity}}
-                    imageStyle={{
-                      borderRadius: 37,
-                      borderWidth: 3,
-                      borderColor: 'white',
-                    }}
-                    resizeMode="cover"
-                    style={styles.ImageHomeTab}>
-                    <HomeSvg width={30} height={30} />
-                  </ImageBackground>
-                ) : (
-                  <View style={styles.HomeTab}>
-                    <HomeSvg width={30} height={30} />
-                  </View>
-                )} */}
                 {isFocused ? (
                   <View style={styles.HomeTabFocused}>
                     <HomeSvg width={30} height={30} />

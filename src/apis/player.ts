@@ -12,6 +12,11 @@ interface postComminityJoinRequest {
   image: Image;
 }
 
+export const getPlayers = async ({name}) => {
+  const response = await axiosInstance.get(`/players?name=${name}`);
+  return response.data;
+};
+
 export const getPlayersByTeam = async ({queryKey}) => {
   const [_key, teamId] = queryKey;
   const response = await axiosInstance.get(`/teams/${teamId}/players`);

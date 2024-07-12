@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect} from 'react';
+import React, {useLayoutEffect} from 'react';
 import PlayerList from '../../components/PlayerList';
 import {Image, SafeAreaView, View} from 'react-native';
 import Back from '../../hooks/Back';
@@ -100,6 +100,7 @@ const PlayerListScreen = ({navigation, route}) => {
       <PlayerList
         teamName={data.result.team.name}
         players={data.result.players}
+        paddingTop={true}
       />
     </SafeAreaView>
   );
