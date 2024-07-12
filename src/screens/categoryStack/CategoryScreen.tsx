@@ -56,7 +56,8 @@ const CategoryScreen = ({navigation}) => {
           paddingHorizontal: 15,
           borderBottomColor: '#f2f2f2',
           borderBottomWidth: 1,
-        }}>
+        }}
+        onPress={() => navigation.navigate('Search')}>
         <View
           style={{
             flex: 1,
