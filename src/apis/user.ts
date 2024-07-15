@@ -52,16 +52,8 @@ export const postSignup = async (data: postSignupRequest) => {
   return response.data;
 };
 
-// export const postEmail = async (data: postEmailRequest) => {
-//   const response = await axiosInstance.post('/email', data);
-//   return response;
-// };
+export const getUserInfo = async () => {
+  const response = await axiosInstance.get('/users');
 
-// export const postSignin = async (data: postSigninRequest) => {
-//   try {
-//     const response = await axiosInstance.post('/signin', data);
-//     return response;
-//   } catch (error) {
-//     //
-//   }
-// };
+  return response.data;
+};

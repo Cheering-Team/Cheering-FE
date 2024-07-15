@@ -46,22 +46,27 @@ const styles = StyleSheet.create({
   LightFont: {
     fontFamily: 'NotoSansKR-Light',
     includeFontPadding: false,
+    paddingBottom: 2,
   },
   RegularFont: {
     fontFamily: 'NotoSansKR-Regular',
     includeFontPadding: false,
+    paddingBottom: 2,
   },
   MediumFont: {
     fontFamily: 'NotoSansKR-Medium',
     includeFontPadding: false,
+    paddingBottom: 2,
   },
   SemiBoldFont: {
     fontFamily: 'NotoSansKR-SemiBold',
     includeFontPadding: false,
+    paddingBottom: 2,
   },
   BoldFont: {
     fontFamily: 'NotoSansKR-Bold',
     includeFontPadding: false,
+    paddingBottom: 2,
   },
 });
 
