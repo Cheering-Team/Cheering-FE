@@ -23,10 +23,10 @@ export const toastConfig = {
     <BaseToast
       {...props}
       style={{
-        borderLeftColor: '#4a4a4a',
-        backgroundColor: '#4a4a4a',
+        borderLeftColor: '#2d2d2d',
+        backgroundColor: '#2d2d2d',
       }}
-      contentContainerStyle={{paddingHorizontal: 15}}
+      contentContainerStyle={{paddingHorizontal: 10}}
       text1Style={{
         fontWeight: 'normal',
         fontFamily: 'NotoSansKR-Medium',

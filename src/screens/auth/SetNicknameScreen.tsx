@@ -13,6 +13,7 @@ import {postSignup} from '../../apis/user';
 import {NICKNAME_REGEX} from '../../constants/regex';
 import {AuthContext} from '../../navigations/AuthSwitch';
 import Toast from 'react-native-toast-message';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type SetNicknameScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -30,6 +31,7 @@ const SetNickNameScreen = ({
 }) => {
   Close(navigation);
   const signIn = useContext(AuthContext)?.signIn;
+  const insets = useSafeAreaInsets();
 
   const {phone} = route.params;
 
@@ -52,8 +54,8 @@ const SetNickNameScreen = ({
           type: 'default',
           position: 'top',
           visibilityTime: 3000,
-          bottomOffset: 30,
-          text1: '회원가입이 완료되었습니다..',
+          bottomOffset: insets.top + 20,
+          text1: '회원가입이 완료되었습니다.',
         });
 
         signIn?.(accessToken, refreshToken);
@@ -79,14 +81,18 @@ const SetNickNameScreen = ({
         </CustomText>
 
         <CustomTextInput
-          placeholder="대표 닉네임"
-          maxLength={20}
+          label="대표 닉네임"
           value={nickname}
-          valid={nicknameValid}
-          invalidMessage="2자~20자, 한글과 영어만 사용 가능합니다."
+          isValid={nicknameValid}
+          maxLength={20}
+          curLength={nickname.length}
+          length={true}
+          inValidMessage="2자~20자, 한글과 영어만 사용 가능합니다."
           onChangeText={e => {
             setNickname(e);
+            setNicknameValid(true);
           }}
+          containerStyle={{marginTop: 10}}
         />
       </KeyboardAwareScrollView>
       <CustomButton

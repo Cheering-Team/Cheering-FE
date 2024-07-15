@@ -1,9 +1,10 @@
 import axios from 'axios';
 import * as RootNavigation from '../navigations/RootNavigation';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import Toast from 'react-native-toast-message';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://172.30.1.47:8080/api',
+  baseURL: 'http://172.30.1.42:8080/api',
 });
 
 axiosInstance.interceptors.request.use(async config => {
@@ -25,6 +26,16 @@ axiosInstance.interceptors.response.use(
   },
   async error => {
     const {config, response} = error;
+    if (response.status === 500) {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: 30,
+        text1: '일시적인 오류입니다.',
+        text2: '잠시 후 다시 시도해 주세요.',
+      });
+    }
     if (response.status === 400) {
       if (response.data.message === '해당 사용자를 찾을 수 없습니다.') {
         await EncryptedStorage.removeItem('accessToken');

@@ -18,6 +18,7 @@ import {useMutation} from '@tanstack/react-query';
 import {postPhoneCode, postPhoneSMS, postSignin} from '../../apis/user';
 import Toast from 'react-native-toast-message';
 import {AuthContext} from '../../navigations/AuthSwitch';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type PhoneCodeScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -35,6 +36,7 @@ const PhoneCodeScreen = ({
 }) => {
   BackClose(navigation);
   const signIn = useContext(AuthContext)?.signIn;
+  const insets = useSafeAreaInsets();
 
   const {user, phone} = route.params;
 
@@ -55,16 +57,15 @@ const PhoneCodeScreen = ({
           type: 'default',
           position: 'top',
           visibilityTime: 3000,
-          bottomOffset: 30,
+          topOffset: insets.top + 20,
           text1: '인증번호가 만료되었습니다.',
-          text2: '다시시도 해주세요.',
         });
         navigation.goBack();
       }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [limitTime, navigation]);
+  }, [insets.top, limitTime, navigation]);
 
   const handleCodeSubmitToSignIn = async () => {
     try {
@@ -76,7 +77,7 @@ const PhoneCodeScreen = ({
           type: 'default',
           position: 'top',
           visibilityTime: 3000,
-          bottomOffset: 30,
+          topOffset: insets.top + 20,
           text1: '로그인되었습니다.',
         });
 
@@ -90,9 +91,8 @@ const PhoneCodeScreen = ({
           type: 'default',
           position: 'top',
           visibilityTime: 3000,
-          bottomOffset: 30,
+          topOffset: insets.top + 20,
           text1: '인증번호가 만료되었습니다.',
-          text2: '다시시도 해주세요.',
         });
         navigation.goBack();
       }
@@ -113,9 +113,8 @@ const PhoneCodeScreen = ({
           type: 'default',
           position: 'top',
           visibilityTime: 3000,
-          bottomOffset: 30,
+          topOffset: insets.top + 20,
           text1: '인증번호가 만료되었습니다.',
-          text2: '다시시도 해주세요.',
         });
         navigation.goBack();
       }
@@ -130,7 +129,7 @@ const PhoneCodeScreen = ({
           type: 'default',
           position: 'top',
           visibilityTime: 3000,
-          bottomOffset: 30,
+          topOffset: insets.top + 20,
           text1: '인증번호가 전송되었습니다.',
         });
         setLimitTime(300);
@@ -156,6 +155,7 @@ const PhoneCodeScreen = ({
       <KeyboardAwareScrollView
         enableOnAndroid
         extraScrollHeight={-200}
+        keyboardShouldPersistTaps="handled"
         style={{flex: 1, padding: 20}}>
         {user ? (
           <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
@@ -176,50 +176,60 @@ const PhoneCodeScreen = ({
         <CustomText fontWeight="400" style={styles.signInInfo}>
           문자로 받은 인증번호를 입력해주시면
         </CustomText>
-        <CustomText fontWeight="400" style={styles.signInInfo}>
-          바로 서비스 이용이 가능합니다.
-        </CustomText>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <View style={{flex: 1}}>
-            <CustomTextInput
-              value={code}
-              valid={codeValid}
-              invalidMessage="인증번호가 일치하지 않습니다."
-              onChangeText={e => {
-                setCode(e);
-                setCodeValid(true);
-              }}
-              placeholder="인증번호"
-              maxLength={6}
-              curLength={code.length}
-              keyboardType="number-pad"
-            />
-          </View>
-
-          <CustomText
-            fontWeight="400"
-            style={{
-              color: '#ff5252',
-              fontSize: 16,
-              marginBottom: 10,
-              marginLeft: 15,
-            }}>
-            {formatTime(limitTime)}
+        {user ? (
+          <CustomText fontWeight="400" style={styles.signInInfo}>
+            바로 로그인할게요
           </CustomText>
-          <Pressable
-            style={{
-              borderColor: '#b5b5b5',
-              borderWidth: 1,
-              paddingHorizontal: 8,
-              paddingVertical: 2,
-              borderRadius: 5,
-              marginLeft: 10,
-              marginBottom: 10,
+        ) : (
+          <CustomText fontWeight="400" style={styles.signInInfo}>
+            바로 가입할게요
+          </CustomText>
+        )}
+        <View style={{flexDirection: 'row', marginTop: 15}}>
+          <CustomTextInput
+            value={code}
+            label="인증번호 6자리"
+            isValid={codeValid}
+            inValidMessage="인증번호가 일치하지 않습니다."
+            onChangeText={e => {
+              setCode(e);
+              setCodeValid(true);
             }}
-            disabled={sendMutation.isPending}
-            onPress={handleReSend}>
-            <CustomText style={{fontSize: 14}}>다시 받기</CustomText>
-          </Pressable>
+            maxLength={6}
+            keyboardType="number-pad"
+          />
+          <View
+            style={{
+              position: 'absolute',
+              flexDirection: 'row',
+              right: 10,
+              top: 17,
+              alignItems: 'center',
+              zIndex: 2,
+            }}>
+            <CustomText
+              fontWeight="400"
+              style={{
+                color: '#ff5252',
+                fontSize: 16,
+                marginBottom: 3,
+              }}>
+              {formatTime(limitTime)}
+            </CustomText>
+            <Pressable
+              style={{
+                borderColor: '#b5b5b5',
+                borderWidth: 1,
+                paddingHorizontal: 8,
+                paddingVertical: 2,
+                borderRadius: 5,
+                marginLeft: 10,
+              }}
+              disabled={sendMutation.isPending}
+              onPress={handleReSend}>
+              <CustomText style={{fontSize: 14}}>다시 받기</CustomText>
+            </Pressable>
+          </View>
         </View>
       </KeyboardAwareScrollView>
       <CustomButton

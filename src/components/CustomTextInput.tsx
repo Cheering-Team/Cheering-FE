@@ -1,86 +1,136 @@
 import {BottomSheetTextInput} from '@gorhom/bottom-sheet';
-import React, {forwardRef} from 'react';
-import {View, TextInput, StyleSheet, TextInputProps} from 'react-native';
+import React, {forwardRef, useState} from 'react';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  TextInputProps,
+  Pressable,
+} from 'react-native';
 import CustomText from './CustomText';
 
 interface CustomTextInputProps extends TextInputProps {
-  label?: string;
-  valid?: boolean;
-  invalidMessage?: string;
-  type?: 'Sheet' | 'Basic';
+  label: string;
+  containerStyle?: any;
+  isValid?: boolean;
+  inValidMessage?: string;
   curLength?: number;
-  maxLength?: number;
+  length?: boolean;
 }
 
 const CustomTextInput = forwardRef<any, CustomTextInputProps>((props, ref) => {
   const {
-    valid = true,
     label,
-    invalidMessage,
-    type = 'Basic',
-    style,
-    curLength = 0,
-    maxLength = 0,
+    isValid = true,
+    inValidMessage,
+    containerStyle,
+    curLength,
+    maxLength,
+    length = false,
+    value = '',
     ...rest
   } = props;
-  const [focus, setFocus] = React.useState(false);
+  const [focus, setFocus] = useState(false);
 
   return (
-    <View style={[styles.emailInput, style]}>
-      {label && (
-        <CustomText fontWeight="400" style={styles.emailInputLabel}>
+    <View style={{width: '100%'}}>
+      <View
+        style={[
+          {
+            width: '100%',
+            borderColor: focus ? '#303030' : '#898989',
+            borderWidth: focus ? 1.5 : 1,
+            borderRadius: 5,
+            paddingTop: 26,
+            paddingBottom: 12,
+            paddingHorizontal: 10,
+            justifyContent: 'center',
+            backgroundColor: isValid ? 'white' : '#fcf2f2',
+          },
+          containerStyle,
+        ]}>
+        <CustomText
+          fontWeight={isValid ? '400' : '500'}
+          style={{
+            position: 'absolute',
+            left: 10,
+            top: focus || value.length > 0 ? 6 : undefined,
+            fontSize: focus || value.length > 0 ? 12 : 16,
+            color: isValid ? '#898989' : '#c64e4e',
+          }}>
           {label}
         </CustomText>
-      )}
-      {type === 'Sheet' ? (
-        <BottomSheetTextInput
-          ref={ref}
-          placeholderTextColor="#C6C6C6"
-          style={
-            !valid
-              ? styles.invalidEmailInput
-              : focus
-              ? styles.emailInputFocus
-              : styles.emailInputBlur
-          }
-          onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
-          autoCapitalize="none"
-          {...rest}
-        />
-      ) : (
         <TextInput
-          placeholderTextColor="#C6C6C6"
-          style={
-            !valid
-              ? styles.invalidEmailInput
-              : focus
-              ? styles.emailInputFocus
-              : styles.emailInputBlur
-          }
+          value={value}
+          style={{fontSize: 16}}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
+          maxLength={maxLength}
           autoCapitalize="none"
           {...rest}
         />
-      )}
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <CustomText
-          fontWeight="500"
-          style={!valid ? styles.invalidEmail : styles.validEmail}>
-          {invalidMessage}
-        </CustomText>
-        {maxLength !== 0 && (
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+        {!isValid && (
+          <CustomText style={{color: '#c64e4e', marginTop: 3, marginLeft: 3}}>
+            {inValidMessage}
+          </CustomText>
+        )}
+        {length && (
           <CustomText
-            fontWeight="400"
             style={{
-              color: '#a3a3a3',
+              position: 'absolute',
+              right: 6,
+              top: 2,
+              color: '#6d6d6d',
               fontSize: 13,
-              marginTop: 4,
-            }}>{`${curLength} / ${maxLength}`}</CustomText>
+            }}>
+            {`${curLength} / ${maxLength}`}
+          </CustomText>
         )}
       </View>
     </View>
+    // <View style={[styles.emailInput, style]}>
+    //   {label && (
+    //     <CustomText fontWeight="400" style={styles.emailInputLabel}>
+    //       {label}
+    //     </CustomText>
+    //   )}
+    //   <TextInput
+    //     placeholderTextColor="#C6C6C6"
+    //     style={
+    //       !valid
+    //         ? styles.invalidEmailInput
+    //         : focus
+    //         ? styles.emailInputFocus
+    //         : styles.emailInputBlur
+    //     }
+    //     onFocus={() => setFocus(true)}
+    //     onBlur={() => setFocus(false)}
+    //     autoCapitalize="none"
+    //     {...rest}
+    //   />
+    //   <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+    //     <CustomText
+    //       fontWeight="500"
+    //       style={!valid ? styles.invalidEmail : styles.validEmail}>
+    //       {invalidMessage}
+    //     </CustomText>
+    //     {maxLength !== 0 && (
+    //       <CustomText
+    //         fontWeight="400"
+    //         style={{
+    //           color: '#a3a3a3',
+    //           fontSize: 13,
+    //           marginTop: 4,
+    //         }}>{`${curLength} / ${maxLength}`}</CustomText>
+    //     )}
+    //   </View>
+    // </View>
   );
 });
 
