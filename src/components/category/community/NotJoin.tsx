@@ -26,7 +26,7 @@ const NotJoin = (props: NotJoinProps) => {
     <View
       style={[
         styles.container,
-        {height: Dimensions.get('window').height * 0.3 + 20},
+        {height: Dimensions.get('window').height * 0.4},
       ]}>
       <View style={styles.imageContainer}>
         <Avatar

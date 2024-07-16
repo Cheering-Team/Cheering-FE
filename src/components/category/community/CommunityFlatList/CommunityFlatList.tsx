@@ -6,7 +6,7 @@ import {
   Pressable,
   View,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useCommunityFlatListHook} from './hooks/useCommunityFlatListHook';
 import CommunityHeader from '../CommunityHeader';
 import {useInfiniteQuery} from '@tanstack/react-query';
@@ -37,6 +37,8 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
     handleScrollBeginDrag,
     handleScrollEndDrag,
   } = props;
+
+  const insets = useSafeAreaInsets();
 
   const isFocused = useIsFocused();
   const navigation = useNavigation();
@@ -131,10 +133,12 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
         ListHeaderComponent={
           <Animated.View onLayout={onLayoutHeaderElement}>
             <CommunityProfile playerData={playerData} />
-            <FeedFilter
-              selectedFilter={selectedFilter}
-              setSelectedFilter={setSelectedFilter}
-            />
+            {playerData.result.user && (
+              <FeedFilter
+                selectedFilter={selectedFilter}
+                setSelectedFilter={setSelectedFilter}
+              />
+            )}
           </Animated.View>
         }
         ListHeaderComponentStyle={styles.header}

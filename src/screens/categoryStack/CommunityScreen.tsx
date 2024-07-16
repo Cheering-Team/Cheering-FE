@@ -97,7 +97,7 @@ const CommunityScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView key={refreshKey} style={{flex: 1}}>
+      <View key={refreshKey} style={{flex: 1, paddingBottom: insets.bottom}}>
         <CommunityFlatList
           ref={flatListRef}
           playerData={playerData}
@@ -115,7 +115,7 @@ const CommunityScreen = ({navigation, route}) => {
           translateY={translateY}
           setRefreshKey={setRefreshKey}
         />
-      </SafeAreaView>
+      </View>
       {playerData.result.user && (
         <View
           style={{
