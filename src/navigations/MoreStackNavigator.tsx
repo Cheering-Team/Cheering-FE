@@ -5,11 +5,13 @@ import MyProfileScreen from '../screens/moreStack/MyProfileScreen';
 import SettingScreen from '../screens/moreStack/SettingScreen';
 import SignOutScreen from '../screens/moreStack/SignOutScreen';
 import EditNicknameScreen from '../screens/moreStack/EditNicknameScreen';
+import DeleteUserScreen from '../screens/moreStack/DeleteUserScreen';
 
 export type MoreStackParamList = {
   More: undefined;
   MyProfile: undefined;
   EditNickname: {nickname: string};
+  DeleteUser: undefined;
   Setting: undefined;
   SignOut: undefined;
 };
@@ -32,6 +34,11 @@ const MoreStackNavigator = () => {
       <MoreStack.Screen
         name="EditNickname"
         component={EditNicknameScreen}
+        options={{headerShown: false}}
+      />
+      <MoreStack.Screen
+        name="DeleteUser"
+        component={DeleteUserScreen}
         options={{headerShown: false}}
       />
       <MoreStack.Screen

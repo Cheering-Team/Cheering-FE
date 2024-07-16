@@ -67,3 +67,9 @@ export const updateUserNickname = async (data: updateUserNikcnameRequest) => {
 
   return response.data;
 };
+
+export const deleteUser = async () => {
+  const response = await axiosInstance.delete('/users');
+
+  return response.data;
+};

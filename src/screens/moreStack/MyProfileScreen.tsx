@@ -1,10 +1,11 @@
 import React from 'react';
-import {PermissionsAndroid, Pressable, SafeAreaView, View} from 'react-native';
+import {Pressable, SafeAreaView, View} from 'react-native';
 import CustomText from '../../components/CustomText';
 import BackSvg from '../../../assets/images/arrow-left.svg';
 import {useQuery} from '@tanstack/react-query';
 import {getUserInfo} from '../../apis/user';
 import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
+import CustomButton from '../../components/CustomButton';
 
 const MyProfileScreen = ({navigation}) => {
   const {data, isLoading} = useQuery({
@@ -66,6 +67,27 @@ const MyProfileScreen = ({navigation}) => {
             <ChevronRightSvg width={13} height={13} />
           </View>
         </Pressable>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginTop: 30,
+          }}>
+          <Pressable onPress={() => navigation.replace('SignOut')}>
+            <CustomText style={{color: '#969696', fontSize: 15}}>
+              로그아웃
+            </CustomText>
+          </Pressable>
+          <CustomText
+            style={{marginHorizontal: 9, color: '#969696', fontSize: 14}}>
+            |
+          </CustomText>
+          <Pressable onPress={() => navigation.navigate('DeleteUser')}>
+            <CustomText style={{color: '#969696', fontSize: 15}}>
+              회원탈퇴
+            </CustomText>
+          </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );

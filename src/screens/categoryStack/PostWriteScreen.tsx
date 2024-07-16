@@ -19,6 +19,7 @@ import {postPlayersPosts} from '../../apis/post';
 import {useMutation} from '@tanstack/react-query';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 import Toast from 'react-native-toast-message';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface FilterType {
   photo: boolean;
@@ -46,6 +47,7 @@ interface SizeImage {
 }
 
 const PostWriteScreen = ({navigation, route}) => {
+  const insets = useSafeAreaInsets();
   const playerId = route.params.playerId;
 
   const [isTagOpen, setIsTagOpen] = useState(false);
@@ -98,7 +100,7 @@ const PostWriteScreen = ({navigation, route}) => {
         type: 'default',
         position: 'top',
         visibilityTime: 3000,
-        bottomOffset: 30,
+        topOffset: insets.top + 20,
         text1: '내용을 입력해주세요.',
       });
 

@@ -85,9 +85,9 @@ const JoinModal = (props: JoinModalProps) => {
       if (isError && error?.message === '이미 존재하는 닉네임입니다.') {
         Toast.show({
           type: 'default',
-          position: 'bottom',
+          position: 'top',
           visibilityTime: 3000,
-          bottomOffset: 30,
+          topOffset: insets.top + 20,
           text1: '이미 존재하는 닉네임입니다.',
         });
         return;
@@ -163,7 +163,7 @@ const JoinModal = (props: JoinModalProps) => {
         type: 'default',
         position: 'top',
         visibilityTime: 3000,
-        bottomOffset: 30,
+        topOffset: insets.top + 20,
         text1: '가입이 완료되었습니다.',
       });
     }
