@@ -68,7 +68,7 @@ const PlayerListScreen = ({navigation, route}) => {
               style={{fontSize: 20, paddingBottom: 0, color: '#2b2b2b'}}>
               {data.result.team.name}
             </CustomText>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <StarOrangeSvg width={11} height={11} />
               <CustomText
                 fontWeight="600"
@@ -80,10 +80,10 @@ const PlayerListScreen = ({navigation, route}) => {
                 }}>
                 {formatComma(data.result.team.fanCount)}
               </CustomText>
-            </View>
+            </View> */}
           </View>
 
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <CustomText
               fontWeight="600"
               style={{
@@ -94,7 +94,7 @@ const PlayerListScreen = ({navigation, route}) => {
               이동하기
             </CustomText>
             <ChevronRightGraySvg width={12} height={12} />
-          </View>
+          </View> */}
         </View>
       </View>
       <PlayerList

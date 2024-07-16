@@ -1,8 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import SplashScreen from '../screens/SplashScreen';
-import Toast from 'react-native-toast-message';
+import SplashScreen from '../screens/auth/SplashScreen';
 import AuthStackNavigator from './AuthStackNavigator';
 import MainTabNavigator from './MainTabNavigator';
 
