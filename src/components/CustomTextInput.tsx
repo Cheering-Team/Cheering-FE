@@ -41,7 +41,7 @@ const CustomTextInput = forwardRef<any, CustomTextInputProps>((props, ref) => {
             borderColor: focus ? '#303030' : '#898989',
             borderWidth: focus ? 1.5 : 1,
             borderRadius: 5,
-            paddingTop: 26,
+            paddingTop: 27,
             paddingBottom: 12,
             paddingHorizontal: 10,
             justifyContent: 'center',
@@ -54,7 +54,7 @@ const CustomTextInput = forwardRef<any, CustomTextInputProps>((props, ref) => {
           style={{
             position: 'absolute',
             left: 10,
-            top: focus || value.length > 0 ? 6 : undefined,
+            top: focus || value.length > 0 ? 5 : undefined,
             fontSize: focus || value.length > 0 ? 12 : 16,
             color: isValid ? '#898989' : '#c64e4e',
           }}>

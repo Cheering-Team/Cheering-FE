@@ -72,7 +72,8 @@ function CustomTabBar({state, descriptors, navigation}) {
         style={[
           routeName === 'PostWrite' ||
           routeName === 'Post' ||
-          routeName === 'Search'
+          routeName === 'Search' ||
+          routeName === 'EditNickname'
             ? {display: 'none'}
             : styles.TabContainer,
           {paddingBottom: useSafeAreaInsets().bottom},

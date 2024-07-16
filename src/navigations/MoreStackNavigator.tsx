@@ -1,13 +1,15 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import SettingScreen from '../screens/moreStack/SettingScreen';
-import SignOutScreen from '../screens/moreStack/SignOutScreen';
 import MoreScreen from '../screens/moreStack/MoreScreen';
 import MyProfileScreen from '../screens/moreStack/MyProfileScreen';
+import SettingScreen from '../screens/moreStack/SettingScreen';
+import SignOutScreen from '../screens/moreStack/SignOutScreen';
+import EditNicknameScreen from '../screens/moreStack/EditNicknameScreen';
 
 export type MoreStackParamList = {
   More: undefined;
   MyProfile: undefined;
+  EditNickname: {nickname: string};
   Setting: undefined;
   SignOut: undefined;
 };
@@ -25,6 +27,11 @@ const MoreStackNavigator = () => {
       <MoreStack.Screen
         name="MyProfile"
         component={MyProfileScreen}
+        options={{headerShown: false}}
+      />
+      <MoreStack.Screen
+        name="EditNickname"
+        component={EditNicknameScreen}
         options={{headerShown: false}}
       />
       <MoreStack.Screen

@@ -20,6 +20,10 @@ interface postSignupRequest {
   nickname: string;
 }
 
+interface updateUserNikcnameRequest {
+  nickname: string;
+}
+
 export const getTest = async () => {
   const response = await axiosInstance.get('/token');
   return response.data;
@@ -54,6 +58,12 @@ export const postSignup = async (data: postSignupRequest) => {
 
 export const getUserInfo = async () => {
   const response = await axiosInstance.get('/users');
+
+  return response.data;
+};
+
+export const updateUserNickname = async (data: updateUserNikcnameRequest) => {
+  const response = await axiosInstance.put('/users/nickname', data);
 
   return response.data;
 };

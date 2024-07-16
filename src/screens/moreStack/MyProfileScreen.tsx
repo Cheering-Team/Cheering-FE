@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, SafeAreaView, View} from 'react-native';
+import {PermissionsAndroid, Pressable, SafeAreaView, View} from 'react-native';
 import CustomText from '../../components/CustomText';
 import BackSvg from '../../../assets/images/arrow-left.svg';
 import {useQuery} from '@tanstack/react-query';
@@ -35,7 +35,7 @@ const MyProfileScreen = ({navigation}) => {
         <View style={{width: 32, height: 32}} />
       </View>
       <View style={{padding: 20}}>
-        <View
+        <Pressable
           style={{
             borderWidth: 1,
             borderColor: '#e5e5e5',
@@ -44,7 +44,12 @@ const MyProfileScreen = ({navigation}) => {
             alignItems: 'center',
             justifyContent: 'space-between',
             borderRadius: 10,
-          }}>
+          }}
+          onPress={() =>
+            navigation.navigate('EditNickname', {
+              nickname: data.result.nickname,
+            })
+          }>
           <CustomText fontWeight="600" style={{fontSize: 18}}>
             닉네임
           </CustomText>
@@ -60,7 +65,7 @@ const MyProfileScreen = ({navigation}) => {
             </CustomText>
             <ChevronRightSvg width={13} height={13} />
           </View>
-        </View>
+        </Pressable>
       </View>
     </SafeAreaView>
   );

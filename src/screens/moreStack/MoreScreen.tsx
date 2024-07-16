@@ -38,6 +38,9 @@ const MoreScreen = ({navigation}) => {
           <SettingSvg width={23} height={23} />
         </View>
       </View>
+      <Pressable onPress={() => navigation.navigate('SignOut')}>
+        <CustomText>로그아웃</CustomText>
+      </Pressable>
     </SafeAreaView>
   );
 };
