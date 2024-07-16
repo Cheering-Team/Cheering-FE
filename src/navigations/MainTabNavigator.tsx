@@ -5,7 +5,7 @@ import HomeStackNavigator from './HomeStackNavigator';
 import MyChatScreen from '../screens/MyChatScreen';
 import CategoryStackNavigator from './CategoryStackNavigator';
 import MyPlayerStackNavigator from './MyPlayerStackNavigator';
-import SettingStackNavigator from './SettingStackNavigator';
+import MoreStackNavigator from './MoreStackNavigator';
 
 const MainTabNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -45,8 +45,8 @@ const MainTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="SettingStack"
-        component={SettingStackNavigator}
+        name="MoreStack"
+        component={MoreStackNavigator}
         options={{
           headerShown: false,
         }}

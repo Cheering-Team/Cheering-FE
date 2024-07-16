@@ -12,6 +12,7 @@ import {AuthStackParamList} from '../../navigations/AuthStackNavigator';
 import {postPhoneSMS} from '../../apis/user';
 import {useMutation} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type SignInScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -20,6 +21,8 @@ type SignInScreenNavigationProp = NativeStackNavigationProp<
 
 function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
   Close(navigation);
+
+  const insets = useSafeAreaInsets();
 
   const [phone, setPhone] = useState('');
   const [phoneValid, setPhoneValid] = useState<'empty' | 'valid' | 'invalid'>(
@@ -50,7 +53,7 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
             type: 'default',
             position: 'top',
             visibilityTime: 3000,
-            bottomOffset: 30,
+            topOffset: insets.top + 20,
             text1: '인증번호가 전송되었습니다.',
           });
           navigation.navigate('PhoneCode', {user, phone});
@@ -69,18 +72,16 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
         extraScrollHeight={-200}
         style={{flex: 1, padding: 20}}>
         <CustomText fontWeight="600" style={styles.signInTitle}>
-          휴대폰 번호로 바로 시작할 수 있어요.
-        </CustomText>
-
-        <CustomText fontWeight="400" style={styles.signInInfo}>
-          '-' 없이 숫자만 입력해주세요.
+          휴대폰 번호로 바로 시작하세요
         </CustomText>
 
         <CustomTextInput
-          placeholder="휴대폰 번호"
           value={phone}
-          valid={phoneValid !== 'invalid'}
-          invalidMessage="휴대폰 번호를 다시 확인해주세요"
+          label="휴대폰 번호"
+          isValid={phoneValid !== 'invalid'}
+          inValidMessage={'올바르지 않은 휴대폰 번호입니다.'}
+          keyboardType="number-pad"
+          maxLength={11}
           onChangeText={e => {
             setPhone(e);
           }}
@@ -99,7 +100,7 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
 const styles = StyleSheet.create({
   signInTitle: {
     marginTop: 20,
-    marginBottom: 5,
+    marginBottom: 14,
     fontSize: 22,
   },
   codeTitle: {
@@ -107,11 +108,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 5,
     fontSize: 21,
-  },
-  signInInfo: {
-    fontSize: 17,
-    color: 'gray',
-    marginBottom: 5,
   },
 });
 

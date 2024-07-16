@@ -104,13 +104,6 @@ const AuthSwitch = () => {
           // 에러 처리
         }
         dispatch({type: 'SIGN_OUT'});
-        Toast.show({
-          type: 'default',
-          position: 'top',
-          visibilityTime: 3000,
-          bottomOffset: 30,
-          text1: '로그아웃 되었습니다.',
-        });
       },
 
       signUp: async (access: string, refresh: string) => {
