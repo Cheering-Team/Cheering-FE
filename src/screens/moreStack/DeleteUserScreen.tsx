@@ -1,14 +1,15 @@
 import React, {useContext, useState} from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
-import CustomText from '../../components/CustomText';
 import BackSvg from '../../../assets/images/arrow-left.svg';
-import CustomButton from '../../components/CustomButton';
 import CheckSvg from '../../../assets/images/check-white.svg';
 import {useMutation} from '@tanstack/react-query';
 import {deleteUser} from '../../apis/user';
 import {AuthContext} from '../../navigations/AuthSwitch';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import CustomText from '../../components/common/CustomText';
+import CustomButton from '../../components/common/CustomButton';
+import CheckBox from '../../components/common/CheckBox';
 
 const DeleteUserScreen = ({navigation}) => {
   const signOut = useContext(AuthContext)?.signOut;
@@ -69,30 +70,7 @@ const DeleteUserScreen = ({navigation}) => {
             alignItems: 'center',
             marginBottom: 20,
           }}>
-          <Pressable
-            style={
-              isAgree
-                ? {
-                    width: 22,
-                    height: 22,
-                    backgroundColor: '#6abe5b',
-                    borderRadius: 5,
-                    marginRight: 10,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }
-                : {
-                    width: 22,
-                    height: 22,
-                    borderWidth: 2,
-                    borderColor: '#d3d3d3',
-                    borderRadius: 5,
-                    marginRight: 10,
-                  }
-            }
-            onPress={() => setIsAgree(prev => !prev)}>
-            {isAgree && <CheckSvg width={13} height={13} />}
-          </Pressable>
+          <CheckBox isCheck={isAgree} onPress={() => setIsAgree(true)} />
           <CustomText style={{fontSize: 17}}>
             위 유의사항을 모두 확인하였습니다.
           </CustomText>

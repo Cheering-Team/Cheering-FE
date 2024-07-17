@@ -8,7 +8,6 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import CustomText from '../../components/CustomText';
 import ChevronLeftSvg from '../../../assets/images/chevron-left.svg';
 import ThreeDotSvg from '../../../assets/images/three-dots-black.svg';
 import HeartSvg from '../../../assets/images/heart.svg';
@@ -28,6 +27,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
 import CommentModal from '../../components/category/post/CommentModal';
 import Toast from 'react-native-toast-message';
+import CustomText from '../../components/common/CustomText';
 
 const PostScreen = ({navigation, route}) => {
   const {postId} = route.params;

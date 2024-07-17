@@ -29,11 +29,11 @@ export const getPlayersInfo = async ({queryKey}) => {
   return response.data;
 };
 
-export const getCheckNickname = async ({queryKey}) => {
-  const [_key, playerId, nickname] = queryKey;
+export const getCheckNickname = async ({playerId, nickname}) => {
   const response = await axiosInstance.get(`/players/${playerId}/nickname`, {
     params: {nickname},
   });
+
   return response.data;
 };
 

@@ -6,7 +6,7 @@ import {
   Pressable,
   View,
 } from 'react-native';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {useCommunityFlatListHook} from './hooks/useCommunityFlatListHook';
 import CommunityHeader from '../CommunityHeader';
 import {useInfiniteQuery} from '@tanstack/react-query';
@@ -17,7 +17,7 @@ import FeedFilter from '../FeedFilter';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import FeedPost from '../FeedPost';
 import NotJoin from '../NotJoin';
-import CustomText from '../../../CustomText';
+import CustomText from '../../../common/CustomText';
 
 interface CommunityFlatListProps {
   playerId: number;
@@ -37,8 +37,6 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
     handleScrollBeginDrag,
     handleScrollEndDrag,
   } = props;
-
-  const insets = useSafeAreaInsets();
 
   const isFocused = useIsFocused();
   const navigation = useNavigation();
@@ -67,13 +65,14 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
       }
       return pages.length;
     },
+    enabled: playerData.result.user !== null,
   });
 
   useEffect(() => {
-    if (isFocused) {
+    if (isFocused && playerData.result.user) {
       refetch();
     }
-  }, [isFocused, refetch]);
+  }, [isFocused, playerData.result.user, refetch]);
 
   nativeScrollY.addListener(
     Animated.event([{value: scrollY}], {useNativeDriver: false}),

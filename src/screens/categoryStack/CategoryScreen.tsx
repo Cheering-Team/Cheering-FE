@@ -7,11 +7,11 @@ import {
   SafeAreaView,
   View,
 } from 'react-native';
-import CustomText from '../../components/CustomText';
 import SearchSvg from '../../../assets/images/search-sm.svg';
 import React, {useEffect, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {getLeagues, getSports, getTeams} from '../../apis/team';
+import CustomText from '../../components/common/CustomText';
 
 const CategoryScreen = ({navigation}) => {
   const [selectedSport, setSelectedSport] = useState(null);

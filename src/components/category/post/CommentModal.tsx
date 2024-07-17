@@ -8,11 +8,11 @@ import {
   Pressable,
   View,
 } from 'react-native';
-import CustomText from '../../CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useQuery} from '@tanstack/react-query';
 import {getComments} from '../../../apis/post';
 import Comment from './Comment';
+import CustomText from '../../common/CustomText';
 
 interface CommentModalProps {
   commentCount: number;

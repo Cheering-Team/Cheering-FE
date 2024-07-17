@@ -1,13 +1,10 @@
 import React, {useLayoutEffect} from 'react';
-import PlayerList from '../../components/PlayerList';
 import {Image, SafeAreaView, View} from 'react-native';
 import Back from '../../hooks/Back';
-import CustomText from '../../components/CustomText';
 import {useQuery} from '@tanstack/react-query';
 import {getPlayersByTeam} from '../../apis/player';
-import {formatComma} from '../../utils/format';
-import StarOrangeSvg from '../../../assets/images/star-orange.svg';
-import ChevronRightGraySvg from '../../../assets/images/chevron-right-gray.svg';
+import CustomText from '../../components/common/CustomText';
+import PlayerList from '../../components/common/PlayerList';
 
 const PlayerListScreen = ({navigation, route}) => {
   Back(navigation);

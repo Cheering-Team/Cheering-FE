@@ -41,8 +41,10 @@ axiosInstance.interceptors.response.use(
         await EncryptedStorage.removeItem('accessToken');
         await EncryptedStorage.removeItem('refreshToken');
         RootNavigation.navigate('SettingStack', {screen: 'SignOut'});
+        return Promise.reject(response.data);
       }
-      return Promise.reject(response.data);
+
+      return Promise.resolve(response);
     }
 
     if (response.data.message === '토큰이 유효하지 않습니다.') {

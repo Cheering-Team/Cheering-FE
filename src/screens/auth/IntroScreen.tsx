@@ -1,10 +1,10 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import CustomButton from '../../components/CustomButton';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {AuthStackParamList} from '../../navigations/AuthSwitch';
-import CustomText from '../../components/CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {AuthStackParamList} from '../../navigations/AuthStackNavigator';
+import CustomText from '../../components/common/CustomText';
+import CustomButton from '../../components/common/CustomButton';
 
 type IntroScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,

@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
-import CustomText from '../../components/CustomText';
 import BackSvg from '../../../assets/images/arrow-left.svg';
-import CustomTextInput from '../../components/CustomTextInput';
-import CustomButton from '../../components/CustomButton';
 import {NICKNAME_REGEX} from '../../constants/regex';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {updateUserNickname} from '../../apis/user';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import CustomText from '../../components/common/CustomText';
+import CustomTextInput from '../../components/common/CustomTextInput';
+import CustomButton from '../../components/common/CustomButton';
 
 const EditNicknameScreen = ({navigation, route}) => {
   const insets = useSafeAreaInsets();

@@ -1,8 +1,8 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import Avatar from '../../Avatar';
-import CustomText from '../../CustomText';
 import {formatDate} from '../../../utils/format';
+import Avatar from '../../common/Avatar';
+import CustomText from '../../common/CustomText';
 
 interface Writer {
   id: number;

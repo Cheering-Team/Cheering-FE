@@ -1,11 +1,11 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import CustomTabBar from '../components/CustomHomeTab';
 import HomeStackNavigator from './HomeStackNavigator';
 import MyChatScreen from '../screens/MyChatScreen';
 import CategoryStackNavigator from './CategoryStackNavigator';
 import MyPlayerStackNavigator from './MyPlayerStackNavigator';
 import MoreStackNavigator from './MoreStackNavigator';
+import CustomTabBar from '../components/common/CustomHomeTab';
 
 const MainTabNavigator = () => {
   const Tab = createBottomTabNavigator();

@@ -1,15 +1,15 @@
 import React from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
-import CategoryGraySvg from '../../assets/images/category-gray.svg';
-import CategorBlackSvg from '../../assets/images/category-black.svg';
-import HomeSvg from '../../assets/images/home_white.svg';
-import HomeBackGraySvg from '../../assets/images/home-back-gray.svg';
-import StarGraySvg from '../../assets/images/star-gray.svg';
-import StarBlackSvg from '../../assets/images/star-black.svg';
-import ChatGraySvg from '../../assets/images/chat-gray.svg';
-import ChatBlackSvg from '../../assets/images/chat-black.svg';
-import MoreGraySvg from '../../assets/images/more-gray.svg';
-import MoreBlackSvg from '../../assets/images/more-black.svg';
+import CategoryGraySvg from '../../../assets/images/category-gray.svg';
+import CategorBlackSvg from '../../../assets/images/category-black.svg';
+import HomeSvg from '../../../assets/images/home_white.svg';
+import HomeBackGraySvg from '../../../assets/images/home-back-gray.svg';
+import StarGraySvg from '../../../assets/images/star-gray.svg';
+import StarBlackSvg from '../../../assets/images/star-black.svg';
+import ChatGraySvg from '../../../assets/images/chat-gray.svg';
+import ChatBlackSvg from '../../../assets/images/chat-black.svg';
+import MoreGraySvg from '../../../assets/images/more-gray.svg';
+import MoreBlackSvg from '../../../assets/images/more-black.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from './CustomText';
 

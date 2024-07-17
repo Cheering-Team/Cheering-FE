@@ -1,11 +1,10 @@
 import React from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
-import CustomText from '../../components/CustomText';
 import BackSvg from '../../../assets/images/arrow-left.svg';
 import {useQuery} from '@tanstack/react-query';
 import {getUserInfo} from '../../apis/user';
 import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
-import CustomButton from '../../components/CustomButton';
+import CustomText from '../../components/common/CustomText';
 
 const MyProfileScreen = ({navigation}) => {
   const {data, isLoading} = useQuery({

@@ -1,11 +1,11 @@
 import {Dimensions, FlatList, Image, Pressable, View} from 'react-native';
 import CustomText from './CustomText';
 import React from 'react';
-import {formatComma} from '../utils/format';
-import StarOrangeSvg from '../../assets/images/star-orange.svg';
+import StarOrangeSvg from '../../../assets/images/star-orange.svg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {CategoryStackParamList} from '../navigations/CategoryStackNavigator';
 import Avatar from './Avatar';
+import {CategoryStackParamList} from '../../navigations/CategoryStackNavigator';
+import {formatComma} from '../../utils/format';
 
 const PlayerList = props => {
   const {teamName, players, paddingTop = false} = props;

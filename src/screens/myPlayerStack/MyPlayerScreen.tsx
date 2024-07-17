@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
 import {Dimensions, FlatList, Pressable, View} from 'react-native';
-import CustomText from '../../components/CustomText';
 import {useQuery} from '@tanstack/react-query';
 import {getMyPlayers} from '../../apis/player';
-import Avatar from '../../components/Avatar';
 import {useIsFocused} from '@react-navigation/native';
 import ChevronDownSvg from '../../../assets/images/chevron-down-black-thin.svg';
 import {CommonActions} from '@react-navigation/native';
+import CustomText from '../../components/common/CustomText';
+import Avatar from '../../components/common/Avatar';
 
 const MyPlayerScreen = ({navigation}) => {
   const isFocused = useIsFocused();

@@ -10,15 +10,15 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../../navigations/HomeStackNavigator';
-import CustomText from '../../components/CustomText';
 import {getMyPlayers} from '../../apis/player';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
-import Avatar from '../../components/Avatar';
 import {useHomeFlatListHook} from '../../components/home/useHomeFlatListHook';
 import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
 import {getMyPlayersPosts} from '../../apis/post';
 import FeedPost from '../../components/category/community/FeedPost';
 import {CommonActions, useIsFocused} from '@react-navigation/native';
+import CustomText from '../../components/common/CustomText';
+import Avatar from '../../components/common/Avatar';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,

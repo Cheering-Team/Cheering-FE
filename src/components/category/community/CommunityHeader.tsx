@@ -2,8 +2,8 @@ import React from 'react';
 import {Animated, Dimensions, Pressable, StyleSheet, View} from 'react-native';
 import CheveronLeft from '../../../../assets/images/chevron-left-white.svg';
 import {useNavigation} from '@react-navigation/native';
-import Avatar from '../../Avatar';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import Avatar from '../../common/Avatar';
 
 interface CommunityHeaderProps {
   scrollY: any;

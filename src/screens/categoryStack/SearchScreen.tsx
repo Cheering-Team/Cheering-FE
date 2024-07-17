@@ -10,7 +10,7 @@ import SearchSvg from '../../../assets/images/search-sm.svg';
 import CloseSvg from '../../../assets/images/close-black.svg';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {getPlayers} from '../../apis/player';
-import PlayerList from '../../components/PlayerList';
+import PlayerList from '../../components/common/PlayerList';
 
 const SearchScreen = ({navigation}) => {
   const queryClient = useQueryClient();

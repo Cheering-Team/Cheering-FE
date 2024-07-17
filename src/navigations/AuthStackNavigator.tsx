@@ -2,10 +2,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import IntroScreen from '../screens/auth/IntroScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
-import CustomText from '../components/CustomText';
 import PhoneCodeScreen from '../screens/auth/PhoneCodeScreen';
 import {User} from '../apis/user';
 import SetNickNameScreen from '../screens/auth/SetNicknameScreen';
+import CustomText from '../components/common/CustomText';
 
 export type AuthStackParamList = {
   Splash: undefined;

@@ -1,5 +1,5 @@
 import {Pressable, SafeAreaView} from 'react-native';
-import CustomText from '../../components/CustomText';
+import CustomText from '../../components/common/CustomText';
 
 const SettingScreen = ({navigation}) => {
   return (

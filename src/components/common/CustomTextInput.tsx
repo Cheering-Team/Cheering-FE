@@ -72,11 +72,12 @@ const CustomTextInput = forwardRef<any, CustomTextInputProps>((props, ref) => {
       </View>
       <View
         style={{
+          height: 25,
           flexDirection: 'row',
           alignItems: 'center',
         }}>
         {!isValid && (
-          <CustomText style={{color: '#c64e4e', marginTop: 3, marginLeft: 3}}>
+          <CustomText style={{color: '#c64e4e', marginLeft: 3}}>
             {inValidMessage}
           </CustomText>
         )}
@@ -85,7 +86,6 @@ const CustomTextInput = forwardRef<any, CustomTextInputProps>((props, ref) => {
             style={{
               position: 'absolute',
               right: 6,
-              top: 2,
               color: '#6d6d6d',
               fontSize: 13,
             }}>

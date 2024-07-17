@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Pressable, View} from 'react-native';
-import Avatar from '../../Avatar';
-import CustomText from '../../CustomText';
 import {formatDate} from '../../../utils/format';
 import {useQuery} from '@tanstack/react-query';
 import {getReComments} from '../../../apis/post';
+import CustomText from '../../common/CustomText';
+import Avatar from '../../common/Avatar';
 
 interface CommentProps {
   comment: any;

@@ -1,8 +1,8 @@
 import React from 'react';
 import {Animated, Dimensions, StyleSheet, View} from 'react-native';
-import Avatar from '../../Avatar';
-import CustomText from '../../CustomText';
 import StarWhiteSvg from '../../../../assets/images/star-white.svg';
+import CustomText from '../../common/CustomText';
+import Avatar from '../../common/Avatar';
 
 interface NotJoinProps {
   playerData: any;

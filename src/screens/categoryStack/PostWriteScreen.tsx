@@ -10,7 +10,6 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import CustomText from '../../components/CustomText';
 import CloseSvg from '../../../assets/images/close-black.svg';
 import CameraSvg from '../../../assets/images/image.svg';
 import {TextInput} from 'react-native-gesture-handler';
@@ -20,6 +19,7 @@ import {useMutation} from '@tanstack/react-query';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import CustomText from '../../components/common/CustomText';
 
 interface FilterType {
   photo: boolean;
