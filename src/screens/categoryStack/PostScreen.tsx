@@ -278,10 +278,18 @@ const PostScreen = ({navigation, route}) => {
           </View>
           {/* 작성자 */}
           <View style={{paddingHorizontal: 15, marginTop: 15}}>
-            <PostWriter
-              writer={data.result.post.writer}
-              createdAt={data.result.post.createdAt}
-            />
+            <Pressable
+              onPress={() =>
+                navigation.navigate('Profile', {
+                  playerUserId: data.result.post.writer.id,
+                })
+              }>
+              <PostWriter
+                writer={data.result.post.writer}
+                createdAt={data.result.post.createdAt}
+              />
+            </Pressable>
+
             <CustomText
               style={{
                 paddingTop: 13,

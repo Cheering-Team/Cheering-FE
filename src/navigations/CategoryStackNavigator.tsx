@@ -6,12 +6,14 @@ import CommunityScreen from '../screens/categoryStack/CommunityScreen';
 import PostWriteScreen from '../screens/categoryStack/PostWriteScreen';
 import PostScreen from '../screens/categoryStack/PostScreen';
 import SearchScreen from '../screens/categoryStack/SearchScreen';
+import ProfileScreen from '../screens/categoryStack/ProfileScreen';
 
 export type CategoryStackParamList = {
   Category: {teamId: number};
   Search: undefined;
   PlayerList: undefined;
   Community: {playerId: number};
+  Profile: {playerUserId: number};
   PostWrite: {playerId: number};
   Post: {postId: number};
 };
@@ -34,6 +36,11 @@ const CategoryStackNavigator = () => {
       <CategoryStack.Screen
         name="Community"
         component={CommunityScreen}
+        options={{headerShown: false}}
+      />
+      <CategoryStack.Screen
+        name="Profile"
+        component={ProfileScreen}
         options={{headerShown: false}}
       />
       <CategoryStack.Screen

@@ -2,10 +2,16 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import MyPlayerScreen from '../screens/myPlayerStack/MyPlayerScreen';
 import CommunityScreen from '../screens/categoryStack/CommunityScreen';
+import PostScreen from '../screens/categoryStack/PostScreen';
+import ProfileScreen from '../screens/categoryStack/ProfileScreen';
+import PostWriteScreen from '../screens/categoryStack/PostWriteScreen';
 
 export type MyPlayerStackParamList = {
   MyPlayer: undefined;
   Community: {playerId: number};
+  Post: {postId: number};
+  Profile: {playerUserId: number};
+  PostWrite: {playerId: number};
 };
 
 const MyPlayerStackNavigator = () => {
@@ -21,6 +27,21 @@ const MyPlayerStackNavigator = () => {
       <MyPlayerStack.Screen
         name="Community"
         component={CommunityScreen}
+        options={{headerShown: false}}
+      />
+      <MyPlayerStack.Screen
+        name="Post"
+        component={PostScreen}
+        options={{headerShown: false}}
+      />
+      <MyPlayerStack.Screen
+        name="PostWrite"
+        component={PostWriteScreen}
+        options={{headerShown: false}}
+      />
+      <MyPlayerStack.Screen
+        name="Profile"
+        component={ProfileScreen}
         options={{headerShown: false}}
       />
     </MyPlayerStack.Navigator>
