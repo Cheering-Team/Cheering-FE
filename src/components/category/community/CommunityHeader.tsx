@@ -52,11 +52,18 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
         </Animated.Text>
       </View>
       {playerData.result.user && (
-        <Avatar
-          uri={playerData.result.user.image}
-          size={30}
-          style={styles.communityUserAvatar}
-        />
+        <Pressable
+          onPress={() =>
+            navigation.navigate('Profile', {
+              playerUserId: playerData.result.user.id,
+            })
+          }>
+          <Avatar
+            uri={playerData.result.user.image}
+            size={30}
+            style={styles.communityUserAvatar}
+          />
+        </Pressable>
       )}
     </Animated.View>
   );

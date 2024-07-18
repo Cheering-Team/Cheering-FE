@@ -66,17 +66,22 @@ const PlayerList = props => {
             </View>
           </View>
           {item.user && (
-            <Avatar
-              uri={item.user.image}
-              size={30}
-              style={{
-                position: 'absolute',
-                bottom: 15,
-                right: 5,
-                borderWidth: 1,
-                borderColor: '#d1d1d1',
-              }}
-            />
+            <Pressable
+              onPress={() =>
+                navigation.navigate('Profile', {playerUserId: item.user.id})
+              }>
+              <Avatar
+                uri={item.user.image}
+                size={30}
+                style={{
+                  position: 'absolute',
+                  bottom: 15,
+                  right: 5,
+                  borderWidth: 1,
+                  borderColor: '#d1d1d1',
+                }}
+              />
+            </Pressable>
           )}
         </Pressable>
       )}

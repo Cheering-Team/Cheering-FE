@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Animated, Pressable, SafeAreaView, View, Keyboard} from 'react-native';
+import {Animated, Pressable, View, Keyboard} from 'react-native';
 import {FlatList as FlatListType} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useQuery} from '@tanstack/react-query';

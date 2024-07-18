@@ -1,6 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   ActivityIndicator,
+  Animated,
   Dimensions,
   Pressable,
   SafeAreaView,
@@ -16,11 +17,18 @@ import CustomText from '../../components/common/CustomText';
 import CustomButton from '../../components/common/CustomButton';
 import FeedPost from '../../components/category/community/FeedPost';
 import {useIsFocused} from '@react-navigation/native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import ChevronTopSvg from '../../../assets/images/chevron-top-black.svg';
 
 const ProfileScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;
-
   const isFocused = useIsFocused();
+  const insets = useSafeAreaInsets();
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const flatListRef = useRef<FlatList<any>>(null);
+  const scrollTimeout = useRef(null);
+
   const {data, isLoading} = useQuery({
     queryKey: ['playerusers', playerUserId],
     queryFn: getPlayerUserInfo,
@@ -51,11 +59,35 @@ const ProfileScreen = ({navigation, route}) => {
     }
   };
 
+  const handleScrollBeginDrag = () => {
+    if (scrollTimeout.current) {
+      clearTimeout(scrollTimeout.current);
+    }
+
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleScrollEndDrag = () => {
+    scrollTimeout.current = setTimeout(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }, 1700);
+  };
+
   useEffect(() => {
     if (isFocused) {
       refetch();
     }
   }, [isFocused, refetch]);
+
+  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
   if (isLoading) {
     return null;
@@ -77,7 +109,11 @@ const ProfileScreen = ({navigation, route}) => {
           <MoreSvg width={18} height={18} />
         </Pressable>
       </View>
-      <FlatList
+      <Animated.FlatList
+        ref={flatListRef}
+        onScrollBeginDrag={handleScrollBeginDrag}
+        onScrollEndDrag={handleScrollEndDrag}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 50}}
         ListHeaderComponent={
           <View
@@ -156,6 +192,34 @@ const ProfileScreen = ({navigation, route}) => {
           )
         }
       />
+      <AnimatedPressable
+        style={[
+          {
+            position: 'absolute',
+            bottom: insets.bottom + 67,
+            right: 17,
+            borderRadius: 100,
+            width: 48,
+            height: 48,
+            marginBottom: 12,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'white',
+            shadowColor: '#bdbdbd',
+            shadowOffset: {width: 1, height: 2},
+            shadowOpacity: 0.7,
+            shadowRadius: 3,
+            elevation: 5,
+          },
+          {opacity: fadeAnim},
+        ]}
+        onPress={() => {
+          if (flatListRef.current) {
+            flatListRef.current.scrollToOffset({offset: 0, animated: true});
+          }
+        }}>
+        <ChevronTopSvg width={25} height={25} />
+      </AnimatedPressable>
     </SafeAreaView>
   );
 };
