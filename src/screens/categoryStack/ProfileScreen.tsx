@@ -105,6 +105,20 @@ const ProfileScreen = ({navigation, route}) => {
         <Pressable onPress={() => navigation.goBack()}>
           <CloseSvg width={30} height={30} />
         </Pressable>
+        <View style={{flexDirection: 'row'}}>
+          <CustomText
+            fontWeight="500"
+            style={{
+              fontSize: 18,
+            }}>{`${data.result.player.koreanName} / `}</CustomText>
+          <CustomText
+            fontWeight="500"
+            style={{
+              fontSize: 18,
+            }}>
+            {data.result.player.englishName}
+          </CustomText>
+        </View>
         <Pressable>
           <MoreSvg width={18} height={18} />
         </Pressable>
@@ -152,7 +166,7 @@ const ProfileScreen = ({navigation, route}) => {
             <FeedPost
               feed={item}
               postId={item.id}
-              playerId={data.result.playerId}
+              playerId={data.result.player.id}
             />
           </Pressable>
         )}
