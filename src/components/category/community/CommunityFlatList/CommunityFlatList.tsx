@@ -22,7 +22,6 @@ import CustomText from '../../../common/CustomText';
 interface CommunityFlatListProps {
   playerId: number;
   playerData: any;
-  translateY: any;
   setIsModalOpen: any;
   handleScrollBeginDrag: any;
   handleScrollEndDrag: any;
@@ -32,7 +31,6 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
   const {
     playerId,
     playerData,
-    translateY,
     setIsModalOpen,
     handleScrollBeginDrag,
     handleScrollEndDrag,
@@ -102,11 +100,7 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
       );
     } else {
       return (
-        <NotJoin
-          playerData={playerData}
-          setIsModalOpen={setIsModalOpen}
-          translateY={translateY}
-        />
+        <NotJoin playerData={playerData} setIsModalOpen={setIsModalOpen} />
       );
     }
   };

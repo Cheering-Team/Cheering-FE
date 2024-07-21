@@ -4,6 +4,7 @@ import {
   Dimensions,
   ImageBackground,
   Modal,
+  PanResponder,
   Pressable,
   TouchableOpacity,
   View,
@@ -29,9 +30,10 @@ interface JoinModalProps {
   playerId: number;
   playerData: any;
   isModalOpen: boolean;
-  setIsModalOpen: any;
   translateY: any;
   setRefreshKey: any;
+  closeModal: any;
+  panResponders: any;
 }
 
 const JoinModal = (props: JoinModalProps) => {
@@ -39,9 +41,10 @@ const JoinModal = (props: JoinModalProps) => {
     playerId,
     playerData,
     isModalOpen,
-    setIsModalOpen,
     translateY,
     setRefreshKey,
+    closeModal,
+    panResponders,
   } = props;
 
   const insets = useSafeAreaInsets();
@@ -70,6 +73,7 @@ const JoinModal = (props: JoinModalProps) => {
     queryKey: ['nickname'],
     queryFn: () => getCheckNickname({playerId, nickname}),
     enabled: false,
+    gcTime: 0,
   });
 
   const mutation = useMutation({
@@ -81,19 +85,14 @@ const JoinModal = (props: JoinModalProps) => {
     },
   });
 
-  const closeModal = () => {
-    setImageData({uri: '', name: '', type: ''});
-    Animated.timing(translateY, {
-      toValue: 500,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
-      setIsModalOpen(false);
+  useEffect(() => {
+    if (!isModalOpen) {
+      setImageData({uri: '', name: '', type: ''});
       setJoinState('profile');
       setAgreements({one: false, two: false, three: false});
       setNickname('');
-    });
-  };
+    }
+  }, [isModalOpen]);
 
   const imageUpload = async () => {
     try {
@@ -168,7 +167,7 @@ const JoinModal = (props: JoinModalProps) => {
 
   return (
     <Modal
-      animationType="none"
+      animationType="fade"
       visible={isModalOpen}
       transparent={true}
       onRequestClose={closeModal}>
@@ -185,7 +184,8 @@ const JoinModal = (props: JoinModalProps) => {
       />
 
       <Animated.View
-        style={[styles.modalContainer, {transform: [{translateY}]}]}>
+        style={[styles.modalContainer, {transform: [{translateY}]}]}
+        {...panResponders.panHandlers}>
         <View
           style={[
             styles.container,

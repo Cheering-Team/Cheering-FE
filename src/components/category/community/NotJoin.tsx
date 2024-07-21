@@ -1,5 +1,5 @@
 import React from 'react';
-import {Animated, Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import StarWhiteSvg from '../../../../assets/images/star-white.svg';
 import CustomText from '../../common/CustomText';
 import Avatar from '../../common/Avatar';
@@ -7,19 +7,13 @@ import Avatar from '../../common/Avatar';
 interface NotJoinProps {
   playerData: any;
   setIsModalOpen: any;
-  translateY: any;
 }
 
 const NotJoin = (props: NotJoinProps) => {
-  const {playerData, setIsModalOpen, translateY} = props;
+  const {playerData, setIsModalOpen} = props;
 
   const openModal = () => {
     setIsModalOpen(true);
-    Animated.timing(translateY, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
   };
 
   return (
