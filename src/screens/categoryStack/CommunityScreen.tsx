@@ -87,7 +87,7 @@ const CommunityScreen = ({navigation, route}) => {
     if (resetTarget === 0 && isModalOpen) {
       resetBottomSheet.start();
     }
-  }, [resetTarget, resetBottomSheet, isModalOpen]);
+  }, [resetTarget]);
 
   const keyboardDidShow = useCallback(
     e => {

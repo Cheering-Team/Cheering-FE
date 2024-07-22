@@ -107,13 +107,11 @@ const FeedPost = (props: FeedPostProps) => {
           </CustomText>
         ))}
       </View>
-      <Pressable
-        onPress={() =>
-          navigation.navigate('Profile', {playerUserId: feed.writer.id})
-        }>
-        <PostWriter writer={feed.writer} createdAt={feed.createdAt} />
-      </Pressable>
-
+      <PostWriter
+        writer={feed.writer}
+        createdAt={feed.createdAt}
+        playerUserId={feed.writer.id}
+      />
       <CustomText style={styles.content}>{feed.content}</CustomText>
       {feed.images.length !== 0 &&
         (feed.images.length === 1 ? (
