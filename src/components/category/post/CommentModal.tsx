@@ -162,7 +162,9 @@ const CommentModal = (props: CommentModalProps) => {
         onStartShouldSetPanResponder: () => true,
         onMoveShouldSetPanResponder: () => false,
         onPanResponderMove: (event, gestureState) => {
-          panY.setValue(gestureState.dy + resetTarget);
+          if (gestureState.dy > 0) {
+            panY.setValue(gestureState.dy + resetTarget);
+          }
         },
         onPanResponderRelease: (event, gestureState) => {
           if (gestureState.dy > 0 && gestureState.vy > 1.3) {
