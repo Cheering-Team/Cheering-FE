@@ -55,7 +55,7 @@ const Comment = (props: CommentProps) => {
   }, [comment.id, reIdx, refetch, setReIdx]);
 
   return (
-    <View style={{paddingVertical: 10}} key={comment.id}>
+    <View style={{paddingVertical: 10, paddingHorizontal: 15}} key={comment.id}>
       <View style={{flexDirection: 'row'}}>
         <Pressable
           onPress={() =>
@@ -78,15 +78,17 @@ const Comment = (props: CommentProps) => {
               style={{color: '#1b1b1b', fontSize: 12}}>
               {comment.writer.name}
             </CustomText>
-            <CustomText
-              style={{
-                color: '#797979',
-                marginLeft: 6,
-                fontSize: 13,
-                paddingBottom: 2,
-              }}>
-              {formatDate(comment.createdAt)}
-            </CustomText>
+            {comment.createAt && (
+              <CustomText
+                style={{
+                  color: '#797979',
+                  marginLeft: 6,
+                  fontSize: 13,
+                  paddingBottom: 2,
+                }}>
+                {formatDate(comment.createdAt)}
+              </CustomText>
+            )}
           </Pressable>
           <CustomText fontWeight="300" style={{marginTop: 1, fontSize: 14}}>
             {comment.content}

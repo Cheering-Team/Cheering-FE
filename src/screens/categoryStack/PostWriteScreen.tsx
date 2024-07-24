@@ -138,7 +138,10 @@ const PostWriteScreen = ({navigation, route}) => {
     });
 
     if (writeData.message === '게시글이 작성되었습니다.') {
-      navigation.replace('Post', {postId: writeData.result.id});
+      navigation.replace('Post', {
+        postId: writeData.result.id,
+        playerUser: writeData.result.playerUser,
+      });
     }
   };
 

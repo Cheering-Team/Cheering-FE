@@ -4,7 +4,6 @@ import {
   Dimensions,
   ImageBackground,
   Modal,
-  PanResponder,
   Pressable,
   TouchableOpacity,
   View,

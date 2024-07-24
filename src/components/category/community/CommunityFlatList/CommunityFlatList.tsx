@@ -88,7 +88,10 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
         <Pressable
           key={item.id}
           onPress={() => {
-            navigation.navigate('Post', {postId: item.id});
+            navigation.navigate('Post', {
+              postId: item.id,
+              playerUser: item.playerUser,
+            });
           }}>
           <FeedPost
             feed={item}

@@ -5,11 +5,12 @@ import CommunityScreen from '../screens/categoryStack/CommunityScreen';
 import PostScreen from '../screens/categoryStack/PostScreen';
 import ProfileScreen from '../screens/categoryStack/ProfileScreen';
 import PostWriteScreen from '../screens/categoryStack/PostWriteScreen';
+import {PlayerUser} from './CategoryStackNavigator';
 
 export type MyPlayerStackParamList = {
   MyPlayer: undefined;
   Community: {playerId: number};
-  Post: {postId: number};
+  Post: {postId: number; playerUser: PlayerUser};
   Profile: {playerUserId: number};
   PostWrite: {playerId: number};
 };

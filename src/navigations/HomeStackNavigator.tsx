@@ -5,10 +5,11 @@ import HomeScreen from '../screens/homeStack/HomeScreen';
 import PostScreen from '../screens/categoryStack/PostScreen';
 import ProfileScreen from '../screens/categoryStack/ProfileScreen';
 import PostWriteScreen from '../screens/categoryStack/PostWriteScreen';
+import {PlayerUser} from './CategoryStackNavigator';
 
 export type HomeStackParamList = {
   Home: undefined;
-  Post: {postId: number};
+  Post: {postId: number; playerUser: PlayerUser};
   Community: {playerId: number};
   Profile: {playerUserId: number};
   PostWrite: {playerId: number};

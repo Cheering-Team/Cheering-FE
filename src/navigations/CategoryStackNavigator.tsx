@@ -15,8 +15,14 @@ export type CategoryStackParamList = {
   Community: {playerId: number};
   Profile: {playerUserId: number};
   PostWrite: {playerId: number};
-  Post: {postId: number};
+  Post: {postId: number; playerUser: PlayerUser};
 };
+
+export interface PlayerUser {
+  id: number;
+  nickname: string;
+  image: string;
+}
 
 const CategoryStackNavigator = () => {
   const CategoryStack = createNativeStackNavigator<CategoryStackParamList>();

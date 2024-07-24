@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
+  ActivityIndicator,
   Animated,
   Dimensions,
   Easing,
@@ -19,15 +20,19 @@ import ArrowUpSvg from '../../../../assets/images/arrow_up.svg';
 import Avatar from '../../common/Avatar';
 import Toast from 'react-native-toast-message';
 import CloseWhiteSvg from '../../../../assets/images/x_white.svg';
+import {toastConfig} from '../../../../App';
+import {FlatList as FlatListType} from 'react-native';
+import {PlayerUser} from '../../../navigations/CategoryStackNavigator';
 
 interface CommentModalProps {
   postId: number;
   isModalOpen: any;
   setIsModalOpen: any;
+  playerUser: PlayerUser;
 }
 
 const CommentModal = (props: CommentModalProps) => {
-  const {postId, isModalOpen, setIsModalOpen} = props;
+  const {postId, isModalOpen, setIsModalOpen, playerUser} = props;
 
   const insets = useSafeAreaInsets();
   const queryClient = useQueryClient();
@@ -49,6 +54,7 @@ const CommentModal = (props: CommentModalProps) => {
   const [resetTarget, setResetTaget] = useState(0);
 
   const commentInputRef = useRef<TextInput>(null);
+  const flatListRef = useRef<FlatListType<any>>(null);
   const [commentContent, setCommentContent] = useState<string>('');
   const [toComment, setToComment] = useState<{
     id: number;
@@ -57,8 +63,19 @@ const CommentModal = (props: CommentModalProps) => {
   } | null>(null);
   const [reIdx, setReIdx] = useState<number | null>(null);
   const [underCommentId, setUnderCommentId] = useState<number | null>(null);
+  const [writingComment, setWritingComment] = useState<{
+    id: number;
+    content: string;
+    reCount: number;
+    writer: PlayerUser;
+  } | null>(null);
 
-  const {data: commentsData, refetch} = useQuery({
+  const {
+    data: commentsData,
+    isRefetching,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['post', postId, 'comments'],
     queryFn: getComments,
   });
@@ -66,8 +83,15 @@ const CommentModal = (props: CommentModalProps) => {
   const commentMutation = useMutation({
     mutationFn: postComments,
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
-      queryClient.invalidateQueries({queryKey: ['post', postId]});
+      setTimeout(() => {
+        queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
+        queryClient.invalidateQueries({queryKey: ['post', postId]});
+        if (flatListRef.current) {
+          flatListRef.current.scrollToEnd({
+            animated: true,
+          });
+        }
+      }, 500);
     },
   });
 
@@ -87,6 +111,19 @@ const CommentModal = (props: CommentModalProps) => {
       return;
     }
 
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({
+        animated: true,
+      });
+    }
+
+    setWritingComment({
+      id: 0,
+      content: commentContent,
+      reCount: 0,
+      writer: playerUser,
+    });
+
     const data = await commentMutation.mutateAsync({
       postId,
       content: commentContent,
@@ -103,6 +140,7 @@ const CommentModal = (props: CommentModalProps) => {
         bottomOffset: 30,
         text1: '잠시 후 다시 시도해 주세요.',
       });
+      setWritingComment(null);
     }
   };
 
@@ -143,6 +181,12 @@ const CommentModal = (props: CommentModalProps) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (!isRefetching) {
+      setWritingComment(null);
+    }
+  }, [isRefetching]);
 
   const resetBottomSheet = Animated.timing(panY, {
     toValue: resetTarget,
@@ -222,16 +266,14 @@ const CommentModal = (props: CommentModalProps) => {
     if (isModalOpen) {
       setModalKey(prevKey => prevKey + 1);
       setIsModalOpen(true);
-      resetBottomSheet.start(() => {
-        refetch();
-      });
+      refetch();
+      resetBottomSheet.start();
     }
   }, [isModalOpen, refetch]);
 
   useEffect(() => {
     if (resetTarget === 0 && isModalOpen) {
       resetBottomSheet.start();
-      // setCommentListHeight(screenHeight * 0.55);
     }
   }, [resetTarget]);
 
@@ -301,43 +343,99 @@ const CommentModal = (props: CommentModalProps) => {
             }}
           />
         </View>
-        <Animated.FlatList
-          key={modalKey}
-          data={commentsData?.result.comments}
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{
-            paddingTop: 20,
-            paddingBottom: 40,
-            paddingHorizontal: 15,
-          }}
-          renderItem={({item}) => (
-            <Comment
-              comment={item}
-              setCommentContent={setCommentContent}
-              setToComment={setToComment}
-              setUnderCommentId={setUnderCommentId}
-              reIdx={reIdx}
-              setReIdx={setReIdx}
-            />
-          )}
-          style={{
-            height: componentHeight,
-            width: '100%',
-            flex: 1,
-          }}
-          ListEmptyComponent={
-            <View style={{alignItems: 'center', marginTop: 50}}>
-              <CustomText
-                fontWeight="600"
-                style={{fontSize: 23, marginBottom: 5}}>
-                아직 댓글이 없어요
-              </CustomText>
-              <CustomText style={{color: '#5b5b5b'}}>
-                가장 먼저 댓글을 작성해보세요
-              </CustomText>
-            </View>
-          }
-        />
+        {isLoading ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: screenHeight * 0.55,
+            }}>
+            <ActivityIndicator size="large" color="#d3d3d3" />
+          </View>
+        ) : (
+          <Animated.FlatList
+            ref={flatListRef}
+            key={modalKey}
+            data={commentsData?.result.comments}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{
+              paddingTop: 20,
+              paddingBottom: 100,
+            }}
+            renderItem={({item}) => (
+              <Comment
+                comment={item}
+                setCommentContent={setCommentContent}
+                setToComment={setToComment}
+                setUnderCommentId={setUnderCommentId}
+                reIdx={reIdx}
+                setReIdx={setReIdx}
+              />
+            )}
+            style={{
+              height: componentHeight,
+              width: '100%',
+              flex: 1,
+            }}
+            ListEmptyComponent={
+              !writingComment && (
+                <View style={{alignItems: 'center', marginTop: 50}}>
+                  <CustomText
+                    fontWeight="600"
+                    style={{fontSize: 23, marginBottom: 5}}>
+                    아직 댓글이 없어요
+                  </CustomText>
+                  <CustomText style={{color: '#5b5b5b'}}>
+                    가장 먼저 댓글을 작성해보세요
+                  </CustomText>
+                </View>
+              )
+            }
+            ListFooterComponent={
+              writingComment && (
+                <View
+                  style={{
+                    paddingVertical: 10,
+                    backgroundColor: '#ecf8e6',
+                    paddingHorizontal: 15,
+                  }}>
+                  <View style={{flexDirection: 'row'}}>
+                    <Avatar
+                      uri={writingComment.writer.image}
+                      size={36}
+                      style={{marginTop: 2}}
+                    />
+                    <View style={{marginLeft: 8, flex: 1}}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                        }}>
+                        <CustomText
+                          fontWeight="500"
+                          style={{color: '#1b1b1b', fontSize: 12}}>
+                          {writingComment.writer.nickname}
+                        </CustomText>
+                      </View>
+                      <CustomText
+                        fontWeight="300"
+                        style={{marginTop: 1, fontSize: 14}}>
+                        {writingComment.content}
+                      </CustomText>
+                      <CustomText
+                        fontWeight="500"
+                        style={{marginTop: 4, fontSize: 12, color: '#888888'}}>
+                        작성중...
+                      </CustomText>
+                    </View>
+                  </View>
+                </View>
+              )
+            }
+          />
+        )}
+
         {toComment && (
           <View
             style={{
@@ -380,7 +478,7 @@ const CommentModal = (props: CommentModalProps) => {
             padding: 6,
             paddingBottom: insets.bottom + 6,
           }}>
-          <Avatar size={30} />
+          <Avatar uri={playerUser.image} size={30} />
           <View
             style={{
               flex: 1,
@@ -429,6 +527,7 @@ const CommentModal = (props: CommentModalProps) => {
           </View>
         </View>
       </Animated.View>
+      <Toast config={toastConfig} />
     </Modal>
   );
 };

@@ -25,7 +25,7 @@ import CustomText from '../../components/common/CustomText';
 import Avatar from '../../components/common/Avatar';
 
 const PostScreen = ({navigation, route}) => {
-  const {postId} = route.params;
+  const {postId, playerUser} = route.params;
   const insets = useSafeAreaInsets();
 
   const {width: screenWidth} = Dimensions.get('window');
@@ -247,10 +247,10 @@ const PostScreen = ({navigation, route}) => {
           </View>
         </ScrollView>
         <CommentModal
-          commentCount={data.result.post.commentCount}
           postId={postId}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
+          playerUser={playerUser}
         />
 
         <Animated.View
@@ -316,7 +316,7 @@ const PostScreen = ({navigation, route}) => {
                 }}>{`${data.result.post.commentCount}개`}</CustomText>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Avatar size={30} />
+              <Avatar uri={playerUser.image} size={30} />
               <View
                 style={{
                   marginLeft: 9,
