@@ -281,7 +281,7 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
           ) : null
         }
         onEndReached={loadFeed}
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={1}
         ListEmptyComponent={
           !feedIsLoading ? (
             playerData?.result.length > 0 ? (

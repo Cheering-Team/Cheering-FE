@@ -154,7 +154,7 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
           {useNativeDriver: true},
         )}
         onEndReached={playerData.result.user && loadFeed}
-        onEndReachedThreshold={playerData.result.user && 0}
+        onEndReachedThreshold={playerData.result.user && 1}
         ListFooterComponent={
           isLoading || (isFetchingNextPage && playerData.result.user) ? (
             <View
