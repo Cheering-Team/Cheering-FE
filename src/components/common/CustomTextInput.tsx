@@ -1,12 +1,5 @@
-import {BottomSheetTextInput} from '@gorhom/bottom-sheet';
-import React, {forwardRef, useState} from 'react';
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  TextInputProps,
-  Pressable,
-} from 'react-native';
+import React, {forwardRef, useRef, useState} from 'react';
+import {View, TextInput, TextInputProps, Pressable} from 'react-native';
 import CustomText from './CustomText';
 
 interface CustomTextInputProps extends TextInputProps {
@@ -31,9 +24,12 @@ const CustomTextInput = forwardRef<any, CustomTextInputProps>((props, ref) => {
     ...rest
   } = props;
   const [focus, setFocus] = useState(false);
+  const textInputRef = useRef<TextInput>(null);
 
   return (
-    <View style={{width: '100%'}}>
+    <Pressable
+      style={{width: '100%'}}
+      onPress={() => textInputRef.current?.focus()}>
       <View
         style={[
           {
@@ -61,6 +57,7 @@ const CustomTextInput = forwardRef<any, CustomTextInputProps>((props, ref) => {
           {label}
         </CustomText>
         <TextInput
+          ref={textInputRef}
           value={value}
           style={{fontSize: 16}}
           onFocus={() => setFocus(true)}
@@ -93,87 +90,8 @@ const CustomTextInput = forwardRef<any, CustomTextInputProps>((props, ref) => {
           </CustomText>
         )}
       </View>
-    </View>
-    // <View style={[styles.emailInput, style]}>
-    //   {label && (
-    //     <CustomText fontWeight="400" style={styles.emailInputLabel}>
-    //       {label}
-    //     </CustomText>
-    //   )}
-    //   <TextInput
-    //     placeholderTextColor="#C6C6C6"
-    //     style={
-    //       !valid
-    //         ? styles.invalidEmailInput
-    //         : focus
-    //         ? styles.emailInputFocus
-    //         : styles.emailInputBlur
-    //     }
-    //     onFocus={() => setFocus(true)}
-    //     onBlur={() => setFocus(false)}
-    //     autoCapitalize="none"
-    //     {...rest}
-    //   />
-    //   <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-    //     <CustomText
-    //       fontWeight="500"
-    //       style={!valid ? styles.invalidEmail : styles.validEmail}>
-    //       {invalidMessage}
-    //     </CustomText>
-    //     {maxLength !== 0 && (
-    //       <CustomText
-    //         fontWeight="400"
-    //         style={{
-    //           color: '#a3a3a3',
-    //           fontSize: 13,
-    //           marginTop: 4,
-    //         }}>{`${curLength} / ${maxLength}`}</CustomText>
-    //     )}
-    //   </View>
-    // </View>
+    </Pressable>
   );
-});
-
-const styles = StyleSheet.create({
-  emailInput: {
-    marginTop: 20,
-  },
-  emailInputLabel: {
-    fontSize: 15,
-    marginBottom: 5,
-    color: '#717478',
-  },
-  emailInputBlur: {
-    fontSize: 19,
-    padding: 0,
-    paddingBottom: 8,
-    borderBottomColor: 'lightgray',
-    borderBottomWidth: 2,
-  },
-  emailInputFocus: {
-    fontSize: 19,
-    padding: 0,
-    paddingBottom: 8,
-    borderBottomColor: 'gray',
-    borderBottomWidth: 2,
-  },
-  invalidEmailInput: {
-    fontSize: 19,
-    padding: 0,
-    paddingBottom: 8,
-    borderBottomColor: '#ff5252',
-    borderBottomWidth: 2,
-  },
-  validEmail: {
-    opacity: 0,
-    fontSize: 14,
-    marginTop: 5,
-  },
-  invalidEmail: {
-    color: '#ff5252',
-    fontSize: 14,
-    marginTop: 4,
-  },
 });
 
 export default CustomTextInput;
