@@ -242,7 +242,10 @@ const FeedPost = (props: FeedPostProps) => {
         {feed.player && (
           <Pressable
             onPress={() =>
-              navigation.navigate('Community', {playerId: feed.player.id})
+              navigation.navigate('CommunityStack', {
+                screen: 'Community',
+                params: {playerId: feed.player.id},
+              })
             }
             style={{flexDirection: 'row', alignItems: 'center'}}>
             <Avatar

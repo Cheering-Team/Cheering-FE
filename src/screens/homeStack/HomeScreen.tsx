@@ -195,7 +195,10 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
           {hotTab !== 0 && (
             <Pressable
               onPress={() => {
-                navigation.navigate('Community', {playerId: hotTab});
+                navigation.navigate('CommunityStack', {
+                  screen: 'Community',
+                  params: {playerId: hotTab},
+                });
               }}
               style={{
                 flexDirection: 'row',
@@ -255,9 +258,12 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
           <Pressable
             key={item.id}
             onPress={() => {
-              navigation.navigate('Post', {
-                postId: item.id,
-                playerUser: item.playerUser,
+              navigation.navigate('CommunityStack', {
+                screen: 'Post',
+                params: {
+                  postId: item.id,
+                  playerUser: item.playerUser,
+                },
               });
             }}>
             <FeedPost

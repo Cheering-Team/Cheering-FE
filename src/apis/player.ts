@@ -84,3 +84,27 @@ export const getPlayerUserPosts = async ({pageParam, queryKey}) => {
 
   return response.data;
 };
+
+export const updatePlayerUserImage = async data => {
+  const {playerUserId, image} = data;
+
+  const formData = new FormData();
+
+  formData.append('dummy', 'dummy');
+
+  if (image) {
+    formData.append('image', image);
+  }
+
+  const response = await axiosInstance.put(
+    `/playerusers/${playerUserId}/image`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  );
+
+  return response.data;
+};

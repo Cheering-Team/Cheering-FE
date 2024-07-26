@@ -11,7 +11,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface CustomButtonProps extends PressableProps {
   text: string;
-  type?: 'normal' | 'bottom' | 'ghost';
+  type?: 'normal' | 'bottom';
   disabled?: boolean;
   isLoading?: boolean;
 }
@@ -46,8 +46,6 @@ const CustomButton = (props: CustomButtonProps) => {
           ? ['#c1c1c1', '#c1c1c1']
           : isPressed
           ? ['#528e46', '#60bf6a']
-          : type === 'ghost'
-          ? ['white', 'white']
           : ['#58a04b', '#63cb6d']
       }
       style={[
@@ -58,7 +56,6 @@ const CustomButton = (props: CustomButtonProps) => {
               height: bottomHeight + 55,
             }
           : {padding: 10, borderRadius: 5},
-        type === 'ghost' && {borderWidth: 1.3, borderColor: '#dadada'},
       ]}>
       <Pressable
         disabled={disabled || isLoading}
@@ -68,12 +65,7 @@ const CustomButton = (props: CustomButtonProps) => {
         {isLoading ? (
           <ActivityIndicator color="white" />
         ) : (
-          <CustomText
-            style={[
-              styles.emailBtnText,
-              {color: type === 'ghost' ? 'black' : 'white'},
-            ]}
-            fontWeight="500">
+          <CustomText style={[styles.emailBtnText]} fontWeight="500">
             {text}
           </CustomText>
         )}
@@ -91,6 +83,7 @@ const styles = StyleSheet.create({
   emailBtnText: {
     textAlign: 'center',
     fontSize: 19,
+    color: 'white',
   },
 });
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import CategoryGraySvg from '../../../assets/images/category-gray.svg';
 import CategorBlackSvg from '../../../assets/images/category-black.svg';
@@ -12,38 +12,15 @@ import MoreGraySvg from '../../../assets/images/more-gray.svg';
 import MoreBlackSvg from '../../../assets/images/more-black.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from './CustomText';
+import {getActiveRouteName} from '../../utils/getActiveRouteName';
 
 function CustomTabBar({state, descriptors, navigation}) {
   // 탭 애니메이션 상태
   const [modeValue, setModeValue] = React.useState(false);
   const mode = React.useRef(new Animated.Value(0)).current;
 
-  // 최근에 접속한 커뮤니티 (이미지 받아오기 위함)
-  // const [curCommunity, setCurCommunity] = React.useState<string | null>(null);
-
   // 현재 화면 이름
-  let routeName = '';
-
-  if (state.routes[state.index].state) {
-    routeName = state.routes[state.index].state.routes.at(-1).name;
-  }
-
-  // React.useEffect(() => {
-  //   const getCommunityMain = async () => {
-  //     const response = await getCommunitiesMain({
-  //       id: state.routes[1].state.routes.at(-1)?.params?.communityId,
-  //     });
-
-  //     if (response.message === 'get community success') {
-  //       setCurCommunity(response.data.backgroundImage);
-  //     }
-  //   };
-  //   if (state.routes[1]?.state?.routes.at(-1)?.name === 'Community') {
-  //     getCommunityMain();
-  //   } else {
-  //     setCurCommunity(null);
-  //   }
-  // }, [state.routes]);
+  let routeName = getActiveRouteName(state);
 
   return (
     <>
@@ -75,7 +52,8 @@ function CustomTabBar({state, descriptors, navigation}) {
           routeName === 'Search' ||
           routeName === 'EditNickname' ||
           routeName === 'DeleteUser' ||
-          routeName === 'Profile'
+          routeName === 'Profile' ||
+          routeName === 'ProfileEdit'
             ? {display: 'none'}
             : styles.TabContainer,
           {paddingBottom: useSafeAreaInsets().bottom},

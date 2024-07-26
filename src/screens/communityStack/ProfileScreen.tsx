@@ -149,7 +149,24 @@ const ProfileScreen = ({navigation, route}) => {
             </View>
             <View style={{paddingHorizontal: 20}}>
               {data.result.isUser ? (
-                <CustomButton type="ghost" text="프로필 편집" />
+                <Pressable
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#d6d6d6',
+                    height: 50,
+                    borderRadius: 5,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  onPress={() =>
+                    navigation.navigate('ProfileEdit', {
+                      playerUserId: data.result.user.id,
+                    })
+                  }>
+                  <CustomText fontWeight="500" style={{fontSize: 17}}>
+                    프로필 편집
+                  </CustomText>
+                </Pressable>
               ) : (
                 <CustomButton type="normal" text="팔로우" />
               )}
@@ -174,7 +191,7 @@ const ProfileScreen = ({navigation, route}) => {
           </Pressable>
         )}
         onEndReached={loadFeed}
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={1}
         ListFooterComponent={
           feedIsLoading || isFetchingNextPage ? (
             <View

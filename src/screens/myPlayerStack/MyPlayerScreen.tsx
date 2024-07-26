@@ -38,7 +38,12 @@ const MyPlayerScreen = ({navigation}) => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}
-          onPress={() => navigation.navigate('Community', {playerId: item.id})}>
+          onPress={() =>
+            navigation.navigate('CommunityStack', {
+              screen: 'Community',
+              params: {playerId: item.id},
+            })
+          }>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Avatar uri={item.image} size={45} />
             <CustomText style={{fontSize: 16, marginLeft: 15}}>

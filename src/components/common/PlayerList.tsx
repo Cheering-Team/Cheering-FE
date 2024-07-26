@@ -20,7 +20,10 @@ const PlayerList = props => {
         <Pressable
           style={{paddingBottom: 10, backgroundColor: 'white'}}
           onPress={() => {
-            navigation.navigate('Community', {playerId: item.id});
+            navigation.navigate('CommunityStack', {
+              screen: 'Community',
+              params: {playerId: item.id},
+            });
           }}>
           <Image
             source={{uri: item.image}}
@@ -68,7 +71,10 @@ const PlayerList = props => {
           {item.user && (
             <Pressable
               onPress={() =>
-                navigation.navigate('Profile', {playerUserId: item.user.id})
+                navigation.navigate('CommunityStack', {
+                  screen: 'Profile',
+                  params: {playerUserId: item.user.id},
+                })
               }>
               <Avatar
                 uri={item.user.image}

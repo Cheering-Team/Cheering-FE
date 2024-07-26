@@ -4,7 +4,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import Toast from 'react-native-toast-message';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://172.30.1.32:8080/api',
+  baseURL: 'http://172.30.1.77:8080/api',
 });
 
 axiosInstance.interceptors.request.use(async config => {

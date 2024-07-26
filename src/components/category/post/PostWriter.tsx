@@ -24,12 +24,23 @@ const PostWriter = (props: PostWriterProps) => {
 
   return (
     <View style={styles.writerContainer}>
-      <Pressable onPress={() => navigation.navigate('Profile', {playerUserId})}>
+      <Pressable
+        onPress={() =>
+          navigation.navigate('CommunityStack', {
+            screen: 'Profile',
+            params: {playerUserId},
+          })
+        }>
         <Avatar uri={writer.image} size={38} />
       </Pressable>
       <View style={styles.writerNameContainer}>
         <Pressable
-          onPress={() => navigation.navigate('Profile', {playerUserId})}>
+          onPress={() =>
+            navigation.navigate('CommunityStack', {
+              screen: 'Profile',
+              params: {playerUserId},
+            })
+          }>
           <CustomText fontWeight="600" style={styles.writerName}>
             {writer.name}
           </CustomText>
