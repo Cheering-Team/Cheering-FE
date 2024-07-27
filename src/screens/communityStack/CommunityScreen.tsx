@@ -1,5 +1,12 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Animated, Pressable, SafeAreaView, View, Keyboard} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {
+  Animated,
+  Pressable,
+  View,
+  Keyboard,
+  Dimensions,
+  PanResponder,
+} from 'react-native';
 import {FlatList as FlatListType} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useQuery} from '@tanstack/react-query';
@@ -16,36 +23,90 @@ const CommunityScreen = ({navigation, route}) => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [resetTarget, setResetTaget] = useState(0);
+
   const playerId = route.params.playerId;
 
-  const translateY = useRef(new Animated.Value(500)).current;
+  const screenHeight = Dimensions.get('screen').height;
+  const panY = useRef(new Animated.Value(screenHeight)).current;
+
+  const translateY = panY.interpolate({
+    inputRange: [-1, 0, 1],
+    outputRange: [-1, 0, 1],
+  });
+
+  const resetBottomSheet = Animated.timing(panY, {
+    toValue: resetTarget,
+    duration: 300,
+    useNativeDriver: true,
+  });
+
+  const closeBottomSheet = Animated.timing(panY, {
+    toValue: screenHeight,
+    duration: 300,
+    useNativeDriver: true,
+  });
+
+  const panResponders = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onMoveShouldSetPanResponder: () => false,
+        onPanResponderMove: (event, gestureState) => {
+          if (gestureState.dy > 0) {
+            panY.setValue(gestureState.dy + resetTarget);
+          }
+        },
+        onPanResponderRelease: (event, gestureState) => {
+          if (gestureState.dy > 0 && gestureState.vy > 1.3) {
+            closeModal();
+          } else {
+            resetBottomSheet.start();
+          }
+        },
+      }),
+    [resetTarget],
+  );
+
+  useEffect(() => {
+    if (isModalOpen) {
+      resetBottomSheet.start();
+    }
+  }, [isModalOpen]);
+
+  const closeModal = () => {
+    closeBottomSheet.start(() => {
+      setIsModalOpen(false);
+    });
+  };
 
   const {data: playerData, isLoading: playerIsLoading} = useQuery({
     queryKey: ['player', playerId, refreshKey],
     queryFn: getPlayersInfo,
   });
 
+  useEffect(() => {
+    if (resetTarget === 0 && isModalOpen) {
+      resetBottomSheet.start();
+    }
+  }, [resetTarget]);
+
   const keyboardDidShow = useCallback(
     e => {
-      Animated.timing(translateY, {
+      Animated.timing(panY, {
         toValue: -e.endCoordinates.height,
         duration: 300,
         useNativeDriver: true,
-      }).start();
+      }).start(() => {
+        setResetTaget(-e.endCoordinates.height);
+      });
     },
-    [translateY],
+    [panY],
   );
 
-  const keyboardDidHide = useCallback(
-    e => {
-      Animated.timing(translateY, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    },
-    [translateY],
-  );
+  const keyboardDidHide = useCallback(e => {
+    setResetTaget(0);
+  }, []);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -61,7 +122,7 @@ const CommunityScreen = ({navigation, route}) => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  }, [keyboardDidShow, keyboardDidHide, translateY]);
+  }, [keyboardDidShow, keyboardDidHide]);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scrollTimeout = useRef(null);
@@ -97,12 +158,11 @@ const CommunityScreen = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView key={refreshKey} style={{flex: 1}}>
+      <View key={refreshKey} style={{flex: 1, paddingBottom: insets.bottom}}>
         <CommunityFlatList
           ref={flatListRef}
           playerData={playerData}
           playerId={playerId}
-          translateY={translateY}
           setIsModalOpen={setIsModalOpen}
           handleScrollBeginDrag={handleScrollBeginDrag}
           handleScrollEndDrag={handleScrollEndDrag}
@@ -110,12 +170,13 @@ const CommunityScreen = ({navigation, route}) => {
         <JoinModal
           playerId={playerId}
           playerData={playerData}
+          panResponders={panResponders}
           isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
+          closeModal={closeModal}
           translateY={translateY}
           setRefreshKey={setRefreshKey}
         />
-      </SafeAreaView>
+      </View>
       {playerData.result.user && (
         <View
           style={{

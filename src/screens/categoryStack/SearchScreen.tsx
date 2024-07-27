@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -10,7 +10,7 @@ import SearchSvg from '../../../assets/images/search-sm.svg';
 import CloseSvg from '../../../assets/images/close-black.svg';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {getPlayers} from '../../apis/player';
-import PlayerList from '../../components/PlayerList';
+import PlayerList from '../../components/common/PlayerList';
 
 const SearchScreen = ({navigation}) => {
   const queryClient = useQueryClient();
@@ -30,7 +30,7 @@ const SearchScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1}}>
       <View
         style={{
           flexDirection: 'row',
@@ -81,8 +81,8 @@ const SearchScreen = ({navigation}) => {
         </View>
       </View>
       {isLoading ? (
-        <View style={{marginTop: 30}}>
-          <ActivityIndicator />
+        <View style={{marginTop: 50}}>
+          <ActivityIndicator size={'large'} />
         </View>
       ) : data ? (
         <PlayerList players={data?.result} />

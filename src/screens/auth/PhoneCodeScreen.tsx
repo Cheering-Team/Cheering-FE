@@ -7,10 +7,7 @@ import {
 } from 'react-native';
 import BackClose from '../../hooks/BackClose';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import CustomText from '../../components/CustomText';
-import CustomTextInput from '../../components/CustomTextInput';
 import React, {useContext, useEffect, useState} from 'react';
-import CustomButton from '../../components/CustomButton';
 import {AuthStackParamList} from '../../navigations/AuthStackNavigator';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -19,6 +16,9 @@ import {postPhoneCode, postPhoneSMS, postSignin} from '../../apis/user';
 import Toast from 'react-native-toast-message';
 import {AuthContext} from '../../navigations/AuthSwitch';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import CustomText from '../../components/common/CustomText';
+import CustomTextInput from '../../components/common/CustomTextInput';
+import CustomButton from '../../components/common/CustomButton';
 
 type PhoneCodeScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,

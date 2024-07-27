@@ -1,10 +1,7 @@
 import {KeyboardAvoidingView, Platform, StyleSheet} from 'react-native';
 import {PHONE_REGEX} from '../../constants/regex';
-import CustomTextInput from '../../components/CustomTextInput';
-import CustomButton from '../../components/CustomButton';
 import Close from '../../hooks/Close';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import CustomText from '../../components/CustomText';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useEffect, useState} from 'react';
 import React from 'react';
@@ -13,6 +10,9 @@ import {postPhoneSMS} from '../../apis/user';
 import {useMutation} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import CustomTextInput from '../../components/common/CustomTextInput';
+import CustomText from '../../components/common/CustomText';
+import CustomButton from '../../components/common/CustomButton';
 
 type SignInScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,

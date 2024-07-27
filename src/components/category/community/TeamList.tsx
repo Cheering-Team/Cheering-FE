@@ -1,6 +1,6 @@
 import React from 'react';
 import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
-import CustomText from '../../CustomText';
+import CustomText from '../../common/CustomText';
 
 interface TeamListProps {
   playerData: any;

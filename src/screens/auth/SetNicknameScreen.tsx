@@ -1,9 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {KeyboardAvoidingView, Platform, StyleSheet} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import CustomText from '../../components/CustomText';
-import CustomTextInput from '../../components/CustomTextInput';
-import CustomButton from '../../components/CustomButton';
 import Close from '../../hooks/Close';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AuthStackParamList} from '../../navigations/AuthStackNavigator';
@@ -14,6 +11,9 @@ import {NICKNAME_REGEX} from '../../constants/regex';
 import {AuthContext} from '../../navigations/AuthSwitch';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import CustomText from '../../components/common/CustomText';
+import CustomTextInput from '../../components/common/CustomTextInput';
+import CustomButton from '../../components/common/CustomButton';
 
 type SetNicknameScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,

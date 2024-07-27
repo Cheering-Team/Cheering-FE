@@ -2,9 +2,9 @@ import {useQuery} from '@tanstack/react-query';
 import React from 'react';
 import {getUserInfo} from '../../apis/user';
 import {Pressable, SafeAreaView, View} from 'react-native';
-import CustomText from '../../components/CustomText';
 import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
 import SettingSvg from '../../../assets/images/setting-svg.svg';
+import CustomText from '../../components/common/CustomText';
 
 const MoreScreen = ({navigation}) => {
   const {data, isLoading} = useQuery({

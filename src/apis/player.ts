@@ -29,11 +29,11 @@ export const getPlayersInfo = async ({queryKey}) => {
   return response.data;
 };
 
-export const getCheckNickname = async ({queryKey}) => {
-  const [_key, playerId, nickname] = queryKey;
+export const getCheckNickname = async ({playerId, nickname}) => {
   const response = await axiosInstance.get(`/players/${playerId}/nickname`, {
     params: {nickname},
   });
+
   return response.data;
 };
 
@@ -62,6 +62,67 @@ export const postCommunityJoin = async (data: postComminityJoinRequest) => {
 
 export const getMyPlayers = async () => {
   const response = await axiosInstance.get('/my/players');
+
+  return response.data;
+};
+
+// PLAYERUSER
+
+export const getPlayerUserInfo = async ({queryKey}) => {
+  const [_key, playerUserId] = queryKey;
+  const response = await axiosInstance.get(`/playerusers/${playerUserId}`);
+
+  return response.data;
+};
+
+export const getPlayerUserPosts = async ({pageParam, queryKey}) => {
+  const [_key, playerUserId] = queryKey;
+
+  const response = await axiosInstance.get(
+    `/playerusers/${playerUserId}/posts?page=${pageParam}&size=5`,
+  );
+
+  return response.data;
+};
+
+export const updatePlayerUserImage = async data => {
+  const {playerUserId, image} = data;
+
+  const formData = new FormData();
+
+  formData.append('dummy', 'dummy');
+
+  if (image) {
+    formData.append('image', image);
+  }
+
+  const response = await axiosInstance.put(
+    `/playerusers/${playerUserId}/image`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const updatePlayerUserNickname = async data => {
+  const {playerUserId, nickname} = data;
+
+  const response = await axiosInstance.put(
+    `/playerusers/${playerUserId}/nickname`,
+    {nickname},
+  );
+
+  return response.data;
+};
+
+export const deletePlayerUser = async data => {
+  const {playerUserId} = data;
+  const response = await axiosInstance.delete(`/playerusers/${playerUserId}`);
 
   return response.data;
 };

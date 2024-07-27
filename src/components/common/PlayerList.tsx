@@ -1,11 +1,11 @@
 import {Dimensions, FlatList, Image, Pressable, View} from 'react-native';
 import CustomText from './CustomText';
 import React from 'react';
-import {formatComma} from '../utils/format';
-import StarOrangeSvg from '../../assets/images/star-orange.svg';
+import StarOrangeSvg from '../../../assets/images/star-orange.svg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {CategoryStackParamList} from '../navigations/CategoryStackNavigator';
 import Avatar from './Avatar';
+import {CategoryStackParamList} from '../../navigations/CategoryStackNavigator';
+import {formatComma} from '../../utils/format';
 
 const PlayerList = props => {
   const {teamName, players, paddingTop = false} = props;
@@ -20,7 +20,10 @@ const PlayerList = props => {
         <Pressable
           style={{paddingBottom: 10, backgroundColor: 'white'}}
           onPress={() => {
-            navigation.navigate('Community', {playerId: item.id});
+            navigation.navigate('CommunityStack', {
+              screen: 'Community',
+              params: {playerId: item.id},
+            });
           }}>
           <Image
             source={{uri: item.image}}
@@ -66,17 +69,25 @@ const PlayerList = props => {
             </View>
           </View>
           {item.user && (
-            <Avatar
-              uri={item.user.image}
-              size={30}
-              style={{
-                position: 'absolute',
-                bottom: 15,
-                right: 5,
-                borderWidth: 1,
-                borderColor: '#d1d1d1',
-              }}
-            />
+            <Pressable
+              onPress={() =>
+                navigation.navigate('CommunityStack', {
+                  screen: 'Profile',
+                  params: {playerUserId: item.user.id},
+                })
+              }>
+              <Avatar
+                uri={item.user.image}
+                size={30}
+                style={{
+                  position: 'absolute',
+                  bottom: 15,
+                  right: 5,
+                  borderWidth: 1,
+                  borderColor: '#d1d1d1',
+                }}
+              />
+            </Pressable>
           )}
         </Pressable>
       )}

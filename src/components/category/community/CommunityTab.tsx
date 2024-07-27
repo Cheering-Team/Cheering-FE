@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {FlatList, Pressable, StyleSheet} from 'react-native';
-import CustomText from '../../CustomText';
+import CustomText from '../../common/CustomText';
 
 const CommunityTopTab = () => {
   const [curTab, setCurTab] = useState('피드');

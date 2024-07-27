@@ -4,7 +4,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import Toast from 'react-native-toast-message';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://172.30.1.42:8080/api',
+  baseURL: 'http://172.30.1.98:8080/api',
 });
 
 axiosInstance.interceptors.request.use(async config => {
@@ -41,8 +41,10 @@ axiosInstance.interceptors.response.use(
         await EncryptedStorage.removeItem('accessToken');
         await EncryptedStorage.removeItem('refreshToken');
         RootNavigation.navigate('SettingStack', {screen: 'SignOut'});
+        return Promise.reject(response.data);
       }
-      return Promise.reject(response.data);
+
+      return Promise.resolve(response);
     }
 
     if (response.data.message === '토큰이 유효하지 않습니다.') {

@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Pressable, View} from 'react-native';
-import Avatar from '../../Avatar';
-import CustomText from '../../CustomText';
 import {formatDate} from '../../../utils/format';
 import {useQuery} from '@tanstack/react-query';
 import {getReComments} from '../../../apis/post';
+import CustomText from '../../common/CustomText';
+import Avatar from '../../common/Avatar';
+import {useNavigation} from '@react-navigation/native';
 
 interface CommentProps {
   comment: any;
@@ -13,6 +14,7 @@ interface CommentProps {
   setUnderCommentId: any;
   reIdx: number | null;
   setReIdx: any;
+  closeModal: any;
 }
 
 const Comment = (props: CommentProps) => {
@@ -23,7 +25,10 @@ const Comment = (props: CommentProps) => {
     setUnderCommentId,
     reIdx,
     setReIdx,
+    closeModal,
   } = props;
+
+  const navigation = useNavigation();
 
   const [isReCommentOpen, setIsReCommentOpen] = useState(false);
 
@@ -52,11 +57,22 @@ const Comment = (props: CommentProps) => {
   }, [comment.id, reIdx, refetch, setReIdx]);
 
   return (
-    <View style={{paddingVertical: 10}} key={comment.id}>
+    <View style={{paddingVertical: 10, paddingHorizontal: 15}} key={comment.id}>
       <View style={{flexDirection: 'row'}}>
-        <Avatar uri={comment.writer.image} size={36} style={{marginTop: 2}} />
+        <Pressable
+          onPress={() => {
+            closeModal();
+            navigation.navigate('Profile', {playerUserId: comment.writer.id});
+          }}>
+          <Avatar uri={comment.writer.image} size={36} style={{marginTop: 2}} />
+        </Pressable>
+
         <View style={{marginLeft: 8, flex: 1}}>
-          <View
+          <Pressable
+            onPress={() => {
+              closeModal();
+              navigation.navigate('Profile', {playerUserId: comment.writer.id});
+            }}
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -66,16 +82,18 @@ const Comment = (props: CommentProps) => {
               style={{color: '#1b1b1b', fontSize: 12}}>
               {comment.writer.name}
             </CustomText>
-            <CustomText
-              style={{
-                color: '#797979',
-                marginLeft: 6,
-                fontSize: 13,
-                paddingBottom: 2,
-              }}>
-              {formatDate(comment.createdAt)}
-            </CustomText>
-          </View>
+            {comment.createAt && (
+              <CustomText
+                style={{
+                  color: '#797979',
+                  marginLeft: 6,
+                  fontSize: 13,
+                  paddingBottom: 2,
+                }}>
+                {formatDate(comment.createdAt)}
+              </CustomText>
+            )}
+          </Pressable>
           <CustomText fontWeight="300" style={{marginTop: 1, fontSize: 14}}>
             {comment.content}
           </CustomText>
@@ -97,13 +115,29 @@ const Comment = (props: CommentProps) => {
               <View
                 key={reComment.id}
                 style={{flexDirection: 'row', marginTop: 19}}>
-                <Avatar
-                  uri={reComment.writer.image}
-                  size={34}
-                  style={{marginTop: 2}}
-                />
+                <Pressable
+                  onPress={() => {
+                    closeModal();
+                    navigation.navigate('Profile', {
+                      playerUserId: comment.writer.id,
+                    });
+                  }}>
+                  <Avatar
+                    uri={reComment.writer.image}
+                    size={34}
+                    style={{marginTop: 2}}
+                  />
+                </Pressable>
+
                 <View style={{marginLeft: 8}}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Pressable
+                    onPress={() => {
+                      closeModal();
+                      navigation.navigate('Profile', {
+                        playerUserId: comment.writer.id,
+                      });
+                    }}
+                    style={{flexDirection: 'row', alignItems: 'center'}}>
                     <CustomText
                       fontWeight="500"
                       style={{color: '#1b1b1b', fontSize: 12}}>
@@ -118,7 +152,7 @@ const Comment = (props: CommentProps) => {
                       }}>
                       {formatDate(reComment.createdAt)}
                     </CustomText>
-                  </View>
+                  </Pressable>
                   <CustomText fontWeight="300" style={{marginTop: 1}}>
                     <CustomText
                       fontWeight="500"

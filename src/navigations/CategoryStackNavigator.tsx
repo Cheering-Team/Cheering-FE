@@ -2,19 +2,21 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import CategoryScreen from '../screens/categoryStack/CategoryScreen';
 import React from 'react';
 import PlayerListScreen from '../screens/categoryStack/PlayerListScreen';
-import CommunityScreen from '../screens/categoryStack/CommunityScreen';
-import PostWriteScreen from '../screens/categoryStack/PostWriteScreen';
-import PostScreen from '../screens/categoryStack/PostScreen';
 import SearchScreen from '../screens/categoryStack/SearchScreen';
+import CommunityStackNavigator from './CommunityStackNavigator';
 
 export type CategoryStackParamList = {
   Category: {teamId: number};
   Search: undefined;
   PlayerList: undefined;
-  Community: {playerId: number};
-  PostWrite: {playerId: number};
-  Post: {postId: number};
+  CommunityStack: undefined;
 };
+
+export interface PlayerUser {
+  id: number;
+  nickname: string;
+  image: string;
+}
 
 const CategoryStackNavigator = () => {
   const CategoryStack = createNativeStackNavigator<CategoryStackParamList>();
@@ -32,18 +34,8 @@ const CategoryStackNavigator = () => {
       />
       <CategoryStack.Screen name="PlayerList" component={PlayerListScreen} />
       <CategoryStack.Screen
-        name="Community"
-        component={CommunityScreen}
-        options={{headerShown: false}}
-      />
-      <CategoryStack.Screen
-        name="PostWrite"
-        component={PostWriteScreen}
-        options={{headerShown: false}}
-      />
-      <CategoryStack.Screen
-        name="Post"
-        component={PostScreen}
+        name="CommunityStack"
+        component={CommunityStackNavigator}
         options={{headerShown: false}}
       />
     </CategoryStack.Navigator>

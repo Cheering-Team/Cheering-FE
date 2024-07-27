@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
-import CustomText from '../../CustomText';
 import HeartSvg from '../../../../assets/images/heart.svg';
 import HeartFillSvg from '../../../../assets/images/heart_fill.svg';
 import CommentSvg from '../../../../assets/images/comment.svg';
@@ -9,8 +8,9 @@ import FastImage from 'react-native-fast-image';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {postPostsLikes} from '../../../apis/post';
 import Toast from 'react-native-toast-message';
-import Avatar from '../../Avatar';
 import {useNavigation} from '@react-navigation/native';
+import CustomText from '../../common/CustomText';
+import Avatar from '../../common/Avatar';
 
 interface FeedPostProps {
   feed: any;
@@ -107,7 +107,11 @@ const FeedPost = (props: FeedPostProps) => {
           </CustomText>
         ))}
       </View>
-      <PostWriter writer={feed.writer} createdAt={feed.createdAt} />
+      <PostWriter
+        writer={feed.writer}
+        createdAt={feed.createdAt}
+        playerUserId={feed.writer.id}
+      />
       <CustomText style={styles.content}>{feed.content}</CustomText>
       {feed.images.length !== 0 &&
         (feed.images.length === 1 ? (
@@ -238,7 +242,10 @@ const FeedPost = (props: FeedPostProps) => {
         {feed.player && (
           <Pressable
             onPress={() =>
-              navigation.navigate('Community', {playerId: feed.player.id})
+              navigation.navigate('CommunityStack', {
+                screen: 'Community',
+                params: {playerId: feed.player.id},
+              })
             }
             style={{flexDirection: 'row', alignItems: 'center'}}>
             <Avatar

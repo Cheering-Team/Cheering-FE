@@ -1,11 +1,11 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import MyPlayerScreen from '../screens/myPlayerStack/MyPlayerScreen';
-import CommunityScreen from '../screens/categoryStack/CommunityScreen';
+import CommunityStackNavigator from './CommunityStackNavigator';
 
 export type MyPlayerStackParamList = {
   MyPlayer: undefined;
-  Community: {playerId: number};
+  CommunityStack: undefined;
 };
 
 const MyPlayerStackNavigator = () => {
@@ -19,8 +19,8 @@ const MyPlayerStackNavigator = () => {
         options={{headerTitle: '내 선수'}}
       />
       <MyPlayerStack.Screen
-        name="Community"
-        component={CommunityScreen}
+        name="CommunityStack"
+        component={CommunityStackNavigator}
         options={{headerShown: false}}
       />
     </MyPlayerStack.Navigator>

@@ -65,7 +65,7 @@ const CustomButton = (props: CustomButtonProps) => {
         {isLoading ? (
           <ActivityIndicator color="white" />
         ) : (
-          <CustomText style={styles.emailBtnText} fontWeight="500">
+          <CustomText style={[styles.emailBtnText]} fontWeight="500">
             {text}
           </CustomText>
         )}
@@ -81,9 +81,9 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   emailBtnText: {
-    color: 'white',
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 19,
+    color: 'white',
   },
 });
 

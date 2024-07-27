@@ -1,13 +1,11 @@
 import React from 'react';
-import CommunityScreen from '../screens/categoryStack/CommunityScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../screens/homeStack/HomeScreen';
-import PostScreen from '../screens/categoryStack/PostScreen';
+import CommunityStackNavigator from './CommunityStackNavigator';
 
 export type HomeStackParamList = {
   Home: undefined;
-  Post: {postId: number};
-  Community: {playerId: number};
+  CommunityStack: undefined;
 };
 
 const HomeStackNavigator = () => {
@@ -23,13 +21,8 @@ const HomeStackNavigator = () => {
         }}
       />
       <HomeStack.Screen
-        name="Post"
-        component={PostScreen}
-        options={{headerShown: false}}
-      />
-      <HomeStack.Screen
-        name="Community"
-        component={CommunityScreen}
+        name="CommunityStack"
+        component={CommunityStackNavigator}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>

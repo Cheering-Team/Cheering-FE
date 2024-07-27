@@ -6,6 +6,7 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type ICustomFlatListStyles = {
   header: StyleProp<ViewStyle>;
@@ -24,6 +25,7 @@ const window = Dimensions.get('window');
 
 export const useCommunityFlatListHook = (): TUseCommunityFlastListHook => {
   const nativeScrollY = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
 
   const [heights, setHeights] = useState({
     header: 0,
@@ -37,7 +39,7 @@ export const useCommunityFlatListHook = (): TUseCommunityFlastListHook => {
     },
     stickyElement: {
       width: '100%',
-      marginTop: Dimensions.get('window').height / 2.6,
+      marginTop: Dimensions.get('window').height / 2.25,
       position: 'absolute',
       transform: [
         {
@@ -45,11 +47,11 @@ export const useCommunityFlatListHook = (): TUseCommunityFlastListHook => {
             extrapolate: 'clamp',
             inputRange: [
               -window.height,
-              Dimensions.get('window').height / 2.6 - 50,
+              Dimensions.get('window').height / 2.25 - (50 + insets.top),
             ],
             outputRange: [
               window.height,
-              -(Dimensions.get('window').height / 2.6) + 50,
+              -(Dimensions.get('window').height / 2.25) + (50 + insets.top),
             ],
           }),
         },

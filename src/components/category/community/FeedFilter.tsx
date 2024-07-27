@@ -1,10 +1,10 @@
 import React from 'react';
 import {Pressable, ScrollView, StyleSheet, View} from 'react-native';
-import CustomText from '../../CustomText';
 import LinearGradient from 'react-native-linear-gradient';
 import {useState} from 'react';
 import ChevronTopSvg from '../../../../assets/images/chevron-top-black.svg';
 import ChevronDownSvg from '../../../../assets/images/chevron-down-black.svg';
+import CustomText from '../../common/CustomText';
 
 interface FilterDataType {
   name: string;

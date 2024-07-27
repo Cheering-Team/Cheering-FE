@@ -1,56 +1,42 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  Animated,
   Dimensions,
+  Easing,
   KeyboardAvoidingView,
   Platform,
   Pressable,
   ScrollView,
-  TextInput,
   View,
 } from 'react-native';
-import CustomText from '../../components/CustomText';
 import ChevronLeftSvg from '../../../assets/images/chevron-left.svg';
 import ThreeDotSvg from '../../../assets/images/three-dots-black.svg';
 import HeartSvg from '../../../assets/images/heart.svg';
 import HeartFillSvg from '../../../assets/images/heart_fill.svg';
-import ArrowUpSvg from '../../../assets/images/arrow_up.svg';
-import CloseWhiteSvg from '../../../assets/images/x_white.svg';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {
-  getPostById,
-  postComments,
-  postPostsLikes,
-  postReComments,
-} from '../../apis/post';
+import {getPostById, postPostsLikes} from '../../apis/post';
 import PostWriter from '../../components/category/post/PostWriter';
 import ImageView from 'react-native-image-viewing';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
 import CommentModal from '../../components/category/post/CommentModal';
 import Toast from 'react-native-toast-message';
+import CustomText from '../../components/common/CustomText';
+import Avatar from '../../components/common/Avatar';
 
 const PostScreen = ({navigation, route}) => {
-  const {postId} = route.params;
+  const {postId, playerUser} = route.params;
   const insets = useSafeAreaInsets();
 
-  const commentInputRef = useRef<TextInput>(null);
   const {width: screenWidth} = Dimensions.get('window');
 
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
 
-  const [reIdx, setReIdx] = useState<number | null>(null);
-
   const [loading, setLoading] = useState([]);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
-  const [commentContent, setCommentContent] = useState<string>('');
-  const [underCommentId, setUnderCommentId] = useState<number | null>(null);
-  const [toComment, setToComment] = useState<{
-    id: number;
-    name: string;
-    image: string;
-  } | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -61,6 +47,14 @@ const PostScreen = ({navigation, route}) => {
 
   const [likeStatus, setLikeStatus] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
+
+  const scrollY = new Animated.Value(0);
+  const diffClamp = Animated.diffClamp(scrollY, 0, 200);
+  const translateYInteract = diffClamp.interpolate({
+    inputRange: [0, 200],
+    outputRange: [0, 70],
+    easing: Easing.in(Easing.ease),
+  });
 
   useEffect(() => {
     if (!isLoading) {
@@ -73,25 +67,6 @@ const PostScreen = ({navigation, route}) => {
     mutationFn: postPostsLikes,
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['post', postId]});
-    },
-  });
-
-  const commentMutation = useMutation({
-    mutationFn: postComments,
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
-      queryClient.invalidateQueries({queryKey: ['post', postId]});
-    },
-  });
-
-  const reCommentMutation = useMutation({
-    mutationFn: postReComments,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['comments', underCommentId, 'reComments'],
-      });
-      queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
-      setReIdx(underCommentId);
     },
   });
 
@@ -138,68 +113,6 @@ const PostScreen = ({navigation, route}) => {
     }
   };
 
-  const writeComment = async () => {
-    if (commentContent === '') {
-      return;
-    }
-
-    const data = await commentMutation.mutateAsync({
-      postId,
-      content: commentContent,
-    });
-
-    if (data.message === '댓글이 작성되었습니다.') {
-      setCommentContent('');
-      return;
-    } else {
-      Toast.show({
-        type: 'default',
-        position: 'top',
-        visibilityTime: 3000,
-        bottomOffset: 30,
-        text1: '잠시 후 다시 시도해 주세요.',
-      });
-    }
-  };
-
-  const writeReComment = async () => {
-    if (commentContent === '') {
-      return;
-    }
-
-    if (toComment && underCommentId) {
-      const data = await reCommentMutation.mutateAsync({
-        commentId: underCommentId,
-        content: commentContent,
-        toId: toComment.id,
-      });
-
-      if (data.message === '답글이 작성되었습니다.') {
-        Toast.show({
-          type: 'default',
-          position: 'top',
-          visibilityTime: 3000,
-          bottomOffset: 30,
-          text1: '댓글을 작성하였습니다.',
-        });
-
-        setCommentContent('');
-        setToComment(null);
-        setUnderCommentId(null);
-
-        return;
-      } else {
-        Toast.show({
-          type: 'default',
-          position: 'top',
-          visibilityTime: 3000,
-          bottomOffset: 30,
-          text1: '잠시 후 다시 시도해 주세요.',
-        });
-      }
-    }
-  };
-
   if (isLoading) {
     return <></>;
   }
@@ -208,8 +121,7 @@ const PostScreen = ({navigation, route}) => {
     <View style={{flex: 1, paddingTop: insets.top}}>
       <KeyboardAvoidingView
         style={{flex: 1}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={-insets.bottom}>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         {/* 헤더 */}
         <View
           style={{
@@ -245,6 +157,10 @@ const PostScreen = ({navigation, route}) => {
         </View>
         {/* 본문 */}
         <ScrollView
+          onScroll={e => {
+            scrollY.setValue(e.nativeEvent.contentOffset.y);
+          }}
+          scrollEventThrottle={16}
           style={{flex: 1}}
           contentContainerStyle={{paddingBottom: 70}}>
           {/* 태그 */}
@@ -281,6 +197,7 @@ const PostScreen = ({navigation, route}) => {
             <PostWriter
               writer={data.result.post.writer}
               createdAt={data.result.post.createdAt}
+              playerUserId={data.result.post.writer.id}
             />
             <CustomText
               style={{
@@ -330,116 +247,92 @@ const PostScreen = ({navigation, route}) => {
           </View>
         </ScrollView>
         <CommentModal
-          commentCount={data.result.post.commentCount}
           postId={postId}
-          setToComment={setToComment}
-          setCommentContent={setCommentContent}
-          setUnderCommentId={setUnderCommentId}
-          reIdx={reIdx}
-          setReIdx={setReIdx}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          playerUser={playerUser}
         />
 
-        {toComment && (
-          <View
-            style={{
-              backgroundColor: '#58a04b',
-              borderTopLeftRadius: 15,
-              borderTopRightRadius: 15,
-              paddingLeft: 17,
-              paddingRight: 14,
-              paddingVertical: 6,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <CustomText
-              fontWeight="500"
-              style={{
-                color: 'white',
-              }}>{`${toComment.name} 님에게 답글 남기는 중`}</CustomText>
-            <Pressable
-              style={{padding: 3}}
-              onPress={() => {
-                setToComment(null);
-                setCommentContent('');
-              }}>
-              <CloseWhiteSvg width={11} height={11} />
-            </Pressable>
-          </View>
-        )}
-        <View
-          style={{
-            height: 55 + insets.bottom,
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderTopColor: '#e0e0e0',
-            backgroundColor: 'white',
-            borderTopWidth: 1,
-            padding: 6,
-            paddingBottom: insets.bottom + 6,
-          }}>
+        <Animated.View
+          style={[
+            {
+              width: '100%',
+              position: 'absolute',
+              bottom: insets.bottom,
+              padding: 10,
+            },
+            {transform: [{translateY: translateYInteract}]},
+          ]}>
           <Pressable
             onPress={toggleLike}
-            style={{
-              alignItems: 'center',
-              marginLeft: 7,
-              marginRight: 15,
-            }}>
+            style={({pressed}) => [
+              {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+                width: 88,
+                backgroundColor: pressed ? '#dedede' : '#f8f8f8',
+                padding: 7,
+                marginBottom: 10,
+                borderRadius: 20,
+                shadowColor: '#000000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.15,
+                shadowRadius: 2.84,
+              },
+            ]}>
             {likeStatus ? (
-              <HeartFillSvg width={21} height={21} />
+              <HeartFillSvg width={17} height={17} />
             ) : (
-              <HeartSvg width={21} height={21} />
+              <HeartSvg width={17} height={17} />
             )}
-            <CustomText style={{fontSize: 11, marginTop: 1, color: '#3a3a3a'}}>
-              {likeCount}
-            </CustomText>
+            <CustomText>{likeCount}</CustomText>
           </Pressable>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: '#f3f3f3',
-              borderRadius: 30,
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingTop: 4,
-              paddingBottom: 5,
-            }}>
-            <TextInput
-              autoCapitalize="none"
-              multiline
-              ref={commentInputRef}
-              placeholder="댓글을 입력해주세요"
-              placeholderTextColor={'#747474'}
-              value={commentContent}
-              onChangeText={setCommentContent}
+          <Pressable
+            onPress={() => setIsModalOpen(true)}
+            style={({pressed}) => [
+              {
+                backgroundColor: pressed ? '#dedede' : '#f8f8f8',
+                padding: 15,
+                borderRadius: 18,
+                shadowColor: '#000000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.2,
+                shadowRadius: 2.84,
+              },
+            ]}>
+            <View
               style={{
-                flex: 1,
-                height: 30,
-                paddingHorizontal: 17,
-                fontFamily: 'NotoSansKR-Regular',
-                includeFontPadding: false,
-                color: 'black',
-              }}
-            />
-            <Pressable
-              disabled={
-                commentMutation.isPending || reCommentMutation.isPending
-              }
-              style={{
-                backgroundColor:
-                  commentMutation.isPending || reCommentMutation.isPending
-                    ? '#d7d7d7'
-                    : '#58a04b',
-                paddingVertical: 8,
-                paddingHorizontal: 14,
-                borderRadius: 23,
-                marginRight: 8,
-              }}
-              onPress={underCommentId ? writeReComment : writeComment}>
-              <ArrowUpSvg width={16} height={16} />
-            </Pressable>
-          </View>
-        </View>
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 8,
+              }}>
+              <CustomText fontWeight="500" style={{fontSize: 15}}>
+                댓글{' '}
+              </CustomText>
+              <CustomText
+                style={{
+                  color: '#6a6a6a',
+                }}>{`${data.result.post.commentCount}개`}</CustomText>
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Avatar uri={playerUser.image} size={30} />
+              <View
+                style={{
+                  marginLeft: 9,
+                  backgroundColor: '#eeeeee',
+                  flex: 1,
+                  borderRadius: 15,
+                  paddingHorizontal: 10,
+                  paddingVertical: 2,
+                }}>
+                <CustomText style={{fontSize: 13, color: '#8b8b8b'}}>
+                  댓글 추가...
+                </CustomText>
+              </View>
+            </View>
+          </Pressable>
+        </Animated.View>
 
         <ImageView
           images={data.result.post.images.map(item => ({uri: item.url}))}

@@ -8,29 +8,31 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import CustomText from '../../CustomText';
-import Avatar from '../../Avatar';
-import CustomTextInput from '../../CustomTextInput';
-import CustomButton from '../../CustomButton';
+
 import Toast from 'react-native-toast-message';
 import ImagePicker from 'react-native-image-crop-picker';
 import {toastConfig} from '../../../../App';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CameraSvg from '../../../../assets/images/camera-01.svg';
 import ArrowLeftGraySvg from '../../../../assets/images/arrow-left-gray.svg';
-import CheckGraySvg from '../../../../assets/images/check-gray.svg';
-import CheckGreenSvg from '../../../../assets/images/check-green.svg';
 import {getCheckNickname, postCommunityJoin} from '../../../apis/player';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {StyleSheet} from 'react-native';
+import {NICKNAME_REGEX} from '../../../constants/regex';
+import CustomText from '../../common/CustomText';
+import Avatar from '../../common/Avatar';
+import CustomTextInput from '../../common/CustomTextInput';
+import CustomButton from '../../common/CustomButton';
+import CheckBox from '../../common/CheckBox';
 
 interface JoinModalProps {
   playerId: number;
   playerData: any;
   isModalOpen: boolean;
-  setIsModalOpen: any;
   translateY: any;
   setRefreshKey: any;
+  closeModal: any;
+  panResponders: any;
 }
 
 const JoinModal = (props: JoinModalProps) => {
@@ -38,9 +40,10 @@ const JoinModal = (props: JoinModalProps) => {
     playerId,
     playerData,
     isModalOpen,
-    setIsModalOpen,
     translateY,
     setRefreshKey,
+    closeModal,
+    panResponders,
   } = props;
 
   const insets = useSafeAreaInsets();
@@ -58,19 +61,20 @@ const JoinModal = (props: JoinModalProps) => {
     type: '',
   });
   const [nickname, setNickname] = useState('');
+  const [isNicknameValid, setIsNicknameValid] = useState(true);
+  const [nicknameInvalidMessage, setNicknameInvalidMessage] = useState('');
 
   const {
     data: nicknameCheckData,
     refetch,
-    error,
     isRefetching,
-    isError,
   } = useQuery({
-    queryKey: ['nickname', playerId, nickname],
-    queryFn: getCheckNickname,
+    queryKey: ['nickname'],
+    queryFn: () => getCheckNickname({playerId, nickname}),
     enabled: false,
-    retry: 0,
+    gcTime: 0,
   });
+
   const mutation = useMutation({
     mutationFn: postCommunityJoin,
     onSuccess: () => {
@@ -81,66 +85,57 @@ const JoinModal = (props: JoinModalProps) => {
   });
 
   useEffect(() => {
-    if (!isRefetching) {
-      if (isError && error?.message === '이미 존재하는 닉네임입니다.') {
-        Toast.show({
-          type: 'default',
-          position: 'top',
-          visibilityTime: 3000,
-          topOffset: insets.top + 20,
-          text1: '이미 존재하는 닉네임입니다.',
-        });
-        return;
-      }
-      if (nicknameCheckData?.message === '사용 가능한 닉네임 입니다.') {
-        setJoinState('term');
-      }
-    }
-  }, [nicknameCheckData, isRefetching, error, isError]);
-
-  const closeModal = () => {
-    setImageData({uri: '', name: '', type: ''});
-    Animated.timing(translateY, {
-      toValue: 500,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
-      setIsModalOpen(false);
+    if (!isModalOpen) {
+      setImageData({uri: '', name: '', type: ''});
       setJoinState('profile');
       setAgreements({one: false, two: false, three: false});
       setNickname('');
-    });
-  };
+    }
+  }, [isModalOpen]);
 
   const imageUpload = async () => {
-    const image = await ImagePicker.openPicker({
-      cropperCircleOverlay: true,
-      cropping: true,
-      cropperChooseText: '확인',
-      cropperCancelText: '취소',
-      cropperToolbarTitle: '사진 선택',
-    });
+    try {
+      const image = await ImagePicker.openPicker({
+        cropperCircleOverlay: true,
+        cropping: true,
+        cropperChooseText: '확인',
+        cropperCancelText: '취소',
+        cropperToolbarTitle: '사진 선택',
+      });
 
-    setImageData({
-      uri: image.path,
-      name: image.filename || '',
-      type: image.mime,
-    });
+      setImageData({
+        uri: image.path,
+        name: image.filename || '',
+        type: image.mime,
+      });
+    } catch (error: any) {
+      if (error.code === 'E_PICKER_CANCELLED') {
+        return;
+      }
+    }
   };
 
   const checkNickname = async () => {
-    if (nickname.length === 0) {
-      Toast.show({
-        type: 'default',
-        position: 'bottom',
-        visibilityTime: 3000,
-        bottomOffset: 30,
-        text1: '닉네임을 입력해주세요.',
-      });
+    if (!NICKNAME_REGEX.test(nickname)) {
+      setIsNicknameValid(false);
+      setNicknameInvalidMessage('2자~20자, 한글과 영어만 사용 가능합니다.');
       return;
     }
     refetch();
   };
+
+  useEffect(() => {
+    if (nicknameCheckData?.message === '이미 존재하는 닉네임입니다.') {
+      setIsNicknameValid(false);
+      setNicknameInvalidMessage('이미 존재하는 닉네임입니다.');
+
+      return;
+    }
+    if (nicknameCheckData?.message === '사용 가능한 닉네임 입니다.') {
+      setJoinState('term');
+      return;
+    }
+  }, [isRefetching, nicknameCheckData?.message, isRefetching]);
 
   const toggleAgreement = (agreement: 'one' | 'two' | 'three') => {
     setAgreements(prev => ({
@@ -171,7 +166,7 @@ const JoinModal = (props: JoinModalProps) => {
 
   return (
     <Modal
-      animationType="none"
+      animationType="fade"
       visible={isModalOpen}
       transparent={true}
       onRequestClose={closeModal}>
@@ -188,7 +183,8 @@ const JoinModal = (props: JoinModalProps) => {
       />
 
       <Animated.View
-        style={[styles.modalContainer, {transform: [{translateY}]}]}>
+        style={[styles.modalContainer, {transform: [{translateY}]}]}
+        {...panResponders.panHandlers}>
         <View
           style={[
             styles.container,
@@ -236,17 +232,23 @@ const JoinModal = (props: JoinModalProps) => {
               <View style={styles.nicknameContainer}>
                 <CustomTextInput
                   label="커뮤니티 닉네임"
-                  placeholder="닉네임을 입력해주세요."
                   value={nickname}
+                  isValid={isNicknameValid}
+                  inValidMessage={nicknameInvalidMessage}
                   maxLength={20}
+                  length
                   curLength={nickname.length}
-                  onChangeText={e => setNickname(e)}
+                  onChangeText={e => {
+                    setNickname(e);
+                    setIsNicknameValid(true);
+                  }}
                 />
               </View>
 
               <CustomButton
                 text="시작하기"
                 type="normal"
+                disabled={nickname.length < 2}
                 onPress={() => {
                   checkNickname();
                 }}
@@ -274,22 +276,17 @@ const JoinModal = (props: JoinModalProps) => {
                 <View
                   style={{
                     flexDirection: 'row',
-                    alignItems: 'center',
                     marginBottom: 10,
                   }}>
-                  <Pressable
+                  <CheckBox
+                    isCheck={agreements.one}
                     onPress={() => toggleAgreement('one')}
-                    style={{padding: 3}}>
-                    {agreements.one ? (
-                      <CheckGreenSvg width={17} height={17} />
-                    ) : (
-                      <CheckGraySvg width={17} height={17} />
-                    )}
-                  </Pressable>
+                    style={{marginTop: 2}}
+                  />
 
                   <CustomText
                     fontWeight="500"
-                    style={{marginLeft: 3, fontSize: 16, color: '#353535'}}>
+                    style={{fontSize: 16, color: '#353535'}}>
                     해당 커뮤니티는 선수와 팬들을 위한 공간입니다.
                   </CustomText>
                 </View>
@@ -298,28 +295,15 @@ const JoinModal = (props: JoinModalProps) => {
                     flexDirection: 'row',
                     marginBottom: 10,
                   }}>
-                  <Pressable
+                  <CheckBox
+                    isCheck={agreements.two}
                     onPress={() => toggleAgreement('two')}
-                    style={{padding: 3}}>
-                    {agreements.two ? (
-                      <CheckGreenSvg
-                        width={17}
-                        height={17}
-                        style={{marginTop: 3}}
-                      />
-                    ) : (
-                      <CheckGraySvg
-                        width={17}
-                        height={17}
-                        style={{marginTop: 3}}
-                      />
-                    )}
-                  </Pressable>
+                    style={{marginTop: 2}}
+                  />
                   <View>
                     <CustomText
                       fontWeight="500"
                       style={{
-                        marginLeft: 3,
                         fontSize: 16,
                         color: '#353535',
                       }}>
@@ -341,28 +325,15 @@ const JoinModal = (props: JoinModalProps) => {
                     flexDirection: 'row',
                     marginBottom: 5,
                   }}>
-                  <Pressable
+                  <CheckBox
+                    isCheck={agreements.three}
                     onPress={() => toggleAgreement('three')}
-                    style={{padding: 3}}>
-                    {agreements.three ? (
-                      <CheckGreenSvg
-                        width={17}
-                        height={17}
-                        style={{marginTop: 3}}
-                      />
-                    ) : (
-                      <CheckGraySvg
-                        width={17}
-                        height={17}
-                        style={{marginTop: 3}}
-                      />
-                    )}
-                  </Pressable>
+                    style={{marginTop: 2}}
+                  />
                   <View>
                     <CustomText
                       fontWeight="500"
                       style={{
-                        marginLeft: 3,
                         fontSize: 16,
                         color: '#353535',
                       }}>
@@ -444,7 +415,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   profileImageRadius: {borderRadius: 85},
-  nicknameContainer: {width: '100%', marginBottom: 25, marginTop: 10},
+  nicknameContainer: {width: '100%', marginBottom: 20, marginTop: 30},
   backButton: {position: 'absolute', top: 20, left: 13},
   termTitle: {
     fontSize: 22,

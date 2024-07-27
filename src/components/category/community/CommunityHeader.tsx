@@ -2,7 +2,8 @@ import React from 'react';
 import {Animated, Dimensions, Pressable, StyleSheet, View} from 'react-native';
 import CheveronLeft from '../../../../assets/images/chevron-left-white.svg';
 import {useNavigation} from '@react-navigation/native';
-import Avatar from '../../Avatar';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import Avatar from '../../common/Avatar';
 
 interface CommunityHeaderProps {
   scrollY: any;
@@ -11,6 +12,7 @@ interface CommunityHeaderProps {
 
 const CommunityHeader = (props: CommunityHeaderProps) => {
   const {scrollY, playerData} = props;
+  const insets = useSafeAreaInsets();
 
   const navigation = useNavigation();
 
@@ -33,6 +35,7 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
         {
           backgroundColor: headerBackgroundColor,
         },
+        {paddingTop: insets.top, height: insets.top + 52},
       ]}>
       <Pressable
         onPress={() => {
@@ -49,11 +52,18 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
         </Animated.Text>
       </View>
       {playerData.result.user && (
-        <Avatar
-          uri={playerData.result.user.image}
-          size={30}
-          style={styles.communityUserAvatar}
-        />
+        <Pressable
+          onPress={() =>
+            navigation.navigate('Profile', {
+              playerUserId: playerData.result.user.id,
+            })
+          }>
+          <Avatar
+            uri={playerData.result.user.image}
+            size={30}
+            style={styles.communityUserAvatar}
+          />
+        </Pressable>
       )}
     </Animated.View>
   );

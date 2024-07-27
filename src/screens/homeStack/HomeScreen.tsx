@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -7,18 +7,19 @@ import {
   Pressable,
   View,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../../navigations/HomeStackNavigator';
-import CustomText from '../../components/CustomText';
 import {getMyPlayers} from '../../apis/player';
 import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
-import Avatar from '../../components/Avatar';
 import {useHomeFlatListHook} from '../../components/home/useHomeFlatListHook';
 import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
 import {getMyPlayersPosts} from '../../apis/post';
 import FeedPost from '../../components/category/community/FeedPost';
 import {CommonActions, useIsFocused} from '@react-navigation/native';
+import CustomText from '../../components/common/CustomText';
+import Avatar from '../../components/common/Avatar';
+import ChevronTopSvg from '../../../assets/images/chevron-top-black.svg';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -27,7 +28,12 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 
 const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
   const isFocused = useIsFocused();
+  const insets = useSafeAreaInsets();
   const [hotTab, setHotTab] = useState<number>(0);
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const flatListRef = useRef<FlatList<any>>(null);
+  const scrollTimeout = useRef(null);
 
   const [scrollY, styles, onLayoutHeaderElement, onLayoutStickyElement] =
     useHomeFlatListHook();
@@ -67,6 +73,30 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
       fetchNextPage();
     }
   };
+
+  const handleScrollBeginDrag = () => {
+    if (scrollTimeout.current) {
+      clearTimeout(scrollTimeout.current);
+    }
+
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleScrollEndDrag = () => {
+    scrollTimeout.current = setTimeout(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }, 1700);
+  };
+
+  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -165,7 +195,10 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
           {hotTab !== 0 && (
             <Pressable
               onPress={() => {
-                navigation.navigate('Community', {playerId: hotTab});
+                navigation.navigate('CommunityStack', {
+                  screen: 'Community',
+                  params: {playerId: hotTab},
+                });
               }}
               style={{
                 flexDirection: 'row',
@@ -192,8 +225,11 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
       </Animated.View>
 
       <Animated.FlatList
+        ref={flatListRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 50}}
+        onScrollBeginDrag={handleScrollBeginDrag}
+        onScrollEndDrag={handleScrollEndDrag}
         onScroll={Animated.event(
           [
             {
@@ -222,7 +258,13 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
           <Pressable
             key={item.id}
             onPress={() => {
-              navigation.navigate('Post', {postId: item.id});
+              navigation.navigate('CommunityStack', {
+                screen: 'Post',
+                params: {
+                  postId: item.id,
+                  playerUser: item.playerUser,
+                },
+              });
             }}>
             <FeedPost
               feed={item}
@@ -245,7 +287,7 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
           ) : null
         }
         onEndReached={loadFeed}
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={1}
         ListEmptyComponent={
           !feedIsLoading ? (
             playerData?.result.length > 0 ? (
@@ -302,6 +344,34 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
           )
         }
       />
+      <AnimatedPressable
+        style={[
+          {
+            position: 'absolute',
+            bottom: insets.bottom + 67,
+            right: 17,
+            borderRadius: 100,
+            width: 48,
+            height: 48,
+            marginBottom: 12,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'white',
+            shadowColor: '#bdbdbd',
+            shadowOffset: {width: 1, height: 2},
+            shadowOpacity: 0.7,
+            shadowRadius: 3,
+            elevation: 5,
+          },
+          {opacity: fadeAnim},
+        ]}
+        onPress={() => {
+          if (flatListRef.current) {
+            flatListRef.current.scrollToOffset({offset: 0, animated: true});
+          }
+        }}>
+        <ChevronTopSvg width={25} height={25} />
+      </AnimatedPressable>
     </SafeAreaView>
   );
 };

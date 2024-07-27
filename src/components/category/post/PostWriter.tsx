@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import Avatar from '../../Avatar';
-import CustomText from '../../CustomText';
+import {Pressable, StyleSheet, View} from 'react-native';
 import {formatDate} from '../../../utils/format';
+import Avatar from '../../common/Avatar';
+import CustomText from '../../common/CustomText';
+import {useNavigation} from '@react-navigation/native';
 
 interface Writer {
   id: number;
@@ -13,18 +14,38 @@ interface Writer {
 interface PostWriterProps {
   writer: Writer;
   createdAt: string;
+  playerUserId: number;
 }
 
 const PostWriter = (props: PostWriterProps) => {
-  const {writer, createdAt} = props;
+  const {writer, createdAt, playerUserId} = props;
+
+  const navigation = useNavigation();
 
   return (
     <View style={styles.writerContainer}>
-      <Avatar uri={writer.image} size={38} />
+      <Pressable
+        onPress={() =>
+          navigation.navigate('CommunityStack', {
+            screen: 'Profile',
+            params: {playerUserId},
+          })
+        }>
+        <Avatar uri={writer.image} size={38} />
+      </Pressable>
       <View style={styles.writerNameContainer}>
-        <CustomText fontWeight="600" style={styles.writerName}>
-          {writer.name}
-        </CustomText>
+        <Pressable
+          onPress={() =>
+            navigation.navigate('CommunityStack', {
+              screen: 'Profile',
+              params: {playerUserId},
+            })
+          }>
+          <CustomText fontWeight="600" style={styles.writerName}>
+            {writer.name}
+          </CustomText>
+        </Pressable>
+
         <CustomText style={styles.createAt}>{formatDate(createdAt)}</CustomText>
       </View>
     </View>

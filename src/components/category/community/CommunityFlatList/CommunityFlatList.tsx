@@ -17,12 +17,11 @@ import FeedFilter from '../FeedFilter';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import FeedPost from '../FeedPost';
 import NotJoin from '../NotJoin';
-import CustomText from '../../../CustomText';
+import CustomText from '../../../common/CustomText';
 
 interface CommunityFlatListProps {
   playerId: number;
   playerData: any;
-  translateY: any;
   setIsModalOpen: any;
   handleScrollBeginDrag: any;
   handleScrollEndDrag: any;
@@ -32,7 +31,6 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
   const {
     playerId,
     playerData,
-    translateY,
     setIsModalOpen,
     handleScrollBeginDrag,
     handleScrollEndDrag,
@@ -65,13 +63,14 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
       }
       return pages.length;
     },
+    enabled: playerData.result.user !== null,
   });
 
   useEffect(() => {
-    if (isFocused) {
+    if (isFocused && playerData.result.user) {
       refetch();
     }
-  }, [isFocused, refetch]);
+  }, [isFocused, playerData.result.user, refetch]);
 
   nativeScrollY.addListener(
     Animated.event([{value: scrollY}], {useNativeDriver: false}),
@@ -89,7 +88,10 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
         <Pressable
           key={item.id}
           onPress={() => {
-            navigation.navigate('Post', {postId: item.id});
+            navigation.navigate('Post', {
+              postId: item.id,
+              playerUser: item.playerUser,
+            });
           }}>
           <FeedPost
             feed={item}
@@ -101,11 +103,7 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
       );
     } else {
       return (
-        <NotJoin
-          playerData={playerData}
-          setIsModalOpen={setIsModalOpen}
-          translateY={translateY}
-        />
+        <NotJoin playerData={playerData} setIsModalOpen={setIsModalOpen} />
       );
     }
   };
@@ -131,10 +129,12 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
         ListHeaderComponent={
           <Animated.View onLayout={onLayoutHeaderElement}>
             <CommunityProfile playerData={playerData} />
-            <FeedFilter
-              selectedFilter={selectedFilter}
-              setSelectedFilter={setSelectedFilter}
-            />
+            {playerData.result.user && (
+              <FeedFilter
+                selectedFilter={selectedFilter}
+                setSelectedFilter={setSelectedFilter}
+              />
+            )}
           </Animated.View>
         }
         ListHeaderComponentStyle={styles.header}
@@ -154,7 +154,7 @@ const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
           {useNativeDriver: true},
         )}
         onEndReached={playerData.result.user && loadFeed}
-        onEndReachedThreshold={playerData.result.user && 0}
+        onEndReachedThreshold={playerData.result.user && 1}
         ListFooterComponent={
           isLoading || (isFetchingNextPage && playerData.result.user) ? (
             <View
