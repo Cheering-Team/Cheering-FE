@@ -371,6 +371,7 @@ const CommentModal = (props: CommentModalProps) => {
                 setUnderCommentId={setUnderCommentId}
                 reIdx={reIdx}
                 setReIdx={setReIdx}
+                closeModal={closeModal}
               />
             )}
             style={{

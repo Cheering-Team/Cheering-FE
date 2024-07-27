@@ -14,6 +14,7 @@ interface CommentProps {
   setUnderCommentId: any;
   reIdx: number | null;
   setReIdx: any;
+  closeModal: any;
 }
 
 const Comment = (props: CommentProps) => {
@@ -24,6 +25,7 @@ const Comment = (props: CommentProps) => {
     setUnderCommentId,
     reIdx,
     setReIdx,
+    closeModal,
   } = props;
 
   const navigation = useNavigation();
@@ -58,17 +60,19 @@ const Comment = (props: CommentProps) => {
     <View style={{paddingVertical: 10, paddingHorizontal: 15}} key={comment.id}>
       <View style={{flexDirection: 'row'}}>
         <Pressable
-          onPress={() =>
-            navigation.navigate('Profile', {playerUserId: comment.writer.id})
-          }>
+          onPress={() => {
+            closeModal();
+            navigation.navigate('Profile', {playerUserId: comment.writer.id});
+          }}>
           <Avatar uri={comment.writer.image} size={36} style={{marginTop: 2}} />
         </Pressable>
 
         <View style={{marginLeft: 8, flex: 1}}>
           <Pressable
-            onPress={() =>
-              navigation.navigate('Profile', {playerUserId: comment.writer.id})
-            }
+            onPress={() => {
+              closeModal();
+              navigation.navigate('Profile', {playerUserId: comment.writer.id});
+            }}
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -112,11 +116,12 @@ const Comment = (props: CommentProps) => {
                 key={reComment.id}
                 style={{flexDirection: 'row', marginTop: 19}}>
                 <Pressable
-                  onPress={() =>
+                  onPress={() => {
+                    closeModal();
                     navigation.navigate('Profile', {
                       playerUserId: comment.writer.id,
-                    })
-                  }>
+                    });
+                  }}>
                   <Avatar
                     uri={reComment.writer.image}
                     size={34}
@@ -126,11 +131,12 @@ const Comment = (props: CommentProps) => {
 
                 <View style={{marginLeft: 8}}>
                   <Pressable
-                    onPress={() =>
+                    onPress={() => {
+                      closeModal();
                       navigation.navigate('Profile', {
                         playerUserId: comment.writer.id,
-                      })
-                    }
+                      });
+                    }}
                     style={{flexDirection: 'row', alignItems: 'center'}}>
                     <CustomText
                       fontWeight="500"
