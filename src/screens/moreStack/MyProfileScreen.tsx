@@ -82,7 +82,10 @@ const MyProfileScreen = ({navigation}) => {
             style={{marginHorizontal: 9, color: '#969696', fontSize: 14}}>
             |
           </CustomText>
-          <Pressable onPress={() => navigation.navigate('DeleteUser')}>
+          <Pressable
+            onPress={() =>
+              navigation.navigate('DeleteUser', {playerUserId: null})
+            }>
             <CustomText style={{color: '#969696', fontSize: 15}}>
               회원탈퇴
             </CustomText>

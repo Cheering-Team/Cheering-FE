@@ -166,18 +166,6 @@ const ProfileEditScreen = ({navigation, route}) => {
             <ChevronRightSvg width={13} height={13} />
           </View>
         </Pressable>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            marginTop: 30,
-          }}>
-          <Pressable onPress={() => navigation.navigate('DeleteUser')}>
-            <CustomText style={{color: '#969696', fontSize: 15}}>
-              커뮤니티 탈퇴
-            </CustomText>
-          </Pressable>
-        </View>
       </View>
       {data.result.user.image ===
       'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/default-profile.jpg' ? (

@@ -119,3 +119,10 @@ export const updatePlayerUserNickname = async data => {
 
   return response.data;
 };
+
+export const deletePlayerUser = async data => {
+  const {playerUserId} = data;
+  const response = await axiosInstance.delete(`/playerusers/${playerUserId}`);
+
+  return response.data;
+};

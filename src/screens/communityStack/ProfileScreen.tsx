@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -19,11 +19,17 @@ import FeedPost from '../../components/category/community/FeedPost';
 import {useIsFocused} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChevronTopSvg from '../../../assets/images/chevron-top-black.svg';
+import OptionModal, {
+  closeModalHandle,
+} from '../../components/common/OptionModal';
 
 const ProfileScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;
   const isFocused = useIsFocused();
   const insets = useSafeAreaInsets();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const closeModalRef = useRef<closeModalHandle>(null);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef<FlatList<any>>(null);
@@ -119,7 +125,7 @@ const ProfileScreen = ({navigation, route}) => {
             {data.result.player.englishName}
           </CustomText>
         </View>
-        <Pressable>
+        <Pressable onPress={() => setIsModalOpen(true)}>
           <MoreSvg width={18} height={18} />
         </Pressable>
       </View>
@@ -254,6 +260,21 @@ const ProfileScreen = ({navigation, route}) => {
         }}>
         <ChevronTopSvg width={25} height={25} />
       </AnimatedPressable>
+      {data.result.isUser && (
+        <OptionModal
+          ref={closeModalRef}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          option1Text="커뮤니티 탈퇴"
+          option1color="#fe6363"
+          option1Press={() => {
+            closeModalRef.current?.closeModal();
+            navigation.navigate('DeletePlayerUser', {
+              playerUserId,
+            });
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 };

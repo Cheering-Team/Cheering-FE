@@ -7,6 +7,7 @@ import PostWriteScreen from '../screens/communityStack/PostWriteScreen';
 import PostScreen from '../screens/communityStack/PostScreen';
 import ProfileEditScreen from '../screens/communityStack/ProfileEditScreen';
 import EditNicknameScreen from '../screens/moreStack/EditNicknameScreen';
+import DeletePlayerUserScreen from '../screens/communityStack/DeletePlayerUserScreen';
 
 export type CommunityStackParamList = {
   Community: {playerId: number};
@@ -15,6 +16,7 @@ export type CommunityStackParamList = {
   Profile: {playerUserId: number};
   ProfileEdit: {playerUserId: number};
   EditNickname: {nickname: string; playerUserId: number | null};
+  DeletePlayerUser: {playerUserId: number};
 };
 
 const CommunityStackNavigator = () => {
@@ -49,6 +51,11 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="EditNickname"
         component={EditNicknameScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="DeletePlayerUser"
+        component={DeletePlayerUserScreen}
         options={{headerShown: false}}
       />
     </CommunityStack.Navigator>
