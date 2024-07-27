@@ -108,3 +108,14 @@ export const updatePlayerUserImage = async data => {
 
   return response.data;
 };
+
+export const updatePlayerUserNickname = async data => {
+  const {playerUserId, nickname} = data;
+
+  const response = await axiosInstance.put(
+    `/playerusers/${playerUserId}/nickname`,
+    {nickname},
+  );
+
+  return response.data;
+};

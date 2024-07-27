@@ -48,6 +48,7 @@ const MyProfileScreen = ({navigation}) => {
           onPress={() =>
             navigation.navigate('EditNickname', {
               nickname: data.result.nickname,
+              playerUserId: null,
             })
           }>
           <CustomText fontWeight="600" style={{fontSize: 18}}>

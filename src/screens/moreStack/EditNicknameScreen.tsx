@@ -9,22 +9,35 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import CustomButton from '../../components/common/CustomButton';
+import {updatePlayerUserNickname} from '../../apis/player';
 
 const EditNicknameScreen = ({navigation, route}) => {
+  const {playerUserId} = route.params;
   const insets = useSafeAreaInsets();
   const queryClient = useQueryClient();
   const [nickname, setNickname] = useState(route.params.nickname);
   const [isNicknameValid, setIsNicknameValid] = useState(true);
 
-  const mutation = useMutation({
+  const userMutation = useMutation({
     mutationFn: updateUserNickname,
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['users']});
     },
   });
 
+  const playerUserMutation = useMutation({
+    mutationFn: updatePlayerUserNickname,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['playerusers', playerUserId],
+      });
+    },
+  });
+
   const updateNickname = async () => {
-    const data = await mutation.mutateAsync({nickname});
+    const data = playerUserId
+      ? await playerUserMutation.mutateAsync({playerUserId, nickname})
+      : await userMutation.mutateAsync({nickname});
 
     if (data.message === '닉네임을 변경하였습니다.') {
       Toast.show({
@@ -34,8 +47,7 @@ const EditNicknameScreen = ({navigation, route}) => {
         bottomOffset: insets.top + 20,
         text1: '닉네임을 변경하였습니다.',
       });
-
-      navigation.navigate('MyProfile');
+      navigation.pop();
     }
   };
 
