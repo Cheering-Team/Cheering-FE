@@ -1,17 +1,19 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
+  Animated,
   Dimensions,
+  FlatList,
   Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
   SafeAreaView,
-  ScrollView,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import CloseSvg from '../../../assets/images/close-black.svg';
-import CameraSvg from '../../../assets/images/image.svg';
+import CameraSvg from '../../../assets/images/plus-gray.svg';
 import {TextInput} from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-crop-picker';
 import {postPlayersPosts} from '../../apis/post';
@@ -20,6 +22,10 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';
+import CloseWhiteSvg from '../../../assets/images/x_white.svg';
+import DraggableFlatList, {
+  ScaleDecorator,
+} from 'react-native-draggable-flatlist';
 
 interface FilterType {
   photo: boolean;
@@ -49,6 +55,9 @@ interface SizeImage {
 const PostWriteScreen = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
   const playerId = route.params.playerId;
+
+  const [isImageInfo, setIsImageInfo] = useState(false);
+  const [fadeAnim] = useState(new Animated.Value(1));
 
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState<FilterType>({
@@ -87,6 +96,13 @@ const PostWriteScreen = ({navigation, route}) => {
 
       const newImages = [...imageData, ...imageObj];
       setImageData(newImages);
+
+      setIsImageInfo(true);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
     } catch (error: any) {
       if (error.code === 'E_PICKER_CANCELLED') {
         return;
@@ -144,6 +160,64 @@ const PostWriteScreen = ({navigation, route}) => {
       });
     }
   };
+
+  const renderImage = ({item, drag, isActive}) => {
+    return (
+      <ScaleDecorator key={item.name}>
+        <TouchableOpacity onLongPress={drag} disabled={isActive}>
+          <Image
+            source={{uri: item.uri}}
+            style={{
+              width: 100,
+              height: 130,
+              borderRadius: 3,
+              marginRight: 10,
+            }}
+            resizeMode="cover"
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              position: 'absolute',
+              top: 5,
+              right: 15,
+            }}>
+            <Pressable
+              style={{
+                padding: 6,
+                borderRadius: 20,
+                backgroundColor: '#000000a1',
+                marginLeft: 10,
+              }}
+              onPress={() => {
+                setImageData(prev =>
+                  prev.filter(image => image.uri !== item.uri),
+                );
+              }}>
+              <CloseWhiteSvg width={9} height={9} />
+            </Pressable>
+          </View>
+        </TouchableOpacity>
+      </ScaleDecorator>
+    );
+  };
+
+  useEffect(() => {
+    let timer;
+    if (isImageInfo) {
+      timer = setTimeout(() => {
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start(() => {
+          setIsImageInfo(false);
+        });
+      }, 3000); // 3초 후
+    }
+
+    return () => clearTimeout(timer); // 타이머 정리
+  }, [fadeAnim, isImageInfo]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -234,102 +308,99 @@ const PostWriteScreen = ({navigation, route}) => {
           </Pressable>
         </View>
 
-        <ScrollView
-          style={{
-            paddingVertical: 3,
-            paddingHorizontal: 14,
-            flexGrow: 1,
-          }}>
-          {/* 태그 목록 */}
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            style={{flexGrow: 0}}>
+        <FlatList
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          data={TagData}
+          style={{padding: 12, flexGrow: 0}}
+          renderItem={({item}) => {
+            if (selectedTag[item.filter] === true) {
+              return (
+                <Pressable
+                  key={item.filter}
+                  style={{
+                    borderWidth: 1,
+                    backgroundColor: '#3a3a3a',
+                    borderColor: '#3a3a3a',
+                    paddingVertical: 6,
+                    paddingHorizontal: 15,
+                    borderRadius: 20,
+                    marginRight: 6,
+                  }}
+                  onPress={() => {
+                    setIsTagOpen(true);
+                  }}>
+                  <CustomText fontWeight="500" style={{color: 'white'}}>
+                    {item.name}
+                  </CustomText>
+                </Pressable>
+              );
+            }
+            return null;
+          }}
+          ListHeaderComponent={
             <Pressable
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: 12,
-                width: '100%',
+                borderWidth: 1,
+                borderColor: '#dcdcdc',
+                paddingVertical: 6,
+                paddingHorizontal: 15,
+                borderRadius: 20,
+                marginRight: 6,
               }}
               onPress={() => {
                 setIsTagOpen(true);
               }}>
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#dcdcdc',
-                  paddingVertical: 6,
-                  paddingHorizontal: 15,
-                  borderRadius: 20,
-                  marginRight: 6,
-                }}>
-                {Object.values(selectedTag).every(v => v === false) ? (
-                  <CustomText>➕ 태그 추가</CustomText>
-                ) : (
-                  <CustomText>➕</CustomText>
-                )}
-              </View>
-
-              {TagData.map(tag => {
-                if (selectedTag[tag.filter] === true) {
-                  return (
-                    <View
-                      key={tag.filter}
-                      style={{
-                        borderWidth: 1,
-                        backgroundColor: '#3a3a3a',
-                        borderColor: '#3a3a3a',
-                        paddingVertical: 6,
-                        paddingHorizontal: 15,
-                        borderRadius: 20,
-                        marginRight: 6,
-                      }}>
-                      <CustomText fontWeight="500" style={{color: 'white'}}>
-                        {tag.name}
-                      </CustomText>
-                    </View>
-                  );
-                }
-              })}
+              {Object.values(selectedTag).every(v => v === false) ? (
+                <CustomText>➕ 태그 추가</CustomText>
+              ) : (
+                <CustomText>➕</CustomText>
+              )}
             </Pressable>
-          </ScrollView>
-          {/* 글 작성 */}
-          <TextInput
-            placeholder="글을 작성해보세요"
-            multiline
-            placeholderTextColor={'#b4b4b4'}
-            value={content}
-            onChangeText={setContent}
-            style={{
-              fontSize: 18,
-            }}
-          />
-          {/* 이미지 */}
-          {imageData.length !== 0 && (
+          }
+        />
+        <TextInput
+          placeholder="글을 작성해보세요"
+          multiline
+          placeholderTextColor={'#b4b4b4'}
+          value={content}
+          onChangeText={setContent}
+          style={{
+            fontSize: 18,
+            flex: 1,
+            paddingHorizontal: 12,
+          }}
+        />
+        {isImageInfo && (
+          <Animated.View
+            style={[
+              {
+                backgroundColor: '#58a04b',
+                alignSelf: 'flex-start',
+                marginLeft: 10,
+                padding: 5,
+                borderRadius: 5,
+                marginBottom: 10,
+                alignItems: 'center',
+              },
+              {opacity: fadeAnim},
+            ]}>
+            <CustomText style={{color: 'white'}}>
+              사진을 길게 눌러 순서를 조정할 수 있어요
+            </CustomText>
             <View
               style={{
-                paddingVertical: 10,
-              }}>
-              {imageData.map(image => (
-                <Image
-                  key={image.name}
-                  source={{uri: image.uri}}
-                  style={{
-                    width: '100%',
-                    height:
-                      (image.height || 0) *
-                      ((Dimensions.get('window').width - 20) /
-                        (image.width || 1)),
-                    borderRadius: 10,
-                    marginVertical: 10,
-                  }}
-                  resizeMode="cover"
-                />
-              ))}
-            </View>
-          )}
-        </ScrollView>
+                position: 'absolute',
+                bottom: -4,
+                borderRadius: 2,
+                width: 10,
+                height: 10,
+                backgroundColor: '#58a04b',
+                transform: [{rotate: '45deg'}],
+              }}></View>
+          </Animated.View>
+        )}
+
         {/* 하단 바 */}
         <View
           style={{
@@ -342,9 +413,33 @@ const PostWriteScreen = ({navigation, route}) => {
             backgroundColor: 'white',
             borderColor: '#e1e1e1',
           }}>
-          <Pressable onPress={handleImageUpload}>
-            <CameraSvg width={23} height={23} />
-          </Pressable>
+          <DraggableFlatList
+            data={imageData}
+            horizontal={true}
+            onDragEnd={({data}) => setImageData(data)}
+            keyExtractor={item => item.uri}
+            showsHorizontalScrollIndicator={false}
+            renderItem={renderImage}
+            containerStyle={{width: '100%'}}
+            ListFooterComponent={
+              <Pressable
+                style={{
+                  width: 100,
+                  height: 130,
+                  borderWidth: 1,
+                  borderRadius: 3,
+                  borderColor: '#d0d0d0',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={handleImageUpload}>
+                <CameraSvg width={18} height={18} />
+                <CustomText style={{color: '#858585', marginTop: 8}}>
+                  사진 추가
+                </CustomText>
+              </Pressable>
+            }
+          />
         </View>
         {/* 태그 선택 */}
         {isTagOpen && (
