@@ -18,7 +18,7 @@ import {TextInput} from 'react-native-gesture-handler';
 import ImagePicker from 'react-native-image-crop-picker';
 import {postPlayersPosts} from '../../apis/post';
 import {useMutation} from '@tanstack/react-query';
-import ImageResizer from '@bam.tech/react-native-image-resizer';
+import CropSvg from '../../../assets/images/crop-white.svg';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';
@@ -48,16 +48,11 @@ interface SizeImage {
   uri: string;
   name: string | undefined;
   type: string;
-  width?: number;
-  height?: number;
 }
 
 const PostWriteScreen = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
   const playerId = route.params.playerId;
-
-  const [isImageInfo, setIsImageInfo] = useState(false);
-  const [fadeAnim] = useState(new Animated.Value(1));
 
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState<FilterType>({
@@ -68,6 +63,9 @@ const PostWriteScreen = ({navigation, route}) => {
 
   const [content, setContent] = useState<string>('');
   const [imageData, setImageData] = useState<SizeImage[]>([]);
+
+  const [isImageInfo, setIsImageInfo] = useState(false);
+  const [fadeAnim] = useState(new Animated.Value(1));
 
   const mutation = useMutation({mutationFn: postPlayersPosts});
 
@@ -84,20 +82,21 @@ const PostWriteScreen = ({navigation, route}) => {
         multiple: true,
         mediaType: 'photo',
         forceJpg: true,
+        compressImageQuality: 0.5,
       });
 
       const imageObj = images.map(image => ({
         uri: image.path,
         name: image.filename,
         type: image.mime,
-        width: image.width,
-        height: image.height,
       }));
 
       const newImages = [...imageData, ...imageObj];
+
       setImageData(newImages);
 
       setIsImageInfo(true);
+
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 0,
@@ -124,33 +123,11 @@ const PostWriteScreen = ({navigation, route}) => {
     }
     const tags = Object.keys(selectedTag).filter(key => selectedTag[key]);
 
-    const images = [];
-
-    for (let image of imageData) {
-      const resizerImage = await ImageResizer.createResizedImage(
-        image.uri,
-        image.width || 360,
-        image.height || 360,
-        'JPEG',
-        50,
-        0,
-        null,
-        false,
-        {onlyScaleDown: true},
-      );
-
-      images.push({
-        uri: resizerImage.uri,
-        name: image.name,
-        type: 'image/jpeg',
-      });
-    }
-
     const writeData = await mutation.mutateAsync({
       playerId,
       content,
       tags,
-      images,
+      images: imageData,
     });
 
     if (writeData.message === '게시글이 작성되었습니다.') {
@@ -161,10 +138,13 @@ const PostWriteScreen = ({navigation, route}) => {
     }
   };
 
-  const renderImage = ({item, drag, isActive}) => {
+  const renderImage = ({item, getIndex, drag, isActive}) => {
     return (
       <ScaleDecorator key={item.name}>
-        <TouchableOpacity onLongPress={drag} disabled={isActive}>
+        <TouchableOpacity
+          onLongPress={drag}
+          onPress={() => cropImage(getIndex())}
+          disabled={isActive}>
           <Image
             source={{uri: item.uri}}
             style={{
@@ -180,6 +160,25 @@ const PostWriteScreen = ({navigation, route}) => {
               flexDirection: 'row',
               position: 'absolute',
               top: 5,
+              left: 5,
+            }}>
+            <Pressable
+              style={{
+                padding: 6,
+                borderRadius: 20,
+                backgroundColor: '#000000a1',
+              }}
+              onPress={() => {
+                cropImage(getIndex());
+              }}>
+              <CropSvg width={10} height={10} />
+            </Pressable>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              position: 'absolute',
+              top: 5,
               right: 15,
             }}>
             <Pressable
@@ -187,19 +186,48 @@ const PostWriteScreen = ({navigation, route}) => {
                 padding: 6,
                 borderRadius: 20,
                 backgroundColor: '#000000a1',
-                marginLeft: 10,
               }}
               onPress={() => {
                 setImageData(prev =>
-                  prev.filter(image => image.uri !== item.uri),
+                  prev.filter((_, idx) => idx !== getIndex()),
                 );
               }}>
-              <CloseWhiteSvg width={9} height={9} />
+              <CloseWhiteSvg width={10} height={10} />
             </Pressable>
           </View>
         </TouchableOpacity>
       </ScaleDecorator>
     );
+  };
+
+  const cropImage = async (index: number) => {
+    try {
+      const image = await ImagePicker.openCropper({
+        path: imageData[index].uri,
+        mediaType: 'photo',
+        forceJpg: true,
+        freeStyleCropEnabled: true,
+        cropperChooseText: '완료',
+        cropperCancelText: '취소',
+        cropperChooseColor: '#58a04b',
+        cropperCancelColor: '#ff6d6d',
+      });
+
+      const imageObj = {
+        uri: image.path,
+        name: image.filename,
+        type: image.mime,
+      };
+
+      const newImageData = [...imageData];
+      newImageData[index] = imageObj;
+
+      setImageData(newImageData);
+    } catch (error: any) {
+      if (error.code === 'E_PICKER_CANCELLED') {
+        return;
+      }
+    }
   };
 
   useEffect(() => {
