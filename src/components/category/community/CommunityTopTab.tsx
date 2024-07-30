@@ -1,13 +1,45 @@
 import React, {useState} from 'react';
-import {FlatList, Pressable, StyleSheet} from 'react-native';
+import {Animated, FlatList, Pressable, StyleSheet} from 'react-native';
 import CustomText from '../../common/CustomText';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-const CommunityTopTab = () => {
+interface CommunityTopTabProps {
+  type?: 'normal' | 'absolute';
+  scrollY?: any;
+}
+
+const CommunityTopTab = (props: CommunityTopTabProps) => {
+  const {type = 'normal', scrollY} = props;
+
+  const insets = useSafeAreaInsets();
+
+  let translateYInteract;
+
+  if (type === 'absolute') {
+    const diffClamp = Animated.diffClamp(scrollY, 0, 100);
+
+    translateYInteract = diffClamp.interpolate({
+      inputRange: [0, 100],
+      outputRange: [0, -70],
+    });
+  }
+
   const [curTab, setCurTab] = useState('피드');
 
   return (
-    <FlatList
-      style={styles.container}
+    <Animated.FlatList
+      style={[
+        styles.container,
+        type === 'absolute' && {
+          top: insets.top + 52,
+          zIndex: 5,
+          position: 'absolute',
+          width: '100%',
+          transform: translateYInteract
+            ? [{translateY: translateYInteract}]
+            : [],
+        },
+      ]}
       horizontal={true}
       data={[{name: '피드'}, {name: '채팅'}]}
       renderItem={({item}) => (

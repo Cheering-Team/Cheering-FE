@@ -1,196 +1,105 @@
-import React, {forwardRef, useEffect, useRef, useState} from 'react';
-import {
-  ActivityIndicator,
-  Animated,
-  Dimensions,
-  Pressable,
-  View,
-} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useCommunityFlatListHook} from './hooks/useCommunityFlatListHook';
-import CommunityHeader from '../CommunityHeader';
-import {useInfiniteQuery} from '@tanstack/react-query';
-import {getPosts} from '../../../../apis/post';
+import React, {Dispatch, forwardRef, SetStateAction} from 'react';
 import CommunityProfile from '../CommunityProfile';
-import CommunityTopTab from '../CommunityTab';
+import CommunityTopTab from '../CommunityTopTab';
 import FeedFilter from '../FeedFilter';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {Animated, FlatList, ListRenderItem} from 'react-native';
+import {Api} from '../../../../types/api';
+import {GetPlayersInfoResponse} from '../../../../types/player';
 import FeedPost from '../FeedPost';
 import NotJoin from '../NotJoin';
-import CustomText from '../../../common/CustomText';
+import {PostInfoResponse} from '../../../../types/post';
+import ListLoading from '../../../common/ListLoading/ListLoading';
+import {useCommunityFlatList} from './useCommunityFlatList';
+import ListEmpty from '../../../common/ListEmpty/ListEmpty';
 
 interface CommunityFlatListProps {
-  playerId: number;
-  playerData: any;
-  setIsModalOpen: any;
-  handleScrollBeginDrag: any;
-  handleScrollEndDrag: any;
+  playerData: Api<GetPlayersInfoResponse>;
+  handleScrollBeginDrag: () => void;
+  handleScrollEndDrag: () => void;
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  scrollY: Animated.Value;
 }
 
-const CommunityFlatList = forwardRef((props: CommunityFlatListProps, ref) => {
-  const {
-    playerId,
-    playerData,
-    setIsModalOpen,
-    handleScrollBeginDrag,
-    handleScrollEndDrag,
-  } = props;
+const CommunityFlatList = forwardRef<FlatList<any>, CommunityFlatListProps>(
+  (props, ref) => {
+    const {
+      playerData,
+      handleScrollBeginDrag,
+      handleScrollEndDrag,
+      setIsModalOpen,
+      scrollY,
+    } = props;
 
-  const isFocused = useIsFocused();
-  const navigation = useNavigation();
+    const {
+      selectedFilter,
+      setSelectedFilter,
+      feedData,
+      isLoading,
+      isFetchingNextPage,
+      loadFeed,
+    } = useCommunityFlatList(playerData);
 
-  const scrollY = useRef(new Animated.Value(0)).current;
-
-  const [selectedFilter, setSelectedFilter] = useState('all');
-
-  const [nativeScrollY, styles, onLayoutHeaderElement, onLayoutStickyElement] =
-    useCommunityFlatListHook();
-
-  const {
-    data: feedData,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    refetch,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['posts', playerId, selectedFilter],
-    queryFn: getPosts,
-    initialPageParam: 0,
-    getNextPageParam: (lastpage, pages) => {
-      if (lastpage.result.last) {
-        return undefined;
-      }
-      return pages.length;
-    },
-    enabled: playerData.result.user !== null,
-  });
-
-  useEffect(() => {
-    if (isFocused && playerData.result.user) {
-      refetch();
-    }
-  }, [isFocused, playerData.result.user, refetch]);
-
-  nativeScrollY.addListener(
-    Animated.event([{value: scrollY}], {useNativeDriver: false}),
-  );
-
-  const loadFeed = () => {
-    if (hasNextPage) {
-      fetchNextPage();
-    }
-  };
-
-  const renderFeed = ({item}) => {
-    if (playerData.result.user) {
-      return (
-        <Pressable
-          key={item.id}
-          onPress={() => {
-            navigation.navigate('Post', {
-              postId: item.id,
-              playerUser: item.playerUser,
-            });
-          }}>
-          <FeedPost
-            feed={item}
-            playerId={playerId}
-            postId={item.id}
-            selectedFilter={selectedFilter}
-          />
-        </Pressable>
-      );
-    } else {
-      return (
-        <NotJoin playerData={playerData} setIsModalOpen={setIsModalOpen} />
-      );
-    }
-  };
-
-  return (
-    <SafeAreaView edges={['bottom']}>
-      <CommunityHeader playerData={playerData} scrollY={scrollY} />
-      <Animated.View
-        style={styles.stickyElement}
-        onLayout={onLayoutStickyElement}>
-        <CommunityTopTab />
-      </Animated.View>
+    const renderFeed: ListRenderItem<PostInfoResponse> = ({item}) => (
+      <FeedPost
+        feed={item}
+        playerId={playerData.result.id}
+        postId={item.id}
+        selectedFilter={selectedFilter}
+      />
+    );
+    return (
       <Animated.FlatList
         ref={ref}
         data={
-          playerData.result.user
-            ? feedData?.pages.flatMap(page => page.result.posts)
-            : [1]
+          isLoading ? [] : feedData?.pages.flatMap(page => page.result.posts)
         }
-        contentContainerStyle={{paddingBottom: 30}}
         renderItem={renderFeed}
+        contentContainerStyle={{paddingBottom: 30}}
         scrollEnabled={!!playerData.result.user || feedData?.pages.length === 0}
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={
-          <Animated.View onLayout={onLayoutHeaderElement}>
+          <>
             <CommunityProfile playerData={playerData} />
+            <CommunityTopTab />
             {playerData.result.user && (
               <FeedFilter
                 selectedFilter={selectedFilter}
                 setSelectedFilter={setSelectedFilter}
               />
             )}
-          </Animated.View>
+          </>
         }
-        ListHeaderComponentStyle={styles.header}
+        onEndReached={playerData.result.user && loadFeed}
+        onEndReachedThreshold={playerData.result.user && 1}
+        ListFooterComponent={
+          isFetchingNextPage && playerData.result.user ? <ListLoading /> : null
+        }
+        ListEmptyComponent={
+          !playerData.result.user ? (
+            <NotJoin playerData={playerData} setIsModalOpen={setIsModalOpen} />
+          ) : isLoading ? (
+            <ListLoading />
+          ) : (
+            <ListEmpty />
+          )
+        }
         onScrollBeginDrag={handleScrollBeginDrag}
         onScrollEndDrag={handleScrollEndDrag}
-        showsVerticalScrollIndicator={false}
         onScroll={Animated.event(
           [
             {
               nativeEvent: {
                 contentOffset: {
-                  y: nativeScrollY,
+                  y: scrollY,
                 },
               },
             },
           ],
-          {useNativeDriver: true},
+          {useNativeDriver: false},
         )}
-        onEndReached={playerData.result.user && loadFeed}
-        onEndReachedThreshold={playerData.result.user && 1}
-        ListFooterComponent={
-          isLoading || (isFetchingNextPage && playerData.result.user) ? (
-            <View
-              style={{
-                height: Dimensions.get('window').height * 0.3 + 20,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <ActivityIndicator size={'large'} />
-            </View>
-          ) : null
-        }
-        ListEmptyComponent={
-          !isLoading ? (
-            <View
-              style={{
-                height: Dimensions.get('window').height * 0.3 + 20,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <CustomText
-                fontWeight="600"
-                style={{fontSize: 23, marginBottom: 5}}>
-                아직 게시글이 없어요
-              </CustomText>
-              <CustomText style={{color: '#5b5b5b'}}>
-                가장 먼저 게시글을 작성해보세요
-              </CustomText>
-            </View>
-          ) : (
-            <></>
-          )
-        }
       />
-    </SafeAreaView>
-  );
-});
+    );
+  },
+);
 
 export default CommunityFlatList;
