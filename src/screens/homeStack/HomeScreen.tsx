@@ -255,24 +255,12 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
         ListHeaderComponentStyle={styles.header}
         data={feedData?.pages.flatMap(page => page.result.posts)}
         renderItem={({item}) => (
-          <Pressable
-            key={item.id}
-            onPress={() => {
-              navigation.navigate('CommunityStack', {
-                screen: 'Post',
-                params: {
-                  postId: item.id,
-                  playerUser: item.playerUser,
-                },
-              });
-            }}>
-            <FeedPost
-              feed={item}
-              playerId={hotTab}
-              postId={item.id}
-              hotTab={hotTab}
-            />
-          </Pressable>
+          <FeedPost
+            feed={item}
+            playerId={hotTab}
+            postId={item.id}
+            hotTab={hotTab}
+          />
         )}
         ListFooterComponent={
           feedIsLoading || isFetchingNextPage ? (

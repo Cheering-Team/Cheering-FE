@@ -53,7 +53,12 @@ const PostWriter = (props: PostWriterProps) => {
 };
 
 const styles = StyleSheet.create({
-  writerContainer: {flexDirection: 'row', alignItems: 'center'},
+  writerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    width: '100%',
+  },
   writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
   writerName: {fontSize: 15},
   createAt: {fontSize: 13, color: '#6d6d6d'},

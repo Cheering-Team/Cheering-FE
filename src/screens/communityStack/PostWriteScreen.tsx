@@ -82,7 +82,6 @@ const PostWriteScreen = ({navigation, route}) => {
         multiple: true,
         mediaType: 'photo',
         forceJpg: true,
-        compressImageQuality: 0.5,
       });
 
       const imageObj = images.map(image => ({
@@ -121,6 +120,7 @@ const PostWriteScreen = ({navigation, route}) => {
 
       return;
     }
+
     const tags = Object.keys(selectedTag).filter(key => selectedTag[key]);
 
     const writeData = await mutation.mutateAsync({
@@ -206,6 +206,8 @@ const PostWriteScreen = ({navigation, route}) => {
         path: imageData[index].uri,
         mediaType: 'photo',
         forceJpg: true,
+        width: 1000,
+        height: 1000,
         freeStyleCropEnabled: true,
         cropperChooseText: '완료',
         cropperCancelText: '취소',
@@ -215,7 +217,7 @@ const PostWriteScreen = ({navigation, route}) => {
 
       const imageObj = {
         uri: image.path,
-        name: image.filename,
+        name: imageData[index].name,
         type: image.mime,
       };
 

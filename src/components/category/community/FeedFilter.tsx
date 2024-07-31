@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 15,
     backgroundColor: 'white',
-    // marginBottom: -35,
+    marginBottom: 20,
   },
   scrollContainer: {paddingRight: 30},
   openedScrollContainer: {flexDirection: 'row', flexWrap: 'wrap'},
