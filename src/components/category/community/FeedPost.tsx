@@ -16,6 +16,7 @@ import {PanGesture} from 'react-native-gesture-handler';
 import {useSharedValue} from 'react-native-reanimated';
 import ImageView from 'react-native-image-viewing';
 import FullScreenSvg from '../../../../assets/images/fullscreen.svg';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface FeedPostProps {
   feed: any;
@@ -27,6 +28,7 @@ interface FeedPostProps {
 
 const FeedPost = (props: FeedPostProps) => {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   const {feed, playerId, postId, selectedFilter, hotTab} = props;
 
