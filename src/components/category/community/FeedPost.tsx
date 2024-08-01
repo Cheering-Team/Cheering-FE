@@ -16,7 +16,6 @@ import {PanGesture} from 'react-native-gesture-handler';
 import {useSharedValue} from 'react-native-reanimated';
 import ImageView from 'react-native-image-viewing';
 import FullScreenSvg from '../../../../assets/images/fullscreen.svg';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface FeedPostProps {
   feed: any;
@@ -28,7 +27,6 @@ interface FeedPostProps {
 
 const FeedPost = (props: FeedPostProps) => {
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
 
   const {feed, playerId, postId, selectedFilter, hotTab} = props;
 
@@ -42,9 +40,13 @@ const FeedPost = (props: FeedPostProps) => {
 
   const queryClient = useQueryClient();
 
-  const [loading, setLoading] = useState([true, true]);
+  // const [loading, setLoading] = useState([true, true]);
   const progress = useSharedValue<number>(0);
   const [isViewer, setIsViewer] = useState(false);
+
+  const [line, setLine] = useState(2);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showMoreButton, setShowMoreButton] = useState(false);
 
   const mutation = useMutation({
     mutationFn: postPostsLikes,
@@ -78,21 +80,21 @@ const FeedPost = (props: FeedPostProps) => {
     }
   };
 
-  const handleLoadStart = index => {
-    setLoading(prevLoading => {
-      const newLoading = [...prevLoading];
-      newLoading[index] = true;
-      return newLoading;
-    });
-  };
+  // const handleLoadStart = index => {
+  //   setLoading(prevLoading => {
+  //     const newLoading = [...prevLoading];
+  //     newLoading[index] = true;
+  //     return newLoading;
+  //   });
+  // };
 
-  const handleLoadEnd = index => {
-    setLoading(prevLoading => {
-      const newLoading = [...prevLoading];
-      newLoading[index] = false;
-      return newLoading;
-    });
-  };
+  // const handleLoadEnd = index => {
+  //   setLoading(prevLoading => {
+  //     const newLoading = [...prevLoading];
+  //     newLoading[index] = false;
+  //     return newLoading;
+  //   });
+  // };
 
   const handleConfigurePanGesture = (panGesture: PanGesture) => {
     panGesture.activeOffsetX([-10, 10]);
@@ -193,7 +195,31 @@ const FeedPost = (props: FeedPostProps) => {
           </View>
         )}
 
-        <CustomText style={styles.content}>{feed.content}</CustomText>
+        <Pressable
+          style={styles.content}
+          onPress={() => {
+            setIsExpanded(true);
+          }}>
+          <CustomText
+            style={{fontSize: 15}}
+            numberOfLines={
+              showMoreButton ? (isExpanded ? undefined : 2) : undefined
+            }
+            ellipsizeMode="tail"
+            onTextLayout={e => {
+              const {lines} = e.nativeEvent;
+              if (lines.length > 2) {
+                setShowMoreButton(true);
+              }
+            }}>
+            {feed.content}
+          </CustomText>
+          {showMoreButton && !isExpanded && (
+            <CustomText style={{marginLeft: 1, color: '#969696'}}>
+              더 보기
+            </CustomText>
+          )}
+        </Pressable>
 
         <View
           style={{
@@ -261,7 +287,7 @@ const styles = StyleSheet.create({
   writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
   writerName: {fontSize: 15},
   createAt: {fontSize: 13, color: '#6d6d6d'},
-  content: {paddingTop: 13, paddingHorizontal: 11, fontSize: 15, width: '100%'},
+  content: {paddingTop: 13, paddingHorizontal: 11, width: '100%'},
   interactContainer: {
     flexDirection: 'row',
     alignItems: 'center',

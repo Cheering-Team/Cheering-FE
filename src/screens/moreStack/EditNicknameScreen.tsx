@@ -44,7 +44,7 @@ const EditNicknameScreen = ({navigation, route}) => {
         type: 'default',
         position: 'top',
         visibilityTime: 3000,
-        bottomOffset: insets.top + 20,
+        topOffset: insets.top + 20,
         text1: '닉네임을 변경하였습니다.',
       });
       navigation.pop();

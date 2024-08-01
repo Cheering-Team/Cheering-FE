@@ -121,6 +121,18 @@ const PostWriteScreen = ({navigation, route}) => {
       return;
     }
 
+    if (content.length > 1990) {
+      Toast.show({
+        type: 'default',
+        position: 'top',
+        visibilityTime: 3000,
+        topOffset: insets.top + 20,
+        text1: '최대 2,000자까지 작성 가능합니다.',
+      });
+
+      return;
+    }
+
     const tags = Object.keys(selectedTag).filter(key => selectedTag[key]);
 
     const writeData = await mutation.mutateAsync({
