@@ -29,10 +29,21 @@ interface CommentModalProps {
   isModalOpen: any;
   setIsModalOpen: any;
   playerUser: PlayerUser;
+  selectedFilter?: any;
+  hotTab?: any;
+  playerId: number;
 }
 
 const CommentModal = (props: CommentModalProps) => {
-  const {postId, isModalOpen, setIsModalOpen, playerUser} = props;
+  const {
+    postId,
+    isModalOpen,
+    setIsModalOpen,
+    playerUser,
+    selectedFilter,
+    hotTab,
+    playerId,
+  } = props;
 
   const insets = useSafeAreaInsets();
   const queryClient = useQueryClient();
@@ -85,7 +96,12 @@ const CommentModal = (props: CommentModalProps) => {
     onSuccess: () => {
       setTimeout(() => {
         queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
-        queryClient.invalidateQueries({queryKey: ['post', postId]});
+        queryClient.invalidateQueries({
+          queryKey: ['posts', playerId, selectedFilter],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['my', 'posts', hotTab],
+        });
         if (flatListRef.current) {
           flatListRef.current.scrollToEnd({
             animated: true,
@@ -102,6 +118,12 @@ const CommentModal = (props: CommentModalProps) => {
         queryKey: ['comments', underCommentId, 'reComments'],
       });
       queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
+      queryClient.invalidateQueries({
+        queryKey: ['posts', playerId, selectedFilter],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['my', 'posts', hotTab],
+      });
       setReIdx(underCommentId);
     },
   });
@@ -131,6 +153,7 @@ const CommentModal = (props: CommentModalProps) => {
 
     if (data.message === '댓글이 작성되었습니다.') {
       setCommentContent('');
+      Keyboard.dismiss();
       return;
     } else {
       Toast.show({
@@ -157,17 +180,10 @@ const CommentModal = (props: CommentModalProps) => {
       });
 
       if (data.message === '답글이 작성되었습니다.') {
-        Toast.show({
-          type: 'default',
-          position: 'top',
-          visibilityTime: 3000,
-          bottomOffset: 30,
-          text1: '댓글을 작성하였습니다.',
-        });
-
         setCommentContent('');
         setToComment(null);
         setUnderCommentId(null);
+        Keyboard.dismiss();
 
         return;
       } else {
@@ -372,6 +388,7 @@ const CommentModal = (props: CommentModalProps) => {
                 reIdx={reIdx}
                 setReIdx={setReIdx}
                 closeModal={closeModal}
+                commentInputRef={commentInputRef}
               />
             )}
             style={{

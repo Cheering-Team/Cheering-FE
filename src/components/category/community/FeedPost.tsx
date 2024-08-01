@@ -43,7 +43,6 @@ const FeedPost = (props: FeedPostProps) => {
 
   const queryClient = useQueryClient();
 
-  // const [loading, setLoading] = useState([true, true]);
   const progress = useSharedValue<number>(0);
   const [isViewer, setIsViewer] = useState(false);
 
@@ -81,22 +80,6 @@ const FeedPost = (props: FeedPostProps) => {
       });
     }
   };
-
-  // const handleLoadStart = index => {
-  //   setLoading(prevLoading => {
-  //     const newLoading = [...prevLoading];
-  //     newLoading[index] = true;
-  //     return newLoading;
-  //   });
-  // };
-
-  // const handleLoadEnd = index => {
-  //   setLoading(prevLoading => {
-  //     const newLoading = [...prevLoading];
-  //     newLoading[index] = false;
-  //     return newLoading;
-  //   });
-  // };
 
   const handleConfigurePanGesture = (panGesture: PanGesture) => {
     panGesture.activeOffsetX([-10, 10]);
@@ -145,10 +128,10 @@ const FeedPost = (props: FeedPostProps) => {
               data={feed.images}
               width={WINDOW_WIDTH}
               height={
-                feed.images[0].height / feed.images[0].width < 1.1
+                feed.images[0].height / feed.images[0].width < 1
                   ? feed.images[0].height /
                     (feed.images[0].width / WINDOW_WIDTH)
-                  : WINDOW_WIDTH * 1.1
+                  : WINDOW_WIDTH * 1
               }
               onProgressChange={progress}
               style={{
@@ -325,6 +308,9 @@ const FeedPost = (props: FeedPostProps) => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         playerUser={feed.playerUser}
+        selectedFilter={selectedFilter}
+        hotTab={hotTab}
+        playerId={playerId}
       />
       <ImageView
         images={feed.images.map(item => ({uri: item.url}))}

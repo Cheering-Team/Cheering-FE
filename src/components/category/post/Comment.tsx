@@ -15,6 +15,7 @@ interface CommentProps {
   reIdx: number | null;
   setReIdx: any;
   closeModal: any;
+  commentInputRef: any;
 }
 
 const Comment = (props: CommentProps) => {
@@ -26,6 +27,7 @@ const Comment = (props: CommentProps) => {
     reIdx,
     setReIdx,
     closeModal,
+    commentInputRef,
   } = props;
 
   const navigation = useNavigation();
@@ -102,6 +104,7 @@ const Comment = (props: CommentProps) => {
               setCommentContent('');
               setToComment(comment.writer);
               setUnderCommentId(comment.id);
+              commentInputRef.current.focus();
             }}>
             <CustomText
               fontWeight="500"
@@ -167,6 +170,7 @@ const Comment = (props: CommentProps) => {
                       setCommentContent('');
                       setToComment(reComment.writer);
                       setUnderCommentId(comment.id);
+                      commentInputRef.current.focus();
                     }}>
                     <CustomText
                       fontWeight="500"
