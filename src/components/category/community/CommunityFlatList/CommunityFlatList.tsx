@@ -2,7 +2,7 @@ import React, {Dispatch, forwardRef, SetStateAction} from 'react';
 import CommunityProfile from '../CommunityProfile';
 import CommunityTopTab from '../CommunityTopTab';
 import FeedFilter from '../FeedFilter';
-import {Animated, FlatList, ListRenderItem} from 'react-native';
+import {Animated, FlatList, ListRenderItem, View} from 'react-native';
 import {Api} from '../../../../types/api';
 import {GetPlayersInfoResponse} from '../../../../types/player';
 import FeedPost from '../FeedPost';
@@ -83,6 +83,11 @@ const CommunityFlatList = forwardRef<FlatList<any>, CommunityFlatListProps>(
             <ListEmpty />
           )
         }
+        ItemSeparatorComponent={() => (
+          <View
+            style={{backgroundColor: '#F0F2F5', height: 6, width: '100%'}}
+          />
+        )}
         onScrollBeginDrag={handleScrollBeginDrag}
         onScrollEndDrag={handleScrollEndDrag}
         onScroll={Animated.event(

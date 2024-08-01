@@ -274,6 +274,11 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
             </View>
           ) : null
         }
+        ItemSeparatorComponent={() => (
+          <View
+            style={{backgroundColor: '#F0F2F5', height: 6, width: '100%'}}
+          />
+        )}
         onEndReached={loadFeed}
         onEndReachedThreshold={1}
         ListEmptyComponent={

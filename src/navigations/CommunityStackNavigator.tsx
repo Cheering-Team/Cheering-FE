@@ -12,7 +12,7 @@ import DeletePlayerUserScreen from '../screens/communityStack/DeletePlayerUserSc
 export type CommunityStackParamList = {
   Community: {playerId: number};
   PostWrite: {playerId: number};
-  Post: {postId: number; playerUser: PlayerUser};
+  // Post: {postId: number; playerUser: PlayerUser};
   Profile: {playerUserId: number};
   ProfileEdit: {playerUserId: number};
   EditNickname: {nickname: string; playerUserId: number | null};
@@ -38,11 +38,11 @@ const CommunityStackNavigator = () => {
         component={PostWriteScreen}
         options={{headerShown: false}}
       />
-      <CommunityStack.Screen
+      {/* <CommunityStack.Screen
         name="Post"
         component={PostScreen}
         options={{headerShown: false}}
-      />
+      /> */}
       <CommunityStack.Screen
         name="ProfileEdit"
         component={ProfileEditScreen}

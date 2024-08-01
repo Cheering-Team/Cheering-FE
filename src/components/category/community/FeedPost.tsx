@@ -226,7 +226,10 @@ const FeedPost = (props: FeedPostProps) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginTop: 30,
+            paddingVertical: 10,
+            marginTop: 10,
+            width: '100%',
+            paddingHorizontal: 12,
           }}>
           <View style={styles.interactContainer}>
             <Pressable onPress={toggleLike}>
@@ -277,22 +280,20 @@ const FeedPost = (props: FeedPostProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: 18,
     paddingTop: 10,
+    backgroundColor: 'white',
     borderBottomWidth: 1.5,
-    borderColor: '#f3f3f3',
+    borderColor: '#e6e6e6',
     alignItems: 'center',
   },
   writerContainer: {flexDirection: 'row', alignItems: 'center'},
   writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
   writerName: {fontSize: 15},
   createAt: {fontSize: 13, color: '#6d6d6d'},
-  content: {paddingTop: 13, paddingHorizontal: 11, width: '100%'},
+  content: {paddingTop: 13, paddingHorizontal: 13, width: '100%'},
   interactContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    width: '100%',
   },
   likeCount: {fontSize: 15, marginLeft: 6, paddingBottom: 1, color: '#333436'},
   commentSvg: {marginLeft: 25, top: 1},

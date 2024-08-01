@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   writerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     width: '100%',
   },
   writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
