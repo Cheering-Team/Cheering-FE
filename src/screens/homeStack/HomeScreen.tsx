@@ -262,6 +262,7 @@ const HomeScreen = ({navigation}: {navigation: HomeScreenNavigationProp}) => {
             hotTab={hotTab}
           />
         )}
+        keyboardShouldPersistTaps="always"
         ListFooterComponent={
           feedIsLoading || isFetchingNextPage ? (
             <View

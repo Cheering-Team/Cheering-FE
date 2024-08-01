@@ -16,6 +16,7 @@ import {PanGesture} from 'react-native-gesture-handler';
 import {useSharedValue} from 'react-native-reanimated';
 import ImageView from 'react-native-image-viewing';
 import FullScreenSvg from '../../../../assets/images/fullscreen.svg';
+import CommentModal from '../post/CommentModal';
 
 interface FeedPostProps {
   feed: any;
@@ -33,6 +34,8 @@ const FeedPost = (props: FeedPostProps) => {
   const [likeStatus, setLikeStatus] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
     setLikeStatus(feed.isLike);
     setLikeCount(feed.likeCount);
@@ -44,7 +47,6 @@ const FeedPost = (props: FeedPostProps) => {
   const progress = useSharedValue<number>(0);
   const [isViewer, setIsViewer] = useState(false);
 
-  const [line, setLine] = useState(2);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showMoreButton, setShowMoreButton] = useState(false);
 
@@ -226,24 +228,32 @@ const FeedPost = (props: FeedPostProps) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            paddingVertical: 10,
-            marginTop: 10,
+            paddingVertical: 7,
+            marginTop: 15,
             width: '100%',
-            paddingHorizontal: 12,
+            paddingRight: 15,
+            paddingLeft: 7,
           }}>
           <View style={styles.interactContainer}>
-            <Pressable onPress={toggleLike}>
+            <Pressable
+              onPress={toggleLike}
+              style={({pressed}) => [
+                {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: pressed ? '#dedede' : '#f7f7f7',
+                  paddingHorizontal: 15,
+                  paddingVertical: 5,
+                  borderRadius: 15,
+                },
+              ]}>
               {likeStatus ? (
-                <HeartFillSvg width={21} height={21} />
+                <HeartFillSvg width={18} height={18} />
               ) : (
-                <HeartSvg width={21} height={21} />
+                <HeartSvg width={18} height={18} />
               )}
+              <CustomText style={styles.likeCount}>{`${likeCount}`}</CustomText>
             </Pressable>
-            <CustomText style={styles.likeCount}>{likeCount}</CustomText>
-            <CommentSvg width={21} height={21} style={styles.commentSvg} />
-            <CustomText style={styles.commentCount}>
-              {feed.commentCount}
-            </CustomText>
           </View>
           {feed.player && (
             <Pressable
@@ -265,7 +275,57 @@ const FeedPost = (props: FeedPostProps) => {
             </Pressable>
           )}
         </View>
+        <Pressable
+          onPress={() => setIsModalOpen(true)}
+          style={({pressed}) => [
+            {
+              backgroundColor: pressed ? '#dedede' : '#f7f7f7',
+              marginHorizontal: 7,
+              marginBottom: 7,
+              paddingHorizontal: 15,
+              paddingVertical: 10,
+              borderRadius: 10,
+            },
+          ]}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginBottom: 5,
+            }}>
+            <CustomText fontWeight="500" style={{fontSize: 15}}>
+              댓글{' '}
+            </CustomText>
+            <CustomText
+              style={{
+                color: '#6a6a6a',
+              }}>{`${feed.commentCount}`}</CustomText>
+          </View>
+          <View
+            style={{flexDirection: 'row', alignItems: 'center', width: '100%'}}>
+            <Avatar uri={feed.playerUser.image} size={30} />
+            <View
+              style={{
+                marginLeft: 9,
+                backgroundColor: '#eeeeee',
+                flex: 1,
+                borderRadius: 15,
+                paddingHorizontal: 10,
+                paddingVertical: 2,
+              }}>
+              <CustomText style={{fontSize: 13, color: '#8b8b8b'}}>
+                댓글 추가...
+              </CustomText>
+            </View>
+          </View>
+        </Pressable>
       </View>
+      <CommentModal
+        postId={postId}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        playerUser={feed.playerUser}
+      />
       <ImageView
         images={feed.images.map(item => ({uri: item.url}))}
         imageIndex={progress.value}
@@ -285,6 +345,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1.5,
     borderColor: '#e6e6e6',
     alignItems: 'center',
+    // borderBottomLeftRadius: 25,
+    // borderBottomRightRadius: 25,
   },
   writerContainer: {flexDirection: 'row', alignItems: 'center'},
   writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
@@ -295,7 +357,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  likeCount: {fontSize: 15, marginLeft: 6, paddingBottom: 1, color: '#333436'},
+  likeCount: {color: '#6a6a6a', marginLeft: 6},
   commentSvg: {marginLeft: 25, top: 1},
   commentCount: {
     fontSize: 15,

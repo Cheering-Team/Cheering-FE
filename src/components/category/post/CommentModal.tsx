@@ -358,7 +358,7 @@ const CommentModal = (props: CommentModalProps) => {
             ref={flatListRef}
             key={modalKey}
             data={commentsData?.result.comments}
-            keyboardShouldPersistTaps="handled"
+            keyboardShouldPersistTaps="always"
             contentContainerStyle={{
               paddingTop: 20,
               paddingBottom: 100,

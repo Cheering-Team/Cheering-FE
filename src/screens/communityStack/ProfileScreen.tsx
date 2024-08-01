@@ -179,6 +179,12 @@ const ProfileScreen = ({navigation, route}) => {
             </View>
           </View>
         }
+        keyboardShouldPersistTaps="always"
+        ItemSeparatorComponent={() => (
+          <View
+            style={{backgroundColor: '#F0F2F5', height: 6, width: '100%'}}
+          />
+        )}
         data={feedData?.pages.flatMap(page => page.result.posts)}
         renderItem={({item}) => (
           <Pressable

@@ -88,6 +88,7 @@ const CommunityFlatList = forwardRef<FlatList<any>, CommunityFlatListProps>(
             style={{backgroundColor: '#F0F2F5', height: 6, width: '100%'}}
           />
         )}
+        keyboardShouldPersistTaps="always"
         onScrollBeginDrag={handleScrollBeginDrag}
         onScrollEndDrag={handleScrollEndDrag}
         onScroll={Animated.event(
