@@ -18,6 +18,8 @@ interface CommunityFlatListProps {
   handleScrollEndDrag: () => void;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   scrollY: Animated.Value;
+  curTab: string;
+  setCurTab: Dispatch<SetStateAction<string>>;
 }
 
 const CommunityFlatList = forwardRef<FlatList<any>, CommunityFlatListProps>(
@@ -28,6 +30,8 @@ const CommunityFlatList = forwardRef<FlatList<any>, CommunityFlatListProps>(
       handleScrollEndDrag,
       setIsModalOpen,
       scrollY,
+      curTab,
+      setCurTab,
     } = props;
 
     const {
@@ -60,7 +64,7 @@ const CommunityFlatList = forwardRef<FlatList<any>, CommunityFlatListProps>(
         ListHeaderComponent={
           <>
             <CommunityProfile playerData={playerData} />
-            <CommunityTopTab />
+            <CommunityTopTab curTab={curTab} setCurTab={setCurTab} />
             {playerData.result.user && (
               <FeedFilter
                 selectedFilter={selectedFilter}

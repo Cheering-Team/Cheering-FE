@@ -18,6 +18,16 @@ export interface GetPlayersInfoResponse {
   teams: TeamResponse[];
 }
 
+export interface GetPlayersResponse {
+  id: number;
+  koreanName: string;
+  englishName: string;
+  image: string | null;
+  backgroundImage: string;
+  fanCount: number;
+  user: PlayerUserResponse;
+}
+
 // PLAYERUSER
 export interface PlayerUserResponse {
   id: number;

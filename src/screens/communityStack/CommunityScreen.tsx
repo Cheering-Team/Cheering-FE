@@ -13,6 +13,7 @@ import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from '../../navigations/CommunityStackNavigator';
 import FloatButton from '../../components/category/community/FloatButton/FloatButton';
+import {WINDOW_HEIGHT} from '../../constants/dimension';
 CommunityFlatList;
 
 export type CommunityScreenNavigationProp = NativeStackNavigationProp<
@@ -30,6 +31,7 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
   const [isTabVisible, setIsTabVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isToTop, setIsToTop] = useState(true);
+  const [curTab, setCurTab] = useState<string>('피드');
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scrollTimeout = useRef(setTimeout(() => {}));
@@ -46,7 +48,6 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
       clearTimeout(scrollTimeout.current);
     }
     setIsToTop(true);
-
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 250,
@@ -88,34 +89,42 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
     return null;
   }
   return (
-    <>
-      <View key={refreshKey} style={{flex: 1, paddingBottom: insets.bottom}}>
-        <CommunityHeader playerData={playerData} scrollY={scrollY} />
-        {isTabVisible && <CommunityTopTab type="absolute" scrollY={scrollY} />}
-        <CommunityFlatList
-          ref={flatListRef}
-          playerData={playerData}
-          handleScrollBeginDrag={handleScrollBeginDrag}
-          handleScrollEndDrag={handleScrollEndDrag}
-          setIsModalOpen={setIsModalOpen}
+    <View key={refreshKey} style={{flex: 1, paddingBottom: insets.bottom}}>
+      <CommunityHeader playerData={playerData} scrollY={scrollY} />
+      {isTabVisible && (
+        <CommunityTopTab
+          type="absolute"
           scrollY={scrollY}
+          curTab={curTab}
+          setCurTab={setCurTab}
         />
-        <JoinModal
-          playerData={playerData}
-          isModalOpen={isModalOpen}
-          setRefreshKey={setRefreshKey}
-          setIsModalOpen={setIsModalOpen}
-        />
-      </View>
+      )}
+      <CommunityFlatList
+        ref={flatListRef}
+        playerData={playerData}
+        handleScrollBeginDrag={handleScrollBeginDrag}
+        handleScrollEndDrag={handleScrollEndDrag}
+        setIsModalOpen={setIsModalOpen}
+        scrollY={scrollY}
+        curTab={curTab}
+        setCurTab={setCurTab}
+      />
+      <JoinModal
+        playerData={playerData}
+        isModalOpen={isModalOpen}
+        setRefreshKey={setRefreshKey}
+        setIsModalOpen={setIsModalOpen}
+      />
       {playerData.result.user && (
         <FloatButton
           playerId={playerData.result.id}
           fadeAnim={fadeAnim}
           flatListRef={flatListRef}
           isToTop={isToTop}
+          offset={WINDOW_HEIGHT / 2.25 - insets.top - 50}
         />
       )}
-    </>
+    </View>
   );
 };
 

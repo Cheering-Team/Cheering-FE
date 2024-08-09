@@ -8,16 +8,17 @@ import {useNavigation} from '@react-navigation/native';
 import {CommunityScreenNavigationProp} from '../../../../screens/communityStack/CommunityScreen';
 
 interface FloatButtonProps {
-  playerId: number;
+  playerId?: number;
   fadeAnim: Animated.Value;
   flatListRef: RefObject<FlatList<any>>;
   isToTop: boolean;
+  offset: number;
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const FloatButton = (props: FloatButtonProps) => {
-  const {playerId, fadeAnim, flatListRef, isToTop} = props;
+  const {playerId, fadeAnim, flatListRef, isToTop, offset} = props;
 
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<CommunityScreenNavigationProp>();
@@ -52,7 +53,7 @@ const FloatButton = (props: FloatButtonProps) => {
           onPress={() => {
             if (flatListRef.current) {
               flatListRef.current.scrollToOffset({
-                offset: WINDOW_HEIGHT / 2.25 - insets.top - 50,
+                offset: offset,
                 animated: true,
               });
             }
@@ -60,32 +61,33 @@ const FloatButton = (props: FloatButtonProps) => {
           <ChevronTopSvg width={25} height={25} />
         </AnimatedPressable>
       )}
-
-      <View
-        style={{
-          borderRadius: 100,
-          backgroundColor: 'white',
-          shadowColor: '#999999',
-          shadowOffset: {width: 1, height: 2},
-          shadowOpacity: 0.9,
-          shadowRadius: 3,
-          elevation: 5,
-        }}>
-        <Pressable
+      {playerId && (
+        <View
           style={{
-            width: 45,
-            height: 45,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#282828',
             borderRadius: 100,
-          }}
-          onPress={() => {
-            navigation.navigate('PostWrite', {playerId});
+            backgroundColor: 'white',
+            shadowColor: '#999999',
+            shadowOffset: {width: 1, height: 2},
+            shadowOpacity: 0.9,
+            shadowRadius: 3,
+            elevation: 5,
           }}>
-          <PencilSvg width={25} height={25} />
-        </Pressable>
-      </View>
+          <Pressable
+            style={{
+              width: 45,
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#282828',
+              borderRadius: 100,
+            }}
+            onPress={() => {
+              navigation.navigate('PostWrite', {playerId});
+            }}>
+            <PencilSvg width={25} height={25} />
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 };

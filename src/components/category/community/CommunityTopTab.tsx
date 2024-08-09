@@ -1,15 +1,22 @@
-import React, {useState} from 'react';
-import {Animated, FlatList, Pressable, StyleSheet} from 'react-native';
+import React, {Dispatch, SetStateAction} from 'react';
+import {Animated, Pressable, StyleSheet} from 'react-native';
 import CustomText from '../../common/CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface CommunityTopTabProps {
   type?: 'normal' | 'absolute';
-  scrollY?: any;
+  scrollY?: Animated.Value;
+  curTab: string;
+  setCurTab: Dispatch<SetStateAction<string>>;
 }
 
 const CommunityTopTab = (props: CommunityTopTabProps) => {
-  const {type = 'normal', scrollY} = props;
+  const {
+    type = 'normal',
+    scrollY = new Animated.Value(0),
+    curTab,
+    setCurTab,
+  } = props;
 
   const insets = useSafeAreaInsets();
 
@@ -23,8 +30,6 @@ const CommunityTopTab = (props: CommunityTopTabProps) => {
       outputRange: [0, -70],
     });
   }
-
-  const [curTab, setCurTab] = useState('피드');
 
   return (
     <Animated.FlatList
