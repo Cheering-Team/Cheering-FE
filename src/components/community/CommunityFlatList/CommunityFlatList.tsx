@@ -3,14 +3,14 @@ import CommunityProfile from '../CommunityProfile';
 import CommunityTopTab from '../CommunityTopTab';
 import FeedFilter from '../FeedFilter';
 import {Animated, FlatList, ListRenderItem, View} from 'react-native';
-import {Api} from '../../../../types/api';
-import {GetPlayersInfoResponse} from '../../../../types/player';
+import {Api} from '../../../types/api';
+import {GetPlayersInfoResponse} from '../../../types/player';
 import FeedPost from '../FeedPost';
 import NotJoin from '../NotJoin';
-import {PostInfoResponse} from '../../../../types/post';
-import ListLoading from '../../../common/ListLoading/ListLoading';
+import {PostInfoResponse} from '../../../types/post';
+import ListLoading from '../../common/ListLoading/ListLoading';
 import {useCommunityFlatList} from './useCommunityFlatList';
-import ListEmpty from '../../../common/ListEmpty/ListEmpty';
+import ListEmpty from '../../common/ListEmpty/ListEmpty';
 
 interface CommunityFlatListProps {
   playerData: Api<GetPlayersInfoResponse>;

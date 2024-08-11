@@ -1,21 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
-import HeartSvg from '../../../../assets/images/heart.svg';
-import HeartFillSvg from '../../../../assets/images/heart_fill.svg';
-import CommentSvg from '../../../../assets/images/comment.svg';
+import HeartSvg from '../../../assets/images/heart.svg';
+import HeartFillSvg from '../../../assets/images/heart_fill.svg';
 import PostWriter from '../post/PostWriter';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {postPostsLikes} from '../../../apis/post';
+import {postPostsLikes} from '../../apis/post';
 import Toast from 'react-native-toast-message';
 import {useNavigation} from '@react-navigation/native';
-import CustomText from '../../common/CustomText';
-import Avatar from '../../common/Avatar';
+import CustomText from '../common/CustomText';
+import Avatar from '../common/Avatar';
 import Carousel, {Pagination} from 'react-native-reanimated-carousel';
-import {WINDOW_WIDTH} from '../../../constants/dimension';
+import {WINDOW_WIDTH} from '../../constants/dimension';
 import {PanGesture} from 'react-native-gesture-handler';
 import {useSharedValue} from 'react-native-reanimated';
 import ImageView from 'react-native-image-viewing';
-import FullScreenSvg from '../../../../assets/images/fullscreen.svg';
+import FullScreenSvg from '../../../assets/images/fullscreen.svg';
 import CommentModal from '../post/CommentModal';
 
 interface FeedPostProps {
@@ -117,9 +116,10 @@ const FeedPost = (props: FeedPostProps) => {
           ))}
         </View>
         <PostWriter
-          writer={feed.writer}
+          feed={feed}
           createdAt={feed.createdAt}
           playerUserId={feed.writer.id}
+          isWriter={feed.playerUser.id === feed.writer.id}
         />
         {feed.images.length > 0 && (
           <View>

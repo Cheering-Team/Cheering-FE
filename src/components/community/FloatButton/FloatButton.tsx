@@ -1,11 +1,10 @@
 import React, {RefObject} from 'react';
 import {Animated, FlatList, Pressable, View} from 'react-native';
-import ChevronTopSvg from '../../../../../assets/images/chevron-top-black.svg';
-import PencilSvg from '../../../../../assets/images/pencil.svg';
-import {WINDOW_HEIGHT} from '../../../../constants/dimension';
+import ChevronTopSvg from '../../../../assets/images/chevron-top-black.svg';
+import PencilSvg from '../../../../assets/images/pencil.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
-import {CommunityScreenNavigationProp} from '../../../../screens/communityStack/CommunityScreen';
+import {CommunityScreenNavigationProp} from '../../../screens/communityStack/CommunityScreen';
 
 interface FloatButtonProps {
   playerId?: number;

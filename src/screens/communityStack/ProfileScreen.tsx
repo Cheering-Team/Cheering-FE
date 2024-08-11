@@ -15,7 +15,7 @@ import {getPlayerUserInfo, getPlayerUserPosts} from '../../apis/player';
 import Avatar from '../../components/common/Avatar';
 import CustomText from '../../components/common/CustomText';
 import CustomButton from '../../components/common/CustomButton';
-import FeedPost from '../../components/category/community/FeedPost';
+import FeedPost from '../../components/community/FeedPost';
 import {useIsFocused} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChevronTopSvg from '../../../assets/images/chevron-top-black.svg';

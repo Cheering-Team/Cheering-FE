@@ -1,6 +1,6 @@
 import React, {Dispatch, forwardRef, SetStateAction, useEffect} from 'react';
 import {Animated, FlatList, View} from 'react-native';
-import FeedPost from '../../category/community/FeedPost';
+import FeedPost from '../../community/FeedPost';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {getMyPlayersPosts} from '../../../apis/post';
 import HomeBanner from '../HomeBanner/HomeBanner';

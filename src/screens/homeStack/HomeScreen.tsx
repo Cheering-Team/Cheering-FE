@@ -1,15 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Animated, Dimensions, FlatList, Pressable, View} from 'react-native';
+import {Animated, FlatList, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
 import {getMyPlayers} from '../../apis/player';
 import {useQuery} from '@tanstack/react-query';
-
-import ChevronTopSvg from '../../../assets/images/chevron-top-black.svg';
 import HomeHeader from '../../components/home/HomeHeader/HomeHeader';
 import HomeTopTab from '../../components/home/HomeTopTab/HomeTopTab';
 import HomeFlatList from '../../components/home/HomeFlatList/HomeFlatList';
-import FloatButton from '../../components/category/community/FloatButton/FloatButton';
+import FloatButton from '../../components/community/FloatButton/FloatButton';
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();

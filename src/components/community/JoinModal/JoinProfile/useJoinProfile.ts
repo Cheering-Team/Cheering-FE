@@ -1,8 +1,8 @@
 import {useQuery} from '@tanstack/react-query';
-import {getCheckNickname} from '../../../../../apis/player';
+import {getCheckNickname} from '../../../../apis/player';
 import ImagePicker from 'react-native-image-crop-picker';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {NICKNAME_REGEX} from '../../../../../constants/regex';
+import {NICKNAME_REGEX} from '../../../../constants/regex';
 import {ImageType} from '../JoinModal';
 import {Keyboard} from 'react-native';
 

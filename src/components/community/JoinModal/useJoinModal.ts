@@ -1,10 +1,10 @@
 import {Animated, Keyboard, PanResponder} from 'react-native';
-import {SCREEN_HEIGHT} from '../../../../constants/dimension';
+import {SCREEN_HEIGHT} from '../../../constants/dimension';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {ImageType} from './JoinModal';
-import {postCommunityJoin} from '../../../../apis/player';
+import {postCommunityJoin} from '../../../apis/player';
 import Toast from 'react-native-toast-message';
 
 export const useJoinModal = (

@@ -7,11 +7,11 @@ import {
   View,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
-import {toastConfig} from '../../../../../App';
+import {toastConfig} from '../../../../App';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {StyleSheet} from 'react-native';
-import {GetPlayersInfoResponse} from '../../../../types/player';
-import {Api} from '../../../../types/api';
+import {GetPlayersInfoResponse} from '../../../types/player';
+import {Api} from '../../../types/api';
 import JoinProfile from './JoinProfile/JoinProfile';
 import JoinTerm from './JoinTerm/JoinTerm';
 import {useJoinModal} from './useJoinModal';

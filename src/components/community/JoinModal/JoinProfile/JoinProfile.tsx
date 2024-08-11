@@ -1,13 +1,12 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import {ImageBackground, Pressable, StyleSheet, View} from 'react-native';
-import CustomText from '../../../../common/CustomText';
-import Avatar from '../../../../common/Avatar';
-import CustomTextInput from '../../../../common/CustomTextInput';
-import CustomButton from '../../../../common/CustomButton';
-import {GetPlayersInfoResponse} from '../../../../../types/player';
-import {Api} from '../../../../../types/api';
-
-import CameraSvg from '../../../../../../assets/images/camera-01.svg';
+import CustomText from '../../../common/CustomText';
+import Avatar from '../../../common/Avatar';
+import CustomTextInput from '../../../common/CustomTextInput';
+import CustomButton from '../../../common/CustomButton';
+import {GetPlayersInfoResponse} from '../../../../types/player';
+import {Api} from '../../../../types/api';
+import CameraSvg from '../../../../../assets/images/camera-01.svg';
 import {ImageType} from '../JoinModal';
 import {useJoinProfile} from './useJoinProfile';
 

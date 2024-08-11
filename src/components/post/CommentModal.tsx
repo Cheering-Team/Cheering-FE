@@ -13,16 +13,16 @@ import {
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {getComments, postComments, postReComments} from '../../../apis/post';
+import {getComments, postComments, postReComments} from '../../apis/post';
 import Comment from './Comment';
-import CustomText from '../../common/CustomText';
-import ArrowUpSvg from '../../../../assets/images/arrow_up.svg';
-import Avatar from '../../common/Avatar';
+import CustomText from '../common/CustomText';
+import ArrowUpSvg from '../../../assets/images/arrow_up.svg';
+import Avatar from '../common/Avatar';
 import Toast from 'react-native-toast-message';
-import CloseWhiteSvg from '../../../../assets/images/x_white.svg';
-import {toastConfig} from '../../../../App';
+import CloseWhiteSvg from '../../../assets/images/x_white.svg';
+import {toastConfig} from '../../../App';
 import {FlatList as FlatListType} from 'react-native';
-import {PlayerUser} from '../../../navigations/CategoryStackNavigator';
+import {PlayerUser} from '../../navigations/CategoryStackNavigator';
 
 interface CommentModalProps {
   postId: number;

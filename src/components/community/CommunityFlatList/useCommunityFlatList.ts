@@ -1,9 +1,9 @@
 import {useIsFocused} from '@react-navigation/native';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {useEffect, useState} from 'react';
-import {getPosts} from '../../../../apis/post';
-import {GetPlayersInfoResponse} from '../../../../types/player';
-import {Api} from '../../../../types/api';
+import {getPosts} from '../../../apis/post';
+import {GetPlayersInfoResponse} from '../../../types/player';
+import {Api} from '../../../types/api';
 
 export const useCommunityFlatList = (
   playerData: Api<GetPlayersInfoResponse>,

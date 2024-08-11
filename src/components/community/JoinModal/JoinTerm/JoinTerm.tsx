@@ -1,9 +1,9 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
-import CustomText from '../../../../common/CustomText';
-import CheckBox from '../../../../common/CheckBox';
-import CustomButton from '../../../../common/CustomButton';
-import ArrowLeftGraySvg from '../../../../../../assets/images/arrow-left-gray.svg';
+import CustomText from '../../../common/CustomText';
+import CheckBox from '../../../common/CheckBox';
+import CustomButton from '../../../common/CustomButton';
+import ArrowLeftGraySvg from '../../../../../assets/images/arrow-left-gray.svg';
 
 interface JoinTermProps {
   isModalOpen: boolean;

@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import {Animated, Pressable, StyleSheet} from 'react-native';
-import CustomText from '../../common/CustomText';
+import CustomText from '../common/CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface CommunityTopTabProps {

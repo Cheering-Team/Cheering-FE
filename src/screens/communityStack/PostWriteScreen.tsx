@@ -1,58 +1,56 @@
 import React, {useEffect, useState} from 'react';
 import {
-  ActivityIndicator,
   Animated,
-  Dimensions,
-  FlatList,
-  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
   SafeAreaView,
-  TouchableOpacity,
-  View,
 } from 'react-native';
-import CloseSvg from '../../../assets/images/close-black.svg';
-import CameraSvg from '../../../assets/images/plus-gray.svg';
 import {TextInput} from 'react-native-gesture-handler';
-import ImagePicker from 'react-native-image-crop-picker';
-import {postPlayersPosts} from '../../apis/post';
+import {postPlayersPosts, updatePost} from '../../apis/post';
 import {useMutation} from '@tanstack/react-query';
-import CropSvg from '../../../assets/images/crop-white.svg';
-import Toast from 'react-native-toast-message';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import CustomText from '../../components/common/CustomText';
-import CloseWhiteSvg from '../../../assets/images/x_white.svg';
-import DraggableFlatList, {
-  ScaleDecorator,
-} from 'react-native-draggable-flatlist';
 
-interface FilterType {
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../../constants/dimension';
+import WriteLoading from '../../components/post/\bwrite/WriteLoading';
+import Toast from 'react-native-toast-message';
+import WriteHeader from '../../components/post/\bwrite/WriteHeader';
+import TagList from '../../components/post/\bwrite/TagList';
+import ImageEditInfo from '../../components/post/\bwrite/ImageEditInfo';
+import WriteFooter from '../../components/post/\bwrite/WriteFooter';
+import TagModal from '../../components/post/\bwrite/TagModal';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CommunityStackParamList} from '../../navigations/CommunityStackNavigator';
+import {RouteProp} from '@react-navigation/native';
+
+export interface FilterType {
   photo: boolean;
   viewing: boolean;
   information: boolean;
 }
 
-interface FilterDataType {
-  name: string;
-  filter: 'photo' | 'viewing' | 'information';
-}
-
-const TagData: FilterDataType[] = [
-  {name: '📸 직찍사', filter: 'photo'},
-  {name: '👀 직관인증', filter: 'viewing'},
-  {name: '🔎 정보', filter: 'information'},
-];
-
-interface SizeImage {
+export interface SizeImage {
   uri: string;
   name: string | undefined;
   type: string;
 }
 
-const PostWriteScreen = ({navigation, route}) => {
+export type PostWriteScreenNavigationProp = NativeStackNavigationProp<
+  CommunityStackParamList,
+  'PostWrite'
+>;
+
+type PostWriteScreenRouteProp = RouteProp<CommunityStackParamList, 'PostWrite'>;
+
+const PostWriteScreen = ({
+  navigation,
+  route,
+}: {
+  navigation: PostWriteScreenNavigationProp;
+  route: PostWriteScreenRouteProp;
+}) => {
   const insets = useSafeAreaInsets();
-  const playerId = route.params.playerId;
+  const {playerId, feed} = route.params;
 
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState<FilterType>({
@@ -67,46 +65,8 @@ const PostWriteScreen = ({navigation, route}) => {
   const [isImageInfo, setIsImageInfo] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(1));
 
-  const mutation = useMutation({mutationFn: postPlayersPosts});
-
-  const selectTag = (tag: 'photo' | 'viewing' | 'information') => {
-    setSelectedTag(prev => ({
-      ...prev,
-      [tag]: !prev[tag],
-    }));
-  };
-
-  const handleImageUpload = async () => {
-    try {
-      const images = await ImagePicker.openPicker({
-        multiple: true,
-        mediaType: 'photo',
-        forceJpg: true,
-      });
-
-      const imageObj = images.map(image => ({
-        uri: image.path,
-        name: image.filename,
-        type: image.mime,
-      }));
-
-      const newImages = [...imageData, ...imageObj];
-
-      setImageData(newImages);
-
-      setIsImageInfo(true);
-
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 0,
-        useNativeDriver: true,
-      }).start();
-    } catch (error: any) {
-      if (error.code === 'E_PICKER_CANCELLED') {
-        return;
-      }
-    }
-  };
+  const writeMutation = useMutation({mutationFn: postPlayersPosts});
+  const editMutation = useMutation({mutationFn: updatePost});
 
   const handleWritePost = async () => {
     if (content.length === 0) {
@@ -133,119 +93,65 @@ const PostWriteScreen = ({navigation, route}) => {
       return;
     }
 
-    const tags = Object.keys(selectedTag).filter(key => selectedTag[key]);
-
-    const writeData = await mutation.mutateAsync({
-      playerId,
-      content,
-      tags,
-      images: imageData,
-    });
-
-    if (writeData.message === '게시글이 작성되었습니다.') {
-      navigation.replace('Post', {
-        postId: writeData.result.id,
-        playerUser: writeData.result.playerUser,
-      });
-    }
-  };
-
-  const renderImage = ({item, getIndex, drag, isActive}) => {
-    return (
-      <ScaleDecorator key={item.name}>
-        <TouchableOpacity
-          onLongPress={drag}
-          onPress={() => cropImage(getIndex())}
-          disabled={isActive}>
-          <Image
-            source={{uri: item.uri}}
-            style={{
-              width: 100,
-              height: 130,
-              borderRadius: 3,
-              marginRight: 10,
-            }}
-            resizeMode="cover"
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              position: 'absolute',
-              top: 5,
-              left: 5,
-            }}>
-            <Pressable
-              style={{
-                padding: 6,
-                borderRadius: 20,
-                backgroundColor: '#000000a1',
-              }}
-              onPress={() => {
-                cropImage(getIndex());
-              }}>
-              <CropSvg width={10} height={10} />
-            </Pressable>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              position: 'absolute',
-              top: 5,
-              right: 15,
-            }}>
-            <Pressable
-              style={{
-                padding: 6,
-                borderRadius: 20,
-                backgroundColor: '#000000a1',
-              }}
-              onPress={() => {
-                setImageData(prev =>
-                  prev.filter((_, idx) => idx !== getIndex()),
-                );
-              }}>
-              <CloseWhiteSvg width={10} height={10} />
-            </Pressable>
-          </View>
-        </TouchableOpacity>
-      </ScaleDecorator>
+    const tags = Object.keys(selectedTag).filter(
+      key => selectedTag[key as keyof FilterType],
     );
-  };
 
-  const cropImage = async (index: number) => {
-    try {
-      const image = await ImagePicker.openCropper({
-        path: imageData[index].uri,
-        mediaType: 'photo',
-        forceJpg: true,
-        width: 1000,
-        height: 1000,
-        freeStyleCropEnabled: true,
-        cropperChooseText: '완료',
-        cropperCancelText: '취소',
-        cropperChooseColor: '#58a04b',
-        cropperCancelColor: '#ff6d6d',
+    if (!feed) {
+      const writeData = await writeMutation.mutateAsync({
+        playerId,
+        content,
+        tags,
+        images: imageData,
       });
 
-      const imageObj = {
-        uri: image.path,
-        name: imageData[index].name,
-        type: image.mime,
-      };
+      if (writeData.message === '게시글이 작성되었습니다.') {
+        navigation.replace('Post', {
+          postId: writeData.result.id,
+          playerUser: writeData.result.playerUser,
+        });
+      }
+    } else {
+      const editData = await editMutation.mutateAsync({
+        postId: feed.id,
+        content,
+        tags,
+        images: imageData,
+      });
 
-      const newImageData = [...imageData];
-      newImageData[index] = imageObj;
-
-      setImageData(newImageData);
-    } catch (error: any) {
-      if (error.code === 'E_PICKER_CANCELLED') {
-        return;
+      if (editData.message === '게시글을 수정하였습니다.') {
+        navigation.replace('Post', {
+          postId: feed.id,
+          playerUser: feed.playerUser,
+        });
       }
     }
   };
 
   useEffect(() => {
-    let timer;
+    console.log(imageData);
+  }, [imageData]);
+
+  useEffect(() => {
+    if (feed) {
+      setContent(feed.content);
+
+      feed.tags.map((tag: 'photo' | 'viewing' | 'information') =>
+        setSelectedTag(prev => ({...prev, [tag]: true})),
+      );
+
+      setImageData(
+        feed.images.map(image => ({
+          uri: image.url,
+          name: `${feed.id}-IMG.JPG`,
+          type: 'image/jpeg',
+        })),
+      );
+    }
+  }, [feed]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
     if (isImageInfo) {
       timer = setTimeout(() => {
         Animated.timing(fadeAnim, {
@@ -276,8 +182,8 @@ const PostWriteScreen = ({navigation, route}) => {
                 left: 0,
               },
               {
-                width: Dimensions.get('window').width,
-                height: Dimensions.get('window').height,
+                width: WINDOW_WIDTH,
+                height: WINDOW_HEIGHT,
               },
             ]}
             onPressOut={() => {
@@ -285,122 +191,11 @@ const PostWriteScreen = ({navigation, route}) => {
             }}
           />
         )}
-        {mutation.isPending && (
-          <View
-            style={[
-              {
-                zIndex: 1,
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'rgba(240, 240, 240, 0.5)',
-              },
-              {
-                width: Dimensions.get('window').width,
-                height: Dimensions.get('window').height,
-              },
-            ]}>
-            <View
-              style={{
-                width: 200,
-                height: 100,
-                backgroundColor: 'rgba(0, 0, 0, 0.763)',
-                borderRadius: 20,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <CustomText
-                fontWeight="500"
-                style={{color: 'white', fontSize: 16, marginBottom: 15}}>
-                글을 등록하고 있어요
-              </CustomText>
-              <ActivityIndicator color={'white'} />
-            </View>
-          </View>
+        {(writeMutation.isPending || editMutation.isPending) && (
+          <WriteLoading />
         )}
-        {/* 헤더 */}
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            height: 45,
-            paddingRight: 17,
-            paddingLeft: 10,
-            borderBottomWidth: 1,
-            borderBottomColor: '#e1e1e1',
-          }}>
-          <Pressable
-            onPress={() => {
-              navigation.goBack();
-            }}>
-            <CloseSvg width={30} height={30} />
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              handleWritePost();
-            }}>
-            <CustomText
-              fontWeight="500"
-              style={{fontSize: 19, color: '#58a04b'}}>
-              등록
-            </CustomText>
-          </Pressable>
-        </View>
-
-        <FlatList
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          data={TagData}
-          style={{padding: 12, flexGrow: 0}}
-          renderItem={({item}) => {
-            if (selectedTag[item.filter] === true) {
-              return (
-                <Pressable
-                  key={item.filter}
-                  style={{
-                    borderWidth: 1,
-                    backgroundColor: '#3a3a3a',
-                    borderColor: '#3a3a3a',
-                    paddingVertical: 6,
-                    paddingHorizontal: 15,
-                    borderRadius: 20,
-                    marginRight: 6,
-                  }}
-                  onPress={() => {
-                    setIsTagOpen(true);
-                  }}>
-                  <CustomText fontWeight="500" style={{color: 'white'}}>
-                    {item.name}
-                  </CustomText>
-                </Pressable>
-              );
-            }
-            return null;
-          }}
-          ListHeaderComponent={
-            <Pressable
-              style={{
-                borderWidth: 1,
-                borderColor: '#dcdcdc',
-                paddingVertical: 6,
-                paddingHorizontal: 15,
-                borderRadius: 20,
-                marginRight: 6,
-              }}
-              onPress={() => {
-                setIsTagOpen(true);
-              }}>
-              {Object.values(selectedTag).every(v => v === false) ? (
-                <CustomText>➕ 태그 추가</CustomText>
-              ) : (
-                <CustomText>➕</CustomText>
-              )}
-            </Pressable>
-          }
-        />
+        <WriteHeader handleWritePost={handleWritePost} />
+        <TagList selectedTag={selectedTag} setIsTagOpen={setIsTagOpen} />
         <TextInput
           placeholder="글을 작성해보세요"
           multiline
@@ -413,124 +208,15 @@ const PostWriteScreen = ({navigation, route}) => {
             paddingHorizontal: 12,
           }}
         />
-        {isImageInfo && (
-          <Animated.View
-            style={[
-              {
-                backgroundColor: '#58a04b',
-                alignSelf: 'flex-start',
-                marginLeft: 10,
-                padding: 5,
-                borderRadius: 5,
-                marginBottom: 10,
-                alignItems: 'center',
-              },
-              {opacity: fadeAnim},
-            ]}>
-            <CustomText style={{color: 'white'}}>
-              사진을 길게 눌러 순서를 조정할 수 있어요
-            </CustomText>
-            <View
-              style={{
-                position: 'absolute',
-                bottom: -4,
-                borderRadius: 2,
-                width: 10,
-                height: 10,
-                backgroundColor: '#58a04b',
-                transform: [{rotate: '45deg'}],
-              }}></View>
-          </Animated.View>
-        )}
-
-        {/* 하단 바 */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: 14,
-            paddingTop: 12,
-            marginBottom: 10,
-            borderTopWidth: 1,
-            backgroundColor: 'white',
-            borderColor: '#e1e1e1',
-          }}>
-          <DraggableFlatList
-            data={imageData}
-            horizontal={true}
-            onDragEnd={({data}) => setImageData(data)}
-            keyExtractor={item => item.uri}
-            showsHorizontalScrollIndicator={false}
-            renderItem={renderImage}
-            containerStyle={{width: '100%'}}
-            ListFooterComponent={
-              <Pressable
-                style={{
-                  width: 100,
-                  height: 130,
-                  borderWidth: 1,
-                  borderRadius: 3,
-                  borderColor: '#d0d0d0',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                onPress={handleImageUpload}>
-                <CameraSvg width={18} height={18} />
-                <CustomText style={{color: '#858585', marginTop: 8}}>
-                  사진 추가
-                </CustomText>
-              </Pressable>
-            }
-          />
-        </View>
-        {/* 태그 선택 */}
+        {isImageInfo && <ImageEditInfo fadeAnim={fadeAnim} />}
+        <WriteFooter
+          imageData={imageData}
+          setImageData={setImageData}
+          setIsImageInfo={setIsImageInfo}
+          fadeAnim={fadeAnim}
+        />
         {isTagOpen && (
-          <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              position: 'absolute',
-              top: 45,
-              zIndex: 2,
-              paddingTop: 12,
-              paddingHorizontal: 12,
-              backgroundColor: 'white',
-              borderWidth: 1,
-              borderTopWidth: 0,
-              borderColor: '#e1e1e1',
-              borderBottomLeftRadius: 15,
-              borderBottomRightRadius: 15,
-            }}>
-            {TagData.map(tag => (
-              <Pressable
-                key={tag.filter}
-                style={[
-                  {
-                    borderWidth: 1,
-                    borderColor: '#dcdcdc',
-                    paddingVertical: 6,
-                    paddingHorizontal: 15,
-                    borderRadius: 20,
-                    marginRight: 6,
-                    marginBottom: 10,
-                  },
-                  selectedTag[tag.filter] && {
-                    backgroundColor: '#3a3a3a',
-                    borderColor: '#3a3a3a',
-                  },
-                ]}
-                onPress={() => {
-                  selectTag(tag.filter);
-                }}>
-                <CustomText
-                  fontWeight="500"
-                  style={[selectedTag[tag.filter] && {color: 'white'}]}>
-                  {tag.name}
-                </CustomText>
-              </Pressable>
-            ))}
-          </View>
+          <TagModal selectedTag={selectedTag} setSelectedTag={setSelectedTag} />
         )}
       </KeyboardAvoidingView>
     </SafeAreaView>

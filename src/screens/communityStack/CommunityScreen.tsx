@@ -4,15 +4,15 @@ import {FlatList as FlatListType} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useQuery} from '@tanstack/react-query';
 import {getPlayersInfo} from '../../apis/player';
-import JoinModal from '../../components/category/community/JoinModal/JoinModal';
-import CommunityFlatList from '../../components/category/community/CommunityFlatList/CommunityFlatList';
-import CommunityHeader from '../../components/category/community/CommunityHeader';
-import CommunityTopTab from '../../components/category/community/CommunityTopTab';
+import JoinModal from '../../components/community/JoinModal/JoinModal';
+import CommunityFlatList from '../../components/community/CommunityFlatList/CommunityFlatList';
+import CommunityHeader from '../../components/community/CommunityHeader';
+import CommunityTopTab from '../../components/community/CommunityTopTab';
 
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from '../../navigations/CommunityStackNavigator';
-import FloatButton from '../../components/category/community/FloatButton/FloatButton';
+import FloatButton from '../../components/community/FloatButton/FloatButton';
 import {WINDOW_HEIGHT} from '../../constants/dimension';
 CommunityFlatList;
 
