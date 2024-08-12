@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect, useImperativeHandle, useRef} from 'react';
+import React, {forwardRef, useEffect, useRef} from 'react';
 import {
   Animated,
   Dimensions,
@@ -90,12 +90,8 @@ const OptionModal = forwardRef<closeModalHandle, OptionModalProps>(
       });
     };
 
-    useImperativeHandle(ref, () => ({
-      closeModal,
-    }));
-
     return (
-      <Modal animationType="fade" visible={isModalOpen} transparent={true}>
+      <Modal animationType="none" visible={isModalOpen} transparent={true}>
         {isModalOpen && (
           <Pressable
             style={{
@@ -139,7 +135,12 @@ const OptionModal = forwardRef<closeModalHandle, OptionModalProps>(
             />
           </View>
           <View style={{padding: 17, paddingBottom: insets.bottom + 20}}>
-            <Pressable style={{marginBottom: 15}} onPress={option1Press}>
+            <Pressable
+              style={{marginBottom: 20}}
+              onPress={() => {
+                closeModal();
+                option1Press();
+              }}>
               <CustomText
                 fontWeight="500"
                 style={{fontSize: 18, color: option1color}}>
@@ -147,7 +148,11 @@ const OptionModal = forwardRef<closeModalHandle, OptionModalProps>(
               </CustomText>
             </Pressable>
             {option2Text !== null && (
-              <Pressable onPress={option2Press}>
+              <Pressable
+                onPress={() => {
+                  closeModal();
+                  option2Press();
+                }}>
                 <CustomText
                   fontWeight="500"
                   style={{fontSize: 18, color: option2color}}>

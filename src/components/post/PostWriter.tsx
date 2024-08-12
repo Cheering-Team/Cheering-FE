@@ -5,7 +5,12 @@ import Avatar from '../common/Avatar';
 import CustomText from '../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import MoreSvg from '../../../assets/images/three-dots-black.svg';
-import OptionModal, {closeModalHandle} from '../common/OptionModal';
+import OptionModal from '../common/OptionModal';
+import AlertModal from '../common/AlertModal/AlertModal';
+import {deletePost} from '../../apis/post';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import Toast from 'react-native-toast-message';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface PostWriterProps {
   feed: any;
@@ -17,10 +22,34 @@ interface PostWriterProps {
 const PostWriter = (props: PostWriterProps) => {
   const {feed, createdAt, playerUserId, isWriter} = props;
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const navigation = useNavigation();
-  const closeModalRef = useRef<closeModalHandle>(null);
+  const queryClient = useQueryClient();
+  const insets = useSafeAreaInsets();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+
+  const mutation = useMutation({
+    mutationFn: deletePost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['posts'], exact: false});
+      queryClient.invalidateQueries({queryKey: ['my', 'posts'], exact: false});
+    },
+  });
+
+  const handleDeletePost = async () => {
+    const data = await mutation.mutateAsync({postId: feed.id});
+
+    if (data.message === '게시글을 삭제하였습니다.') {
+      Toast.show({
+        type: 'default',
+        position: 'top',
+        visibilityTime: 3000,
+        topOffset: insets.top + 20,
+        text1: '게시글을 삭제하였습니다.',
+      });
+    }
+  };
 
   return (
     <View style={styles.writerContainer}>
@@ -57,12 +86,10 @@ const PostWriter = (props: PostWriterProps) => {
       </Pressable>
       {isWriter ? (
         <OptionModal
-          ref={closeModalRef}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           option1Text="수정하기"
           option1Press={() => {
-            closeModalRef?.current?.closeModal();
             navigation.navigate('CommunityStack', {
               screen: 'PostWrite',
               params: {playerId: feed.player.id, feed},
@@ -70,6 +97,9 @@ const PostWriter = (props: PostWriterProps) => {
           }}
           option2Text="삭제하기"
           option2color="#fe6363"
+          option2Press={() => {
+            setIsAlertOpen(true);
+          }}
         />
       ) : (
         <OptionModal
@@ -85,6 +115,18 @@ const PostWriter = (props: PostWriterProps) => {
           option1color="#fe6363"
         />
       )}
+      <AlertModal
+        isModalOpen={isAlertOpen}
+        setIsModalOpen={setIsAlertOpen}
+        title="게시글을 삭제하시겠어요?"
+        content="게시글을 삭제한 후에는 복구할 수 없습니다."
+        button1Text="삭제"
+        button1Color="#fe6363"
+        button2Text="취소"
+        button1Press={() => {
+          handleDeletePost();
+        }}
+      />
     </View>
   );
 };
