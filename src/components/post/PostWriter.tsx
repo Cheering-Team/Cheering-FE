@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {formatDate} from '../../utils/format';
 import Avatar from '../common/Avatar';

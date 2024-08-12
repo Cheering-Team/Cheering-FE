@@ -164,3 +164,19 @@ export const deletePost = async data => {
 
   return response.data;
 };
+
+export const deleteComment = async data => {
+  const {commentId} = data;
+
+  const response = await axiosInstance.delete(`/comments/${commentId}`);
+
+  return response.data;
+};
+
+export const deleteReComment = async data => {
+  const {reCommentId} = data;
+
+  const response = await axiosInstance.delete(`/reComments/${reCommentId}`);
+
+  return response.data;
+};

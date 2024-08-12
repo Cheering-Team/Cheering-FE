@@ -139,19 +139,17 @@ const ProfileScreen = ({navigation, route}) => {
               borderColor: '#efefef',
               paddingBottom: 20,
             }}>
-            <View style={{flexDirection: 'row', padding: 22}}>
+            <View
+              style={{flexDirection: 'row', padding: 22, alignItems: 'center'}}>
               <Avatar uri={data.result.user.image} size={68} />
               <View style={{marginLeft: 15, marginTop: 3}}>
                 <CustomText fontWeight="500" style={{fontSize: 22}}>
                   {data.result.user.nickname}
                 </CustomText>
-                <CustomText fontWeight="300" style={{marginTop: 2}}>
-                  2 팔로워
-                </CustomText>
               </View>
             </View>
             <View style={{paddingHorizontal: 20}}>
-              {data.result.isUser ? (
+              {data.result.isUser && (
                 <Pressable
                   style={{
                     borderWidth: 1,
@@ -170,8 +168,6 @@ const ProfileScreen = ({navigation, route}) => {
                     프로필 편집
                   </CustomText>
                 </Pressable>
-              ) : (
-                <CustomButton type="normal" text="팔로우" />
               )}
             </View>
           </View>

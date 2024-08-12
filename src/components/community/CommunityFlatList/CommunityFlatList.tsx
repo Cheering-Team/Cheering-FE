@@ -58,7 +58,7 @@ const CommunityFlatList = forwardRef<FlatList<any>, CommunityFlatListProps>(
           isLoading ? [] : feedData?.pages.flatMap(page => page.result.posts)
         }
         renderItem={renderFeed}
-        contentContainerStyle={{paddingBottom: 30}}
+        contentContainerStyle={{paddingBottom: 50}}
         scrollEnabled={!!playerData.result.user || feedData?.pages.length === 0}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={

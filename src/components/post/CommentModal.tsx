@@ -381,6 +381,7 @@ const CommentModal = (props: CommentModalProps) => {
             }}
             renderItem={({item}) => (
               <Comment
+                postId={postId}
                 comment={item}
                 setCommentContent={setCommentContent}
                 setToComment={setToComment}
