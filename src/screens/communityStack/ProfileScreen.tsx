@@ -15,13 +15,11 @@ import {getPlayerUserInfo, getPlayerUserPosts} from '../../apis/player';
 import Avatar from '../../components/common/Avatar';
 import CustomText from '../../components/common/CustomText';
 import CustomButton from '../../components/common/CustomButton';
-import FeedPost from '../../components/category/community/FeedPost';
+import FeedPost from '../../components/community/FeedPost';
 import {useIsFocused} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChevronTopSvg from '../../../assets/images/chevron-top-black.svg';
-import OptionModal, {
-  closeModalHandle,
-} from '../../components/common/OptionModal';
+import OptionModal from '../../components/common/OptionModal';
 
 const ProfileScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;
@@ -29,7 +27,6 @@ const ProfileScreen = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const closeModalRef = useRef<closeModalHandle>(null);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef<FlatList<any>>(null);
@@ -142,19 +139,17 @@ const ProfileScreen = ({navigation, route}) => {
               borderColor: '#efefef',
               paddingBottom: 20,
             }}>
-            <View style={{flexDirection: 'row', padding: 22}}>
+            <View
+              style={{flexDirection: 'row', padding: 22, alignItems: 'center'}}>
               <Avatar uri={data.result.user.image} size={68} />
               <View style={{marginLeft: 15, marginTop: 3}}>
                 <CustomText fontWeight="500" style={{fontSize: 22}}>
                   {data.result.user.nickname}
                 </CustomText>
-                <CustomText fontWeight="300" style={{marginTop: 2}}>
-                  2 팔로워
-                </CustomText>
               </View>
             </View>
             <View style={{paddingHorizontal: 20}}>
-              {data.result.isUser ? (
+              {data.result.isUser && (
                 <Pressable
                   style={{
                     borderWidth: 1,
@@ -173,12 +168,16 @@ const ProfileScreen = ({navigation, route}) => {
                     프로필 편집
                   </CustomText>
                 </Pressable>
-              ) : (
-                <CustomButton type="normal" text="팔로우" />
               )}
             </View>
           </View>
         }
+        keyboardShouldPersistTaps="always"
+        ItemSeparatorComponent={() => (
+          <View
+            style={{backgroundColor: '#F0F2F5', height: 6, width: '100%'}}
+          />
+        )}
         data={feedData?.pages.flatMap(page => page.result.posts)}
         renderItem={({item}) => (
           <Pressable
@@ -262,13 +261,11 @@ const ProfileScreen = ({navigation, route}) => {
       </AnimatedPressable>
       {data.result.isUser && (
         <OptionModal
-          ref={closeModalRef}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           option1Text="커뮤니티 탈퇴"
           option1color="#fe6363"
           option1Press={() => {
-            closeModalRef.current?.closeModal();
             navigation.navigate('DeletePlayerUser', {
               playerUserId,
             });

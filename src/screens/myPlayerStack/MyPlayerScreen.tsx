@@ -7,16 +7,13 @@ import ChevronDownSvg from '../../../assets/images/chevron-down-black-thin.svg';
 import {CommonActions} from '@react-navigation/native';
 import CustomText from '../../components/common/CustomText';
 import Avatar from '../../components/common/Avatar';
-import OptionModal, {
-  closeModalHandle,
-} from '../../components/common/OptionModal';
+import OptionModal from '../../components/common/OptionModal';
 
 const MyPlayerScreen = ({navigation}) => {
   const isFocused = useIsFocused();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(0);
-  const closeModalRef = useRef<closeModalHandle>(null);
 
   const {data, isLoading, refetch} = useQuery({
     queryKey: ['my', 'players'],
@@ -116,12 +113,10 @@ const MyPlayerScreen = ({navigation}) => {
         }
       />
       <OptionModal
-        ref={closeModalRef}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         option1Text="내 프로필"
         option1Press={() => {
-          closeModalRef.current?.closeModal();
           navigation.navigate('CommunityStack', {
             screen: 'Profile',
             params: {playerUserId: data.result[selectedIdx].user.id},
@@ -130,7 +125,6 @@ const MyPlayerScreen = ({navigation}) => {
         option2Text="커뮤니티 탈퇴"
         option2color="#fe6363"
         option2Press={() => {
-          closeModalRef.current?.closeModal();
           navigation.navigate('CommunityStack', {
             screen: 'DeletePlayerUser',
             params: {playerUserId: data.result[selectedIdx].user.id},

@@ -11,7 +11,7 @@ import DeletePlayerUserScreen from '../screens/communityStack/DeletePlayerUserSc
 
 export type CommunityStackParamList = {
   Community: {playerId: number};
-  PostWrite: {playerId: number};
+  PostWrite: {playerId: number; feed?: any};
   Post: {postId: number; playerUser: PlayerUser};
   Profile: {playerUserId: number};
   ProfileEdit: {playerUserId: number};

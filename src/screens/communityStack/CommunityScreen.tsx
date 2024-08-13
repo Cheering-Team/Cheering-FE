@@ -1,141 +1,56 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {
-  Animated,
-  Pressable,
-  View,
-  Keyboard,
-  Dimensions,
-  PanResponder,
-} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Animated, View, Dimensions} from 'react-native';
 import {FlatList as FlatListType} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useQuery} from '@tanstack/react-query';
 import {getPlayersInfo} from '../../apis/player';
-import ChevronTopSvg from '../../../assets/images/chevron-top-black.svg';
-import PencilSvg from '../../../assets/images/pencil.svg';
-import JoinModal from '../../components/category/community/JoinModal';
-import CommunityFlatList from '../../components/category/community/CommunityFlatList/CommunityFlatList';
+import JoinModal from '../../components/community/JoinModal/JoinModal';
+import CommunityFlatList from '../../components/community/CommunityFlatList/CommunityFlatList';
+import CommunityHeader from '../../components/community/CommunityHeader';
+import CommunityTopTab from '../../components/community/CommunityTopTab';
+
+import {RouteProp} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CommunityStackParamList} from '../../navigations/CommunityStackNavigator';
+import FloatButton from '../../components/community/FloatButton/FloatButton';
+import {WINDOW_HEIGHT} from '../../constants/dimension';
 CommunityFlatList;
 
-const CommunityScreen = ({navigation, route}) => {
+export type CommunityScreenNavigationProp = NativeStackNavigationProp<
+  CommunityStackParamList,
+  'Community'
+>;
+
+type CommunityScreenRouteProp = RouteProp<CommunityStackParamList, 'Community'>;
+
+const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
+  const {playerId} = route.params;
   const insets = useSafeAreaInsets();
 
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isTabVisible, setIsTabVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isToTop, setIsToTop] = useState(true);
+  const [curTab, setCurTab] = useState<string>('피드');
 
-  const [resetTarget, setResetTaget] = useState(0);
-
-  const playerId = route.params.playerId;
-
-  const screenHeight = Dimensions.get('screen').height;
-  const panY = useRef(new Animated.Value(screenHeight)).current;
-
-  const translateY = panY.interpolate({
-    inputRange: [-1, 0, 1],
-    outputRange: [-1, 0, 1],
-  });
-
-  const resetBottomSheet = Animated.timing(panY, {
-    toValue: resetTarget,
-    duration: 300,
-    useNativeDriver: true,
-  });
-
-  const closeBottomSheet = Animated.timing(panY, {
-    toValue: screenHeight,
-    duration: 300,
-    useNativeDriver: true,
-  });
-
-  const panResponders = useMemo(
-    () =>
-      PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
-        onMoveShouldSetPanResponder: () => false,
-        onPanResponderMove: (event, gestureState) => {
-          if (gestureState.dy > 0) {
-            panY.setValue(gestureState.dy + resetTarget);
-          }
-        },
-        onPanResponderRelease: (event, gestureState) => {
-          if (gestureState.dy > 0 && gestureState.vy > 1.3) {
-            closeModal();
-          } else {
-            resetBottomSheet.start();
-          }
-        },
-      }),
-    [resetTarget],
-  );
-
-  useEffect(() => {
-    if (isModalOpen) {
-      resetBottomSheet.start();
-    }
-  }, [isModalOpen]);
-
-  const closeModal = () => {
-    closeBottomSheet.start(() => {
-      setIsModalOpen(false);
-    });
-  };
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scrollTimeout = useRef(setTimeout(() => {}));
+  const flatListRef = useRef<FlatListType<any>>(null);
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   const {data: playerData, isLoading: playerIsLoading} = useQuery({
     queryKey: ['player', playerId, refreshKey],
     queryFn: getPlayersInfo,
   });
 
-  useEffect(() => {
-    if (resetTarget === 0 && isModalOpen) {
-      resetBottomSheet.start();
-    }
-  }, [resetTarget]);
-
-  const keyboardDidShow = useCallback(
-    e => {
-      Animated.timing(panY, {
-        toValue: -e.endCoordinates.height,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        setResetTaget(-e.endCoordinates.height);
-      });
-    },
-    [panY],
-  );
-
-  const keyboardDidHide = useCallback(e => {
-    setResetTaget(0);
-  }, []);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardWillShow',
-      keyboardDidShow,
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardWillHide',
-      keyboardDidHide,
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, [keyboardDidShow, keyboardDidHide]);
-
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scrollTimeout = useRef(null);
-  const flatListRef = useRef<FlatListType<any>>(null);
-
   const handleScrollBeginDrag = () => {
     if (scrollTimeout.current) {
       clearTimeout(scrollTimeout.current);
     }
-
+    setIsToTop(true);
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 300,
+      duration: 250,
       useNativeDriver: true,
     }).start();
   };
@@ -144,101 +59,72 @@ const CommunityScreen = ({navigation, route}) => {
     scrollTimeout.current = setTimeout(() => {
       Animated.timing(fadeAnim, {
         toValue: 0,
-        duration: 300,
+        duration: 250,
         useNativeDriver: true,
-      }).start();
-    }, 1700);
+      }).start(() => setIsToTop(false));
+    }, 1000);
   };
 
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+  useEffect(() => {
+    const listenerId = scrollY.addListener(({value}) => {
+      if (
+        value >= Dimensions.get('window').height / 2.25 - insets.top - 50 &&
+        !isTabVisible
+      ) {
+        setIsTabVisible(true);
+      } else if (
+        value < Dimensions.get('window').height / 2.25 - insets.top - 50 &&
+        isTabVisible
+      ) {
+        setIsTabVisible(false);
+      }
+    });
+
+    return () => {
+      scrollY.removeListener(listenerId);
+    };
+  }, [scrollY, isTabVisible, insets.top]);
 
   if (playerIsLoading) {
-    return <></>;
+    return null;
   }
-
   return (
-    <>
-      <View key={refreshKey} style={{flex: 1, paddingBottom: insets.bottom}}>
-        <CommunityFlatList
-          ref={flatListRef}
-          playerData={playerData}
-          playerId={playerId}
-          setIsModalOpen={setIsModalOpen}
-          handleScrollBeginDrag={handleScrollBeginDrag}
-          handleScrollEndDrag={handleScrollEndDrag}
+    <View key={refreshKey} style={{flex: 1, paddingBottom: insets.bottom}}>
+      <CommunityHeader playerData={playerData} scrollY={scrollY} />
+      {isTabVisible && (
+        <CommunityTopTab
+          type="absolute"
+          scrollY={scrollY}
+          curTab={curTab}
+          setCurTab={setCurTab}
         />
-        <JoinModal
-          playerId={playerId}
-          playerData={playerData}
-          panResponders={panResponders}
-          isModalOpen={isModalOpen}
-          closeModal={closeModal}
-          translateY={translateY}
-          setRefreshKey={setRefreshKey}
-        />
-      </View>
-      {playerData.result.user && (
-        <View
-          style={{
-            alignItems: 'center',
-            position: 'absolute',
-            bottom: insets.bottom + 67,
-            right: 17,
-          }}>
-          <AnimatedPressable
-            style={[
-              {
-                borderRadius: 100,
-                width: 48,
-                height: 48,
-                marginBottom: 12,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'white',
-                shadowColor: '#bdbdbd',
-                shadowOffset: {width: 1, height: 2},
-                shadowOpacity: 0.7,
-                shadowRadius: 3,
-                elevation: 5,
-              },
-              {opacity: fadeAnim},
-            ]}
-            onPress={() => {
-              if (flatListRef.current) {
-                flatListRef.current.scrollToOffset({offset: 0, animated: true});
-              }
-            }}>
-            <ChevronTopSvg width={25} height={25} />
-          </AnimatedPressable>
-
-          <View
-            style={{
-              borderRadius: 100,
-              backgroundColor: 'white',
-              shadowColor: '#999999',
-              shadowOffset: {width: 1, height: 2},
-              shadowOpacity: 0.9,
-              shadowRadius: 3,
-              elevation: 5,
-            }}>
-            <Pressable
-              style={{
-                width: 50,
-                height: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#282828',
-                borderRadius: 100,
-              }}
-              onPress={() => {
-                navigation.navigate('PostWrite', {playerId});
-              }}>
-              <PencilSvg width={25} height={25} />
-            </Pressable>
-          </View>
-        </View>
       )}
-    </>
+      <CommunityFlatList
+        ref={flatListRef}
+        playerData={playerData}
+        handleScrollBeginDrag={handleScrollBeginDrag}
+        handleScrollEndDrag={handleScrollEndDrag}
+        setIsModalOpen={setIsModalOpen}
+        scrollY={scrollY}
+        curTab={curTab}
+        setCurTab={setCurTab}
+      />
+      <JoinModal
+        playerData={playerData}
+        isModalOpen={isModalOpen}
+        setRefreshKey={setRefreshKey}
+        setIsModalOpen={setIsModalOpen}
+      />
+      {playerData.result.user && (
+        <FloatButton
+          playerId={playerData.result.id}
+          fadeAnim={fadeAnim}
+          flatListRef={flatListRef}
+          isToTop={isToTop}
+          offset={WINDOW_HEIGHT / 2.25 - insets.top - 50}
+        />
+      )}
+    </View>
   );
 };
 

@@ -54,7 +54,7 @@ const SetNickNameScreen = ({
           type: 'default',
           position: 'top',
           visibilityTime: 3000,
-          bottomOffset: insets.top + 20,
+          topOffset: insets.top + 20,
           text1: '회원가입이 완료되었습니다.',
         });
 

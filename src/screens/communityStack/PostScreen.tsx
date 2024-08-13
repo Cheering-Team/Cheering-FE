@@ -15,11 +15,11 @@ import HeartSvg from '../../../assets/images/heart.svg';
 import HeartFillSvg from '../../../assets/images/heart_fill.svg';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {getPostById, postPostsLikes} from '../../apis/post';
-import PostWriter from '../../components/category/post/PostWriter';
+import PostWriter from '../../components/post/PostWriter';
 import ImageView from 'react-native-image-viewing';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
-import CommentModal from '../../components/category/post/CommentModal';
+import CommentModal from '../../components/post/CommentModal';
 import Toast from 'react-native-toast-message';
 import CustomText from '../../components/common/CustomText';
 import Avatar from '../../components/common/Avatar';
@@ -195,9 +195,12 @@ const PostScreen = ({navigation, route}) => {
           {/* 작성자 */}
           <View style={{paddingHorizontal: 15, marginTop: 15}}>
             <PostWriter
-              writer={data.result.post.writer}
+              feed={data.result.post}
               createdAt={data.result.post.createdAt}
               playerUserId={data.result.post.writer.id}
+              isWriter={
+                data.result.post.playerUser.id === data.result.post.writer.id
+              }
             />
             <CustomText
               style={{

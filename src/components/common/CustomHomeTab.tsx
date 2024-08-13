@@ -2,7 +2,8 @@ import React, {useEffect} from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import CategoryGraySvg from '../../../assets/images/category-gray.svg';
 import CategorBlackSvg from '../../../assets/images/category-black.svg';
-import HomeSvg from '../../../assets/images/home_white.svg';
+import HomeGraySvg from '../../../assets/images/home-gray.svg';
+import HomeBlackSvg from '../../../assets/images/home-black.svg';
 import HomeBackGraySvg from '../../../assets/images/home-back-gray.svg';
 import StarGraySvg from '../../../assets/images/star-gray.svg';
 import StarBlackSvg from '../../../assets/images/star-black.svg';
@@ -83,113 +84,123 @@ function CustomTabBar({state, descriptors, navigation}) {
             });
           };
 
-          if (index === 2) {
-            return (
-              <Pressable
-                key={index}
-                accessibilityRole="button"
-                accessibilityState={isFocused ? {selected: true} : {}}
-                accessibilityLabel={options.tabBarAccessibilityLabel}
-                testID={options.tabBarTestID}
-                onPress={onPress}
-                onLongPress={onLongPress}
-                style={styles.Tab}>
-                {isFocused ? (
-                  <View style={styles.HomeTabFocused}>
-                    <HomeSvg width={30} height={30} />
-                  </View>
-                ) : (
-                  <View style={styles.HomeTab}>
-                    <HomeBackGraySvg width={30} height={30} />
-                  </View>
-                )}
-              </Pressable>
-            );
-          } else {
-            return (
-              // gray: B7B7B7
-              // black: 323232
-              <Pressable
-                key={index}
-                accessibilityRole="button"
-                accessibilityState={isFocused ? {selected: true} : {}}
-                accessibilityLabel={options.tabBarAccessibilityLabel}
-                testID={options.tabBarTestID}
-                onPress={onPress}
-                onLongPress={onLongPress}
-                style={styles.Tab}>
-                {index === 0 ? (
-                  isFocused ? (
-                    <>
-                      <CategorBlackSvg width={20} height={20} />
-                      <CustomText
-                        fontWeight="600"
-                        style={styles.TabLabelFocused}>
-                        카테고리
-                      </CustomText>
-                    </>
-                  ) : (
-                    <>
-                      <CategoryGraySvg width={20} height={20} />
-                      <CustomText fontWeight="600" style={styles.TabLabel}>
-                        카테고리
-                      </CustomText>
-                    </>
-                  )
-                ) : index === 1 ? (
-                  isFocused ? (
-                    <>
-                      <StarBlackSvg width={20} height={20} />
-                      <CustomText
-                        fontWeight="600"
-                        style={styles.TabLabelFocused}>
-                        내 선수
-                      </CustomText>
-                    </>
-                  ) : (
-                    <>
-                      <StarGraySvg width={20} height={20} />
-                      <CustomText fontWeight="600" style={styles.TabLabel}>
-                        내 선수
-                      </CustomText>
-                    </>
-                  )
-                ) : index === 3 ? (
-                  isFocused ? (
-                    <>
-                      <ChatBlackSvg width={20} height={20} />
-                      <CustomText
-                        fontWeight="600"
-                        style={styles.TabLabelFocused}>
-                        채팅
-                      </CustomText>
-                    </>
-                  ) : (
-                    <>
-                      <ChatGraySvg width={20} height={20} />
-                      <CustomText fontWeight="600" style={styles.TabLabel}>
-                        채팅
-                      </CustomText>
-                    </>
-                  )
-                ) : isFocused ? (
+          // if (index === 2) {
+          //   return (
+          //     <Pressable
+          //       key={index}
+          //       accessibilityRole="button"
+          //       accessibilityState={isFocused ? {selected: true} : {}}
+          //       accessibilityLabel={options.tabBarAccessibilityLabel}
+          //       testID={options.tabBarTestID}
+          //       onPress={onPress}
+          //       onLongPress={onLongPress}
+          //       style={styles.Tab}>
+          //       {isFocused ? (
+          //         <View style={styles.HomeTabFocused}>
+          //           <HomeSvg width={30} height={30} />
+          //         </View>
+          //       ) : (
+          //         <View style={styles.HomeTab}>
+          //           <HomeBackGraySvg width={30} height={30} />
+          //         </View>
+          //       )}
+          //     </Pressable>
+          //   );
+          // } else {
+          return (
+            // gray: B7B7B7
+            // black: 323232
+            <Pressable
+              key={index}
+              accessibilityRole="button"
+              accessibilityState={isFocused ? {selected: true} : {}}
+              accessibilityLabel={options.tabBarAccessibilityLabel}
+              testID={options.tabBarTestID}
+              onPress={onPress}
+              onLongPress={onLongPress}
+              style={styles.Tab}>
+              {index === 0 ? (
+                isFocused ? (
                   <>
-                    <MoreBlackSvg width={20} height={20} />
+                    <CategorBlackSvg width={20} height={20} />
                     <CustomText fontWeight="600" style={styles.TabLabelFocused}>
-                      더보기
+                      카테고리
                     </CustomText>
                   </>
                 ) : (
                   <>
-                    <MoreGraySvg width={20} height={20} />
+                    <CategoryGraySvg width={20} height={20} />
                     <CustomText fontWeight="600" style={styles.TabLabel}>
-                      더보기
+                      카테고리
                     </CustomText>
                   </>
-                )}
-              </Pressable>
-            );
-          }
+                )
+              ) : index === 1 ? (
+                isFocused ? (
+                  <>
+                    <StarBlackSvg width={20} height={20} />
+                    <CustomText fontWeight="600" style={styles.TabLabelFocused}>
+                      내 선수
+                    </CustomText>
+                  </>
+                ) : (
+                  <>
+                    <StarGraySvg width={20} height={20} />
+                    <CustomText fontWeight="600" style={styles.TabLabel}>
+                      내 선수
+                    </CustomText>
+                  </>
+                )
+              ) : index === 2 ? (
+                isFocused ? (
+                  <>
+                    <HomeBlackSvg width={20} height={20} />
+                    <CustomText fontWeight="600" style={styles.TabLabelFocused}>
+                      홈
+                    </CustomText>
+                  </>
+                ) : (
+                  <>
+                    <HomeGraySvg width={20} height={20} />
+                    <CustomText fontWeight="600" style={styles.TabLabel}>
+                      홈
+                    </CustomText>
+                  </>
+                )
+              ) : index === 3 ? (
+                isFocused ? (
+                  <>
+                    <ChatBlackSvg width={20} height={20} />
+                    <CustomText fontWeight="600" style={styles.TabLabelFocused}>
+                      채팅
+                    </CustomText>
+                  </>
+                ) : (
+                  <>
+                    <ChatGraySvg width={20} height={20} />
+                    <CustomText fontWeight="600" style={styles.TabLabel}>
+                      채팅
+                    </CustomText>
+                  </>
+                )
+              ) : isFocused ? (
+                <>
+                  <MoreBlackSvg width={20} height={20} />
+                  <CustomText fontWeight="600" style={styles.TabLabelFocused}>
+                    더보기
+                  </CustomText>
+                </>
+              ) : (
+                <>
+                  <MoreGraySvg width={20} height={20} />
+                  <CustomText fontWeight="600" style={styles.TabLabel}>
+                    더보기
+                  </CustomText>
+                </>
+              )}
+            </Pressable>
+          );
+          // }
         })}
       </View>
     </>
@@ -223,7 +234,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 37,
     position: 'absolute',
-    top: -20,
+    top: -15,
     shadowColor: '#B7B7B7',
     shadowRadius: 5,
     shadowOffset: {height: 10, width: 0},
@@ -240,7 +251,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 37,
     position: 'absolute',
-    top: -20,
+    top: -15,
     shadowColor: '#58a04b',
     shadowRadius: 5,
     shadowOffset: {height: 10, width: 0},
