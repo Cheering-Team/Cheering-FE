@@ -27,6 +27,8 @@ end
 
 target 'Cheering' do
   config = use_native_modules!
+  
+  pod 'GoogleUtilities', :modular_headers => true
 
   use_react_native!(
     :path => config[:reactNativePath],
