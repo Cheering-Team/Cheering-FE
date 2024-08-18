@@ -129,10 +129,6 @@ const PostWriteScreen = ({
   };
 
   useEffect(() => {
-    console.log(imageData);
-  }, [imageData]);
-
-  useEffect(() => {
     if (feed) {
       setContent(feed.content);
 

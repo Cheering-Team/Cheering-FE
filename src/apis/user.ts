@@ -1,16 +1,16 @@
 import {axiosInstance} from '.';
 
-export interface User {
-  id: number;
-  phone: string;
-  nickname: string;
-}
-
 interface postPhoneSMSRequest {
   phone: string;
 }
 
 interface postPhoneCodeRequest {
+  phone: string;
+  code: string;
+}
+
+interface postKakaoPhoneCodeRequest {
+  accessToken: string;
   phone: string;
   code: string;
 }
@@ -22,6 +22,15 @@ interface postSignupRequest {
 
 interface updateUserNikcnameRequest {
   nickname: string;
+}
+
+interface siginWithKakaoRequest {
+  accessToken: string;
+}
+
+interface postConnectKakaoRequest {
+  accessToken: string;
+  userId: number;
 }
 
 export const getTest = async () => {
@@ -70,6 +79,31 @@ export const updateUserNickname = async (data: updateUserNikcnameRequest) => {
 
 export const deleteUser = async () => {
   const response = await axiosInstance.delete('/users');
+  return response.data;
+};
 
+export const siginWithKakao = async (data: siginWithKakaoRequest) => {
+  const {accessToken} = data;
+  const response = await axiosInstance.post(
+    `/signin/kakao?accessToken=${accessToken}`,
+  );
+  return response.data;
+};
+
+export const postKakaoPhoneCode = async (data: postKakaoPhoneCodeRequest) => {
+  const {accessToken, phone, code} = data;
+  const response = await axiosInstance.post(
+    `/phone/code/kakao?accessToken=${accessToken}`,
+    {phone, code},
+  );
+  return response.data;
+};
+
+export const connectKakao = async (data: postConnectKakaoRequest) => {
+  const {accessToken, userId} = data;
+  const response = await axiosInstance.post(
+    `/connect/kakao?accessToken=${accessToken}`,
+    {userId},
+  );
   return response.data;
 };

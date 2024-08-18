@@ -2,19 +2,18 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import IntroScreen from '../screens/auth/IntroScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
-import PhoneCodeScreen from '../screens/auth/PhoneCodeScreen';
-import {User} from '../apis/user';
 import SetNickNameScreen from '../screens/auth/SetNicknameScreen';
 import CustomText from '../components/common/CustomText';
+import PhoneVerifyScreen from '../screens/auth/PhoneVerifyScreen';
+import SocialConnectScreen from '../screens/auth/SocialConnectScreen';
+import {User} from '../types/user';
 
 export type AuthStackParamList = {
-  Splash: undefined;
   Intro: undefined;
   SignIn: undefined;
-  PhoneCode: {user: User | null; phone: string};
   SetNickname: {phone: string};
-  SetPassword: {email: string};
-  SignUpComplete: {access: string; refresh: string};
+  PhoneVerify: {accessToken: string};
+  SocialConnect: {accessToken: string; user: User};
 };
 
 const AuthStack = () => {
@@ -50,8 +49,8 @@ const AuthStack = () => {
         }}
       />
       <Stack.Screen
-        name="PhoneCode"
-        component={PhoneCodeScreen}
+        name="SetNickname"
+        component={SetNickNameScreen}
         options={{
           headerTitle: () => (
             <CustomText
@@ -72,8 +71,30 @@ const AuthStack = () => {
         }}
       />
       <Stack.Screen
-        name="SetNickname"
-        component={SetNickNameScreen}
+        name="PhoneVerify"
+        component={PhoneVerifyScreen}
+        options={{
+          headerTitle: () => (
+            <CustomText
+              fontWeight="700"
+              style={{
+                fontSize: 30,
+                letterSpacing: 1.1,
+              }}>
+              cheering
+            </CustomText>
+          ),
+          contentStyle: {
+            borderBottomWidth: 0,
+          },
+          headerTitleAlign: 'center',
+          headerBackVisible: false,
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="SocialConnect"
+        component={SocialConnectScreen}
         options={{
           headerTitle: () => (
             <CustomText

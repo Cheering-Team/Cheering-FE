@@ -70,6 +70,7 @@ const SetNickNameScreen = ({
       keyboardVerticalOffset={62}>
       <KeyboardAwareScrollView
         enableOnAndroid
+        keyboardShouldPersistTaps="handled"
         extraScrollHeight={-200}
         style={{flex: 1, padding: 20}}>
         <CustomText fontWeight="600" style={styles.signInTitle}>
@@ -94,12 +95,14 @@ const SetNickNameScreen = ({
           }}
           containerStyle={{marginTop: 10}}
         />
+        <CustomButton
+          type="normal"
+          text={'시작하기'}
+          disabled={nickname.length < 2}
+          onPress={handleSignUp}
+          style={{marginTop: 15}}
+        />
       </KeyboardAwareScrollView>
-      <CustomButton
-        text={'시작하기'}
-        disabled={nickname.length < 2}
-        onPress={handleSignUp}
-      />
     </KeyboardAvoidingView>
   );
 };

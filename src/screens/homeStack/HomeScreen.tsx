@@ -7,6 +7,7 @@ import HomeHeader from '../../components/home/HomeHeader/HomeHeader';
 import HomeTopTab from '../../components/home/HomeTopTab/HomeTopTab';
 import HomeFlatList from '../../components/home/HomeFlatList/HomeFlatList';
 import FloatButton from '../../components/community/FloatButton/FloatButton';
+import messaging from '@react-native-firebase/messaging';
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
