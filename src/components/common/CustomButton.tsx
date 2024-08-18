@@ -14,6 +14,7 @@ interface CustomButtonProps extends PressableProps {
   type?: 'normal' | 'bottom';
   disabled?: boolean;
   isLoading?: boolean;
+  style?: any;
 }
 
 const CustomButton = (props: CustomButtonProps) => {
@@ -22,6 +23,7 @@ const CustomButton = (props: CustomButtonProps) => {
     type = 'bottom',
     disabled = false,
     isLoading = false,
+    style,
     ...rest
   } = props;
 
@@ -55,7 +57,8 @@ const CustomButton = (props: CustomButtonProps) => {
               paddingBottom: bottomHeight,
               height: bottomHeight + 55,
             }
-          : {padding: 10, borderRadius: 5},
+          : {padding: 10, borderRadius: 5, height: 50},
+        style,
       ]}>
       <Pressable
         disabled={disabled || isLoading}

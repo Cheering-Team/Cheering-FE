@@ -12,8 +12,14 @@ type IntroScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 const IntroScreen = ({navigation}: {navigation: IntroScreenNavigationProp}) => {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={[styles.main, {paddingTop: useSafeAreaInsets().top + 20}]}>
+    <View
+      style={[
+        styles.main,
+        {paddingTop: insets.top + 20, paddingBottom: insets.bottom + 15},
+      ]}>
       <View>
         <CustomText style={styles.headerText} fontWeight="600">
           언제 어디서든
@@ -24,6 +30,7 @@ const IntroScreen = ({navigation}: {navigation: IntroScreenNavigationProp}) => {
       </View>
       <CustomButton
         text="시작하기"
+        type="normal"
         onPress={() => {
           navigation.navigate('SignIn');
         }}
@@ -38,6 +45,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: 'white',
+    paddingHorizontal: 15,
   },
   headerText: {
     textAlign: 'center',

@@ -25,21 +25,6 @@ const HomeScreen = () => {
     queryFn: getMyPlayers,
   });
 
-  // const requestUserPermission = async () => {
-  //   const authStatus = await messaging().requestPermission();
-  //   const enabled =
-  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-  //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-  //   if (enabled) {
-  //     console.log(authStatus);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   requestUserPermission();
-  // }, []);
-
   const handleScrollBeginDrag = () => {
     if (scrollTimeout.current) {
       clearTimeout(scrollTimeout.current);

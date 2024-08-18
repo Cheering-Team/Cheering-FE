@@ -14,6 +14,7 @@
 		615C06FBD1091465327552ED /* libPods-Cheering.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 117C6F74C31D997424F79DCF /* libPods-Cheering.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		F519A39DE7F12809E587C4E7 /* libPods-Cheering-CheeringTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CB103802AB966025AF8ABAD0 /* libPods-Cheering-CheeringTests.a */; };
+		F70E37392C7104C700900D88 /* SwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70E37382C7104C700900D88 /* SwiftBridge.swift */; };
 		F78DA8652B625C640085C6E4 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = F78DA8642B625C640085C6E4 /* Fonts */; };
 		F79C52D32C6CE55B00973EBD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F79C52D22C6CE55B00973EBD /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
@@ -46,6 +47,8 @@
 		CB103802AB966025AF8ABAD0 /* libPods-Cheering-CheeringTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Cheering-CheeringTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE365BCF3581BBA2E7493084 /* Pods-Cheering-CheeringTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cheering-CheeringTests.debug.xcconfig"; path = "Target Support Files/Pods-Cheering-CheeringTests/Pods-Cheering-CheeringTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F70E37372C7104C600900D88 /* Cheering-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cheering-Bridging-Header.h"; sourceTree = "<group>"; };
+		F70E37382C7104C700900D88 /* SwiftBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBridge.swift; sourceTree = "<group>"; };
 		F78DA8642B625C640085C6E4 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		F79C52D22C6CE55B00973EBD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -128,6 +131,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				F70E37382C7104C700900D88 /* SwiftBridge.swift */,
 				F78DA8642B625C640085C6E4 /* Fonts */,
 				13B07FAE1A68108700A75B9A /* Cheering */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -136,6 +140,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				5113B38BDED94FDBBC515651 /* Resources */,
+				F70E37372C7104C600900D88 /* Cheering-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -222,7 +227,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1520;
 					};
 				};
 			};
@@ -427,6 +432,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				F70E37392C7104C700900D88 /* SwiftBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,6 +451,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE365BCF3581BBA2E7493084 /* Pods-Cheering-CheeringTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = U2QA72Q6BP;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -473,6 +480,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 91ABDDED432AC09611B5C83D /* Pods-Cheering-CheeringTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = U2QA72Q6BP;
@@ -517,6 +525,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Cheering;
+				SWIFT_OBJC_BRIDGING_HEADER = "Cheering-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -545,6 +554,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Cheering;
+				SWIFT_OBJC_BRIDGING_HEADER = "Cheering-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
