@@ -2179,6 +2179,13 @@
   dependencies:
     dooboolab-welcome "^1.3.2"
 
+"@react-native-seoul/naver-login@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/@react-native-seoul/naver-login/-/naver-login-4.0.1.tgz"
+  integrity sha512-EHA/aW0cn/O2ypeTus2DRE2+R1vcHmhiVHGNMeIBGueM+SvCZxtNyEIacVE7zGve0gkScZbeihlNUm0CfPnGIQ==
+  dependencies:
+    dooboolab-welcome "^1.3.2"
+
 "@react-native/assets-registry@^0.73.1":
   version "0.73.1"
   resolved "https://registry.npmjs.org/@react-native/assets-registry/-/assets-registry-0.73.1.tgz"

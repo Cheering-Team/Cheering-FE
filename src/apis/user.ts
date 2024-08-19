@@ -24,12 +24,13 @@ interface updateUserNikcnameRequest {
   nickname: string;
 }
 
-interface siginWithKakaoRequest {
+interface siginWithSocialRequest {
   accessToken: string;
 }
 
-interface postConnectKakaoRequest {
+interface postConnectRequest {
   accessToken: string;
+  type: 'kakao' | 'naver';
   userId: number;
 }
 
@@ -82,10 +83,18 @@ export const deleteUser = async () => {
   return response.data;
 };
 
-export const siginWithKakao = async (data: siginWithKakaoRequest) => {
+export const siginWithKakao = async (data: siginWithSocialRequest) => {
   const {accessToken} = data;
   const response = await axiosInstance.post(
-    `/signin/kakao?accessToken=${accessToken}`,
+    `/signin/kakao?accessToken=${encodeURIComponent(accessToken)}`,
+  );
+  return response.data;
+};
+
+export const siginWithNaver = async (data: siginWithSocialRequest) => {
+  const {accessToken} = data;
+  const response = await axiosInstance.post(
+    `/signin/naver?accessToken=${encodeURIComponent(accessToken)}`,
   );
   return response.data;
 };
@@ -93,16 +102,16 @@ export const siginWithKakao = async (data: siginWithKakaoRequest) => {
 export const postKakaoPhoneCode = async (data: postKakaoPhoneCodeRequest) => {
   const {accessToken, phone, code} = data;
   const response = await axiosInstance.post(
-    `/phone/code/kakao?accessToken=${accessToken}`,
+    `/phone/code/kakao?accessToken=${encodeURIComponent(accessToken)}`,
     {phone, code},
   );
   return response.data;
 };
 
-export const connectKakao = async (data: postConnectKakaoRequest) => {
-  const {accessToken, userId} = data;
+export const postConnect = async (data: postConnectRequest) => {
+  const {accessToken, type, userId} = data;
   const response = await axiosInstance.post(
-    `/connect/kakao?accessToken=${accessToken}`,
+    `/connect?accessToken=${encodeURIComponent(accessToken)}&type=${type}`,
     {userId},
   );
   return response.data;
