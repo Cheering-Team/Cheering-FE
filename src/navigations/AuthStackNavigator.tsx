@@ -13,7 +13,7 @@ export type AuthStackParamList = {
   SignIn: undefined;
   SetNickname: {phone: string};
   PhoneVerify: {accessToken: string};
-  SocialConnect: {accessToken: string; user: User};
+  SocialConnect: {accessToken: string; user: User; type: 'kakao' | 'naver'};
 };
 
 const AuthStack = () => {

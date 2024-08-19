@@ -11,6 +11,7 @@ import {
   postPhoneSMS,
   postSignin,
   siginWithKakao,
+  siginWithNaver,
 } from '../../apis/user';
 import {useMutation} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
@@ -24,6 +25,7 @@ import NaverSvg from '../../../assets/images/naver.svg';
 import GoogleSvg from '../../../assets/images/google.svg';
 import {User} from '../../types/user';
 import {AuthContext} from '../../navigations/AuthSwitch';
+import NaverLogin from '@react-native-seoul/naver-login';
 
 type SignInScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -51,6 +53,7 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
 
   const sendMutation = useMutation({mutationFn: postPhoneSMS});
   const kakaoMutation = useMutation({mutationFn: siginWithKakao});
+  const naverMutation = useMutation({mutationFn: siginWithNaver});
   const signinMutation = useMutation({mutationFn: postSignin});
   const codeMutation = useMutation({mutationFn: postPhoneCode});
 
@@ -178,6 +181,37 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
       }
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const siginInWithNaver = async () => {
+    const token = await NaverLogin.login();
+
+    if (token.isSuccess) {
+      const data = await naverMutation.mutateAsync({
+        accessToken: token.successResponse!.accessToken,
+      });
+
+      if (data.message === '이미 가입된 유저입니다.') {
+        navigation.replace('SocialConnect', {
+          accessToken: token.successResponse!.accessToken,
+          user: data.result,
+          type: 'naver',
+        });
+      } else if (data.message === '회원가입되었습니다.') {
+        const {accessToken: sessionToken, refreshToken} = data.result;
+
+        Toast.show({
+          type: 'default',
+          position: 'top',
+          visibilityTime: 3000,
+          topOffset: insets.top + 20,
+          text1: '회원가입되었습니다.',
+        });
+
+        signIn?.(sessionToken, refreshToken);
+        return;
+      }
     }
   };
 
@@ -350,7 +384,8 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
           paddingHorizontal: 17,
           borderRadius: 5,
           marginTop: 20,
-        }}>
+        }}
+        onPress={siginInWithNaver}>
         <NaverSvg width={17} height={17} />
         <CustomText
           fontWeight="500"
@@ -363,7 +398,7 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
           네이버로 시작하기
         </CustomText>
       </Pressable>
-      <Pressable
+      {/* <Pressable
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -385,7 +420,7 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
           }}>
           구글로 시작하기
         </CustomText>
-      </Pressable>
+      </Pressable> */}
     </KeyboardAwareScrollView>
   );
 }

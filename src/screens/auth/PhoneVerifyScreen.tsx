@@ -85,8 +85,11 @@ const PhoneVerifyScreen = ({navigation, route}) => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
-      navigation.replace('SocialConnect', {accessToken, user: data.result});
-      return;
+      navigation.replace('SocialConnect', {
+        accessToken,
+        user: data.result,
+        type: 'kakao',
+      });
     } else if (data.message === '회원가입되었습니다.') {
       const {accessToken: sessionToken, refreshToken} = data.result;
 
