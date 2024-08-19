@@ -41,6 +41,7 @@ const PhoneVerifyScreen = ({navigation, route}) => {
         const data = await sendMutation.mutateAsync({phone});
         if (data.message === '인증번호가 전송되었습니다.') {
           setStatus('code');
+          setLimitTime(300);
           Toast.show({
             type: 'default',
             position: 'top',
@@ -85,6 +86,7 @@ const PhoneVerifyScreen = ({navigation, route}) => {
         clearInterval(timerRef.current);
       }
       navigation.replace('SocialConnect', {accessToken, user: data.result});
+      return;
     } else if (data.message === '회원가입되었습니다.') {
       const {accessToken: sessionToken, refreshToken} = data.result;
 
@@ -98,6 +100,19 @@ const PhoneVerifyScreen = ({navigation, route}) => {
 
       signIn?.(sessionToken, refreshToken);
       return;
+    }
+    if (data.message === '인증코드가 일치하지 않습니다.') {
+      setCodeValid(false);
+      return;
+    } else if (data.message === '인증코드가 만료되었습니다.') {
+      Toast.show({
+        type: 'default',
+        position: 'top',
+        visibilityTime: 3000,
+        topOffset: insets.top + 20,
+        text1: '인증번호가 만료되었습니다.',
+      });
+      setStatus('phone');
     }
   };
 
@@ -164,7 +179,9 @@ const PhoneVerifyScreen = ({navigation, route}) => {
         maxLength={11}
         onChangeText={e => {
           setPhoneValid('valid');
+          setCodeValid(true);
           setStatus('phone');
+          setCode('');
           setPhone(e);
         }}
         style={{marginTop: 20}}
