@@ -61,21 +61,20 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
     if (!PHONE_REGEX.test(phone)) {
       setPhoneValid('invalid');
     } else {
-      try {
-        const data = await sendMutation.mutateAsync({phone});
-        if (data.message === '인증번호가 전송되었습니다.') {
-          setStatus('code');
-          setUser(data.result);
-          Toast.show({
-            type: 'default',
-            position: 'top',
-            visibilityTime: 3000,
-            topOffset: insets.top + 20,
-            text1: '인증번호가 전송되었습니다.',
-          });
-          customTextInputRef.current?.focus();
-        }
-      } catch (error) {}
+      const data = await sendMutation.mutateAsync({phone});
+      if (data.message === '인증번호가 전송되었습니다.') {
+        setLimitTime(300);
+        setStatus('code');
+        setUser(data.result);
+        Toast.show({
+          type: 'default',
+          position: 'top',
+          visibilityTime: 3000,
+          topOffset: insets.top + 20,
+          text1: '인증번호가 전송되었습니다.',
+        });
+        customTextInputRef.current?.focus();
+      }
     }
   };
 
@@ -131,24 +130,23 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
   };
 
   const handleCodeSubmitToSignUp = async () => {
-    try {
-      const data = await codeMutation.mutateAsync({phone, code});
-      if (data.message === '인증번호가 일치합니다.') {
-        navigation.replace('SetNickname', {phone});
-      }
-    } catch (error: any) {
-      if (error.message === '인증코드가 일치하지 않습니다.') {
-        setCodeValid(false);
-      } else if (error.message === '인증코드가 만료되었습니다.') {
-        Toast.show({
-          type: 'default',
-          position: 'top',
-          visibilityTime: 3000,
-          topOffset: insets.top + 20,
-          text1: '인증번호가 만료되었습니다.',
-        });
-        setStatus('phone');
-      }
+    const data = await codeMutation.mutateAsync({phone, code});
+    if (data.message === '인증번호가 일치합니다.') {
+      navigation.replace('SetNickname', {phone});
+    }
+
+    if (data.message === '인증코드가 일치하지 않습니다.') {
+      setCodeValid(false);
+      return;
+    } else if (data.message === '인증코드가 만료되었습니다.') {
+      Toast.show({
+        type: 'default',
+        position: 'top',
+        visibilityTime: 3000,
+        topOffset: insets.top + 20,
+        text1: '인증번호가 만료되었습니다.',
+      });
+      setStatus('phone');
     }
   };
 
@@ -279,7 +277,9 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
         maxLength={11}
         onChangeText={e => {
           setPhoneValid('valid');
+          setCodeValid(true);
           setStatus('phone');
+          setCode('');
           setPhone(e);
         }}
       />
