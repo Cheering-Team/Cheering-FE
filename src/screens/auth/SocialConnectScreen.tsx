@@ -4,22 +4,26 @@ import {SafeAreaView, StyleSheet, View} from 'react-native';
 import CustomText from '../../components/common/CustomText';
 import CustomButton from '../../components/common/CustomButton';
 import {useMutation} from '@tanstack/react-query';
-import {connectKakao} from '../../apis/user';
+import {postConnect} from '../../apis/user';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {AuthContext} from '../../navigations/AuthSwitch';
 
 const SocialConnectScreen = ({navigation, route}) => {
   Close(navigation);
-  const {accessToken, user} = route.params;
+  const {accessToken, user, type} = route.params;
 
   const insets = useSafeAreaInsets();
   const signIn = useContext(AuthContext)?.signIn;
 
-  const mutation = useMutation({mutationFn: connectKakao});
+  const mutation = useMutation({mutationFn: postConnect});
 
   const handleConnectSocial = async () => {
-    const data = await mutation.mutateAsync({accessToken, userId: user.id});
+    const data = await mutation.mutateAsync({
+      accessToken,
+      type,
+      userId: user.id,
+    });
 
     if (data.message === '연결되었습니다.') {
       const {accessToken: sessionToken, refreshToken} = data.result;
@@ -29,7 +33,7 @@ const SocialConnectScreen = ({navigation, route}) => {
         position: 'top',
         visibilityTime: 3000,
         topOffset: insets.top + 20,
-        text1: '회원가입되었습니다.',
+        text1: '계정이 연결되었습니다.',
       });
 
       signIn?.(sessionToken, refreshToken);

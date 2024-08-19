@@ -183,6 +183,7 @@ PODS:
     - nanopb/encode (= 2.30910.0)
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
+  - naveridlogin-sdk-ios (4.2.1)
   - OpenSSL-Universal (1.1.1100)
   - PromisesObjC (2.4.0)
   - RCT-Folly (2022.05.16.00):
@@ -1256,6 +1257,11 @@ PODS:
     - React-Core
     - React-RCTImage
     - TOCropViewController
+  - RNNaverLogin (4.0.1):
+    - glog
+    - naveridlogin-sdk-ios (= 4.2.1)
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
   - RNReanimated (3.12.1):
     - glog
     - RCT-Folly (= 2022.05.16.00)
@@ -1362,6 +1368,7 @@ DEPENDENCIES:
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
+  - "RNNaverLogin (from `../node_modules/@react-native-seoul/naver-login`)"
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -1394,6 +1401,7 @@ SPEC REPOS:
     - libevent
     - libwebp
     - nanopb
+    - naveridlogin-sdk-ios
     - OpenSSL-Universal
     - PromisesObjC
     - SDWebImage
@@ -1517,6 +1525,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
+  RNNaverLogin:
+    :path: "../node_modules/@react-native-seoul/naver-login"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -1560,6 +1570,7 @@ SPEC CHECKSUMS:
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
+  naveridlogin-sdk-ios: d5f9d92905a7e964976ebfdd665bee5fb75845c5
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: 7169b2b1c44399c76a47b5deaaba715eeeb476c0
@@ -1611,6 +1622,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: 91592ea949854c66697757af648a2c07bcb583b9
   RNGestureHandler: 25b969a1ffc806b9f9ad2e170d4a3b049c6af85e
   RNImageCropPicker: d9616a0cb9b72e8551ff94a7a5021fbd29050aa5
+  RNNaverLogin: 4e21c41782cfb25eaf06093c6d1baa47fa934d82
   RNReanimated: fa47e0572971cdb0b29b8eca683980e9c97e952f
   RNScreens: b582cb834dc4133307562e930e8fa914b8c04ef2
   RNSVG: ba3e7232f45e34b7b47e74472386cf4e1a676d0a

@@ -6,13 +6,14 @@
  */
 
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import AuthSwitch from './src/navigations/AuthSwitch';
 import {StatusBar} from 'react-native';
 import {navigationRef} from './src/navigations/RootNavigation';
 import Toast, {BaseToast} from 'react-native-toast-message';
 import {QueryClientProvider, QueryClient} from '@tanstack/react-query';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import NaverLogin from '@react-native-seoul/naver-login';
 
 export const toastConfig = {
   /*
@@ -43,6 +44,11 @@ export const toastConfig = {
   ),
 };
 
+const consumerKey = 'T40q4ZLAbDGZCa5v50tK';
+const consumerSecret = 'Tk2ggobTof';
+const appName = '치어링';
+const serviceUrlScheme = 'org.reactjs.native.example.Cheering';
+
 function App(): React.JSX.Element {
   const queryClient = new QueryClient();
 
@@ -53,6 +59,16 @@ function App(): React.JSX.Element {
       background: '#ffffff',
     },
   };
+
+  useEffect(() => {
+    NaverLogin.initialize({
+      appName,
+      consumerKey,
+      consumerSecret,
+      serviceUrlSchemeIOS: serviceUrlScheme,
+      disableNaverAppAuthIOS: true,
+    });
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
