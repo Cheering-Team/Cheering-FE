@@ -27,7 +27,8 @@ const PostWriter = (props: PostWriterProps) => {
   const insets = useSafeAreaInsets();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
 
   const mutation = useMutation({
     mutationFn: deletePost,
@@ -98,7 +99,7 @@ const PostWriter = (props: PostWriterProps) => {
           option2Text="삭제하기"
           option2color="#fe6363"
           option2Press={() => {
-            setIsAlertOpen(true);
+            setIsDeleteAlertOpen(true);
           }}
         />
       ) : (
@@ -107,17 +108,14 @@ const PostWriter = (props: PostWriterProps) => {
           setIsModalOpen={setIsModalOpen}
           option1Text="신고하기"
           option1Press={() => {
-            navigation.navigate('CommunityStack', {
-              screen: 'PostWrite',
-              params: {playerId: feed.player.id, feed},
-            });
+            setIsReportAlertOpen(true);
           }}
           option1color="#fe6363"
         />
       )}
       <AlertModal
-        isModalOpen={isAlertOpen}
-        setIsModalOpen={setIsAlertOpen}
+        isModalOpen={isDeleteAlertOpen}
+        setIsModalOpen={setIsDeleteAlertOpen}
         title="게시글을 삭제하시겠어요?"
         content="게시글을 삭제한 후에는 복구할 수 없습니다."
         button1Text="삭제"
@@ -126,6 +124,16 @@ const PostWriter = (props: PostWriterProps) => {
         button1Press={() => {
           handleDeletePost();
         }}
+      />
+      <AlertModal
+        isModalOpen={isReportAlertOpen}
+        setIsModalOpen={setIsReportAlertOpen}
+        title="게시글을 신고하시겠습니까?"
+        content="정상적인 글에 대한 신고가 계속될 경우 신고자가 제재받을 수 있습니다."
+        button1Text="신고하기"
+        button1Color="#fe6363"
+        button2Text="취소"
+        button1Press={() => {}}
       />
     </View>
   );
