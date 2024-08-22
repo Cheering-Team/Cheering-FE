@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import MoreSvg from '../../../assets/images/three-dots-black.svg';
 import OptionModal from '../common/OptionModal';
 import AlertModal from '../common/AlertModal/AlertModal';
-import {deletePost} from '../../apis/post';
+import {deletePost, reportPost} from '../../apis/post';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -38,6 +38,10 @@ const PostWriter = (props: PostWriterProps) => {
     },
   });
 
+  const reportMutation = useMutation({
+    mutationFn: reportPost,
+  });
+
   const handleDeletePost = async () => {
     const data = await mutation.mutateAsync({postId: feed.id});
 
@@ -49,6 +53,32 @@ const PostWriter = (props: PostWriterProps) => {
         topOffset: insets.top + 20,
         text1: '게시글을 삭제하였습니다.',
       });
+    }
+  };
+
+  const handleReportPost = async () => {
+    const data = await reportMutation.mutateAsync({postId: feed.id});
+
+    if (data.message === '이미 신고한 게시글입니다.') {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: insets.bottom + 20,
+        text1: '이미 신고한 게시글입니다.',
+      });
+      return;
+    }
+
+    if (data.message === '신고가 접수되었습니다.') {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: insets.bottom + 20,
+        text1: '게시글을 신고하였습니다.',
+      });
+      return;
     }
   };
 
@@ -133,7 +163,9 @@ const PostWriter = (props: PostWriterProps) => {
         button1Text="신고하기"
         button1Color="#fe6363"
         button2Text="취소"
-        button1Press={() => {}}
+        button1Press={() => {
+          handleReportPost();
+        }}
       />
     </View>
   );

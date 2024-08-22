@@ -331,8 +331,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1.5,
     borderColor: '#e6e6e6',
     alignItems: 'center',
-    // borderBottomLeftRadius: 25,
-    // borderBottomRightRadius: 25,
   },
   writerContainer: {flexDirection: 'row', alignItems: 'center'},
   writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
