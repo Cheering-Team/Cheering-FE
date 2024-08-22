@@ -11,7 +11,7 @@ interface AlertModalProps {
   button1Color?: string;
   button2Text?: string;
   button2Color?: string;
-  button1Press: any;
+  button1Press?: any;
   button2Press?: any;
 }
 
@@ -76,7 +76,7 @@ const AlertModal = (props: AlertModalProps) => {
             }}
             onPress={() => {
               setIsModalOpen(false);
-              button1Press();
+              button1Press?.();
             }}>
             <CustomText fontWeight="500" style={[{color: button1Color}]}>
               {button1Text}

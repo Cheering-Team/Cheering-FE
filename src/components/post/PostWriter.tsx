@@ -29,6 +29,7 @@ const PostWriter = (props: PostWriterProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
+  const [isInhibitAlertOpen, setIsInhibitAlertOpen] = useState(false);
 
   const mutation = useMutation({
     mutationFn: deletePost,
@@ -121,6 +122,10 @@ const PostWriter = (props: PostWriterProps) => {
           setIsModalOpen={setIsModalOpen}
           option1Text="수정하기"
           option1Press={() => {
+            if (feed.isHide) {
+              setIsInhibitAlertOpen(true);
+              return;
+            }
             navigation.navigate('CommunityStack', {
               screen: 'PostWrite',
               params: {playerId: feed.player.id, feed},
@@ -129,6 +134,10 @@ const PostWriter = (props: PostWriterProps) => {
           option2Text="삭제하기"
           option2color="#fe6363"
           option2Press={() => {
+            if (feed.isHide) {
+              setIsInhibitAlertOpen(true);
+              return;
+            }
             setIsDeleteAlertOpen(true);
           }}
         />
@@ -167,6 +176,13 @@ const PostWriter = (props: PostWriterProps) => {
           handleReportPost();
         }}
       />
+      <AlertModal
+        isModalOpen={isInhibitAlertOpen}
+        setIsModalOpen={setIsInhibitAlertOpen}
+        title="신고 누적된 게시글입니다."
+        content="게시글을 수정하거나 삭제할 수 없습니다."
+        button1Text="확인"
+      />
     </View>
   );
 };
@@ -174,6 +190,7 @@ const PostWriter = (props: PostWriterProps) => {
 const styles = StyleSheet.create({
   writerContainer: {
     flexDirection: 'row',
+    paddingTop: 10,
     paddingLeft: 12,
     paddingRight: 10,
     width: '100%',

@@ -88,33 +88,50 @@ const FeedPost = (props: FeedPostProps) => {
   return (
     <>
       <View style={styles.container}>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginBottom: 9,
-            marginLeft: -2,
-            paddingHorizontal: 10,
-            width: '100%',
-          }}>
-          {feed.tags.map(tag => (
+        {feed.isHide && (
+          <View
+            style={{
+              width: '100%',
+              backgroundColor: '#fbeeee',
+              paddingVertical: 5,
+            }}>
             <CustomText
-              key={tag}
-              style={{
-                borderWidth: 1,
-                borderColor: '#dcdcdc',
-                marginRight: 8,
-                borderRadius: 5,
-                paddingHorizontal: 5,
-                paddingVertical: 1,
-              }}>
-              {tag === 'photo'
-                ? '📸 직찍사'
-                : tag === 'viewing'
-                ? '👀 직관인증'
-                : '🔎 정보'}
+              fontWeight="500"
+              style={{color: '#fd5e5e', marginLeft: 12, fontSize: 13}}>
+              신고 누적으로 인해 숨겨진 게시글입니다.
             </CustomText>
-          ))}
-        </View>
+          </View>
+        )}
+        {feed.tags.length > 0 && (
+          <View
+            style={{
+              paddingTop: 10,
+              flexDirection: 'row',
+              marginLeft: -2,
+              paddingHorizontal: 10,
+              width: '100%',
+            }}>
+            {feed.tags.map(tag => (
+              <CustomText
+                key={tag}
+                style={{
+                  borderWidth: 1,
+                  borderColor: '#dcdcdc',
+                  marginRight: 8,
+                  borderRadius: 5,
+                  paddingHorizontal: 5,
+                  paddingVertical: 1,
+                }}>
+                {tag === 'photo'
+                  ? '📸 직찍사'
+                  : tag === 'viewing'
+                  ? '👀 직관인증'
+                  : '🔎 정보'}
+              </CustomText>
+            ))}
+          </View>
+        )}
+
         <PostWriter
           feed={feed}
           createdAt={feed.createdAt}
@@ -326,7 +343,6 @@ const FeedPost = (props: FeedPostProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 10,
     backgroundColor: 'white',
     borderBottomWidth: 1.5,
     borderColor: '#e6e6e6',
