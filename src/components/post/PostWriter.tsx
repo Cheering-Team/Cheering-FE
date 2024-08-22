@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import MoreSvg from '../../../assets/images/three-dots-black.svg';
 import OptionModal from '../common/OptionModal';
 import AlertModal from '../common/AlertModal/AlertModal';
-import {deletePost} from '../../apis/post';
+import {deletePost, reportPost} from '../../apis/post';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -27,7 +27,9 @@ const PostWriter = (props: PostWriterProps) => {
   const insets = useSafeAreaInsets();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
+  const [isInhibitAlertOpen, setIsInhibitAlertOpen] = useState(false);
 
   const mutation = useMutation({
     mutationFn: deletePost,
@@ -35,6 +37,10 @@ const PostWriter = (props: PostWriterProps) => {
       queryClient.invalidateQueries({queryKey: ['posts'], exact: false});
       queryClient.invalidateQueries({queryKey: ['my', 'posts'], exact: false});
     },
+  });
+
+  const reportMutation = useMutation({
+    mutationFn: reportPost,
   });
 
   const handleDeletePost = async () => {
@@ -48,6 +54,32 @@ const PostWriter = (props: PostWriterProps) => {
         topOffset: insets.top + 20,
         text1: '게시글을 삭제하였습니다.',
       });
+    }
+  };
+
+  const handleReportPost = async () => {
+    const data = await reportMutation.mutateAsync({postId: feed.id});
+
+    if (data.message === '이미 신고한 게시글입니다.') {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: insets.bottom + 20,
+        text1: '이미 신고한 게시글입니다.',
+      });
+      return;
+    }
+
+    if (data.message === '신고가 접수되었습니다.') {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: insets.bottom + 20,
+        text1: '게시글을 신고하였습니다.',
+      });
+      return;
     }
   };
 
@@ -90,6 +122,10 @@ const PostWriter = (props: PostWriterProps) => {
           setIsModalOpen={setIsModalOpen}
           option1Text="수정하기"
           option1Press={() => {
+            if (feed.isHide) {
+              setIsInhibitAlertOpen(true);
+              return;
+            }
             navigation.navigate('CommunityStack', {
               screen: 'PostWrite',
               params: {playerId: feed.player.id, feed},
@@ -98,7 +134,11 @@ const PostWriter = (props: PostWriterProps) => {
           option2Text="삭제하기"
           option2color="#fe6363"
           option2Press={() => {
-            setIsAlertOpen(true);
+            if (feed.isHide) {
+              setIsInhibitAlertOpen(true);
+              return;
+            }
+            setIsDeleteAlertOpen(true);
           }}
         />
       ) : (
@@ -107,17 +147,14 @@ const PostWriter = (props: PostWriterProps) => {
           setIsModalOpen={setIsModalOpen}
           option1Text="신고하기"
           option1Press={() => {
-            navigation.navigate('CommunityStack', {
-              screen: 'PostWrite',
-              params: {playerId: feed.player.id, feed},
-            });
+            setIsReportAlertOpen(true);
           }}
           option1color="#fe6363"
         />
       )}
       <AlertModal
-        isModalOpen={isAlertOpen}
-        setIsModalOpen={setIsAlertOpen}
+        isModalOpen={isDeleteAlertOpen}
+        setIsModalOpen={setIsDeleteAlertOpen}
         title="게시글을 삭제하시겠어요?"
         content="게시글을 삭제한 후에는 복구할 수 없습니다."
         button1Text="삭제"
@@ -127,6 +164,25 @@ const PostWriter = (props: PostWriterProps) => {
           handleDeletePost();
         }}
       />
+      <AlertModal
+        isModalOpen={isReportAlertOpen}
+        setIsModalOpen={setIsReportAlertOpen}
+        title="게시글을 신고하시겠습니까?"
+        content="정상적인 글에 대한 신고가 계속될 경우 신고자가 제재받을 수 있습니다."
+        button1Text="신고하기"
+        button1Color="#fe6363"
+        button2Text="취소"
+        button1Press={() => {
+          handleReportPost();
+        }}
+      />
+      <AlertModal
+        isModalOpen={isInhibitAlertOpen}
+        setIsModalOpen={setIsInhibitAlertOpen}
+        title="신고 누적된 게시글입니다."
+        content="게시글을 수정하거나 삭제할 수 없습니다."
+        button1Text="확인"
+      />
     </View>
   );
 };
@@ -134,6 +190,7 @@ const PostWriter = (props: PostWriterProps) => {
 const styles = StyleSheet.create({
   writerContainer: {
     flexDirection: 'row',
+    paddingTop: 10,
     paddingLeft: 12,
     paddingRight: 10,
     width: '100%',

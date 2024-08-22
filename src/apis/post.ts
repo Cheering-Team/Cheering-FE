@@ -157,6 +157,12 @@ export const updatePost = async (data: updatePostRequest) => {
   return response.data;
 };
 
+export const reportPost = async ({postId}) => {
+  const response = await axiosInstance.post(`/posts/${postId}/reports`);
+
+  return response.data;
+};
+
 export const deletePost = async data => {
   const {postId} = data;
 
