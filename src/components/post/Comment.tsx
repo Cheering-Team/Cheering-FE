@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Pressable, View} from 'react-native';
 import {formatDate} from '../../utils/format';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {deleteComment, getReComments} from '../../apis/post';
+import {deleteComment, getReComments, reportComment} from '../../apis/post';
 import CustomText from '../common/CustomText';
 import Avatar from '../common/Avatar';
 import {useNavigation} from '@react-navigation/native';
@@ -11,6 +11,7 @@ import ReComment from './ReComment';
 import OptionModal from '../common/OptionModal';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import AlertModal from '../common/AlertModal/AlertModal';
 
 interface CommentProps {
   postId: number;
@@ -43,6 +44,7 @@ const Comment = (props: CommentProps) => {
 
   const [isReCommentOpen, setIsReCommentOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
 
   const {
     data: reCommentsData,
@@ -63,6 +65,10 @@ const Comment = (props: CommentProps) => {
     },
   });
 
+  const reportMutation = useMutation({
+    mutationFn: reportComment,
+  });
+
   const handleToUser = writer => {
     setCommentContent('');
     setToComment(writer);
@@ -81,6 +87,32 @@ const Comment = (props: CommentProps) => {
         bottomOffset: insets.bottom + 20,
         text1: '댓글을 삭제하였습니다.',
       });
+    }
+  };
+
+  const handleReportPost = async () => {
+    const data = await reportMutation.mutateAsync({commentId: comment.id});
+
+    if (data.message === '이미 신고하였습니다.') {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: insets.bottom + 20,
+        text1: '이미 신고한 댓글입니다.',
+      });
+      return;
+    }
+
+    if (data.message === '신고가 접수되었습니다.') {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: insets.bottom + 20,
+        text1: '댓글을 신고하였습니다.',
+      });
+      return;
     }
   };
 
@@ -228,10 +260,24 @@ const Comment = (props: CommentProps) => {
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           option1Text="신고하기"
-          option1Press={() => {}}
+          option1Press={() => {
+            setIsReportAlertOpen(true);
+          }}
           option1color="#fe6363"
         />
       )}
+      <AlertModal
+        isModalOpen={isReportAlertOpen}
+        setIsModalOpen={setIsReportAlertOpen}
+        title="게시글을 신고하시겠습니까?"
+        content="정상적인 글에 대한 신고가 계속될 경우 신고자가 제재받을 수 있습니다."
+        button1Text="신고하기"
+        button1Color="#fe6363"
+        button2Text="취소"
+        button1Press={() => {
+          handleReportPost();
+        }}
+      />
     </View>
   );
 };

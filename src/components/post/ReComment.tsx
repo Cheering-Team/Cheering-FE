@@ -12,9 +12,10 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import {deleteReComment} from '../../apis/post';
+import {deleteReComment, reportReComment} from '../../apis/post';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import AlertModal from '../common/AlertModal/AlertModal';
 
 interface ReCommentProps {
   postId: number;
@@ -35,6 +36,7 @@ const ReComment = (props: ReCommentProps) => {
   const queryClient = useQueryClient();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
 
   const mutation = useMutation({
     mutationFn: deleteReComment,
@@ -44,6 +46,10 @@ const ReComment = (props: ReCommentProps) => {
       queryClient.invalidateQueries({queryKey: ['posts'], exact: false});
       queryClient.invalidateQueries({queryKey: ['my', 'posts'], exact: false});
     },
+  });
+
+  const reportMutation = useMutation({
+    mutationFn: reportReComment,
   });
 
   const handleDeleteReComment = async () => {
@@ -57,6 +63,32 @@ const ReComment = (props: ReCommentProps) => {
         bottomOffset: insets.bottom + 20,
         text1: '댓글을 삭제하였습니다.',
       });
+    }
+  };
+
+  const handleReportPost = async () => {
+    const data = await reportMutation.mutateAsync({reCommentId: reComment.id});
+
+    if (data.message === '이미 신고하였습니다.') {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: insets.bottom + 20,
+        text1: '이미 신고한 답글입니다.',
+      });
+      return;
+    }
+
+    if (data.message === '신고가 접수되었습니다.') {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        visibilityTime: 3000,
+        bottomOffset: insets.bottom + 20,
+        text1: '답글을 신고하였습니다.',
+      });
+      return;
     }
   };
 
@@ -141,10 +173,24 @@ const ReComment = (props: ReCommentProps) => {
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           option1Text="신고하기"
-          option1Press={() => {}}
+          option1Press={() => {
+            setIsReportAlertOpen(true);
+          }}
           option1color="#fe6363"
         />
       )}
+      <AlertModal
+        isModalOpen={isReportAlertOpen}
+        setIsModalOpen={setIsReportAlertOpen}
+        title="게시글을 신고하시겠습니까?"
+        content="정상적인 글에 대한 신고가 계속될 경우 신고자가 제재받을 수 있습니다."
+        button1Text="신고하기"
+        button1Color="#fe6363"
+        button2Text="취소"
+        button1Press={() => {
+          handleReportPost();
+        }}
+      />
     </View>
   );
 };

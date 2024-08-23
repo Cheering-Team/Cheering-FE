@@ -186,3 +186,17 @@ export const deleteReComment = async data => {
 
   return response.data;
 };
+
+export const reportComment = async ({commentId}) => {
+  const response = await axiosInstance.post(`/comments/${commentId}/reports`);
+
+  return response.data;
+};
+
+export const reportReComment = async ({reCommentId}) => {
+  const response = await axiosInstance.post(
+    `/reComments/${reCommentId}/reports`,
+  );
+
+  return response.data;
+};
