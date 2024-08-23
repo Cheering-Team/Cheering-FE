@@ -60,7 +60,7 @@ const PostWriter = (props: PostWriterProps) => {
   const handleReportPost = async () => {
     const data = await reportMutation.mutateAsync({postId: feed.id});
 
-    if (data.message === '이미 신고한 게시글입니다.') {
+    if (data.message === '이미 신고하였습니다.') {
       Toast.show({
         type: 'default',
         position: 'bottom',
