@@ -50,6 +50,12 @@ const ReComment = (props: ReCommentProps) => {
 
   const reportMutation = useMutation({
     mutationFn: reportReComment,
+    onSuccess: () => {
+      refetch();
+      queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
+      queryClient.invalidateQueries({queryKey: ['posts'], exact: false});
+      queryClient.invalidateQueries({queryKey: ['my', 'posts'], exact: false});
+    },
   });
 
   const handleDeleteReComment = async () => {

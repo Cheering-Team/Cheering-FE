@@ -67,6 +67,11 @@ const Comment = (props: CommentProps) => {
 
   const reportMutation = useMutation({
     mutationFn: reportComment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['post', postId, 'comments']});
+      queryClient.invalidateQueries({queryKey: ['posts'], exact: false});
+      queryClient.invalidateQueries({queryKey: ['my', 'posts'], exact: false});
+    },
   });
 
   const handleToUser = writer => {
