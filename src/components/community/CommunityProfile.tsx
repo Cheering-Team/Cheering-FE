@@ -65,7 +65,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
 const styles = StyleSheet.create({
   profileContainer: {
     width: '100%',
-    height: 350,
+    height: 375,
   },
   infoContainer: {position: 'absolute', zIndex: 2, width: '100%'},
   englishName: {color: 'white', fontSize: 17, marginLeft: 2},
