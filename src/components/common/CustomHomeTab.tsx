@@ -55,7 +55,8 @@ function CustomTabBar({state, descriptors, navigation}) {
           routeName === 'DeleteUser' ||
           routeName === 'Profile' ||
           routeName === 'ProfileEdit' ||
-          routeName === 'DeletePlayerUser'
+          routeName === 'DeletePlayerUser' ||
+          routeName === 'Chat'
             ? {display: 'none'}
             : styles.TabContainer,
           {paddingBottom: useSafeAreaInsets().bottom},

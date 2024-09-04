@@ -5,16 +5,14 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useQuery} from '@tanstack/react-query';
 import {getPlayersInfo} from '../../apis/player';
 import JoinModal from '../../components/community/JoinModal/JoinModal';
-import CommunityFlatList from '../../components/community/CommunityFlatList/CommunityFlatList';
 import CommunityHeader from '../../components/community/CommunityHeader';
 import CommunityTopTab from '../../components/community/CommunityTopTab';
-
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from '../../navigations/CommunityStackNavigator';
 import FloatButton from '../../components/community/FloatButton/FloatButton';
 import {WINDOW_HEIGHT} from '../../constants/dimension';
-CommunityFlatList;
+import CommunityFlatList from '../../components/community/CommunityFeedFlatList/CommunityFeedFlatList';
 
 export type CommunityScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
@@ -88,6 +86,7 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
   if (playerIsLoading) {
     return null;
   }
+
   return (
     <View key={refreshKey} style={{flex: 1, paddingBottom: insets.bottom}}>
       <CommunityHeader playerData={playerData} scrollY={scrollY} />

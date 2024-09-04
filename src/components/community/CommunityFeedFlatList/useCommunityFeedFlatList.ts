@@ -5,7 +5,7 @@ import {getPosts} from '../../../apis/post';
 import {GetPlayersInfoResponse} from '../../../types/player';
 import {Api} from '../../../types/api';
 
-export const useCommunityFlatList = (
+export const useCommunityFeedFlatList = (
   playerData: Api<GetPlayersInfoResponse>,
 ) => {
   const isFocused = useIsFocused();

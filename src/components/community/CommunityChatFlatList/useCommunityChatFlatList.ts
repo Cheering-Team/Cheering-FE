@@ -1,0 +1,55 @@
+import {useIsFocused} from '@react-navigation/native';
+import {useInfiniteQuery} from '@tanstack/react-query';
+import {useEffect, useState} from 'react';
+import {getPosts} from '../../../apis/post';
+import {GetPlayersInfoResponse} from '../../../types/player';
+import {Api} from '../../../types/api';
+
+export const useCommunityChatFlatList = (
+  playerData: Api<GetPlayersInfoResponse>,
+) => {
+  const isFocused = useIsFocused();
+
+  const [selectedFilter, setSelectedFilter] = useState('all');
+
+  const {
+    data: feedData,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['posts', playerData.result.id, selectedFilter],
+    queryFn: getPosts,
+    initialPageParam: 0,
+    getNextPageParam: (lastpage, pages) => {
+      if (lastpage.result.last) {
+        return undefined;
+      }
+      return pages.length;
+    },
+    enabled: playerData.result.user !== null,
+  });
+
+  const loadFeed = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  useEffect(() => {
+    if (isFocused && playerData.result.user) {
+      refetch();
+    }
+  }, [isFocused, playerData.result.user, refetch]);
+
+  return {
+    selectedFilter,
+    setSelectedFilter,
+    feedData,
+    isLoading,
+    isFetchingNextPage,
+    loadFeed,
+  };
+};

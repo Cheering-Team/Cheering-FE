@@ -4,7 +4,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import Toast from 'react-native-toast-message';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://15.165.150.47/api',
+  baseURL: 'http://172.30.1.57:8080/api',
 });
 
 axiosInstance.interceptors.request.use(async config => {
@@ -40,7 +40,7 @@ axiosInstance.interceptors.response.use(
       if (response.data.message === '해당 사용자를 찾을 수 없습니다.') {
         await EncryptedStorage.removeItem('accessToken');
         await EncryptedStorage.removeItem('refreshToken');
-        RootNavigation.navigate('SettingStack', {screen: 'SignOut'});
+        RootNavigation.navigate('MoreStack', {screen: 'SignOut'});
         return Promise.reject(response.data);
       }
 
@@ -51,7 +51,8 @@ axiosInstance.interceptors.response.use(
       if (config.url === '/refresh') {
         await EncryptedStorage.removeItem('accessToken');
         await EncryptedStorage.removeItem('refreshToken');
-        RootNavigation.navigate('SettingStack', {screen: 'SignOut'});
+        RootNavigation.navigate('MoreStack', {screen: 'SignOut'});
+        return;
       } else {
         const data = await reIssueToken();
 
@@ -67,7 +68,7 @@ axiosInstance.interceptors.response.use(
   },
 );
 
-const reIssueToken = async () => {
+export const reIssueToken = async () => {
   const response = await axiosInstance.get('/refresh');
 
   return response.data;
