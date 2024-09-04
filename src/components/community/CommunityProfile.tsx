@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {formatComma} from '../../utils/format';
 import LinearGradient from 'react-native-linear-gradient';
 import StarOrangeSvg from '../../../assets/images/star-orange.svg';
@@ -18,27 +18,22 @@ const CommunityProfile = (props: CommunityProfileProps) => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View
-      style={[
-        styles.profileContainer,
-        {
-          height: Dimensions.get('window').height / 2.25,
-        },
-      ]}>
-      <View style={styles.infoContainer}>
-        <CustomText
-          fontWeight="500"
-          style={[styles.englishName, {marginTop: insets.top}]}>
-          {playerData.result.englishName}
-        </CustomText>
-        <CustomText fontWeight="600" style={styles.koreanName}>
-          {playerData.result.koreanName}
-        </CustomText>
-        <View style={styles.fanCountContainer}>
-          <StarOrangeSvg width={14} height={14} />
-          <CustomText style={styles.fanCount}>
-            {formatComma(playerData.result.fanCount)}
+    <View style={styles.profileContainer}>
+      <View style={[styles.infoContainer, {top: insets.top + 65}]}>
+        <TeamList playerData={playerData} />
+        <View style={{paddingLeft: 15}}>
+          <CustomText fontWeight="500" style={styles.englishName}>
+            {playerData.result.englishName}
           </CustomText>
+          <CustomText fontWeight="600" style={styles.koreanName}>
+            {playerData.result.koreanName}
+          </CustomText>
+          <View style={styles.fanCountContainer}>
+            <StarOrangeSvg width={14} height={14} />
+            <CustomText style={styles.fanCount}>
+              {formatComma(playerData.result.fanCount)}
+            </CustomText>
+          </View>
         </View>
       </View>
 
@@ -50,12 +45,19 @@ const CommunityProfile = (props: CommunityProfileProps) => {
         style={styles.backgroundImage}
       />
       <LinearGradient
-        colors={['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.15)', '#000000']}
+        start={{x: 1, y: 1}}
+        end={{x: 0, y: 0}}
+        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.45)', '#000000']}
         style={{
           ...StyleSheet.absoluteFillObject,
         }}
       />
-      <TeamList playerData={playerData} />
+      <LinearGradient
+        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.05)', '#000000']}
+        style={{
+          ...StyleSheet.absoluteFillObject,
+        }}
+      />
     </View>
   );
 };
@@ -63,17 +65,21 @@ const CommunityProfile = (props: CommunityProfileProps) => {
 const styles = StyleSheet.create({
   profileContainer: {
     width: '100%',
+    height: 350,
   },
-  infoContainer: {position: 'absolute', top: 56, left: 15, zIndex: 2},
+  infoContainer: {position: 'absolute', zIndex: 2, width: '100%'},
   englishName: {color: 'white', fontSize: 17, marginLeft: 2},
-  koreanName: {color: 'white', fontSize: 40, lineHeight: 50},
+  koreanName: {color: 'white', fontSize: 41, lineHeight: 53},
   fanCountContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 5,
   },
-  fanCount: {color: '#F99E35', marginLeft: 4, fontSize: 16, paddingBottom: 2},
-  backgroundImage: {height: '100%', width: '100%'},
+  fanCount: {color: '#F99E35', marginLeft: 4, fontSize: 16},
+  backgroundImage: {
+    height: '100%',
+    width: '100%',
+  },
 });
 
 export default CommunityProfile;

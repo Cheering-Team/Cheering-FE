@@ -11,10 +11,6 @@ const TeamList = (props: TeamListProps) => {
 
   return (
     <View style={styles.container}>
-      <CustomText fontWeight="500" style={styles.title}>
-        소속팀
-      </CustomText>
-
       <FlatList
         horizontal={true}
         data={playerData.result.teams}
@@ -25,8 +21,8 @@ const TeamList = (props: TeamListProps) => {
               source={{
                 uri: item.image,
               }}
-              width={20}
-              height={20}
+              width={18}
+              height={18}
             />
             <CustomText fontWeight="500" style={styles.teamName}>
               {item.name}
@@ -40,13 +36,11 @@ const TeamList = (props: TeamListProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 50,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 17,
-    position: 'absolute',
-    bottom: 0,
+    marginBottom: 5,
+    marginLeft: 10,
   },
   title: {color: '#d2d2d2', fontSize: 16, paddingBottom: 4},
   teamContainer: {
@@ -56,9 +50,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 11,
     paddingVertical: 2,
-    marginLeft: 15,
+    marginLeft: 5,
   },
-  teamName: {color: 'white', paddingBottom: 1, marginLeft: 4, fontSize: 14},
+  teamName: {color: 'white', paddingBottom: 1, marginLeft: 4, fontSize: 12},
 });
 
 export default TeamList;
