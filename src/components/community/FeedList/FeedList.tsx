@@ -2,7 +2,7 @@ import React from 'react';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import FeedFilter from '../FeedFilter';
 import {useCommunityFeedFlatList} from '../CommunityFeedFlatList/useCommunityFeedFlatList';
-import {ListRenderItem} from 'react-native';
+import {ListRenderItem, View} from 'react-native';
 import {PostInfoResponse} from '../../../types/post';
 import FeedPost from '../FeedPost';
 import ListLoading from '../../common/ListLoading/ListLoading';
@@ -70,6 +70,7 @@ const FeedList = (props: Props) => {
           )
         }
       />
+      <View></View>
     </>
   );
 };
