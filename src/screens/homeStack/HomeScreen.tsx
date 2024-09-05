@@ -86,12 +86,6 @@ const HomeScreen = () => {
         setHotTab={setHotTab}
         scrollY={scrollY}
       />
-      <FloatButton
-        fadeAnim={fadeAnim}
-        flatListRef={flatListRef}
-        isToTop={isToTop}
-        offset={205}
-      />
     </View>
   );
 };

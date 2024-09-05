@@ -1,13 +1,16 @@
 import React from 'react';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import FeedFilter from '../FeedFilter';
-import {useCommunityFeedFlatList} from '../CommunityFeedFlatList/useCommunityFeedFlatList';
-import {ListRenderItem, View} from 'react-native';
+import {useFeedList} from './useFeedList';
+import {ListRenderItem, Pressable} from 'react-native';
 import {PostInfoResponse} from '../../../types/post';
 import FeedPost from '../FeedPost';
 import ListLoading from '../../common/ListLoading/ListLoading';
 import ListEmpty from '../../common/ListEmpty/ListEmpty';
 import NotJoin from '../NotJoin';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import PlusSvg from '../../../../assets/images/plus-gray.svg';
+import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   playerData: any;
@@ -17,6 +20,9 @@ interface Props {
 const FeedList = (props: Props) => {
   const {playerData, handlePresentModalPress} = props;
 
+  const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
+
   const {
     selectedFilter,
     setSelectedFilter,
@@ -24,7 +30,7 @@ const FeedList = (props: Props) => {
     isLoading,
     isFetchingNextPage,
     loadFeed,
-  } = useCommunityFeedFlatList(playerData);
+  } = useFeedList(playerData);
 
   const renderFeed: ListRenderItem<PostInfoResponse> = ({item}) => (
     <FeedPost
@@ -70,7 +76,32 @@ const FeedList = (props: Props) => {
           )
         }
       />
-      <View></View>
+      {playerData.user && (
+        <Pressable
+          style={{
+            alignItems: 'center',
+            position: 'absolute',
+            bottom: insets.bottom + 67,
+            right: 17,
+            width: 42,
+            height: 42,
+            justifyContent: 'center',
+            backgroundColor: '#ffffff',
+            borderRadius: 100,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 1,
+              height: 1,
+            },
+            shadowOpacity: 0.2,
+            shadowRadius: 2,
+          }}
+          onPress={() => {
+            navigation.navigate('PostWrite', {playerId: playerData.id});
+          }}>
+          <PlusSvg width={20} height={20} />
+        </Pressable>
+      )}
     </>
   );
 };

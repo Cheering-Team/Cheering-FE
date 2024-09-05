@@ -4,9 +4,7 @@ import {useEffect, useState} from 'react';
 import {getPosts} from '../../../apis/post';
 import {GetPlayersInfoResponse} from '../../../types/player';
 
-export const useCommunityFeedFlatList = (
-  playerData: GetPlayersInfoResponse,
-) => {
+export const useFeedList = (playerData: GetPlayersInfoResponse) => {
   const isFocused = useIsFocused();
 
   const [selectedFilter, setSelectedFilter] = useState('all');

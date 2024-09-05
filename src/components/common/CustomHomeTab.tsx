@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import CategoryGraySvg from '../../../assets/images/category-gray.svg';
 import CategorBlackSvg from '../../../assets/images/category-black.svg';
 import HomeGraySvg from '../../../assets/images/home-gray.svg';
 import HomeBlackSvg from '../../../assets/images/home-black.svg';
+import HomeBackGraySvg from '../../../assets/images/home-back-gray.svg';
 import StarGraySvg from '../../../assets/images/star-gray.svg';
 import StarBlackSvg from '../../../assets/images/star-black.svg';
 import ChatGraySvg from '../../../assets/images/chat-gray.svg';
@@ -13,7 +14,6 @@ import MoreBlackSvg from '../../../assets/images/more-black.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from './CustomText';
 import {getActiveRouteName} from '../../utils/getActiveRouteName';
-import PlusSvg from '../../../assets/images/plus-gray.svg';
 
 function CustomTabBar({state, descriptors, navigation}) {
   // 탭 애니메이션 상태
@@ -85,6 +85,29 @@ function CustomTabBar({state, descriptors, navigation}) {
             });
           };
 
+          // if (index === 2) {
+          //   return (
+          //     <Pressable
+          //       key={index}
+          //       accessibilityRole="button"
+          //       accessibilityState={isFocused ? {selected: true} : {}}
+          //       accessibilityLabel={options.tabBarAccessibilityLabel}
+          //       testID={options.tabBarTestID}
+          //       onPress={onPress}
+          //       onLongPress={onLongPress}
+          //       style={styles.Tab}>
+          //       {isFocused ? (
+          //         <View style={styles.HomeTabFocused}>
+          //           <HomeSvg width={30} height={30} />
+          //         </View>
+          //       ) : (
+          //         <View style={styles.HomeTab}>
+          //           <HomeBackGraySvg width={30} height={30} />
+          //         </View>
+          //       )}
+          //     </Pressable>
+          //   );
+          // } else {
           return (
             // gray: B7B7B7
             // black: 323232
@@ -96,11 +119,7 @@ function CustomTabBar({state, descriptors, navigation}) {
               testID={options.tabBarTestID}
               onPress={onPress}
               onLongPress={onLongPress}
-              style={
-                index === 2 && routeName === 'Community'
-                  ? styles.PlusTab
-                  : styles.Tab
-              }>
+              style={styles.Tab}>
               {index === 0 ? (
                 isFocused ? (
                   <>
@@ -134,17 +153,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                   </>
                 )
               ) : index === 2 ? (
-                routeName === 'Community' ? (
-                  <View
-                    style={{
-                      backgroundColor: '#eeeeee',
-                      borderRadius: 15,
-                      paddingVertical: 14,
-                      paddingHorizontal: 18,
-                    }}>
-                    <PlusSvg width={20} height={20} />
-                  </View>
-                ) : isFocused ? (
+                isFocused ? (
                   <>
                     <HomeBlackSvg width={20} height={20} />
                     <CustomText fontWeight="600" style={styles.TabLabelFocused}>
@@ -215,11 +224,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 7,
     paddingBottom: 3,
-  },
-  PlusTab: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   TabLabel: {fontSize: 10, color: '#B7B7B7', marginTop: 3},
   TabLabelFocused: {fontSize: 10, color: '#323232', marginTop: 3},
