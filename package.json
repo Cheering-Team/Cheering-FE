@@ -11,6 +11,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "^4.6.4",
     "@react-native-community/blur": "^4.4.1",
     "@react-native-firebase/app": "^20.4.0",
     "@react-native-firebase/messaging": "^20.4.0",
@@ -33,13 +34,13 @@
     "react-native-draggable-flatlist": "^4.0.1",
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-fast-image": "^8.6.3",
-    "react-native-gesture-handler": "^2.14.1",
+    "react-native-gesture-handler": "^2.19.0",
     "react-native-image-crop-picker": "^0.40.2",
     "react-native-image-viewing": "^0.2.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-pager-view": "^6.4.1",
-    "react-native-reanimated": "^3.12.1",
+    "react-native-reanimated": "^3.15.1",
     "react-native-reanimated-carousel": "^4.0.0-alpha.12",
     "react-native-safe-area-context": "^4.8.2",
     "react-native-screens": "^3.29.0",

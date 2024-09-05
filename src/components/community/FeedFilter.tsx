@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   filterItem: {
     borderWidth: 1,
     borderColor: '#dcdcdc',
-    paddingVertical: 6,
+    paddingVertical: 5,
     paddingHorizontal: 15,
     borderRadius: 12,
     marginRight: 6,

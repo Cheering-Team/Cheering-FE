@@ -7,13 +7,16 @@ import {PostInfoResponse} from '../../../types/post';
 import FeedPost from '../FeedPost';
 import ListLoading from '../../common/ListLoading/ListLoading';
 import ListEmpty from '../../common/ListEmpty/ListEmpty';
+import NotJoin from '../NotJoin';
+import JoinModal from '../JoinModal/JoinModal';
 
 interface Props {
   playerData: any;
+  handlePresentModalPress: any;
 }
 
 const FeedList = (props: Props) => {
-  const {playerData} = props;
+  const {playerData, handlePresentModalPress} = props;
 
   const {
     selectedFilter,
@@ -35,24 +38,40 @@ const FeedList = (props: Props) => {
   );
 
   return (
-    <Tabs.FlatList
-      data={isLoading ? [] : feedData?.pages.flatMap(page => page.result.posts)}
-      renderItem={renderFeed}
-      ListHeaderComponent={
-        <FeedFilter
-          selectedFilter={selectedFilter}
-          setSelectedFilter={setSelectedFilter}
-        />
-      }
-      contentContainerStyle={{paddingBottom: 70}}
-      scrollEnabled={!!playerData.user}
-      onEndReached={playerData.user && loadFeed}
-      onEndReachedThreshold={playerData.user && 1}
-      ListFooterComponent={
-        isFetchingNextPage && playerData.user ? <ListLoading /> : null
-      }
-      ListEmptyComponent={isLoading ? <ListLoading /> : <ListEmpty />}
-    />
+    <>
+      <Tabs.FlatList
+        data={
+          isLoading ? [] : feedData?.pages.flatMap(page => page.result.posts)
+        }
+        renderItem={renderFeed}
+        ListHeaderComponent={
+          playerData.user ? (
+            <FeedFilter
+              selectedFilter={selectedFilter}
+              setSelectedFilter={setSelectedFilter}
+            />
+          ) : null
+        }
+        contentContainerStyle={{paddingBottom: 70}}
+        onEndReached={playerData.user && loadFeed}
+        onEndReachedThreshold={playerData.user && 1}
+        ListFooterComponent={
+          isFetchingNextPage && playerData.user ? <ListLoading /> : null
+        }
+        ListEmptyComponent={
+          !playerData.user ? (
+            <NotJoin
+              playerData={playerData}
+              setIsModalOpen={handlePresentModalPress}
+            />
+          ) : isLoading ? (
+            <ListLoading />
+          ) : (
+            <ListEmpty />
+          )
+        }
+      />
+    </>
   );
 };
 

@@ -2,7 +2,7 @@ import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import {View, TextInput, TextInputProps, Pressable} from 'react-native';
 import CustomText from './CustomText';
 
-interface CustomTextInputProps extends TextInputProps {
+export interface CustomTextInputProps extends TextInputProps {
   label: string;
   containerStyle?: any;
   isValid?: boolean;
@@ -24,6 +24,8 @@ const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
       length = false,
       value = '',
       style,
+      onFocus,
+      onBlur,
       ...rest
     } = props;
     const [focus, setFocus] = useState(false);
@@ -65,8 +67,14 @@ const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
             ref={internalRef}
             value={value}
             style={{fontSize: 16}}
-            onFocus={() => setFocus(true)}
-            onBlur={() => setFocus(false)}
+            onFocus={e => {
+              onFocus?.(e);
+              setFocus(true);
+            }}
+            onBlur={e => {
+              onBlur?.(e);
+              setFocus(false);
+            }}
             maxLength={maxLength}
             autoCapitalize="none"
             {...rest}

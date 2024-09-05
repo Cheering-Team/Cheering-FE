@@ -14,13 +14,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface PostWriterProps {
   feed: any;
-  createdAt: string;
-  playerUserId: number;
   isWriter: boolean;
 }
 
 const PostWriter = (props: PostWriterProps) => {
-  const {feed, createdAt, playerUserId, isWriter} = props;
+  const {feed, isWriter} = props;
 
   const navigation = useNavigation();
   const queryClient = useQueryClient();
@@ -85,37 +83,26 @@ const PostWriter = (props: PostWriterProps) => {
 
   return (
     <View style={styles.writerContainer}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Pressable
-          onPress={() =>
-            navigation.navigate('CommunityStack', {
-              screen: 'Profile',
-              params: {playerUserId},
-            })
-          }>
-          <Avatar uri={feed.writer.image} size={38} />
-        </Pressable>
-        <View style={styles.writerNameContainer}>
-          <Pressable
-            onPress={() =>
-              navigation.navigate('CommunityStack', {
-                screen: 'Profile',
-                params: {playerUserId},
-              })
-            }>
-            <CustomText fontWeight="600" style={styles.writerName}>
-              {feed.writer.name}
-            </CustomText>
-          </Pressable>
-
-          <CustomText style={styles.createAt}>
-            {formatDate(createdAt)}
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          paddingRight: 25,
+        }}>
+        <View style={{flexDirection: 'row'}}>
+          <CustomText fontWeight="500" style={styles.writerName}>
+            {feed.writer.name}
+          </CustomText>
+          <CustomText style={styles.createdAt}>
+            {formatDate(feed.createdAt)}
           </CustomText>
         </View>
+        <Pressable style={{padding: 2}} onPress={() => setIsModalOpen(true)}>
+          <MoreSvg width={18} height={18} />
+        </Pressable>
       </View>
-      <Pressable onPress={() => setIsModalOpen(true)}>
-        <MoreSvg width={18} height={18} style={{marginTop: 7}} />
-      </Pressable>
       {isWriter ? (
         <OptionModal
           isModalOpen={isModalOpen}
@@ -190,15 +177,12 @@ const PostWriter = (props: PostWriterProps) => {
 const styles = StyleSheet.create({
   writerContainer: {
     flexDirection: 'row',
-    paddingTop: 10,
-    paddingLeft: 12,
-    paddingRight: 10,
     width: '100%',
     justifyContent: 'space-between',
   },
+  createdAt: {fontSize: 14, color: '#6d6d6d', marginLeft: 5},
+  writerName: {fontSize: 14},
   writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
-  writerName: {fontSize: 15},
-  createAt: {fontSize: 13, color: '#6d6d6d'},
 });
 
 export default PostWriter;

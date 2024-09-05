@@ -1248,7 +1248,7 @@ PODS:
     - FirebaseCoreExtension
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.14.1):
+  - RNGestureHandler (2.19.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1266,7 +1266,19 @@ PODS:
     - naveridlogin-sdk-ios (= 4.2.1)
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - RNReanimated (3.12.1):
+  - RNReanimated (3.15.1):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+    - ReactCommon/turbomodule/core
+    - RNReanimated/reanimated (= 3.15.1)
+    - RNReanimated/worklets (= 3.15.1)
+  - RNReanimated/reanimated (3.15.1):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - RNReanimated/worklets (3.15.1):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1628,10 +1640,10 @@ SPEC CHECKSUMS:
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFBApp: 2f83756f4d8be2859af5e2cf54130c20e380119d
   RNFBMessaging: 91592ea949854c66697757af648a2c07bcb583b9
-  RNGestureHandler: 25b969a1ffc806b9f9ad2e170d4a3b049c6af85e
+  RNGestureHandler: 2969f62965d59a759823c9116b7c819f9dfbea74
   RNImageCropPicker: d9616a0cb9b72e8551ff94a7a5021fbd29050aa5
   RNNaverLogin: 4e21c41782cfb25eaf06093c6d1baa47fa934d82
-  RNReanimated: fa47e0572971cdb0b29b8eca683980e9c97e952f
+  RNReanimated: 4f9e720898495918e9ee795166fe48ff4d62667d
   RNScreens: b582cb834dc4133307562e930e8fa914b8c04ef2
   RNSVG: ba3e7232f45e34b7b47e74472386cf4e1a676d0a
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d

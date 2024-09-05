@@ -192,6 +192,7 @@ const ProfileScreen = ({navigation, route}) => {
               feed={item}
               postId={item.id}
               playerId={data.result.player.id}
+              type="community"
             />
           </Pressable>
         )}

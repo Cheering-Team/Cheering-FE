@@ -13,15 +13,11 @@ const NotJoin = (props: NotJoinProps) => {
   const {playerData, setIsModalOpen} = props;
 
   const openModal = () => {
-    setIsModalOpen(true);
+    setIsModalOpen();
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        {height: Dimensions.get('window').height * 0.4},
-      ]}>
+    <View style={styles.container}>
       <View style={styles.imageContainer}>
         <Avatar uri={playerData.image} size={85} style={styles.playerImage} />
         <View style={styles.starImage}>
@@ -39,7 +35,7 @@ const NotJoin = (props: NotJoinProps) => {
       </View>
 
       <CustomText style={styles.info}>
-        프로필을 설정한 후, 바로 이용해보세요
+        프로필을 설정한 후, 바로 이용할 수 있어요
       </CustomText>
 
       <CustomText
@@ -56,6 +52,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 30,
   },
   imageContainer: {
     flexDirection: 'row',

@@ -14,6 +14,8 @@ import Toast, {BaseToast} from 'react-native-toast-message';
 import {QueryClientProvider, QueryClient} from '@tanstack/react-query';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import NaverLogin from '@react-native-seoul/naver-login';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 export const toastConfig = {
   /*
@@ -71,15 +73,19 @@ function App(): React.JSX.Element {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView style={{flex: 1}}>
-        <NavigationContainer theme={navTheme} ref={navigationRef}>
-          <StatusBar barStyle="dark-content" />
-          <AuthSwitch />
-          <Toast config={toastConfig} />
-        </NavigationContainer>
-      </GestureHandlerRootView>
-    </QueryClientProvider>
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView style={{flex: 1}}>
+          <BottomSheetModalProvider>
+            <NavigationContainer theme={navTheme} ref={navigationRef}>
+              <StatusBar barStyle="dark-content" />
+              <AuthSwitch />
+              <Toast config={toastConfig} />
+            </NavigationContainer>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
+      </QueryClientProvider>
+    </SafeAreaProvider>
   );
 }
 

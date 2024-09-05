@@ -13,13 +13,15 @@ const JoinButton = () => {
         position: 'absolute',
         alignItems: 'center',
         width: '100%',
-        bottom: insets.bottom + 65,
+        bottom: insets.bottom + 60,
+        zIndex: 5,
       }}>
       <BlurView
-        blurType="xlight"
+        blurType="dark"
         style={{
-          paddingVertical: 12,
-          paddingHorizontal: 22,
+          paddingVertical: 10,
+          paddingHorizontal: 20,
+          borderRadius: 20,
         }}>
         <CustomText fontWeight="600" style={{color: 'white', fontSize: 17}}>
           커뮤니티 가입하기

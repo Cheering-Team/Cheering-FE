@@ -3,6 +3,7 @@ import {
   Pressable,
   PressableProps,
   StyleSheet,
+  View,
 } from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -27,31 +28,20 @@ const CustomButton = (props: CustomButtonProps) => {
     ...rest
   } = props;
 
-  const [isPressed, setIsPressed] = useState(false);
-
   const bottomHeight = useSafeAreaInsets().bottom;
 
-  const handlePressIn = () => {
-    setIsPressed(true);
-  };
-
-  const handlePressOut = () => {
-    setIsPressed(false);
-  };
-
   return (
-    <LinearGradient
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}
-      colors={
-        disabled
-          ? ['#c1c1c1', '#c1c1c1']
-          : isPressed
-          ? ['#528e46', '#60bf6a']
-          : ['#58a04b', '#63cb6d']
-      }
-      style={[
+    <Pressable
+      disabled={disabled || isLoading}
+      style={({pressed}) => [
         styles.emailBtn,
+        {
+          backgroundColor: disabled
+            ? '#aeaeae'
+            : pressed
+            ? '#232323'
+            : '#000000',
+        },
         type === 'bottom'
           ? {
               paddingBottom: bottomHeight,
@@ -59,21 +49,16 @@ const CustomButton = (props: CustomButtonProps) => {
             }
           : {padding: 10, borderRadius: 5, height: 50},
         style,
-      ]}>
-      <Pressable
-        disabled={disabled || isLoading}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        {...rest}>
-        {isLoading ? (
-          <ActivityIndicator color="white" />
-        ) : (
-          <CustomText style={[styles.emailBtnText]} fontWeight="500">
-            {text}
-          </CustomText>
-        )}
-      </Pressable>
-    </LinearGradient>
+      ]}
+      {...rest}>
+      {isLoading ? (
+        <ActivityIndicator color="white" />
+      ) : (
+        <CustomText style={[styles.emailBtnText]} fontWeight="500">
+          {text}
+        </CustomText>
+      )}
+    </Pressable>
   );
 };
 

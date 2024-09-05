@@ -3,21 +3,17 @@ import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
 import HeartSvg from '../../../assets/images/heart.svg';
 import HeartFillSvg from '../../../assets/images/heart_fill.svg';
 import CommentSvg from '../../../assets//images/comment.svg';
-import PostWriter from '../post/PostWriter';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {postPostsLikes} from '../../apis/post';
 import Toast from 'react-native-toast-message';
 import {useNavigation} from '@react-navigation/native';
 import CustomText from '../common/CustomText';
 import Avatar from '../common/Avatar';
-import Carousel, {Pagination} from 'react-native-reanimated-carousel';
 import {WINDOW_WIDTH} from '../../constants/dimension';
-import {PanGesture} from 'react-native-gesture-handler';
-import {useSharedValue} from 'react-native-reanimated';
 import ImageView from 'react-native-image-viewing';
-import FullScreenSvg from '../../../assets/images/fullscreen.svg';
-import CommentModal from '../post/CommentModal';
 import {formatDate} from '../../utils/format';
+import MoreSvg from '../../../assets/images/three-dots.svg';
+import PostWriter from '../post/PostWriter';
 
 interface FeedPostProps {
   feed: any;
@@ -38,27 +34,10 @@ const FeedPost = (props: FeedPostProps) => {
 
   const [imageHeight, setImageHeight] = useState(0);
 
-  useEffect(() => {
-    if (feed.images.length) {
-      setImageHeight(feed.images[0].height > 350 ? 350 : feed.images[0].height);
-    }
-  }, [feed.images]);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    setLikeStatus(feed.isLike);
-    setLikeCount(feed.likeCount);
-  }, [feed.isLike, feed.likeCount]);
-
   const queryClient = useQueryClient();
 
-  const progress = useSharedValue<number>(0);
   const [isViewer, setIsViewer] = useState(false);
   const [curImage, setCurImage] = useState(0);
-
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [showMoreButton, setShowMoreButton] = useState(false);
 
   const mutation = useMutation({
     mutationFn: postPostsLikes,
@@ -92,10 +71,16 @@ const FeedPost = (props: FeedPostProps) => {
     }
   };
 
-  const handleConfigurePanGesture = (panGesture: PanGesture) => {
-    panGesture.activeOffsetX([-10, 10]);
-    panGesture.failOffsetY([-10, 10]);
-  };
+  useEffect(() => {
+    if (feed.images.length) {
+      setImageHeight(feed.images[0].height > 350 ? 350 : feed.images[0].height);
+    }
+  }, [feed.images]);
+
+  useEffect(() => {
+    setLikeStatus(feed.isLike);
+    setLikeCount(feed.likeCount);
+  }, [feed.isLike, feed.likeCount]);
 
   return (
     <>
@@ -154,15 +139,14 @@ const FeedPost = (props: FeedPostProps) => {
           }}>
           <Avatar uri={feed.writer.image} size={33} style={{marginTop: 3}} />
           <View style={{paddingHorizontal: 10}}>
-            <View style={{flexDirection: 'row'}}>
-              <CustomText fontWeight="600" style={styles.writerName}>
-                {feed.writer.name}
-              </CustomText>
-              <CustomText style={styles.createdAt}>
-                {formatDate(feed.createdAt)}
-              </CustomText>
-            </View>
-            <CustomText style={{color: '#282828'}}>{feed.content}</CustomText>
+            <PostWriter
+              feed={feed}
+              isWriter={feed.playerUser.id === feed.writer.id}
+            />
+            <CustomText
+              style={{color: '#282828', marginRight: 25, lineHeight: 24}}>
+              {feed.content}
+            </CustomText>
           </View>
         </View>
         {/* 이미지 */}
@@ -202,34 +186,38 @@ const FeedPost = (props: FeedPostProps) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
+            justifyContent: 'space-between',
             marginLeft: 53,
             marginVertical: 12,
+            marginRight: 25,
           }}>
-          <Pressable
-            onPress={toggleLike}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginRight: 40,
-            }}>
-            {likeStatus ? (
-              <HeartFillSvg width={18} height={18} />
-            ) : (
-              <HeartSvg width={18} height={18} />
-            )}
-            <CustomText style={styles.likeCount}>{`${likeCount}`}</CustomText>
-          </Pressable>
-          <Pressable
-            onPress={toggleLike}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginRight: 40,
-            }}>
-            <CommentSvg width={18} height={18} />
-            <CustomText
-              style={styles.likeCount}>{`${feed.commentCount}`}</CustomText>
-          </Pressable>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Pressable
+              onPress={toggleLike}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginRight: 40,
+              }}>
+              {likeStatus ? (
+                <HeartFillSvg width={18} height={18} />
+              ) : (
+                <HeartSvg width={18} height={18} />
+              )}
+              <CustomText style={styles.likeCount}>{`${likeCount}`}</CustomText>
+            </Pressable>
+            <Pressable
+              onPress={toggleLike}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginRight: 40,
+              }}>
+              <CommentSvg width={18} height={18} />
+              <CustomText
+                style={styles.likeCount}>{`${feed.commentCount}`}</CustomText>
+            </Pressable>
+          </View>
 
           {type === 'home' && (
             <Pressable
@@ -239,7 +227,11 @@ const FeedPost = (props: FeedPostProps) => {
                   params: {playerId: feed.player.id},
                 })
               }
-              style={{flexDirection: 'row', alignItems: 'center'}}>
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                alignSelf: 'flex-end',
+              }}>
               <Avatar
                 uri={feed.player.image}
                 size={21}
@@ -252,15 +244,6 @@ const FeedPost = (props: FeedPostProps) => {
           )}
         </View>
       </View>
-      <CommentModal
-        postId={postId}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        playerUser={feed.playerUser}
-        selectedFilter={selectedFilter}
-        hotTab={hotTab}
-        playerId={playerId}
-      />
       <ImageView
         images={feed.images.map(item => ({uri: item.url}))}
         imageIndex={curImage}
@@ -279,10 +262,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderColor: '#d9d9d9',
   },
-  writerContainer: {flexDirection: 'row', alignItems: 'center'},
-  writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
-  writerName: {fontSize: 14},
-  createdAt: {fontSize: 14, color: '#6d6d6d', marginLeft: 5},
   interactContainer: {
     flexDirection: 'row',
     alignItems: 'center',
