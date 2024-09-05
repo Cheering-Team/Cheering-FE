@@ -26,18 +26,14 @@ interface FeedFilterProps {
 
 const FeedFilter = (props: FeedFilterProps) => {
   const {selectedFilter, setSelectedFilter} = props;
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <View style={styles.container}>
       <ScrollView
-        horizontal={!isOpen}
+        horizontal={true}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={[
-          styles.scrollContainer,
-          isOpen && styles.openedScrollContainer,
-        ]}>
+        contentContainerStyle={[styles.scrollContainer]}>
         {FeedFilterData.map(item => (
           <Pressable
             key={item.filter}
@@ -48,8 +44,8 @@ const FeedFilter = (props: FeedFilterProps) => {
             }}
             style={[
               styles.filterItem,
-              isOpen && styles.openedFilterItem,
               item.filter === selectedFilter && styles.selectedFilterItem,
+              item.filter === 'all' && {marginLeft: 15},
             ]}>
             <CustomText
               fontWeight="500"
@@ -62,29 +58,6 @@ const FeedFilter = (props: FeedFilterProps) => {
           </Pressable>
         ))}
       </ScrollView>
-      <LinearGradient
-        colors={[
-          'rgba(255,255,255,0.1)',
-          'rgba(255,255,255,1)',
-          'rgba(255,255,255,1)',
-          'rgba(255,255,255,1)',
-          'rgba(255,255,255,1)',
-        ]}
-        start={{x: 0, y: 1}}
-        end={{x: 1, y: 1}}
-        style={styles.blur}>
-        <Pressable
-          onPress={() => {
-            setIsOpen(prev => !prev);
-          }}
-          style={styles.openButton}>
-          {isOpen ? (
-            <ChevronTopSvg width={20} height={20} />
-          ) : (
-            <ChevronDownSvg width={20} height={20} />
-          )}
-        </Pressable>
-      </LinearGradient>
     </View>
   );
 };
@@ -93,7 +66,6 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 10,
     flexDirection: 'row',
-    paddingHorizontal: 15,
     backgroundColor: 'white',
     marginBottom: 10,
   },
@@ -104,7 +76,7 @@ const styles = StyleSheet.create({
     borderColor: '#dcdcdc',
     paddingVertical: 6,
     paddingHorizontal: 15,
-    borderRadius: 20,
+    borderRadius: 12,
     marginRight: 6,
   },
   openedFilterItem: {marginBottom: 10},

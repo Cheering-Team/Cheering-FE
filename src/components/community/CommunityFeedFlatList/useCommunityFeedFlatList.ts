@@ -3,10 +3,9 @@ import {useInfiniteQuery} from '@tanstack/react-query';
 import {useEffect, useState} from 'react';
 import {getPosts} from '../../../apis/post';
 import {GetPlayersInfoResponse} from '../../../types/player';
-import {Api} from '../../../types/api';
 
 export const useCommunityFeedFlatList = (
-  playerData: Api<GetPlayersInfoResponse>,
+  playerData: GetPlayersInfoResponse,
 ) => {
   const isFocused = useIsFocused();
 
@@ -20,7 +19,7 @@ export const useCommunityFeedFlatList = (
     refetch,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['posts', playerData.result.id, selectedFilter],
+    queryKey: ['posts', playerData.id, selectedFilter],
     queryFn: getPosts,
     initialPageParam: 0,
     getNextPageParam: (lastpage, pages) => {
@@ -29,7 +28,7 @@ export const useCommunityFeedFlatList = (
       }
       return pages.length;
     },
-    enabled: playerData.result.user !== null,
+    enabled: playerData.user !== null,
   });
 
   const loadFeed = () => {
@@ -39,10 +38,10 @@ export const useCommunityFeedFlatList = (
   };
 
   useEffect(() => {
-    if (isFocused && playerData.result.user) {
+    if (isFocused && playerData.user) {
       refetch();
     }
-  }, [isFocused, playerData.result.user, refetch]);
+  }, [isFocused, playerData.user, refetch]);
 
   return {
     selectedFilter,

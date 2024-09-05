@@ -7,6 +7,7 @@ import FastImage from 'react-native-fast-image';
 import TeamList from './TeamList';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../common/CustomText';
+import {WINDOW_HEIGHT} from '../../../constants/dimension';
 
 interface CommunityProfileProps {
   playerData: any;
@@ -18,7 +19,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.profileContainer}>
+    <View style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2}]}>
       <View style={[styles.infoContainer, {top: insets.top + 65}]}>
         <TeamList playerData={playerData} />
         <View style={{paddingLeft: 15}}>
@@ -65,7 +66,6 @@ const CommunityProfile = (props: CommunityProfileProps) => {
 const styles = StyleSheet.create({
   profileContainer: {
     width: '100%',
-    height: 375,
   },
   infoContainer: {position: 'absolute', zIndex: 2, width: '100%'},
   englishName: {color: 'white', fontSize: 17, marginLeft: 2},

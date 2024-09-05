@@ -77,6 +77,7 @@ const HomeFlatList = forwardRef<FlatList<any>, HomeFlatListProps>(
             playerId={hotTab}
             postId={item.id}
             hotTab={hotTab}
+            type="home"
           />
         )}
         contentContainerStyle={{paddingBottom: 50}}

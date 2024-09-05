@@ -23,11 +23,7 @@ const NotJoin = (props: NotJoinProps) => {
         {height: Dimensions.get('window').height * 0.4},
       ]}>
       <View style={styles.imageContainer}>
-        <Avatar
-          uri={playerData.result.image}
-          size={85}
-          style={styles.playerImage}
-        />
+        <Avatar uri={playerData.image} size={85} style={styles.playerImage} />
         <View style={styles.starImage}>
           <StarWhiteSvg width={45} height={45} />
         </View>
@@ -35,7 +31,7 @@ const NotJoin = (props: NotJoinProps) => {
 
       <View style={styles.imageContainer}>
         <CustomText fontWeight="500" style={styles.title}>
-          {`${playerData.result.koreanName} `}
+          {`${playerData.koreanName} `}
         </CustomText>
         <CustomText fontWeight="500" style={styles.title}>
           커뮤니티

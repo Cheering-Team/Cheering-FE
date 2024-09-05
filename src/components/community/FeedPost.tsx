@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
 import HeartSvg from '../../../assets/images/heart.svg';
 import HeartFillSvg from '../../../assets/images/heart_fill.svg';
+import CommentSvg from '../../../assets//images/comment.svg';
 import PostWriter from '../post/PostWriter';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {postPostsLikes} from '../../apis/post';
@@ -16,6 +17,7 @@ import {useSharedValue} from 'react-native-reanimated';
 import ImageView from 'react-native-image-viewing';
 import FullScreenSvg from '../../../assets/images/fullscreen.svg';
 import CommentModal from '../post/CommentModal';
+import {formatDate} from '../../utils/format';
 
 interface FeedPostProps {
   feed: any;
@@ -23,15 +25,24 @@ interface FeedPostProps {
   postId: number;
   selectedFilter?: any;
   hotTab?: any;
+  type: 'community' | 'home';
 }
 
 const FeedPost = (props: FeedPostProps) => {
   const navigation = useNavigation();
 
-  const {feed, playerId, postId, selectedFilter, hotTab} = props;
+  const {feed, playerId, postId, selectedFilter, hotTab, type} = props;
 
   const [likeStatus, setLikeStatus] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
+
+  const [imageHeight, setImageHeight] = useState(0);
+
+  useEffect(() => {
+    if (feed.images.length) {
+      setImageHeight(feed.images[0].height > 350 ? 350 : feed.images[0].height);
+    }
+  }, [feed.images]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -44,6 +55,7 @@ const FeedPost = (props: FeedPostProps) => {
 
   const progress = useSharedValue<number>(0);
   const [isViewer, setIsViewer] = useState(false);
+  const [curImage, setCurImage] = useState(0);
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [showMoreButton, setShowMoreButton] = useState(false);
@@ -88,6 +100,7 @@ const FeedPost = (props: FeedPostProps) => {
   return (
     <>
       <View style={styles.container}>
+        {/* 숨겨진 글 */}
         {feed.isHide && (
           <View
             style={{
@@ -102,10 +115,12 @@ const FeedPost = (props: FeedPostProps) => {
             </CustomText>
           </View>
         )}
+        {/* 태그 필터 */}
         {feed.tags.length > 0 && (
           <View
             style={{
               paddingTop: 10,
+
               flexDirection: 'row',
               marginLeft: -2,
               paddingHorizontal: 10,
@@ -131,131 +146,92 @@ const FeedPost = (props: FeedPostProps) => {
             ))}
           </View>
         )}
-
-        <PostWriter
-          feed={feed}
-          createdAt={feed.createdAt}
-          playerUserId={feed.writer.id}
-          isWriter={feed.playerUser.id === feed.writer.id}
-        />
-        {feed.images.length > 0 && (
-          <View>
-            <Carousel
-              loop={false}
-              data={feed.images}
-              width={WINDOW_WIDTH}
-              height={
-                feed.images[0].height / feed.images[0].width < 1
-                  ? feed.images[0].height /
-                    (feed.images[0].width / WINDOW_WIDTH)
-                  : WINDOW_WIDTH * 1
-              }
-              onProgressChange={progress}
-              style={{
-                marginTop: 10,
-              }}
-              onConfigurePanGesture={handleConfigurePanGesture}
-              renderItem={({item, index}) => {
-                return (
-                  <Image
-                    source={{uri: item.url}}
-                    style={{width: '100%', height: '100%'}}
-                    resizeMode="contain"
-                  />
-                );
-              }}
-            />
-            <Pressable
-              onPress={() => setIsViewer(true)}
-              style={{
-                width: 25,
-                height: 25,
-                borderRadius: 100,
-                backgroundColor: 'rgba(0, 0, 0, 0.501)',
-                position: 'absolute',
-                bottom: 20,
-                right: 10,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <FullScreenSvg width={13} height={13} />
-            </Pressable>
-            <Pagination.Basic
-              data={feed.images}
-              progress={progress}
-              dotStyle={{
-                width: 13,
-                height: 4,
-                backgroundColor: 'rgba(0,0,0,0.2)',
-              }}
-              activeDotStyle={{
-                overflow: 'hidden',
-                backgroundColor: 'black',
-              }}
-              containerStyle={{gap: 8, marginTop: 7}}
-            />
-          </View>
-        )}
-
-        <Pressable
-          style={styles.content}
-          onPress={() => {
-            setIsExpanded(true);
+        {/* 글 정보 */}
+        <View
+          style={{
+            flexDirection: 'row',
+            padding: 10,
           }}>
-          <CustomText
-            style={{fontSize: 15}}
-            numberOfLines={
-              showMoreButton ? (isExpanded ? undefined : 2) : undefined
-            }
-            ellipsizeMode="tail"
-            onTextLayout={e => {
-              const {lines} = e.nativeEvent;
-              if (lines.length > 2) {
-                setShowMoreButton(true);
-              }
-            }}>
-            {feed.content}
-          </CustomText>
-          {showMoreButton && !isExpanded && (
-            <CustomText style={{marginLeft: 1, color: '#969696'}}>
-              더 보기
-            </CustomText>
+          <Avatar uri={feed.writer.image} size={33} style={{marginTop: 3}} />
+          <View style={{paddingHorizontal: 10}}>
+            <View style={{flexDirection: 'row'}}>
+              <CustomText fontWeight="600" style={styles.writerName}>
+                {feed.writer.name}
+              </CustomText>
+              <CustomText style={styles.createdAt}>
+                {formatDate(feed.createdAt)}
+              </CustomText>
+            </View>
+            <CustomText style={{color: '#282828'}}>{feed.content}</CustomText>
+          </View>
+        </View>
+        {/* 이미지 */}
+        <FlatList
+          data={feed.images}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          renderItem={({item, index}) => (
+            <Pressable
+              onPress={() => {
+                setCurImage(index);
+                setIsViewer(true);
+              }}>
+              <Image
+                source={{uri: item.url}}
+                resizeMode="cover"
+                style={[
+                  {
+                    width:
+                      WINDOW_WIDTH - 90 < item.width
+                        ? WINDOW_WIDTH - 90
+                        : item.width,
+                    height: imageHeight,
+                    borderRadius: 5,
+                    marginLeft: 15,
+                    borderWidth: 0.5,
+                    borderColor: '#d1d1d1',
+                  },
+                  index === 0 && {marginLeft: 53},
+                ]}
+              />
+            </Pressable>
           )}
-        </Pressable>
-
+        />
+        {/* 상호작용 */}
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingVertical: 7,
-            marginTop: 15,
-            width: '100%',
-            paddingRight: 15,
-            paddingLeft: 7,
+            marginLeft: 53,
+            marginVertical: 12,
           }}>
-          <View style={styles.interactContainer}>
-            <Pressable
-              onPress={toggleLike}
-              style={({pressed}) => [
-                {
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: pressed ? '#dedede' : '#f7f7f7',
-                  paddingHorizontal: 15,
-                  paddingVertical: 5,
-                  borderRadius: 15,
-                },
-              ]}>
-              {likeStatus ? (
-                <HeartFillSvg width={18} height={18} />
-              ) : (
-                <HeartSvg width={18} height={18} />
-              )}
-              <CustomText style={styles.likeCount}>{`${likeCount}`}</CustomText>
-            </Pressable>
-          </View>
-          {feed.player && (
+          <Pressable
+            onPress={toggleLike}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginRight: 40,
+            }}>
+            {likeStatus ? (
+              <HeartFillSvg width={18} height={18} />
+            ) : (
+              <HeartSvg width={18} height={18} />
+            )}
+            <CustomText style={styles.likeCount}>{`${likeCount}`}</CustomText>
+          </Pressable>
+          <Pressable
+            onPress={toggleLike}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginRight: 40,
+            }}>
+            <CommentSvg width={18} height={18} />
+            <CustomText
+              style={styles.likeCount}>{`${feed.commentCount}`}</CustomText>
+          </Pressable>
+
+          {type === 'home' && (
             <Pressable
               onPress={() =>
                 navigation.navigate('CommunityStack', {
@@ -275,50 +251,6 @@ const FeedPost = (props: FeedPostProps) => {
             </Pressable>
           )}
         </View>
-        <Pressable
-          onPress={() => setIsModalOpen(true)}
-          style={({pressed}) => [
-            {
-              backgroundColor: pressed ? '#dedede' : '#f7f7f7',
-              marginHorizontal: 7,
-              marginBottom: 7,
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-              borderRadius: 10,
-            },
-          ]}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginBottom: 5,
-            }}>
-            <CustomText fontWeight="500" style={{fontSize: 15}}>
-              댓글{' '}
-            </CustomText>
-            <CustomText
-              style={{
-                color: '#6a6a6a',
-              }}>{`${feed.commentCount}`}</CustomText>
-          </View>
-          <View
-            style={{flexDirection: 'row', alignItems: 'center', width: '100%'}}>
-            <Avatar uri={feed.playerUser.image} size={30} />
-            <View
-              style={{
-                marginLeft: 9,
-                backgroundColor: '#eeeeee',
-                flex: 1,
-                borderRadius: 15,
-                paddingHorizontal: 10,
-                paddingVertical: 2,
-              }}>
-              <CustomText style={{fontSize: 13, color: '#8b8b8b'}}>
-                댓글 추가...
-              </CustomText>
-            </View>
-          </View>
-        </Pressable>
       </View>
       <CommentModal
         postId={postId}
@@ -331,7 +263,7 @@ const FeedPost = (props: FeedPostProps) => {
       />
       <ImageView
         images={feed.images.map(item => ({uri: item.url}))}
-        imageIndex={progress.value}
+        imageIndex={curImage}
         visible={isViewer}
         onRequestClose={() => setIsViewer(false)}
         presentationStyle="overFullScreen"
@@ -344,15 +276,13 @@ const FeedPost = (props: FeedPostProps) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderBottomWidth: 1.5,
-    borderColor: '#e6e6e6',
-    alignItems: 'center',
+    borderBottomWidth: 0.5,
+    borderColor: '#d9d9d9',
   },
   writerContainer: {flexDirection: 'row', alignItems: 'center'},
   writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
-  writerName: {fontSize: 15},
-  createAt: {fontSize: 13, color: '#6d6d6d'},
-  content: {paddingTop: 13, paddingHorizontal: 13, width: '100%'},
+  writerName: {fontSize: 14},
+  createdAt: {fontSize: 14, color: '#6d6d6d', marginLeft: 5},
   interactContainer: {
     flexDirection: 'row',
     alignItems: 'center',

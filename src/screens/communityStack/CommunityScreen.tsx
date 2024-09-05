@@ -314,7 +314,7 @@
 // export default memo(CommunityScreen);
 
 import React, {useState} from 'react';
-import {View, StyleSheet, ListRenderItem} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import CommunityHeader from '../../components/community/CommunityInfo/CommunityHeader';
 import {useQuery} from '@tanstack/react-query';
@@ -322,11 +322,13 @@ import {getPlayersInfo} from '../../apis/player';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CommunityProfile from '../../components/community/CommunityInfo/CommunityProfile';
 import {CommunityTabBar} from '../../components/community/CommunityTabBar/CommunityTabBar';
+import FeedList from '../../components/community/FeedList/FeedList';
+import ChatList from '../../components/community/ChatList/ChatList';
+import {WINDOW_HEIGHT} from '../../constants/dimension';
+import CustomText from '../../components/common/CustomText';
+import JoinButton from '../../components/community/JoinButton/JoinButton';
 
-const HEADER_HEIGHT = 375;
-
-const DATA = [0, 1, 2, 3, 4];
-const identity = (v: unknown): string => v + '';
+const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
 
 const CommunityScreen: React.FC = ({route}) => {
   const {playerId} = route.params;
@@ -338,12 +340,6 @@ const CommunityScreen: React.FC = ({route}) => {
     queryFn: getPlayersInfo,
   });
 
-  const renderItem: ListRenderItem<number> = React.useCallback(({index}) => {
-    return (
-      <View style={[styles.box, index % 2 === 0 ? styles.boxB : styles.boxA]} />
-    );
-  }, []);
-
   if (playerIsLoading) {
     return null;
   }
@@ -351,45 +347,21 @@ const CommunityScreen: React.FC = ({route}) => {
   return (
     <>
       <CommunityHeader playerData={playerData} />
+      {/* {!playerData.result.user && <JoinButton />} */}
       <Tabs.Container
         renderHeader={() => <CommunityProfile playerData={playerData} />}
-        headerHeight={HEADER_HEIGHT} // optional
+        headerHeight={HEADER_HEIGHT}
         minHeaderHeight={45 + insets.top}
         renderTabBar={props => <CommunityTabBar {...props} />}>
         <Tabs.Tab name="피드">
-          <Tabs.FlatList
-            data={DATA}
-            renderItem={renderItem}
-            keyExtractor={identity}
-          />
+          <FeedList playerData={playerData.result} />
         </Tabs.Tab>
         <Tabs.Tab name="채팅">
-          <Tabs.ScrollView>
-            <View style={[styles.box, styles.boxA]} />
-            <View style={[styles.box, styles.boxB]} />
-          </Tabs.ScrollView>
+          <ChatList playerData={playerData.result} />
         </Tabs.Tab>
       </Tabs.Container>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  box: {
-    height: 250,
-    width: '100%',
-  },
-  boxA: {
-    backgroundColor: 'white',
-  },
-  boxB: {
-    backgroundColor: '#D8D8D8',
-  },
-  header: {
-    height: HEADER_HEIGHT,
-    width: '100%',
-    backgroundColor: '#2196f3',
-  },
-});
 
 export default CommunityScreen;

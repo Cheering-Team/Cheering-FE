@@ -11,6 +11,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
+    "@react-native-community/blur": "^4.4.1",
     "@react-native-firebase/app": "^20.4.0",
     "@react-native-firebase/messaging": "^20.4.0",
     "@react-native-seoul/kakao-login": "^5.4.1",
