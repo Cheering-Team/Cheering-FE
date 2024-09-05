@@ -33,10 +33,7 @@ const WriteFooter = (props: WriterFooterProps) => {
   }) => {
     return (
       <ScaleDecorator key={item.name}>
-        <TouchableOpacity
-          onLongPress={drag}
-          onPress={() => cropImage(getIndex())}
-          disabled={isActive}>
+        <TouchableOpacity onLongPress={drag} disabled={isActive}>
           <Image
             source={{uri: item.uri}}
             style={{
@@ -47,25 +44,6 @@ const WriteFooter = (props: WriterFooterProps) => {
             }}
             resizeMode="cover"
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              position: 'absolute',
-              top: 5,
-              left: 5,
-            }}>
-            <Pressable
-              style={{
-                padding: 6,
-                borderRadius: 20,
-                backgroundColor: '#000000a1',
-              }}
-              onPress={() => {
-                cropImage(getIndex());
-              }}>
-              <CropSvg width={10} height={10} />
-            </Pressable>
-          </View>
           <View
             style={{
               flexDirection: 'row',
@@ -90,40 +68,6 @@ const WriteFooter = (props: WriterFooterProps) => {
         </TouchableOpacity>
       </ScaleDecorator>
     );
-  };
-
-  const cropImage = async (index: number | undefined) => {
-    if (index === undefined) return;
-
-    try {
-      const image = await ImagePicker.openCropper({
-        path: imageData[index].uri,
-        mediaType: 'photo',
-        forceJpg: true,
-        width: 1000,
-        height: 1000,
-        freeStyleCropEnabled: true,
-        cropperChooseText: '완료',
-        cropperCancelText: '취소',
-        cropperChooseColor: '#58a04b',
-        cropperCancelColor: '#ff6d6d',
-      });
-
-      const imageObj = {
-        uri: image.path,
-        name: imageData[index].name,
-        type: image.mime,
-      };
-
-      const newImageData = [...imageData];
-      newImageData[index] = imageObj;
-
-      setImageData(newImageData);
-    } catch (error: any) {
-      if (error.code === 'E_PICKER_CANCELLED') {
-        return;
-      }
-    }
   };
 
   const handleImageUpload = async () => {

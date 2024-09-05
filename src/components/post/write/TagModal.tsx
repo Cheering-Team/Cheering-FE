@@ -46,7 +46,7 @@ const TagModal = (props: TagModalProps) => {
               borderColor: '#dcdcdc',
               paddingVertical: 6,
               paddingHorizontal: 15,
-              borderRadius: 20,
+              borderRadius: 12,
               marginRight: 6,
               marginBottom: 10,
             },

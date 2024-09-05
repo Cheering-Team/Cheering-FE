@@ -71,7 +71,17 @@ const FeedPost = (props: FeedPostProps) => {
 
   useEffect(() => {
     if (feed.images.length) {
-      setImageHeight(feed.images[0].height > 350 ? 350 : feed.images[0].height);
+      if (WINDOW_WIDTH - 90 < feed.images[0].width) {
+        setImageHeight(
+          feed.images[0].height * ((WINDOW_WIDTH - 90) / feed.images[0].width),
+        );
+      } else {
+        if (feed.images[0].height > 350) {
+          setImageHeight(350);
+        } else {
+          setImageHeight(feed.images[0].height);
+        }
+      }
     }
   }, [feed.images]);
 
@@ -96,37 +106,6 @@ const FeedPost = (props: FeedPostProps) => {
               style={{color: '#fd5e5e', marginLeft: 12, fontSize: 13}}>
               신고 누적으로 인해 숨겨진 게시글입니다.
             </CustomText>
-          </View>
-        )}
-        {/* 태그 필터 */}
-        {feed.tags.length > 0 && (
-          <View
-            style={{
-              paddingTop: 10,
-
-              flexDirection: 'row',
-              marginLeft: -2,
-              paddingHorizontal: 10,
-              width: '100%',
-            }}>
-            {feed.tags.map(tag => (
-              <CustomText
-                key={tag}
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#dcdcdc',
-                  marginRight: 8,
-                  borderRadius: 5,
-                  paddingHorizontal: 5,
-                  paddingVertical: 1,
-                }}>
-                {tag === 'photo'
-                  ? '📸 직찍사'
-                  : tag === 'viewing'
-                  ? '👀 직관인증'
-                  : '🔎 정보'}
-              </CustomText>
-            ))}
           </View>
         )}
         {/* 글 정보 */}
@@ -168,10 +147,7 @@ const FeedPost = (props: FeedPostProps) => {
                 resizeMode="cover"
                 style={[
                   {
-                    width:
-                      WINDOW_WIDTH - 90 < item.width
-                        ? WINDOW_WIDTH - 90
-                        : item.width,
+                    width: item.width * (imageHeight / item.height),
                     height: imageHeight,
                     borderRadius: 5,
                     marginLeft: 15,

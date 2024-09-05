@@ -4,7 +4,7 @@ import {formatDate} from '../../utils/format';
 import Avatar from '../common/Avatar';
 import CustomText from '../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
-import MoreSvg from '../../../assets/images/three-dots-black.svg';
+import MoreSvg from '../../../assets/images/three-dots.svg';
 import OptionModal from '../common/OptionModal';
 import AlertModal from '../common/AlertModal/AlertModal';
 import {deletePost, reportPost} from '../../apis/post';
@@ -42,17 +42,15 @@ const PostWriter = (props: PostWriterProps) => {
   });
 
   const handleDeletePost = async () => {
-    const data = await mutation.mutateAsync({postId: feed.id});
+    Toast.show({
+      type: 'default',
+      position: 'bottom',
+      visibilityTime: 2000,
+      bottomOffset: insets.bottom + 20,
+      text1: '삭제중입니다...',
+    });
 
-    if (data.message === '게시글을 삭제하였습니다.') {
-      Toast.show({
-        type: 'default',
-        position: 'top',
-        visibilityTime: 3000,
-        topOffset: insets.top + 20,
-        text1: '게시글을 삭제하였습니다.',
-      });
-    }
+    await mutation.mutateAsync({postId: feed.id});
   };
 
   const handleReportPost = async () => {

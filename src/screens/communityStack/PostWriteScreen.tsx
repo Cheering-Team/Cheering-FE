@@ -69,24 +69,12 @@ const PostWriteScreen = ({
   const editMutation = useMutation({mutationFn: updatePost});
 
   const handleWritePost = async () => {
-    if (content.length === 0) {
-      Toast.show({
-        type: 'default',
-        position: 'top',
-        visibilityTime: 3000,
-        topOffset: insets.top + 20,
-        text1: '내용을 입력해주세요.',
-      });
-
-      return;
-    }
-
     if (content.length > 1990) {
       Toast.show({
         type: 'default',
-        position: 'top',
+        position: 'bottom',
         visibilityTime: 3000,
-        topOffset: insets.top + 20,
+        bottomOffset: insets.bottom + 20,
         text1: '최대 2,000자까지 작성 가능합니다.',
       });
 
@@ -98,6 +86,14 @@ const PostWriteScreen = ({
     );
 
     if (!feed) {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        autoHide: false,
+        bottomOffset: insets.bottom + 20,
+        text1: '작성중입니다..',
+      });
+
       const writeData = await writeMutation.mutateAsync({
         playerId,
         content,
@@ -110,8 +106,26 @@ const PostWriteScreen = ({
           postId: writeData.result.id,
           playerUser: writeData.result.playerUser,
         });
+
+        Toast.hide();
+
+        Toast.show({
+          type: 'default',
+          position: 'bottom',
+          visibilityTime: 2000,
+          bottomOffset: insets.bottom + 20,
+          text1: '작성이 완료되었습니다.',
+        });
       }
     } else {
+      Toast.show({
+        type: 'default',
+        position: 'bottom',
+        autoHide: false,
+        bottomOffset: insets.bottom + 20,
+        text1: '수정중입니다..',
+      });
+
       const editData = await editMutation.mutateAsync({
         postId: feed.id,
         content,
@@ -123,6 +137,16 @@ const PostWriteScreen = ({
         navigation.replace('Post', {
           postId: feed.id,
           playerUser: feed.playerUser,
+        });
+
+        Toast.hide();
+
+        Toast.show({
+          type: 'default',
+          position: 'bottom',
+          visibilityTime: 2000,
+          bottomOffset: insets.bottom + 20,
+          text1: '수정이 완료되었습니다.',
         });
       }
     }
@@ -186,9 +210,6 @@ const PostWriteScreen = ({
               setIsTagOpen(false);
             }}
           />
-        )}
-        {(writeMutation.isPending || editMutation.isPending) && (
-          <WriteLoading />
         )}
         <WriteHeader handleWritePost={handleWritePost} />
         <TagList selectedTag={selectedTag} setIsTagOpen={setIsTagOpen} />

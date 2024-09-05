@@ -13,7 +13,7 @@ const ImageEditInfo = (props: ImageEditInfoProps) => {
     <Animated.View
       style={[
         {
-          backgroundColor: '#58a04b',
+          backgroundColor: 'black',
           alignSelf: 'flex-start',
           marginLeft: 10,
           padding: 5,
@@ -33,7 +33,7 @@ const ImageEditInfo = (props: ImageEditInfoProps) => {
           borderRadius: 2,
           width: 10,
           height: 10,
-          backgroundColor: '#58a04b',
+          backgroundColor: 'black',
           transform: [{rotate: '45deg'}],
         }}
       />

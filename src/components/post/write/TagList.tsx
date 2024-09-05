@@ -39,7 +39,7 @@ const TagList = (props: TagListProps) => {
                 borderColor: '#3a3a3a',
                 paddingVertical: 6,
                 paddingHorizontal: 15,
-                borderRadius: 20,
+                borderRadius: 12,
                 marginRight: 6,
               }}
               onPress={() => {
@@ -60,7 +60,7 @@ const TagList = (props: TagListProps) => {
             borderColor: '#dcdcdc',
             paddingVertical: 6,
             paddingHorizontal: 15,
-            borderRadius: 20,
+            borderRadius: 12,
             marginRight: 6,
           }}
           onPress={() => {

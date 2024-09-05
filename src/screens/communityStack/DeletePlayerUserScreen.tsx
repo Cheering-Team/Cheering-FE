@@ -20,6 +20,7 @@ const DeletePlayerUserScreen = ({navigation, route}) => {
     mutationFn: deletePlayerUser,
     onSuccess: () => {
       queryClient.removeQueries({queryKey: ['posts'], exact: false});
+      queryClient.removeQueries({queryKey: ['player'], exact: false});
     },
   });
 

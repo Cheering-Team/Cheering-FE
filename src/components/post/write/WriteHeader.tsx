@@ -34,8 +34,14 @@ const WriteHeader = (props: WriterHeaderProps) => {
       <Pressable
         onPress={() => {
           handleWritePost();
+        }}
+        style={{
+          backgroundColor: 'black',
+          paddingVertical: 6,
+          paddingHorizontal: 14,
+          borderRadius: 20,
         }}>
-        <CustomText fontWeight="500" style={{fontSize: 19, color: '#58a04b'}}>
+        <CustomText fontWeight="600" style={{fontSize: 14, color: 'white'}}>
           등록
         </CustomText>
       </Pressable>

@@ -80,8 +80,8 @@ function App(): React.JSX.Element {
             <NavigationContainer theme={navTheme} ref={navigationRef}>
               <StatusBar barStyle="dark-content" />
               <AuthSwitch />
-              <Toast config={toastConfig} />
             </NavigationContainer>
+            <Toast config={toastConfig} />
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
       </QueryClientProvider>
