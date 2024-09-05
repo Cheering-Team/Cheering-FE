@@ -1,12 +1,12 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {formatComma} from '../../utils/format';
+import {formatComma} from '../../../utils/format';
 import LinearGradient from 'react-native-linear-gradient';
-import StarOrangeSvg from '../../../assets/images/star-orange.svg';
+import StarOrangeSvg from '../../../../assets/images/star-orange.svg';
 import FastImage from 'react-native-fast-image';
 import TeamList from './TeamList';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import CustomText from '../common/CustomText';
+import CustomText from '../../common/CustomText';
 
 interface CommunityProfileProps {
   playerData: any;

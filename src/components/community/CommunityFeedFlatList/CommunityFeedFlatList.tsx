@@ -1,5 +1,5 @@
 import React, {Dispatch, forwardRef, SetStateAction} from 'react';
-import CommunityProfile from '../CommunityProfile';
+import CommunityProfile from '../CommunityInfo/CommunityProfile';
 import CommunityTopTab from '../CommunityTopTab';
 import FeedFilter from '../FeedFilter';
 import {Animated, FlatList, ListRenderItem, View} from 'react-native';
