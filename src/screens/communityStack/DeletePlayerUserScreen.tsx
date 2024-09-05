@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {deletePlayerUser} from '../../apis/player';
 import Toast from 'react-native-toast-message';
 import {Pressable, View} from 'react-native';
@@ -13,9 +13,15 @@ const DeletePlayerUserScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;
 
   const insets = useSafeAreaInsets();
+  const queryClient = useQueryClient();
   const [isAgree, setIsAgree] = useState(false);
 
-  const mutation = useMutation({mutationFn: deletePlayerUser});
+  const mutation = useMutation({
+    mutationFn: deletePlayerUser,
+    onSuccess: () => {
+      queryClient.removeQueries({queryKey: ['posts'], exact: false});
+    },
+  });
 
   const handleDeleteUser = async () => {
     const data = await mutation.mutateAsync({playerUserId});

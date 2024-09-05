@@ -51,7 +51,11 @@ const JoinModal = (props: Props) => {
       keyboardBehavior="interactive">
       <BottomSheetView
         style={[styles.contentContainer, {paddingBottom: insets.bottom + 20}]}>
-        <JoinProfile playerData={playerData} setRefreshKey={setRefreshKey} />
+        <JoinProfile
+          playerData={playerData}
+          setRefreshKey={setRefreshKey}
+          bottomSheetModalRef={bottomSheetModalRef}
+        />
       </BottomSheetView>
     </BottomSheetModal>
   );

@@ -8,7 +8,6 @@ import FeedPost from '../FeedPost';
 import ListLoading from '../../common/ListLoading/ListLoading';
 import ListEmpty from '../../common/ListEmpty/ListEmpty';
 import NotJoin from '../NotJoin';
-import JoinModal from '../JoinModal/JoinModal';
 
 interface Props {
   playerData: any;

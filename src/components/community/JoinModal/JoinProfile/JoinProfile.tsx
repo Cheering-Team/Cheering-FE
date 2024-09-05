@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import {
   ImageBackground,
   Keyboard,
@@ -12,8 +12,8 @@ import CustomButton from '../../../common/CustomButton';
 import CameraSvg from '../../../../../assets/images/camera-01.svg';
 import {ImageType} from '../JoinModal';
 import {NICKNAME_REGEX} from '../../../../constants/regex';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {getCheckNickname, postCommunityJoin} from '../../../../apis/player';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {postCommunityJoin} from '../../../../apis/player';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -22,10 +22,11 @@ import CustomBottomSheetTextInput from '../../../common/CustomBottomSheetTextInp
 interface Props {
   playerData: any;
   setRefreshKey: Dispatch<SetStateAction<number>>;
+  bottomSheetModalRef: any;
 }
 
 const JoinProfile = (props: Props) => {
-  const {playerData, setRefreshKey} = props;
+  const {playerData, setRefreshKey, bottomSheetModalRef} = props;
 
   const insets = useSafeAreaInsets();
   const queryClient = useQueryClient();
@@ -40,17 +41,6 @@ const JoinProfile = (props: Props) => {
   const [isValid, setIsValid] = useState(true);
   const [nicknameInvalidMessage, setNicknameInvalidMessage] = useState('');
 
-  const {
-    data: nicknameCheckData,
-    refetch,
-    isRefetching,
-  } = useQuery({
-    queryKey: ['nickname'],
-    queryFn: () => getCheckNickname({playerId: playerData.id, nickname}),
-    enabled: false,
-    gcTime: 0,
-  });
-
   const mutation = useMutation({
     mutationFn: postCommunityJoin,
     onSuccess: () => {
@@ -59,15 +49,6 @@ const JoinProfile = (props: Props) => {
       });
     },
   });
-
-  const checkNickname = async () => {
-    if (!NICKNAME_REGEX.test(nickname)) {
-      setIsValid(false);
-      setNicknameInvalidMessage('2자~20자, 한글과 영어만 사용 가능합니다.');
-      return;
-    }
-    refetch();
-  };
 
   const imageUpload = async () => {
     try {
@@ -92,15 +73,27 @@ const JoinProfile = (props: Props) => {
     }
   };
 
-  const joinCommunity = async () => {
+  const handleJoinCommunity = async () => {
+    if (!NICKNAME_REGEX.test(nickname)) {
+      setIsValid(false);
+      setNicknameInvalidMessage('2자~20자, 한글과 영어만 사용 가능합니다.');
+      return;
+    }
+
     const joinData = await mutation.mutateAsync({
       playerId: playerData.id,
       nickname,
       image: imageData,
     });
 
+    if (joinData?.message === '이미 존재하는 닉네임입니다.') {
+      setIsValid(false);
+      setNicknameInvalidMessage('이미 존재하는 닉네임입니다.');
+      return;
+    }
+
     if (joinData.message === '가입이 완료되었습니다.') {
-      // closeModal();
+      bottomSheetModalRef?.current.dismiss();
       setRefreshKey((prev: number) => prev + 1);
       Toast.show({
         type: 'default',
@@ -111,19 +104,6 @@ const JoinProfile = (props: Props) => {
       });
     }
   };
-
-  useEffect(() => {
-    if (nicknameCheckData?.message === '이미 존재하는 닉네임입니다.') {
-      setIsValid(false);
-      setNicknameInvalidMessage('이미 존재하는 닉네임입니다.');
-
-      return;
-    }
-    if (nicknameCheckData?.message === '사용 가능한 닉네임 입니다.') {
-      // setJoinState('term');
-      return;
-    }
-  }, [isRefetching, nicknameCheckData?.message]);
 
   return (
     <View
@@ -178,10 +158,7 @@ const JoinProfile = (props: Props) => {
         text="시작하기"
         type="normal"
         disabled={nickname.length < 2}
-        onPress={() => {
-          checkNickname();
-          joinCommunity();
-        }}
+        onPress={handleJoinCommunity}
       />
     </View>
   );

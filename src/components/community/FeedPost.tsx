@@ -11,8 +11,6 @@ import CustomText from '../common/CustomText';
 import Avatar from '../common/Avatar';
 import {WINDOW_WIDTH} from '../../constants/dimension';
 import ImageView from 'react-native-image-viewing';
-import {formatDate} from '../../utils/format';
-import MoreSvg from '../../../assets/images/three-dots.svg';
 import PostWriter from '../post/PostWriter';
 
 interface FeedPostProps {
@@ -144,7 +142,12 @@ const FeedPost = (props: FeedPostProps) => {
               isWriter={feed.playerUser.id === feed.writer.id}
             />
             <CustomText
-              style={{color: '#282828', marginRight: 25, lineHeight: 24}}>
+              style={{
+                color: '#282828',
+                marginRight: 25,
+                lineHeight: 24,
+                fontSize: 15,
+              }}>
               {feed.content}
             </CustomText>
           </View>
