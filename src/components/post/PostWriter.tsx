@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {formatDate} from '../../utils/format';
 import Avatar from '../common/Avatar';
@@ -11,6 +11,7 @@ import {deletePost, reportPost} from '../../apis/post';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 
 interface PostWriterProps {
   feed: any;
@@ -24,7 +25,8 @@ const PostWriter = (props: PostWriterProps) => {
   const queryClient = useQueryClient();
   const insets = useSafeAreaInsets();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
   const [isInhibitAlertOpen, setIsInhibitAlertOpen] = useState(false);
@@ -100,16 +102,18 @@ const PostWriter = (props: PostWriterProps) => {
             {formatDate(feed.createdAt)}
           </CustomText>
         </Pressable>
-        <Pressable style={{padding: 2}} onPress={() => setIsModalOpen(true)}>
+        <Pressable
+          style={{padding: 2}}
+          onPress={() => bottomSheetModalRef.current?.present()}>
           <MoreSvg width={18} height={18} />
         </Pressable>
       </View>
       {isWriter ? (
         <OptionModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          option1Text="수정하기"
-          option1Press={() => {
+          modalRef={bottomSheetModalRef}
+          firstText="수정"
+          firstSvg="edit"
+          firstOnPress={() => {
             if (feed.isHide) {
               setIsInhibitAlertOpen(true);
               return;
@@ -119,9 +123,10 @@ const PostWriter = (props: PostWriterProps) => {
               params: {playerId: feed.player.id, feed},
             });
           }}
-          option2Text="삭제하기"
-          option2color="#fe6363"
-          option2Press={() => {
+          secondText="삭제"
+          secondColor="#ff2626"
+          secondSvg="trash"
+          secondOnPress={() => {
             if (feed.isHide) {
               setIsInhibitAlertOpen(true);
               return;
@@ -131,13 +136,13 @@ const PostWriter = (props: PostWriterProps) => {
         />
       ) : (
         <OptionModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          option1Text="신고하기"
-          option1Press={() => {
-            setIsReportAlertOpen(true);
+          modalRef={bottomSheetModalRef}
+          firstText="신고"
+          firstColor="#ff2626"
+          firstSvg="report"
+          firstOnPress={() => {
+            // 신고
           }}
-          option1color="#fe6363"
         />
       )}
       <AlertModal
@@ -146,7 +151,7 @@ const PostWriter = (props: PostWriterProps) => {
         title="게시글을 삭제하시겠어요?"
         content="게시글을 삭제한 후에는 복구할 수 없습니다."
         button1Text="삭제"
-        button1Color="#fe6363"
+        button1Color="#ff2626"
         button2Text="취소"
         button1Press={() => {
           handleDeletePost();
@@ -158,7 +163,7 @@ const PostWriter = (props: PostWriterProps) => {
         title="게시글을 신고하시겠습니까?"
         content="정상적인 글에 대한 신고가 계속될 경우 신고자가 제재받을 수 있습니다."
         button1Text="신고하기"
-        button1Color="#fe6363"
+        button1Color="#ff2626"
         button2Text="취소"
         button1Press={() => {
           handleReportPost();

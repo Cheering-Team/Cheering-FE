@@ -1,170 +1,127 @@
-import React, {forwardRef, useEffect, useRef} from 'react';
 import {
-  Animated,
-  Dimensions,
-  Modal,
-  PanResponder,
-  Pressable,
-  View,
-} from 'react-native';
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
+import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
+import React, {RefObject, useCallback, useMemo} from 'react';
+import {Pressable} from 'react-native';
 import CustomText from './CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import TrashSvg from '../../../assets/images/trash-red.svg';
+import ReportSvg from '../../../assets/images/report-red.svg';
+import EditSvg from '../../../assets/images/edit.svg';
 
 interface OptionModalProps {
-  isModalOpen: boolean;
-  setIsModalOpen: any;
-  option1Text: string;
-  option2Text?: string;
-  option1color?: string;
-  option2color?: string;
-  option1Press: any;
-  option2Press?: any;
+  modalRef: RefObject<BottomSheetModalMethods>;
+  firstText: string;
+  firstColor?: string;
+  firstSvg?: 'trash' | 'report' | 'edit';
+  firstOnPress: any;
+  secondText?: string;
+  secondColor?: string;
+  secondSvg?: 'trash' | 'report' | 'edit';
+  secondOnPress?: any;
 }
 
-export type closeModalHandle = {
-  closeModal: () => void;
-};
+const OptionModal = (props: OptionModalProps) => {
+  const {
+    modalRef,
+    firstText,
+    firstColor = '#000000',
+    firstSvg,
+    firstOnPress,
+    secondText,
+    secondColor = '#000000',
+    secondSvg,
+    secondOnPress,
+  } = props;
+  const insets = useSafeAreaInsets();
 
-const OptionModal = forwardRef<closeModalHandle, OptionModalProps>(
-  (props, ref) => {
-    const {
-      isModalOpen,
-      setIsModalOpen,
-      option1Text,
-      option2Text = null,
-      option1color = 'black',
-      option2color = 'black',
-      option1Press,
-      option2Press,
-    } = props;
+  const snapPoints = useMemo(
+    () => [secondText ? 160 + insets.bottom : 110 + insets.bottom],
+    [insets.bottom, secondText],
+  );
 
-    const insets = useSafeAreaInsets();
-    const screenHeight = Dimensions.get('screen').height;
-    const panY = useRef(new Animated.Value(screenHeight)).current;
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        pressBehavior="close"
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    [],
+  );
 
-    const translateY = panY.interpolate({
-      inputRange: [-1, 0, 1],
-      outputRange: [-1, 0, 1],
-    });
-
-    const resetBottomSheet = Animated.timing(panY, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    });
-
-    const closeBottomSheet = Animated.timing(panY, {
-      toValue: screenHeight,
-      duration: 350,
-      useNativeDriver: true,
-    });
-
-    const panResponders = useRef(
-      PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
-        onMoveShouldSetPanResponder: () => false,
-        onPanResponderMove: (event, gestureState) => {
-          if (gestureState.dy > 0) {
-            panY.setValue(gestureState.dy);
-          }
-        },
-        onPanResponderRelease: (event, gestureState) => {
-          if (gestureState.dy > 0 && gestureState.vy > 1.0) {
-            closeModal();
-          } else {
-            resetBottomSheet.start();
-          }
-        },
-      }),
-    ).current;
-
-    useEffect(() => {
-      if (isModalOpen) {
-        resetBottomSheet.start();
-      }
-    }, [isModalOpen, resetBottomSheet]);
-
-    const closeModal = () => {
-      closeBottomSheet.start(() => {
-        setIsModalOpen(false);
-      });
-    };
-
-    return (
-      <Modal animationType="none" visible={isModalOpen} transparent={true}>
-        {isModalOpen && (
+  return (
+    <BottomSheetModal
+      ref={modalRef}
+      index={0}
+      snapPoints={snapPoints}
+      backdropComponent={renderBackdrop}
+      backgroundStyle={{backgroundColor: '#f4f4f4'}}>
+      <BottomSheetView
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          paddingTop: 10,
+        }}>
+        <Pressable
+          style={{
+            backgroundColor: 'white',
+            width: '90%',
+            paddingVertical: 14,
+            paddingHorizontal: 20,
+            borderRadius: 15,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+          onPress={() => {
+            modalRef.current?.close();
+            firstOnPress();
+          }}>
+          <CustomText
+            fontWeight="600"
+            style={{color: firstColor, fontSize: 15}}>
+            {firstText}
+          </CustomText>
+          {firstSvg === 'trash' && <TrashSvg width={20} height={20} />}
+          {firstSvg === 'report' && <ReportSvg width={20} height={20} />}
+          {firstSvg === 'edit' && <EditSvg width={16} height={16} />}
+        </Pressable>
+        {secondText && (
           <Pressable
             style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'rgba(0,0,0,0.3)',
-            }}
-            onPressOut={closeModal}
-          />
-        )}
-        <Animated.View
-          style={[
-            {
-              position: 'absolute',
-              bottom: 0,
-              width: '100%',
               backgroundColor: 'white',
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-            },
-            {transform: [{translateY}]},
-          ]}>
-          <View
-            style={{
-              height: 30,
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
+              width: '90%',
+              paddingVertical: 14,
+              paddingHorizontal: 20,
+              borderRadius: 15,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 10,
               alignItems: 'center',
-              width: '100%',
             }}
-            {...panResponders.panHandlers}>
-            <View
-              style={{
-                backgroundColor: '#a2a2a2',
-                width: 50,
-                height: 6,
-                marginTop: 13,
-                borderRadius: 6,
-              }}
-            />
-          </View>
-          <View style={{padding: 17, paddingBottom: insets.bottom + 20}}>
-            <Pressable
-              style={{marginBottom: 20}}
-              onPress={() => {
-                closeModal();
-                option1Press();
-              }}>
-              <CustomText
-                fontWeight="500"
-                style={{fontSize: 18, color: option1color}}>
-                {option1Text}
-              </CustomText>
-            </Pressable>
-            {option2Text !== null && (
-              <Pressable
-                onPress={() => {
-                  closeModal();
-                  option2Press();
-                }}>
-                <CustomText
-                  fontWeight="500"
-                  style={{fontSize: 18, color: option2color}}>
-                  {option2Text}
-                </CustomText>
-              </Pressable>
-            )}
-          </View>
-        </Animated.View>
-      </Modal>
-    );
-  },
-);
+            onPress={() => {
+              modalRef.current?.close();
+              secondOnPress();
+            }}>
+            <CustomText
+              fontWeight="600"
+              style={{color: secondColor, fontSize: 15}}>
+              {secondText}
+            </CustomText>
+            {secondSvg === 'trash' && <TrashSvg width={20} height={20} />}
+            {secondSvg === 'report' && <ReportSvg width={20} height={20} />}
+            {secondSvg === 'edit' && <EditSvg width={16} height={16} />}
+          </Pressable>
+        )}
+      </BottomSheetView>
+    </BottomSheetModal>
+  );
+};
 
 export default OptionModal;
