@@ -1,5 +1,8 @@
-import {axiosInstance} from '.';
-import {Image} from './player';
+import {axiosInstance} from '..';
+import {Image} from '../player';
+import {ApiResponse} from '../types';
+import {postKeys} from './queries';
+import {LikePostPayload, Post} from './types';
 
 interface postPlayersPostsRequest {
   playerId: number;
@@ -10,17 +13,6 @@ interface postPlayersPostsRequest {
 
 interface postPostsLikesRequest {
   postId: number;
-}
-
-interface postCommentsRequest {
-  postId: number;
-  content: string;
-}
-
-interface postReCommentsRequest {
-  commentId: number | null;
-  content: string;
-  toId: number;
 }
 
 interface updatePostRequest {
@@ -85,56 +77,25 @@ export const getMyPlayersPosts = async ({pageParam, queryKey}) => {
   return response.data;
 };
 
-export const getPostById = async ({queryKey}) => {
-  const [_key, postId] = queryKey;
-
-  const response = await axiosInstance.get(`/posts/${postId}`);
-
+// 게시글 불러오기
+export const getPostById = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof postKeys.detail>;
+}) => {
+  const [, , postId] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<Post>>(
+    `/posts/${postId}`,
+  );
   return response.data;
 };
 
-export const postPostsLikes = async (data: postPostsLikesRequest) => {
+// 게시글 좋아요 토글
+export const likePost = async (data: LikePostPayload) => {
   const {postId} = data;
-
-  const response = await axiosInstance.post(`/posts/${postId}/likes`);
-
-  return response.data;
-};
-
-export const postComments = async (data: postCommentsRequest) => {
-  const {postId, content} = data;
-
-  const response = await axiosInstance.post(`/posts/${postId}/comments`, {
-    content,
-  });
-
-  return response.data;
-};
-
-export const getComments = async ({queryKey}) => {
-  const [_key, postId] = queryKey;
-
-  const response = await axiosInstance.get(`/posts/${postId}/comments`);
-
-  return response.data;
-};
-
-export const postReComments = async (data: postReCommentsRequest) => {
-  const {commentId, content, toId} = data;
-
-  const response = await axiosInstance.post(`/comments/${commentId}/re`, {
-    content,
-    toId,
-  });
-
-  return response.data;
-};
-
-export const getReComments = async ({queryKey}) => {
-  const [_key, commentId] = queryKey;
-
-  const response = await axiosInstance.get(`/comments/${commentId}/re`);
-
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/posts/${postId}/likes`,
+  );
   return response.data;
 };
 
@@ -167,36 +128,6 @@ export const deletePost = async data => {
   const {postId} = data;
 
   const response = await axiosInstance.delete(`/posts/${postId}`);
-
-  return response.data;
-};
-
-export const deleteComment = async data => {
-  const {commentId} = data;
-
-  const response = await axiosInstance.delete(`/comments/${commentId}`);
-
-  return response.data;
-};
-
-export const deleteReComment = async data => {
-  const {reCommentId} = data;
-
-  const response = await axiosInstance.delete(`/reComments/${reCommentId}`);
-
-  return response.data;
-};
-
-export const reportComment = async ({commentId}) => {
-  const response = await axiosInstance.post(`/comments/${commentId}/reports`);
-
-  return response.data;
-};
-
-export const reportReComment = async ({reCommentId}) => {
-  const response = await axiosInstance.post(
-    `/reComments/${reCommentId}/reports`,
-  );
 
   return response.data;
 };

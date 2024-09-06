@@ -92,7 +92,14 @@ const FeedPost = (props: FeedPostProps) => {
 
   return (
     <>
-      <View style={styles.container}>
+      <Pressable
+        style={styles.container}
+        onPress={() => {
+          navigation.navigate('Post', {
+            postId: feed.id,
+            playerUser: feed.playerUser,
+          });
+        }}>
         {/* 숨겨진 글 */}
         {feed.isHide && (
           <View
@@ -114,8 +121,14 @@ const FeedPost = (props: FeedPostProps) => {
             flexDirection: 'row',
             padding: 10,
           }}>
-          <Avatar uri={feed.writer.image} size={33} style={{marginTop: 3}} />
-          <View style={{paddingHorizontal: 10}}>
+          <Pressable
+            onPress={() => {
+              navigation.navigate('Profile', {playerUserId: feed.writer.id});
+            }}>
+            <Avatar uri={feed.writer.image} size={33} style={{marginTop: 3}} />
+          </Pressable>
+
+          <View style={{marginLeft: 10, flex: 1}}>
             <PostWriter
               feed={feed}
               isWriter={feed.playerUser.id === feed.writer.id}
@@ -185,8 +198,7 @@ const FeedPost = (props: FeedPostProps) => {
               )}
               <CustomText style={styles.likeCount}>{`${likeCount}`}</CustomText>
             </Pressable>
-            <Pressable
-              onPress={toggleLike}
+            <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -195,7 +207,7 @@ const FeedPost = (props: FeedPostProps) => {
               <CommentSvg width={18} height={18} />
               <CustomText
                 style={styles.likeCount}>{`${feed.commentCount}`}</CustomText>
-            </Pressable>
+            </View>
           </View>
 
           {type === 'home' && (
@@ -222,7 +234,7 @@ const FeedPost = (props: FeedPostProps) => {
             </Pressable>
           )}
         </View>
-      </View>
+      </Pressable>
       <ImageView
         images={feed.images.map(item => ({uri: item.url}))}
         imageIndex={curImage}

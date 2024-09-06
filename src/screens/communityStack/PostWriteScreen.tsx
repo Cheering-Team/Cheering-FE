@@ -12,13 +12,12 @@ import {useMutation} from '@tanstack/react-query';
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../../constants/dimension';
-import WriteLoading from '../../components/post/\bwrite/WriteLoading';
 import Toast from 'react-native-toast-message';
-import WriteHeader from '../../components/post/\bwrite/WriteHeader';
-import TagList from '../../components/post/\bwrite/TagList';
-import ImageEditInfo from '../../components/post/\bwrite/ImageEditInfo';
-import WriteFooter from '../../components/post/\bwrite/WriteFooter';
-import TagModal from '../../components/post/\bwrite/TagModal';
+import WriteHeader from '../../components/post/write/WriteHeader';
+import TagList from '../../components/post/write/TagList';
+import ImageEditInfo from '../../components/post/write/ImageEditInfo';
+import WriteFooter from '../../components/post/write/WriteFooter';
+import TagModal from '../../components/post/write/TagModal';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from '../../navigations/CommunityStackNavigator';
 import {RouteProp} from '@react-navigation/native';

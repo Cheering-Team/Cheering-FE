@@ -80,23 +80,26 @@ const PostWriter = (props: PostWriterProps) => {
   };
 
   return (
-    <View style={styles.writerContainer}>
+    <>
       <View
         style={{
+          flex: 1,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-          width: '100%',
-          paddingRight: 25,
         }}>
-        <View style={{flexDirection: 'row'}}>
+        <Pressable
+          style={{flexDirection: 'row'}}
+          onPress={() => {
+            navigation.navigate('Profile', {playerUserId: feed.writer.id});
+          }}>
           <CustomText fontWeight="500" style={styles.writerName}>
-            {feed.writer.name}
+            {feed.writer.nickname}
           </CustomText>
           <CustomText style={styles.createdAt}>
             {formatDate(feed.createdAt)}
           </CustomText>
-        </View>
+        </Pressable>
         <Pressable style={{padding: 2}} onPress={() => setIsModalOpen(true)}>
           <MoreSvg width={18} height={18} />
         </Pressable>
@@ -168,17 +171,12 @@ const PostWriter = (props: PostWriterProps) => {
         content="게시글을 수정하거나 삭제할 수 없습니다."
         button1Text="확인"
       />
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  writerContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'space-between',
-  },
-  createdAt: {fontSize: 14, color: '#6d6d6d', marginLeft: 5},
+  createdAt: {fontSize: 14, color: '#a5a5a5', marginLeft: 5},
   writerName: {fontSize: 14},
   writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
 });
