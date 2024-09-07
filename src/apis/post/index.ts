@@ -1,38 +1,25 @@
 import {axiosInstance} from '..';
 import {Image} from '../player';
-import {ApiResponse} from '../types';
+import {ApiResponse, Id} from '../types';
 import {postKeys} from './queries';
-import {LikePostPayload, Post} from './types';
+import {
+  EditPostPayload,
+  GetPostsResponse,
+  LikePostPayload,
+  Post,
+  WritePostPayload,
+} from './types';
 
-interface postPlayersPostsRequest {
-  playerId: number;
-  content: string;
-  tags: string[];
-  images: Image[];
-}
-
-interface postPostsLikesRequest {
-  postId: number;
-}
-
-interface updatePostRequest {
-  postId: number;
-  content: string;
-  tags: string[];
-  images: Image[];
-}
-
-export const postPlayersPosts = async (data: postPlayersPostsRequest) => {
+// 게시글 작성
+export const writePost = async (data: WritePostPayload) => {
   const {playerId, content, tags, images} = data;
 
   const formData = new FormData();
-
   formData.append('content', content);
-
   tags.forEach(tag => formData.append('tags', tag));
   images.forEach(image => formData.append('images', image));
 
-  const response = await axiosInstance.post(
+  const response = await axiosInstance.post<ApiResponse<Id>>(
     `/players/${playerId}/posts`,
     formData,
     {
@@ -41,21 +28,23 @@ export const postPlayersPosts = async (data: postPlayersPostsRequest) => {
       },
     },
   );
-
   return response.data;
 };
 
-export const getPosts = async ({pageParam, queryKey}) => {
-  let [_key, playerId, selectedFilter] = queryKey;
-
-  if (selectedFilter === 'all') {
-    selectedFilter = '';
-  }
-
-  const response = await axiosInstance.get(
-    `/players/${playerId}/posts?tag=${selectedFilter}&page=${pageParam}&size=5`,
+// 게시글 목록 불러오기 (무한 스크롤)
+export const getPosts = async ({
+  queryKey,
+  pageParam = 0,
+}: {
+  queryKey: ReturnType<typeof postKeys.list>;
+  pageParam: number;
+}) => {
+  let [, , {playerId, filter}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<GetPostsResponse>>(
+    `/players/${playerId}/posts?tag=${
+      filter === 'all' ? '' : filter
+    }&page=${pageParam}&size=5`,
   );
-
   return response.data;
 };
 
@@ -99,22 +88,24 @@ export const likePost = async (data: LikePostPayload) => {
   return response.data;
 };
 
-export const updatePost = async (data: updatePostRequest) => {
+// 게시글 수정
+export const editPost = async (data: EditPostPayload) => {
   const {postId, content, tags, images} = data;
 
   const formData = new FormData();
-
   formData.append('content', content);
-
   tags.forEach(tag => formData.append('tags', tag));
   images.forEach(image => formData.append('images', image));
 
-  const response = await axiosInstance.put(`/posts/${postId}`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
+  const response = await axiosInstance.put<ApiResponse<null>>(
+    `/posts/${postId}`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     },
-  });
-
+  );
   return response.data;
 };
 

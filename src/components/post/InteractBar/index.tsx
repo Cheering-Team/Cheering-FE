@@ -11,10 +11,11 @@ import {useLikePost} from '../../../apis/post/usePosts';
 
 interface InteractBarProps {
   post: Post;
+  type: 'home' | 'community' | 'post';
 }
 
 const InteractBar = (props: InteractBarProps) => {
-  const {post} = props;
+  const {post, type} = props;
   const navigation = useNavigation();
 
   const [likeStatus, setLikeStatus] = useState<boolean>(false);
@@ -46,7 +47,9 @@ const InteractBar = (props: InteractBarProps) => {
         marginHorizontal: 15,
         paddingBottom: 12,
         borderBottomWidth: 1,
+        marginTop: 10,
         borderBottomColor: '#eeeeee',
+        marginLeft: type === 'post' ? undefined : 53,
       }}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Pressable
@@ -67,7 +70,7 @@ const InteractBar = (props: InteractBarProps) => {
               marginLeft: 6,
             }}>{`${likeCount}`}</CustomText>
         </Pressable>
-        <Pressable
+        <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -79,30 +82,32 @@ const InteractBar = (props: InteractBarProps) => {
               color: '#6a6a6a',
               marginLeft: 6,
             }}>{`${post.commentCount}`}</CustomText>
-        </Pressable>
+        </View>
       </View>
 
-      <Pressable
-        onPress={() =>
-          navigation.navigate('CommunityStack', {
-            screen: 'Community',
-            params: {playerId: post.player.id},
-          })
-        }
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          alignSelf: 'flex-end',
-        }}>
-        <Avatar
-          uri={post.player.image}
-          size={21}
-          style={{borderWidth: 1, borderColor: '#e2e2e2'}}
-        />
-        <CustomText style={{fontSize: 15, marginLeft: 7}}>
-          {post.player.koreanName}
-        </CustomText>
-      </Pressable>
+      {type !== 'community' && (
+        <Pressable
+          onPress={() =>
+            navigation.navigate('CommunityStack', {
+              screen: 'Community',
+              params: {playerId: post.player.id},
+            })
+          }
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignSelf: 'flex-end',
+          }}>
+          <Avatar
+            uri={post.player.image}
+            size={21}
+            style={{borderWidth: 1, borderColor: '#e2e2e2'}}
+          />
+          <CustomText style={{fontSize: 15, marginLeft: 7}}>
+            {post.player.koreanName}
+          </CustomText>
+        </Pressable>
+      )}
     </View>
   );
 };

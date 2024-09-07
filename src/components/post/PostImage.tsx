@@ -36,7 +36,6 @@ const PostImage = (props: PostImageProps) => {
       <FlatList
         data={images}
         showsHorizontalScrollIndicator={false}
-        style={{marginBottom: 10}}
         horizontal={true}
         renderItem={({item, index}) => (
           <Pressable

@@ -17,11 +17,12 @@ export const useWriteComment = () => {
       const {postId} = variables;
       queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
       queryClient.invalidateQueries({queryKey: postKeys.detail(postId)});
+      queryClient.invalidateQueries({queryKey: postKeys.lists()});
     },
   });
 };
 
-// 댓글 불러오기
+// 댓글 목록 불러오기
 export const useGetComments = (postId: number) => {
   return useInfiniteQuery({
     queryKey: commentKeys.list(postId),
@@ -46,6 +47,7 @@ export const useWriteReComment = (postId: number) => {
       queryClient.invalidateQueries({queryKey: postKeys.detail(postId)});
       queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
       queryClient.invalidateQueries({queryKey: reCommentKeys.list(commentId)});
+      queryClient.invalidateQueries({queryKey: postKeys.lists()});
     },
   });
 };

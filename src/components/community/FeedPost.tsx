@@ -12,6 +12,8 @@ import Avatar from '../common/Avatar';
 import {WINDOW_WIDTH} from '../../constants/dimension';
 import ImageView from 'react-native-image-viewing';
 import PostWriter from '../post/PostWriter';
+import {useLikePost} from '../../apis/post/usePosts';
+import InteractBar from '../post/InteractBar';
 
 interface FeedPostProps {
   feed: any;
@@ -37,36 +39,13 @@ const FeedPost = (props: FeedPostProps) => {
   const [isViewer, setIsViewer] = useState(false);
   const [curImage, setCurImage] = useState(0);
 
-  const mutation = useMutation({
-    mutationFn: postPostsLikes,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['posts', playerId, selectedFilter],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['my', 'posts', hotTab],
-      });
-    },
-  });
+  const {mutateAsync: likePost} = useLikePost(postId);
 
   const toggleLike = async () => {
     setLikeCount(prev => (likeStatus ? prev - 1 : prev + 1));
     setLikeStatus(prev => !prev);
 
-    const response = await mutation.mutateAsync({postId});
-
-    if (response.code !== 200) {
-      setLikeCount(prev => (likeStatus ? prev - 1 : prev + 1));
-      setLikeStatus(prev => !prev);
-
-      Toast.show({
-        type: 'default',
-        position: 'bottom',
-        visibilityTime: 3000,
-        bottomOffset: 30,
-        text1: '일시적인 오류입니다. 잠시 후 다시 시도해주세요.',
-      });
-    }
+    await likePost({postId});
   };
 
   useEffect(() => {
@@ -95,10 +74,20 @@ const FeedPost = (props: FeedPostProps) => {
       <Pressable
         style={styles.container}
         onPress={() => {
-          navigation.navigate('Post', {
-            postId: feed.id,
-            playerUser: feed.playerUser,
-          });
+          if (type === 'community') {
+            navigation.navigate('Post', {
+              postId: feed.id,
+              playerUser: feed.playerUser,
+            });
+          } else {
+            navigation.navigate('CommunityStack', {
+              screen: 'Post',
+              params: {
+                postId: feed.id,
+                playerUser: feed.playerUser,
+              },
+            });
+          }
         }}>
         {/* 숨겨진 글 */}
         {feed.isHide && (
@@ -174,66 +163,7 @@ const FeedPost = (props: FeedPostProps) => {
           )}
         />
         {/* 상호작용 */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginLeft: 53,
-            marginVertical: 12,
-            marginRight: 25,
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Pressable
-              onPress={toggleLike}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginRight: 40,
-              }}>
-              {likeStatus ? (
-                <HeartFillSvg width={18} height={18} />
-              ) : (
-                <HeartSvg width={18} height={18} />
-              )}
-              <CustomText style={styles.likeCount}>{`${likeCount}`}</CustomText>
-            </Pressable>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginRight: 40,
-              }}>
-              <CommentSvg width={18} height={18} />
-              <CustomText
-                style={styles.likeCount}>{`${feed.commentCount}`}</CustomText>
-            </View>
-          </View>
-
-          {type === 'home' && (
-            <Pressable
-              onPress={() =>
-                navigation.navigate('CommunityStack', {
-                  screen: 'Community',
-                  params: {playerId: feed.player.id},
-                })
-              }
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                alignSelf: 'flex-end',
-              }}>
-              <Avatar
-                uri={feed.player.image}
-                size={21}
-                style={{borderWidth: 1, borderColor: '#e2e2e2'}}
-              />
-              <CustomText style={{fontSize: 15, marginLeft: 7}}>
-                {feed.player.koreanName}
-              </CustomText>
-            </Pressable>
-          )}
-        </View>
+        <InteractBar post={feed} type={type} />
       </Pressable>
       <ImageView
         images={feed.images.map(item => ({uri: item.url}))}

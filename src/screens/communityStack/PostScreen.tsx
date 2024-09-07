@@ -140,7 +140,7 @@ const PostScreen = ({route}) => {
               </CustomText>
               {/* 이미지 */}
               <PostImage images={postData.result.images} />
-              <InteractBar post={postData.result} />
+              <InteractBar post={postData.result} type="post" />
               {/* 댓글 */}
               <CustomText
                 fontWeight="600"

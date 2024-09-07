@@ -7,12 +7,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
-import {postPlayersPosts, updatePost} from '../../apis/post';
-import {useMutation} from '@tanstack/react-query';
-
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../../constants/dimension';
-import Toast from 'react-native-toast-message';
 import WriteHeader from '../../components/post/write/WriteHeader';
 import TagList from '../../components/post/write/TagList';
 import ImageEditInfo from '../../components/post/write/ImageEditInfo';
@@ -21,18 +17,9 @@ import TagModal from '../../components/post/write/TagModal';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from '../../navigations/CommunityStackNavigator';
 import {RouteProp} from '@react-navigation/native';
-
-export interface FilterType {
-  photo: boolean;
-  viewing: boolean;
-  information: boolean;
-}
-
-export interface SizeImage {
-  uri: string;
-  name: string | undefined;
-  type: string;
-}
+import {ImageType, TagType} from '../../apis/post/types';
+import {useEditPost, useWritePost} from '../../apis/post/usePosts';
+import {showBottomToast} from '../../utils/\btoast';
 
 export type PostWriteScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
@@ -41,113 +28,54 @@ export type PostWriteScreenNavigationProp = NativeStackNavigationProp<
 
 type PostWriteScreenRouteProp = RouteProp<CommunityStackParamList, 'PostWrite'>;
 
-const PostWriteScreen = ({
-  navigation,
-  route,
-}: {
-  navigation: PostWriteScreenNavigationProp;
-  route: PostWriteScreenRouteProp;
-}) => {
+const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
   const insets = useSafeAreaInsets();
   const {playerId, feed} = route.params;
 
   const [isTagOpen, setIsTagOpen] = useState(false);
-  const [selectedTag, setSelectedTag] = useState<FilterType>({
+  const [selectedTag, setSelectedTag] = useState<Record<TagType, boolean>>({
     photo: false,
     viewing: false,
     information: false,
   });
 
   const [content, setContent] = useState<string>('');
-  const [imageData, setImageData] = useState<SizeImage[]>([]);
+  const [imageData, setImageData] = useState<ImageType[]>([]);
 
   const [isImageInfo, setIsImageInfo] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(1));
 
-  const writeMutation = useMutation({mutationFn: postPlayersPosts});
-  const editMutation = useMutation({mutationFn: updatePost});
+  const {mutate: writePost} = useWritePost();
+  const {mutate: editPost} = useEditPost();
 
   const handleWritePost = async () => {
     if (content.length > 1990) {
-      Toast.show({
-        type: 'default',
-        position: 'bottom',
-        visibilityTime: 3000,
-        bottomOffset: insets.bottom + 20,
-        text1: '최대 2,000자까지 작성 가능합니다.',
-      });
-
+      showBottomToast(insets.bottom + 20, '최대 2,000자까지 작성 가능합니다.');
       return;
     }
 
-    const tags = Object.keys(selectedTag).filter(
-      key => selectedTag[key as keyof FilterType],
-    );
+    const tags = Object.entries(selectedTag)
+      .filter(([_, value]) => value)
+      .map(([key]) => key as TagType);
 
     if (!feed) {
-      Toast.show({
-        type: 'default',
-        position: 'bottom',
-        autoHide: false,
-        bottomOffset: insets.bottom + 20,
-        text1: '작성중입니다..',
-      });
+      showBottomToast(insets.bottom + 20, '작성중입니다..', false);
 
-      const writeData = await writeMutation.mutateAsync({
+      writePost({
         playerId,
         content,
         tags,
         images: imageData,
       });
-
-      if (writeData.message === '게시글이 작성되었습니다.') {
-        navigation.replace('Post', {
-          postId: writeData.result.id,
-          playerUser: writeData.result.playerUser,
-        });
-
-        Toast.hide();
-
-        Toast.show({
-          type: 'default',
-          position: 'bottom',
-          visibilityTime: 2000,
-          bottomOffset: insets.bottom + 20,
-          text1: '작성이 완료되었습니다.',
-        });
-      }
     } else {
-      Toast.show({
-        type: 'default',
-        position: 'bottom',
-        autoHide: false,
-        bottomOffset: insets.bottom + 20,
-        text1: '수정중입니다..',
-      });
+      showBottomToast(insets.bottom + 20, '수정중입니다..', false);
 
-      const editData = await editMutation.mutateAsync({
+      editPost({
         postId: feed.id,
         content,
         tags,
         images: imageData,
       });
-
-      if (editData.message === '게시글을 수정하였습니다.') {
-        navigation.replace('Post', {
-          postId: feed.id,
-          playerUser: feed.playerUser,
-        });
-
-        Toast.hide();
-
-        Toast.show({
-          type: 'default',
-          position: 'bottom',
-          visibilityTime: 2000,
-          bottomOffset: insets.bottom + 20,
-          text1: '수정이 완료되었습니다.',
-        });
-      }
     }
   };
 

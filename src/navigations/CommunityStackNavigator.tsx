@@ -1,5 +1,4 @@
 import React from 'react';
-import {PlayerUser} from './CategoryStackNavigator';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import CommunityScreen from '../screens/communityStack/CommunityScreen';
 import ProfileScreen from '../screens/communityStack/ProfileScreen';
@@ -13,7 +12,7 @@ import ChatTestScreen from '../screens/communityStack/ChatTestScreen';
 export type CommunityStackParamList = {
   Community: {playerId: number};
   PostWrite: {playerId: number; feed?: any};
-  Post: {postId: number; playerUser: PlayerUser};
+  Post: {postId: number};
   Chat: undefined;
   Profile: {playerUserId: number};
   ProfileEdit: {playerUserId: number};
