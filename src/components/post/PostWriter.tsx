@@ -42,8 +42,6 @@ const PostWriter = (props: PostWriterProps) => {
   const handleReportPost = async () => {
     const data = await reportPost({postId: feed.id});
 
-    console.log(JSON.stringify(data));
-
     if (data.message === '존재하지 않는 게시글입니다.' && type === 'post') {
       navigation.goBack();
     }

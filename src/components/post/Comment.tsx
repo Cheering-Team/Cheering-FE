@@ -1,18 +1,15 @@
-import React, {useRef, useState} from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {Pressable, View} from 'react-native';
 import Avatar from '../common/Avatar';
-import MoreSvg from '../../../assets/images/three-dots.svg';
 import CustomText from '../common/CustomText';
-import {formatDate} from '../../utils/format';
 import {useNavigation} from '@react-navigation/native';
 import ReComment from './ReComment';
 import {useGetRecomments} from '../../apis/comment/useComments';
-import OptionModal from '../common/OptionModal';
-import AlertModal from '../common/AlertModal/AlertModal';
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import CommentWriter from '../comment/CommentWriter';
+import {Comment as CommentType} from '../../apis/comment/types';
 
 interface Props {
-  comment: any;
+  comment: CommentType;
   setUnder: any;
   setTo: any;
   inputRef: any;
@@ -22,10 +19,7 @@ const Comment = (props: Props) => {
   const {comment, setUnder, setTo, inputRef} = props;
   const navigation = useNavigation();
 
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
   const [isReCommentOpen, setIsReCommentOpen] = useState(false);
-  const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
 
   const {data} = useGetRecomments(comment.id, isReCommentOpen);
 
@@ -47,33 +41,7 @@ const Comment = (props: Props) => {
       </Pressable>
 
       <View style={{marginLeft: 10, flex: 1}}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <Pressable
-            style={{flexDirection: 'row'}}
-            onPress={() => {
-              navigation.navigate('Profile', {playerUserId: comment.writer.id});
-            }}>
-            <CustomText fontWeight="500" style={styles.writerName}>
-              {comment.writer.nickname}
-            </CustomText>
-            <CustomText style={styles.createdAt}>
-              {formatDate(comment.createdAt)}
-            </CustomText>
-          </Pressable>
-          <Pressable
-            style={{padding: 2}}
-            onPress={() => {
-              bottomSheetModalRef.current?.present();
-            }}>
-            <MoreSvg width={18} height={18} />
-          </Pressable>
-        </View>
+        <CommentWriter comment={comment} type="comment" />
         <CustomText style={{color: '#282828'}}>{comment.content}</CustomText>
         <Pressable
           onPress={() => {
@@ -137,47 +105,8 @@ const Comment = (props: Props) => {
           </Pressable>
         )}
       </View>
-      {comment.isWriter ? (
-        <OptionModal
-          modalRef={bottomSheetModalRef}
-          firstText="삭제"
-          firstColor="#ff2626"
-          firstSvg="trash"
-          firstOnPress={() => {
-            // handleDeleteComment();
-          }}
-        />
-      ) : (
-        <OptionModal
-          modalRef={bottomSheetModalRef}
-          firstText="신고"
-          firstColor="#ff2626"
-          firstSvg="report"
-          firstOnPress={() => {
-            setIsReportAlertOpen(true);
-          }}
-        />
-      )}
-      <AlertModal
-        isModalOpen={isReportAlertOpen}
-        setIsModalOpen={setIsReportAlertOpen}
-        title="댓글을 신고하시겠습니까?"
-        content="정상적인 글에 대한 신고가 계속될 경우 신고자가 제재받을 수 있습니다."
-        button1Text="신고하기"
-        button1Color="#ff2626"
-        button2Text="취소"
-        button1Press={() => {
-          // handleReportPost();
-        }}
-      />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  createdAt: {fontSize: 14, color: '#a5a5a5', marginLeft: 5},
-  writerName: {fontSize: 14},
-  writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
-});
 
 export default Comment;

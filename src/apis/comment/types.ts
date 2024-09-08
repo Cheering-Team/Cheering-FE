@@ -16,11 +16,19 @@ export interface ReComment {
   content: string;
   createdAt: Date;
   to: PlayerUser;
-  wrtier: PlayerUser;
+  writer: PlayerUser;
   isWriter: boolean;
 }
 
 // 요청
+export interface CommentIdPayload {
+  commentId: number;
+}
+
+export interface ReCommentIdPayload {
+  reCommentId: number;
+}
+
 export interface WriteCommentPayload {
   postId: number;
   content: string;

@@ -2,9 +2,11 @@ import {axiosInstance} from '..';
 import {ApiResponse, Id} from '../types';
 import {
   Comment,
+  CommentIdPayload,
   GetCommentsResponse,
   GetReCommentsResponse,
   ReComment,
+  ReCommentIdPayload,
   WriteCommentPayload,
   WriteReCommentPayload,
 } from './types';
@@ -45,11 +47,12 @@ export const getComments = async ({
   return response.data;
 };
 
-export const deleteComment = async data => {
+// 댓글 삭제
+export const deleteComment = async (data: CommentIdPayload) => {
   const {commentId} = data;
-
-  const response = await axiosInstance.delete(`/comments/${commentId}`);
-
+  const response = await axiosInstance.delete<ApiResponse<null>>(
+    `/comments/${commentId}`,
+  );
   return response.data;
 };
 
@@ -87,11 +90,12 @@ export const getReComments = async ({
   return response.data;
 };
 
-export const deleteReComment = async data => {
+// 답글 삭제
+export const deleteReComment = async (data: ReCommentIdPayload) => {
   const {reCommentId} = data;
-
-  const response = await axiosInstance.delete(`/reComments/${reCommentId}`);
-
+  const response = await axiosInstance.delete<ApiResponse<null>>(
+    `/reComments/${reCommentId}`,
+  );
   return response.data;
 };
 
