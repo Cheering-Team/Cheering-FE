@@ -60,12 +60,6 @@ const HomeFlatList = forwardRef<FlatList<any>, HomeFlatListProps>(
       }
     };
 
-    useEffect(() => {
-      if (isFocused) {
-        refetch();
-      }
-    }, [isFocused, refetch]);
-
     return (
       <Animated.FlatList
         ref={ref}

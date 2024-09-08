@@ -40,14 +40,19 @@ axiosInstance.interceptors.response.use(
       return;
     }
 
+    // 탈퇴처리된 유저 활동중 발생
     if (message === '해당 커뮤니티 유저를 찾을 수 없습니다.') {
       queryClient.invalidateQueries({queryKey: ['my', 'players']});
-      queryClient.invalidateQueries({queryKey: postKeys.lists()});
-      console.log('here');
+      queryClient.invalidateQueries({queryKey: postKeys.list(0, 'all')});
       RootNavigation.navigate('HomeStack', {screen: 'Home'});
       showBottomToast(50, '일시적인 오류입니다.');
-
       return Promise.reject(error);
+    }
+
+    // 삭제된 게시글에 대한 활동
+    if (message === '존재하지 않는 게시글입니다.') {
+      showBottomToast(50, message);
+      return Promise.resolve(error);
     }
 
     if (message === '토큰이 유효하지 않습니다.') {
@@ -76,7 +81,7 @@ axiosInstance.interceptors.response.use(
         text1: '서버에 문제가 발생했습니다.',
         text2: '잠시 후 다시 시도해 주세요.',
       });
-    } else if (status === 400) {
+    } else if (status >= 400) {
       return Promise.resolve(response);
     }
 
