@@ -6,24 +6,21 @@ import {useNavigation} from '@react-navigation/native';
 import MoreSvg from '../../../assets/images/three-dots.svg';
 import OptionModal from '../common/OptionModal';
 import AlertModal from '../common/AlertModal/AlertModal';
-import {deletePost} from '../../apis/post';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import Toast from 'react-native-toast-message';
+import {useQueryClient} from '@tanstack/react-query';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {useReportPost} from '../../apis/post/usePosts';
+import {useDeletePost, useReportPost} from '../../apis/post/usePosts';
 
 interface PostWriterProps {
   feed: any;
   isWriter: boolean;
+  type: 'post' | 'feed';
 }
 
 const PostWriter = (props: PostWriterProps) => {
-  const {feed, isWriter} = props;
+  const {feed, isWriter, type} = props;
 
   const navigation = useNavigation();
-  const queryClient = useQueryClient();
-  const insets = useSafeAreaInsets();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -31,30 +28,25 @@ const PostWriter = (props: PostWriterProps) => {
   const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
   const [isInhibitAlertOpen, setIsInhibitAlertOpen] = useState(false);
 
-  const mutation = useMutation({
-    mutationFn: deletePost,
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['posts'], exact: false});
-      queryClient.invalidateQueries({queryKey: ['my', 'posts'], exact: false});
-    },
-  });
-
-  const {mutate: reportPost} = useReportPost();
+  const {mutateAsync: deletePost} = useDeletePost();
+  const {mutateAsync: reportPost} = useReportPost();
 
   const handleDeletePost = async () => {
-    Toast.show({
-      type: 'default',
-      position: 'bottom',
-      visibilityTime: 2000,
-      bottomOffset: insets.bottom + 20,
-      text1: '삭제중입니다...',
-    });
+    const data = await deletePost({postId: feed.id});
 
-    await mutation.mutateAsync({postId: feed.id});
+    if (data.code === 200 && type === 'post') {
+      navigation.goBack();
+    }
   };
 
-  const handleReportPost = () => {
-    reportPost({postId: feed.id});
+  const handleReportPost = async () => {
+    const data = await reportPost({postId: feed.id});
+
+    console.log(JSON.stringify(data));
+
+    if (data.message === '존재하지 않는 게시글입니다.' && type === 'post') {
+      navigation.goBack();
+    }
   };
 
   return (

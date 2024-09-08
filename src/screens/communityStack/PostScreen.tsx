@@ -123,6 +123,7 @@ const PostScreen = ({route}) => {
                   isWriter={
                     postData.result.playerUser.id === postData.result.writer.id
                   }
+                  type="post"
                 />
               </View>
               {/* 본문 */}

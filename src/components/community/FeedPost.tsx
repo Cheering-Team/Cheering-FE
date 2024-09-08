@@ -121,6 +121,7 @@ const FeedPost = (props: FeedPostProps) => {
             <PostWriter
               feed={feed}
               isWriter={feed.playerUser.id === feed.writer.id}
+              type="feed"
             />
             <CustomText
               style={{

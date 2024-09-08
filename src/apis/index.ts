@@ -52,7 +52,7 @@ axiosInstance.interceptors.response.use(
     // 삭제된 게시글에 대한 활동
     if (message === '존재하지 않는 게시글입니다.') {
       showBottomToast(50, message);
-      return Promise.resolve(error);
+      return Promise.resolve(response);
     }
 
     if (message === '토큰이 유효하지 않습니다.') {

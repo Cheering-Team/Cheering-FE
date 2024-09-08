@@ -101,10 +101,11 @@ export const reportPost = async (data: PostIdPayload) => {
   return response.data;
 };
 
-export const deletePost = async data => {
+// 게시글 삭제
+export const deletePost = async (data: PostIdPayload) => {
   const {postId} = data;
-
-  const response = await axiosInstance.delete(`/posts/${postId}`);
-
+  const response = await axiosInstance.delete<ApiResponse<null>>(
+    `/posts/${postId}`,
+  );
   return response.data;
 };

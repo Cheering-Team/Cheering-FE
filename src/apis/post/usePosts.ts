@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 import {postKeys} from './queries';
 import {
+  deletePost,
   editPost,
   getPostById,
   getPosts,
@@ -107,6 +108,19 @@ export const useReportPost = () => {
     onSuccess: data => {
       const {message} = data;
       showBottomToast(insets.bottom + 20, message);
+    },
+  });
+};
+
+// 게시글 삭제
+export const useDeletePost = () => {
+  const insets = useSafeAreaInsets();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deletePost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: postKeys.lists()});
+      showBottomToast(insets.bottom + 20, '삭제되었습니다.');
     },
   });
 };
