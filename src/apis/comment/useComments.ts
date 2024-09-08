@@ -9,6 +9,8 @@ import {
   deleteReComment,
   getComments,
   getReComments,
+  reportComment,
+  reportReComment,
   writeComment,
   writeReComment,
 } from '.';
@@ -49,17 +51,24 @@ export const useGetComments = (postId: number) => {
 // 댓글 삭제
 export const useDeleteComment = () => {
   const queryClient = useQueryClient();
-  const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: deleteComment,
-    onSuccess: data => {
-      const {message} = data;
-      if (message === '존재하지 않는 댓글입니다.') {
-        showBottomToast(insets.bottom + 20, message);
-      }
+    onSuccess: () => {
       queryClient.invalidateQueries({queryKey: commentKeys.lists()});
       queryClient.invalidateQueries({queryKey: postKeys.details()});
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
+    },
+  });
+};
+
+// 댓글 신고
+export const useReportComment = () => {
+  const insets = useSafeAreaInsets();
+  return useMutation({
+    mutationFn: reportComment,
+    onSuccess: data => {
+      const {message} = data;
+      showBottomToast(insets.bottom + 20, message);
     },
   });
 };
@@ -94,18 +103,25 @@ export const useGetRecomments = (
 // 답글 삭제
 export const useDeleteReComment = () => {
   const queryClient = useQueryClient();
-  const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: deleteReComment,
-    onSuccess: data => {
-      const {message} = data;
-      if (message === '존재하지 않는 답글입니다.') {
-        showBottomToast(insets.bottom + 20, message);
-      }
+    onSuccess: () => {
       queryClient.invalidateQueries({queryKey: commentKeys.lists()});
       queryClient.invalidateQueries({queryKey: reCommentKeys.lists()});
       queryClient.invalidateQueries({queryKey: postKeys.details()});
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
+    },
+  });
+};
+
+// 답글 신고
+export const useReportReComment = () => {
+  const insets = useSafeAreaInsets();
+  return useMutation({
+    mutationFn: reportReComment,
+    onSuccess: data => {
+      const {message} = data;
+      showBottomToast(insets.bottom + 20, message);
     },
   });
 };

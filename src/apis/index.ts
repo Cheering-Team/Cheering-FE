@@ -6,6 +6,7 @@ import {queryClient} from '../../App';
 import {showBottomToast} from '../utils/\btoast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {postKeys} from './post/queries';
+import {commentKeys, reCommentKeys} from './comment/queries';
 
 export const axiosInstance = axios.create({
   baseURL: 'http://172.30.1.99:8080/api',
@@ -53,6 +54,16 @@ axiosInstance.interceptors.response.use(
     if (message === '존재하지 않는 게시글입니다.') {
       showBottomToast(50, message);
       return Promise.resolve(response);
+    }
+
+    // 삭제된 댓글에 대한 활동
+    if (message === '존재하지 않는 댓글입니다.') {
+      showBottomToast(50, message);
+      queryClient.invalidateQueries({queryKey: commentKeys.lists()});
+      queryClient.invalidateQueries({queryKey: reCommentKeys.lists()});
+      queryClient.invalidateQueries({queryKey: postKeys.details()});
+      queryClient.invalidateQueries({queryKey: postKeys.lists()});
+      return Promise.reject(error);
     }
 
     if (message === '토큰이 유효하지 않습니다.') {

@@ -10,6 +10,8 @@ import AlertModal from '../../common/AlertModal/AlertModal';
 import {
   useDeleteComment,
   useDeleteReComment,
+  useReportComment,
+  useReportReComment,
 } from '../../../apis/comment/useComments';
 import {Comment, ReComment} from '../../../apis/comment/types';
 
@@ -28,6 +30,8 @@ const CommentWriter = (props: CommentWriterProps) => {
 
   const {mutate: deleteComment} = useDeleteComment();
   const {mutate: deleteReComment} = useDeleteReComment();
+  const {mutate: reportComment} = useReportComment();
+  const {mutate: reportReComment} = useReportReComment();
 
   const handleDeleteComment = () => {
     deleteComment({commentId: comment.id});
@@ -35,6 +39,13 @@ const CommentWriter = (props: CommentWriterProps) => {
 
   const handleDeleteReComment = () => {
     deleteReComment({reCommentId: comment.id});
+  };
+
+  const handleReportComment = () => {
+    reportComment({commentId: comment.id});
+  };
+  const handleReportReComment = () => {
+    reportReComment({reCommentId: comment.id});
   };
 
   return (
@@ -91,9 +102,9 @@ const CommentWriter = (props: CommentWriterProps) => {
         button1Text="신고하기"
         button1Color="#ff2626"
         button2Text="취소"
-        button1Press={() => {
-          // handleReportPost();
-        }}
+        button1Press={
+          type === 'comment' ? handleReportComment : handleReportReComment
+        }
       />
     </View>
   );
