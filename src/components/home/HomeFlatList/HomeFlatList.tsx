@@ -2,7 +2,7 @@ import React, {Dispatch, forwardRef, SetStateAction, useEffect} from 'react';
 import {Animated, FlatList, View} from 'react-native';
 import FeedPost from '../../community/FeedPost';
 import {useInfiniteQuery} from '@tanstack/react-query';
-import {getMyPlayersPosts} from '../../../apis/post';
+import {getMyPlayersPosts, getPosts} from '../../../apis/post';
 import HomeBanner from '../HomeBanner/HomeBanner';
 import HomeTopTab from '../HomeTopTab/HomeTopTab';
 import {GetPlayersResponse} from '../../../types/player';
@@ -11,6 +11,7 @@ import ListLoading from '../../common/ListLoading/ListLoading';
 import {useIsFocused} from '@react-navigation/native';
 import CommunityEmpty from '../../common/CommunityEmpty/CommunityEmpty';
 import ListEmpty from '../../common/ListEmpty/ListEmpty';
+import {postKeys} from '../../../apis/post/queries';
 
 interface HomeFlatListProps {
   playerData: Api<GetPlayersResponse[]>;
@@ -42,8 +43,8 @@ const HomeFlatList = forwardRef<FlatList<any>, HomeFlatListProps>(
       refetch,
       isFetchingNextPage,
     } = useInfiniteQuery({
-      queryKey: ['my', 'posts', hotTab],
-      queryFn: getMyPlayersPosts,
+      queryKey: postKeys.list(hotTab, 'all'),
+      queryFn: getPosts,
       initialPageParam: 0,
       getNextPageParam: (lastpage, pages) => {
         if (lastpage.result.last) {

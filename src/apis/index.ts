@@ -2,9 +2,13 @@ import axios from 'axios';
 import * as RootNavigation from '../navigations/RootNavigation';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Toast from 'react-native-toast-message';
+import {queryClient} from '../../App';
+import {showBottomToast} from '../utils/\btoast';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {postKeys} from './post/queries';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://172.30.1.57:8080/api',
+  baseURL: 'http://172.30.1.99:8080/api',
 });
 
 axiosInstance.interceptors.request.use(async config => {
@@ -29,11 +33,21 @@ axiosInstance.interceptors.response.use(
     const status = response.status;
     const message = response.data.message;
 
-    if (message === "'해당 사용자를 찾을 수 없습니다.'") {
+    if (message === '해당 사용자를 찾을 수 없습니다.') {
       await EncryptedStorage.removeItem('accessToken');
       await EncryptedStorage.removeItem('refreshToken');
       RootNavigation.navigate('MoreStack', {screen: 'SignOut'});
       return;
+    }
+
+    if (message === '해당 커뮤니티 유저를 찾을 수 없습니다.') {
+      queryClient.invalidateQueries({queryKey: ['my', 'players']});
+      queryClient.invalidateQueries({queryKey: postKeys.lists()});
+      console.log('here');
+      RootNavigation.navigate('HomeStack', {screen: 'Home'});
+      showBottomToast(50, '일시적인 오류입니다.');
+
+      return Promise.reject(error);
     }
 
     if (message === '토큰이 유효하지 않습니다.') {

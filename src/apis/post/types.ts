@@ -34,6 +34,10 @@ export type FilterType = 'all' | 'hot' | 'photo' | 'viewing' | 'information';
 export type TagType = 'photo' | 'viewing' | 'information';
 
 // 요청
+export interface PostIdPayload {
+  postId: number;
+}
+
 export interface WritePostPayload {
   playerId: number;
   content: string;
@@ -46,10 +50,6 @@ export interface EditPostPayload {
   content: string;
   tags: TagType[];
   images: ImageType[];
-}
-
-export interface LikePostPayload {
-  postId: number;
 }
 
 // 응답

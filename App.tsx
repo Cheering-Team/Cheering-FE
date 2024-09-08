@@ -51,9 +51,9 @@ const consumerSecret = 'Tk2ggobTof';
 const appName = '치어링';
 const serviceUrlScheme = 'org.reactjs.native.example.Cheering';
 
-function App(): React.JSX.Element {
-  const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
+function App(): React.JSX.Element {
   const navTheme = {
     ...DefaultTheme,
     colors: {

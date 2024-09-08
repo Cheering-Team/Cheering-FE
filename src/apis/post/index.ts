@@ -7,6 +7,7 @@ import {
   GetPostsResponse,
   LikePostPayload,
   Post,
+  PostIdPayload,
   WritePostPayload,
 } from './types';
 
@@ -48,24 +49,6 @@ export const getPosts = async ({
   return response.data;
 };
 
-export const getMyPlayersPosts = async ({pageParam, queryKey}) => {
-  let [_key1, _key2, hotTab] = queryKey;
-
-  let response;
-
-  if (hotTab === 0) {
-    response = await axiosInstance.get(
-      `my/players/posts?page=${pageParam}&size=5`,
-    );
-  } else {
-    response = await axiosInstance.get(
-      `/players/${hotTab}/posts?tag=&page=${pageParam}&size=5`,
-    );
-  }
-
-  return response.data;
-};
-
 // 게시글 불러오기
 export const getPostById = async ({
   queryKey,
@@ -80,7 +63,7 @@ export const getPostById = async ({
 };
 
 // 게시글 좋아요 토글
-export const likePost = async (data: LikePostPayload) => {
+export const likePost = async (data: PostIdPayload) => {
   const {postId} = data;
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/posts/${postId}/likes`,
@@ -109,9 +92,12 @@ export const editPost = async (data: EditPostPayload) => {
   return response.data;
 };
 
-export const reportPost = async ({postId}) => {
-  const response = await axiosInstance.post(`/posts/${postId}/reports`);
-
+// 게시글 신고
+export const reportPost = async (data: PostIdPayload) => {
+  const {postId} = data;
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/posts/${postId}/reports`,
+  );
   return response.data;
 };
 

@@ -5,7 +5,14 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import {postKeys} from './queries';
-import {editPost, getPostById, getPosts, likePost, writePost} from '.';
+import {
+  editPost,
+  getPostById,
+  getPosts,
+  likePost,
+  reportPost,
+  writePost,
+} from '.';
 import {FilterType} from './types';
 import {useNavigation} from '@react-navigation/native';
 import {PostWriteScreenNavigationProp} from '../../screens/communityStack/PostWriteScreen';
@@ -88,6 +95,18 @@ export const useEditPost = () => {
       hideToast();
       navigaion.goBack();
       showBottomToast(insets.bottom + 20, '수정이 완료되었습니다.');
+    },
+  });
+};
+
+// 게시글 신고
+export const useReportPost = () => {
+  const insets = useSafeAreaInsets();
+  return useMutation({
+    mutationFn: reportPost,
+    onSuccess: data => {
+      const {message} = data;
+      showBottomToast(insets.bottom + 20, message);
     },
   });
 };
