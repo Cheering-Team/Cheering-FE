@@ -50,7 +50,10 @@ const CommunityScreen: React.FC = ({route}) => {
           />
         </Tabs.Tab>
         <Tabs.Tab name="채팅">
-          <ChatList playerData={playerData.result} />
+          <ChatList
+            playerData={playerData.result}
+            handlePresentModalPress={handlePresentModalPress}
+          />
         </Tabs.Tab>
       </Tabs.Container>
       <JoinModal

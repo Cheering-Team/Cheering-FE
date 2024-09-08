@@ -9,3 +9,8 @@ export interface Player {
   fanCount: number | null;
   user: PlayerUser | null;
 }
+
+// 요청
+export interface PlayerIdPayload {
+  playerId: number;
+}
