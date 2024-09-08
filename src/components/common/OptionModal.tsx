@@ -11,16 +11,17 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import TrashSvg from '../../../assets/images/trash-red.svg';
 import ReportSvg from '../../../assets/images/report-red.svg';
 import EditSvg from '../../../assets/images/edit.svg';
+import ExitSvg from '../../../assets/images/exit.svg';
 
 interface OptionModalProps {
   modalRef: RefObject<BottomSheetModalMethods>;
   firstText: string;
   firstColor?: string;
-  firstSvg?: 'trash' | 'report' | 'edit';
+  firstSvg?: 'trash' | 'report' | 'edit' | 'exit';
   firstOnPress: any;
   secondText?: string;
   secondColor?: string;
-  secondSvg?: 'trash' | 'report' | 'edit';
+  secondSvg?: 'trash' | 'report' | 'edit' | 'exit';
   secondOnPress?: any;
 }
 
@@ -91,6 +92,7 @@ const OptionModal = (props: OptionModalProps) => {
           {firstSvg === 'trash' && <TrashSvg width={20} height={20} />}
           {firstSvg === 'report' && <ReportSvg width={20} height={20} />}
           {firstSvg === 'edit' && <EditSvg width={16} height={16} />}
+          {firstSvg === 'exit' && <ExitSvg width={16} height={16} />}
         </Pressable>
         {secondText && (
           <Pressable
@@ -117,6 +119,7 @@ const OptionModal = (props: OptionModalProps) => {
             {secondSvg === 'trash' && <TrashSvg width={20} height={20} />}
             {secondSvg === 'report' && <ReportSvg width={20} height={20} />}
             {secondSvg === 'edit' && <EditSvg width={16} height={16} />}
+            {secondSvg === 'exit' && <ExitSvg width={16} height={16} />}
           </Pressable>
         )}
       </BottomSheetView>

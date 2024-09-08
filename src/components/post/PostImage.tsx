@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, Image, Pressable} from 'react-native';
-import {ImageType} from '../../apis/post/types';
+import {ImageSizeType} from '../../apis/post/types';
 import {WINDOW_WIDTH} from '../../constants/dimension';
 import ImageView from 'react-native-image-viewing';
 
 interface PostImageProps {
-  images: ImageType[];
+  images: ImageSizeType[];
 }
 
 const PostImage = (props: PostImageProps) => {
