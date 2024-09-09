@@ -7,13 +7,13 @@ import PostScreen from '../screens/communityStack/PostScreen';
 import ProfileEditScreen from '../screens/communityStack/ProfileEditScreen';
 import EditNicknameScreen from '../screens/moreStack/EditNicknameScreen';
 import DeletePlayerUserScreen from '../screens/communityStack/DeletePlayerUserScreen';
-import ChatTestScreen from '../screens/communityStack/ChatTestScreen';
+import ChatRoomScreen from '../screens/communityStack/ChatRoomScreen';
 
 export type CommunityStackParamList = {
   Community: {playerId: number};
   PostWrite: {playerId: number; feed?: any};
   Post: {postId: number};
-  Chat: undefined;
+  ChatRoom: {chatRommId: number};
   Profile: {playerUserId: number};
   ProfileEdit: {playerUserId: number};
   EditNickname: {nickname: string; playerUserId: number | null};
@@ -45,8 +45,8 @@ const CommunityStackNavigator = () => {
         options={{headerShown: false}}
       />
       <CommunityStack.Screen
-        name="Chat"
-        component={ChatTestScreen}
+        name="ChatRoom"
+        component={ChatRoomScreen}
         options={{headerShown: false}}
       />
       <CommunityStack.Screen

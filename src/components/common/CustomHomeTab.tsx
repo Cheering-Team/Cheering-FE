@@ -1,10 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import CategoryGraySvg from '../../../assets/images/category-gray.svg';
 import CategorBlackSvg from '../../../assets/images/category-black.svg';
 import HomeGraySvg from '../../../assets/images/home-gray.svg';
 import HomeBlackSvg from '../../../assets/images/home-black.svg';
-import HomeBackGraySvg from '../../../assets/images/home-back-gray.svg';
 import StarGraySvg from '../../../assets/images/star-gray.svg';
 import StarBlackSvg from '../../../assets/images/star-black.svg';
 import ChatGraySvg from '../../../assets/images/chat-gray.svg';
@@ -56,7 +55,7 @@ function CustomTabBar({state, descriptors, navigation}) {
           routeName === 'Profile' ||
           routeName === 'ProfileEdit' ||
           routeName === 'DeletePlayerUser' ||
-          routeName === 'Chat'
+          routeName === 'ChatRoom'
             ? {display: 'none'}
             : styles.TabContainer,
           {paddingBottom: useSafeAreaInsets().bottom},

@@ -6,6 +6,7 @@ import {useGetChatRooms} from '../../../apis/chat/useChats';
 import {Pressable, View} from 'react-native';
 import Avatar from '../../common/Avatar';
 import OfficialSvg from '../../../../assets/images/official.svg';
+import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   playerData: any;
@@ -14,6 +15,7 @@ interface Props {
 
 const ChatList = (props: Props) => {
   const {playerData, handlePresentModalPress} = props;
+  const navigation = useNavigation();
 
   const {data, isLoading} = useGetChatRooms(
     playerData.id,
@@ -40,6 +42,7 @@ const ChatList = (props: Props) => {
 
           {data.result.map(chatRoom => (
             <Pressable
+              key={chatRoom.id}
               style={{
                 marginTop: 10,
                 flexDirection: 'row',
@@ -56,7 +59,10 @@ const ChatList = (props: Props) => {
                 },
                 shadowOpacity: 0.1,
                 shadowRadius: 6,
-              }}>
+              }}
+              onPress={() =>
+                navigation.navigate('ChatRoom', {chatRoomId: chatRoom.id})
+              }>
               <Avatar
                 uri={chatRoom.image}
                 size={59}
@@ -65,7 +71,7 @@ const ChatList = (props: Props) => {
               <View style={{marginLeft: 13}}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <CustomText
-                    fontWeight="600"
+                    fontWeight="500"
                     style={{fontSize: 17, marginRight: 2}}>
                     {chatRoom.name}
                   </CustomText>
@@ -81,7 +87,7 @@ const ChatList = (props: Props) => {
                   {chatRoom.description}
                 </CustomText>
                 <CustomText fontWeight="500" style={{color: '#7d7d7d'}}>
-                  156 명
+                  {`${chatRoom.count} 명`}
                 </CustomText>
               </View>
             </Pressable>

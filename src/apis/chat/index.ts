@@ -15,3 +15,16 @@ export const getChatRooms = async ({
   );
   return response.data;
 };
+
+// 채팅방 불러오기
+export const getChatRoomById = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof chatRoomKeys.detail>;
+}) => {
+  const [, , chatRoomId] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<ChatRoom>>(
+    `/chatrooms/${chatRoomId}`,
+  );
+  return response.data;
+};

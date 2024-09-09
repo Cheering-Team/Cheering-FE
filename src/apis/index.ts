@@ -4,12 +4,11 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import Toast from 'react-native-toast-message';
 import {queryClient} from '../../App';
 import {showBottomToast} from '../utils/\btoast';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {postKeys} from './post/queries';
 import {commentKeys, reCommentKeys} from './comment/queries';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://172.30.1.99:8080/api',
+  baseURL: 'http://172.30.1.47:8080/api',
 });
 
 axiosInstance.interceptors.request.use(async config => {

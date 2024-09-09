@@ -4,4 +4,5 @@ export interface ChatRoom {
   name: string;
   image: string;
   description: string;
+  count: number;
 }
