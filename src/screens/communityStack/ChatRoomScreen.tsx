@@ -398,6 +398,7 @@ const ChatRoomScreen = ({route}) => {
               multiline
               value={text}
               onChangeText={setText}
+              maxLength={150}
               style={{
                 minHeight: 40,
                 maxHeight: 100,
