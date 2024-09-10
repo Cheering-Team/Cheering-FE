@@ -142,35 +142,33 @@ const ChatRoomScreen = ({route}) => {
 
   const handleNewMessage = (newMessage: ChatResponse) => {
     setMessages(prevMessages => {
-      const lastGroup = prevMessages[prevMessages.length - 1];
+      const firstGroup = prevMessages[0];
 
       if (
-        lastGroup &&
-        lastGroup.sender.id === newMessage.sender.id &&
-        lastGroup.createdAt === newMessage.createdAt.substring(0, 16)
+        firstGroup &&
+        firstGroup.sender.id === newMessage.sender.id &&
+        firstGroup.createdAt === newMessage.createdAt.substring(0, 16)
       ) {
         return prevMessages.map((group, index) =>
-          index === prevMessages.length - 1
+          index === 0
             ? {...group, messages: [...group.messages, newMessage.message]}
             : group,
         );
       }
 
       return [
-        ...prevMessages,
         {
           createdAt: newMessage.createdAt.substring(0, 16),
           sender: newMessage.sender,
           messages: [newMessage.message],
         },
+        ...prevMessages,
       ];
     });
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
-    const isBottom =
-      layoutMeasurement.height + contentOffset.y >= contentSize.height - 200;
+    const isBottom = event.nativeEvent.contentOffset.y <= 200;
     setIsAtBottom(isBottom);
   };
 
@@ -351,9 +349,11 @@ const ChatRoomScreen = ({route}) => {
         </View>
 
         <FlatList
+          inverted
+          automaticallyAdjustsScrollIndicatorInsets={true}
           ref={flatListRef}
           contentContainerStyle={{
-            paddingTop: insets.top + 110,
+            paddingBottom: insets.top + 110,
             paddingHorizontal: 15,
           }}
           data={messages}
@@ -361,16 +361,9 @@ const ChatRoomScreen = ({route}) => {
           keyExtractor={(item, index) => index.toString()}
           onScroll={handleScroll}
           scrollEventThrottle={16}
-          onContentSizeChange={() => {
-            if (isAtBottom) {
-              setTimeout(() => {
-                flatListRef.current?.scrollToEnd({animated: true});
-              }, 0);
-            }
-          }}
-          onLayout={() => {
-            flatListRef.current?.scrollToEnd({animated: true});
-          }}
+          maintainVisibleContentPosition={
+            isAtBottom ? undefined : {minIndexForVisible: 0}
+          }
         />
         <View>
           {!isAtBottom && (
@@ -388,7 +381,10 @@ const ChatRoomScreen = ({route}) => {
                 justifyContent: 'center',
               }}
               onPress={() => {
-                flatListRef.current?.scrollToEnd({animated: true});
+                flatListRef.current?.scrollToOffset({
+                  offset: 0,
+                  animated: true,
+                });
               }}>
               <ChevronDownSvg width={20} height={20} />
             </Pressable>
