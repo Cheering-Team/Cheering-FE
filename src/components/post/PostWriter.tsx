@@ -1,155 +1,105 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {formatDate} from '../../utils/format';
-import Avatar from '../common/Avatar';
 import CustomText from '../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
-import MoreSvg from '../../../assets/images/three-dots-black.svg';
+import MoreSvg from '../../../assets/images/three-dots.svg';
 import OptionModal from '../common/OptionModal';
 import AlertModal from '../common/AlertModal/AlertModal';
-import {deletePost, reportPost} from '../../apis/post';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import Toast from 'react-native-toast-message';
+import {useQueryClient} from '@tanstack/react-query';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {useDeletePost, useReportPost} from '../../apis/post/usePosts';
 
 interface PostWriterProps {
   feed: any;
-  createdAt: string;
-  playerUserId: number;
   isWriter: boolean;
+  type: 'post' | 'feed';
 }
 
 const PostWriter = (props: PostWriterProps) => {
-  const {feed, createdAt, playerUserId, isWriter} = props;
+  const {feed, isWriter, type} = props;
 
   const navigation = useNavigation();
-  const queryClient = useQueryClient();
-  const insets = useSafeAreaInsets();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
-  const [isInhibitAlertOpen, setIsInhibitAlertOpen] = useState(false);
 
-  const mutation = useMutation({
-    mutationFn: deletePost,
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['posts'], exact: false});
-      queryClient.invalidateQueries({queryKey: ['my', 'posts'], exact: false});
-    },
-  });
-
-  const reportMutation = useMutation({
-    mutationFn: reportPost,
-  });
+  const {mutateAsync: deletePost} = useDeletePost();
+  const {mutateAsync: reportPost} = useReportPost();
 
   const handleDeletePost = async () => {
-    const data = await mutation.mutateAsync({postId: feed.id});
+    const data = await deletePost({postId: feed.id});
 
-    if (data.message === '게시글을 삭제하였습니다.') {
-      Toast.show({
-        type: 'default',
-        position: 'top',
-        visibilityTime: 3000,
-        topOffset: insets.top + 20,
-        text1: '게시글을 삭제하였습니다.',
-      });
+    if (data.code === 200 && type === 'post') {
+      navigation.goBack();
     }
   };
 
   const handleReportPost = async () => {
-    const data = await reportMutation.mutateAsync({postId: feed.id});
+    const data = await reportPost({postId: feed.id});
 
-    if (data.message === '이미 신고하였습니다.') {
-      Toast.show({
-        type: 'default',
-        position: 'bottom',
-        visibilityTime: 3000,
-        bottomOffset: insets.bottom + 20,
-        text1: '이미 신고한 게시글입니다.',
-      });
-      return;
-    }
-
-    if (data.message === '신고가 접수되었습니다.') {
-      Toast.show({
-        type: 'default',
-        position: 'bottom',
-        visibilityTime: 3000,
-        bottomOffset: insets.bottom + 20,
-        text1: '게시글을 신고하였습니다.',
-      });
-      return;
+    if (data.message === '존재하지 않는 게시글입니다.' && type === 'post') {
+      navigation.goBack();
     }
   };
 
   return (
-    <View style={styles.writerContainer}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+    <>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
         <Pressable
-          onPress={() =>
-            navigation.navigate('CommunityStack', {
-              screen: 'Profile',
-              params: {playerUserId},
-            })
-          }>
-          <Avatar uri={feed.writer.image} size={38} />
-        </Pressable>
-        <View style={styles.writerNameContainer}>
-          <Pressable
-            onPress={() =>
-              navigation.navigate('CommunityStack', {
-                screen: 'Profile',
-                params: {playerUserId},
-              })
-            }>
-            <CustomText fontWeight="600" style={styles.writerName}>
-              {feed.writer.name}
-            </CustomText>
-          </Pressable>
-
-          <CustomText style={styles.createAt}>
-            {formatDate(createdAt)}
+          style={{flexDirection: 'row'}}
+          onPress={() => {
+            navigation.navigate('Profile', {playerUserId: feed.writer.id});
+          }}>
+          <CustomText fontWeight="500" style={styles.writerName}>
+            {feed.writer.nickname}
           </CustomText>
-        </View>
+          <CustomText style={styles.createdAt}>
+            {formatDate(feed.createdAt)}
+          </CustomText>
+        </Pressable>
+        <Pressable
+          style={{padding: 2}}
+          onPress={() => bottomSheetModalRef.current?.present()}>
+          <MoreSvg width={18} height={18} />
+        </Pressable>
       </View>
-      <Pressable onPress={() => setIsModalOpen(true)}>
-        <MoreSvg width={18} height={18} style={{marginTop: 7}} />
-      </Pressable>
       {isWriter ? (
         <OptionModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          option1Text="수정하기"
-          option1Press={() => {
-            if (feed.isHide) {
-              setIsInhibitAlertOpen(true);
-              return;
-            }
+          modalRef={bottomSheetModalRef}
+          firstText="수정"
+          firstSvg="edit"
+          firstOnPress={() => {
             navigation.navigate('CommunityStack', {
               screen: 'PostWrite',
               params: {playerId: feed.player.id, feed},
             });
           }}
-          option2Text="삭제하기"
-          option2color="#fe6363"
-          option2Press={() => {
-            if (feed.isHide) {
-              setIsInhibitAlertOpen(true);
-              return;
-            }
+          secondText="삭제"
+          secondColor="#ff2626"
+          secondSvg="trash"
+          secondOnPress={() => {
             setIsDeleteAlertOpen(true);
           }}
         />
       ) : (
         <OptionModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          option1Text="신고하기"
-          option1Press={() => {
+          modalRef={bottomSheetModalRef}
+          firstText="신고"
+          firstColor="#ff2626"
+          firstSvg="report"
+          firstOnPress={() => {
             setIsReportAlertOpen(true);
           }}
-          option1color="#fe6363"
         />
       )}
       <AlertModal
@@ -158,7 +108,7 @@ const PostWriter = (props: PostWriterProps) => {
         title="게시글을 삭제하시겠어요?"
         content="게시글을 삭제한 후에는 복구할 수 없습니다."
         button1Text="삭제"
-        button1Color="#fe6363"
+        button1Color="#ff2626"
         button2Text="취소"
         button1Press={() => {
           handleDeletePost();
@@ -170,35 +120,20 @@ const PostWriter = (props: PostWriterProps) => {
         title="게시글을 신고하시겠습니까?"
         content="정상적인 글에 대한 신고가 계속될 경우 신고자가 제재받을 수 있습니다."
         button1Text="신고하기"
-        button1Color="#fe6363"
+        button1Color="#ff2626"
         button2Text="취소"
         button1Press={() => {
           handleReportPost();
         }}
       />
-      <AlertModal
-        isModalOpen={isInhibitAlertOpen}
-        setIsModalOpen={setIsInhibitAlertOpen}
-        title="신고 누적된 게시글입니다."
-        content="게시글을 수정하거나 삭제할 수 없습니다."
-        button1Text="확인"
-      />
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  writerContainer: {
-    flexDirection: 'row',
-    paddingTop: 10,
-    paddingLeft: 12,
-    paddingRight: 10,
-    width: '100%',
-    justifyContent: 'space-between',
-  },
+  createdAt: {fontSize: 14, color: '#a5a5a5', marginLeft: 5},
+  writerName: {fontSize: 14},
   writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
-  writerName: {fontSize: 15},
-  createAt: {fontSize: 13, color: '#6d6d6d'},
 });
 
 export default PostWriter;

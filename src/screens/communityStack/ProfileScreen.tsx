@@ -14,12 +14,12 @@ import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import {getPlayerUserInfo, getPlayerUserPosts} from '../../apis/player';
 import Avatar from '../../components/common/Avatar';
 import CustomText from '../../components/common/CustomText';
-import CustomButton from '../../components/common/CustomButton';
 import FeedPost from '../../components/community/FeedPost';
 import {useIsFocused} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChevronTopSvg from '../../../assets/images/chevron-top-black.svg';
 import OptionModal from '../../components/common/OptionModal';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 
 const ProfileScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;
@@ -31,6 +31,7 @@ const ProfileScreen = ({navigation, route}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef<FlatList<any>>(null);
   const scrollTimeout = useRef(null);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const {data, isLoading} = useQuery({
     queryKey: ['playerusers', playerUserId],
@@ -122,7 +123,7 @@ const ProfileScreen = ({navigation, route}) => {
             {data.result.player.englishName}
           </CustomText>
         </View>
-        <Pressable onPress={() => setIsModalOpen(true)}>
+        <Pressable onPress={() => bottomSheetModalRef.current?.present()}>
           <MoreSvg width={18} height={18} />
         </Pressable>
       </View>
@@ -192,6 +193,7 @@ const ProfileScreen = ({navigation, route}) => {
               feed={item}
               postId={item.id}
               playerId={data.result.player.id}
+              type="community"
             />
           </Pressable>
         )}
@@ -261,11 +263,11 @@ const ProfileScreen = ({navigation, route}) => {
       </AnimatedPressable>
       {data.result.isUser && (
         <OptionModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          option1Text="커뮤니티 탈퇴"
-          option1color="#fe6363"
-          option1Press={() => {
+          modalRef={bottomSheetModalRef}
+          firstText="커뮤니티 탈퇴"
+          firstColor="#ff2626"
+          firstSvg="exit"
+          firstOnPress={() => {
             navigation.navigate('DeletePlayerUser', {
               playerUserId,
             });

@@ -12,12 +12,6 @@ export type CategoryStackParamList = {
   CommunityStack: undefined;
 };
 
-export interface PlayerUser {
-  id: number;
-  nickname: string;
-  image: string;
-}
-
 const CategoryStackNavigator = () => {
   const CategoryStack = createNativeStackNavigator<CategoryStackParamList>();
   return (

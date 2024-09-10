@@ -1,10 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import CategoryGraySvg from '../../../assets/images/category-gray.svg';
 import CategorBlackSvg from '../../../assets/images/category-black.svg';
 import HomeGraySvg from '../../../assets/images/home-gray.svg';
 import HomeBlackSvg from '../../../assets/images/home-black.svg';
-import HomeBackGraySvg from '../../../assets/images/home-back-gray.svg';
 import StarGraySvg from '../../../assets/images/star-gray.svg';
 import StarBlackSvg from '../../../assets/images/star-black.svg';
 import ChatGraySvg from '../../../assets/images/chat-gray.svg';
@@ -55,7 +54,8 @@ function CustomTabBar({state, descriptors, navigation}) {
           routeName === 'DeleteUser' ||
           routeName === 'Profile' ||
           routeName === 'ProfileEdit' ||
-          routeName === 'DeletePlayerUser'
+          routeName === 'DeletePlayerUser' ||
+          routeName === 'ChatRoom'
             ? {display: 'none'}
             : styles.TabContainer,
           {paddingBottom: useSafeAreaInsets().bottom},
@@ -221,8 +221,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 8,
-    paddingBottom: 4,
+    paddingTop: 7,
+    paddingBottom: 3,
   },
   TabLabel: {fontSize: 10, color: '#B7B7B7', marginTop: 3},
   TabLabelFocused: {fontSize: 10, color: '#323232', marginTop: 3},

@@ -78,7 +78,7 @@ const AlertModal = (props: AlertModalProps) => {
               setIsModalOpen(false);
               button1Press?.();
             }}>
-            <CustomText fontWeight="500" style={[{color: button1Color}]}>
+            <CustomText fontWeight="600" style={[{color: button1Color}]}>
               {button1Text}
             </CustomText>
           </Pressable>
@@ -94,7 +94,7 @@ const AlertModal = (props: AlertModalProps) => {
                 setIsModalOpen(false);
                 button2Press?.();
               }}>
-              <CustomText fontWeight="500" style={[{color: button2Color}]}>
+              <CustomText fontWeight="600" style={[{color: button2Color}]}>
                 {button2Text}
               </CustomText>
             </Pressable>

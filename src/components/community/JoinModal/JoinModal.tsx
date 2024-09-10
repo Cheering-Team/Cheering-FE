@@ -1,20 +1,13 @@
-import React, {Dispatch, SetStateAction} from 'react';
+import React, {Dispatch, SetStateAction, useCallback, useMemo} from 'react';
 import {
-  Animated,
-  Dimensions,
-  Modal,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import Toast from 'react-native-toast-message';
-import {toastConfig} from '../../../../App';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
 import {StyleSheet} from 'react-native';
 import {GetPlayersInfoResponse} from '../../../types/player';
-import {Api} from '../../../types/api';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import JoinProfile from './JoinProfile/JoinProfile';
-import JoinTerm from './JoinTerm/JoinTerm';
-import {useJoinModal} from './useJoinModal';
 
 export interface ImageType {
   uri: string;
@@ -22,110 +15,56 @@ export interface ImageType {
   type: string;
 }
 
-interface JoinModalProps {
-  playerData: Api<GetPlayersInfoResponse>;
+interface Props {
+  playerData: GetPlayersInfoResponse;
   isModalOpen: boolean;
   setRefreshKey: Dispatch<SetStateAction<number>>;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  bottomSheetModalRef: any;
 }
 
-const JoinModal = (props: JoinModalProps) => {
-  const {playerData, isModalOpen, setRefreshKey, setIsModalOpen} = props;
+const JoinModal = (props: Props) => {
+  const {playerData, setRefreshKey, bottomSheetModalRef} = props;
 
   const insets = useSafeAreaInsets();
+  const snapPoints = useMemo(() => [380 + insets.bottom], [insets.bottom]);
 
-  const {
-    joinState,
-    setJoinState,
-    imageData,
-    setImageData,
-    nickname,
-    setNickname,
-    joinCommunity,
-    translateY,
-    panResponders,
-    closeModal,
-  } = useJoinModal(
-    playerData.result.id,
-    isModalOpen,
-    setIsModalOpen,
-    setRefreshKey,
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        pressBehavior="close"
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    [],
   );
 
   return (
-    <Modal
-      animationType="fade"
-      visible={isModalOpen}
-      transparent={true}
-      onRequestClose={closeModal}>
-      <TouchableOpacity
-        style={[
-          styles.blur,
-          {
-            width: Dimensions.get('window').width,
-            height: Dimensions.get('window').height,
-          },
-        ]}
-        activeOpacity={1}
-        onPressOut={closeModal}
-      />
-
-      <Animated.View
-        style={[styles.modalContainer, {transform: [{translateY}]}]}
-        {...panResponders.panHandlers}>
-        <View
-          style={[
-            styles.container,
-            {
-              paddingBottom: insets.bottom + 20,
-            },
-          ]}>
-          <View style={styles.topMark} />
-          {joinState === 'profile' ? (
-            <JoinProfile
-              playerData={playerData}
-              setJoinState={setJoinState}
-              imageData={imageData}
-              setImageData={setImageData}
-              nickname={nickname}
-              setNickname={setNickname}
-            />
-          ) : (
-            <JoinTerm
-              isModalOpen={isModalOpen}
-              setJoinState={setJoinState}
-              joinCommunity={joinCommunity}
-            />
-          )}
-        </View>
-      </Animated.View>
-      <Toast config={toastConfig} />
-    </Modal>
+    <BottomSheetModal
+      ref={bottomSheetModalRef}
+      index={0}
+      snapPoints={snapPoints}
+      backdropComponent={renderBackdrop}
+      keyboardBlurBehavior="restore"
+      keyboardBehavior="interactive">
+      <BottomSheetView
+        style={[styles.contentContainer, {paddingBottom: insets.bottom + 20}]}>
+        <JoinProfile
+          playerData={playerData}
+          setRefreshKey={setRefreshKey}
+          bottomSheetModalRef={bottomSheetModalRef}
+        />
+      </BottomSheetView>
+    </BottomSheetModal>
   );
 };
 
 const styles = StyleSheet.create({
-  blur: {backgroundColor: 'rgba(0,0,0,0.5)'},
-  modalContainer: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  container: {
-    flexGrow: 1,
-    paddingHorizontal: 20,
-    justifyContent: 'space-between',
-  },
-  topMark: {
-    alignSelf: 'center',
-    width: 50,
-    height: 4,
-    backgroundColor: '#eaeaea',
-    marginTop: 8,
-    borderRadius: 20,
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
 });
 

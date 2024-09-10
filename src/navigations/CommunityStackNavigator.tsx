@@ -1,5 +1,4 @@
 import React from 'react';
-import {PlayerUser} from './CategoryStackNavigator';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import CommunityScreen from '../screens/communityStack/CommunityScreen';
 import ProfileScreen from '../screens/communityStack/ProfileScreen';
@@ -8,11 +7,13 @@ import PostScreen from '../screens/communityStack/PostScreen';
 import ProfileEditScreen from '../screens/communityStack/ProfileEditScreen';
 import EditNicknameScreen from '../screens/moreStack/EditNicknameScreen';
 import DeletePlayerUserScreen from '../screens/communityStack/DeletePlayerUserScreen';
+import ChatRoomScreen from '../screens/communityStack/ChatRoomScreen';
 
 export type CommunityStackParamList = {
   Community: {playerId: number};
   PostWrite: {playerId: number; feed?: any};
-  Post: {postId: number; playerUser: PlayerUser};
+  Post: {postId: number};
+  ChatRoom: {chatRommId: number};
   Profile: {playerUserId: number};
   ProfileEdit: {playerUserId: number};
   EditNickname: {nickname: string; playerUserId: number | null};
@@ -41,6 +42,11 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="Post"
         component={PostScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="ChatRoom"
+        component={ChatRoomScreen}
         options={{headerShown: false}}
       />
       <CommunityStack.Screen

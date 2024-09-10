@@ -1,130 +1,69 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Animated, View, Dimensions} from 'react-native';
-import {FlatList as FlatListType} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import React, {useCallback, useRef, useState} from 'react';
+import {Tabs} from 'react-native-collapsible-tab-view';
+import CommunityHeader from '../../components/community/CommunityInfo/CommunityHeader';
 import {useQuery} from '@tanstack/react-query';
 import {getPlayersInfo} from '../../apis/player';
-import JoinModal from '../../components/community/JoinModal/JoinModal';
-import CommunityFlatList from '../../components/community/CommunityFlatList/CommunityFlatList';
-import CommunityHeader from '../../components/community/CommunityHeader';
-import CommunityTopTab from '../../components/community/CommunityTopTab';
-
-import {RouteProp} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from '../../navigations/CommunityStackNavigator';
-import FloatButton from '../../components/community/FloatButton/FloatButton';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import CommunityProfile from '../../components/community/CommunityInfo/CommunityProfile';
+import {CommunityTabBar} from '../../components/community/CommunityTabBar/CommunityTabBar';
+import FeedList from '../../components/community/FeedList/FeedList';
+import ChatList from '../../components/community/ChatList/ChatList';
 import {WINDOW_HEIGHT} from '../../constants/dimension';
-CommunityFlatList;
+import JoinModal from '../../components/community/JoinModal/JoinModal';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 
-export type CommunityScreenNavigationProp = NativeStackNavigationProp<
-  CommunityStackParamList,
-  'Community'
->;
+const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
 
-type CommunityScreenRouteProp = RouteProp<CommunityStackParamList, 'Community'>;
-
-const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
+const CommunityScreen: React.FC = ({route}) => {
   const {playerId} = route.params;
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const insets = useSafeAreaInsets();
 
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [isTabVisible, setIsTabVisible] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isToTop, setIsToTop] = useState(true);
-  const [curTab, setCurTab] = useState<string>('피드');
-
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scrollTimeout = useRef(setTimeout(() => {}));
-  const flatListRef = useRef<FlatListType<any>>(null);
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const {data: playerData, isLoading: playerIsLoading} = useQuery({
     queryKey: ['player', playerId, refreshKey],
     queryFn: getPlayersInfo,
   });
 
-  const handleScrollBeginDrag = () => {
-    if (scrollTimeout.current) {
-      clearTimeout(scrollTimeout.current);
-    }
-    setIsToTop(true);
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 250,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const handleScrollEndDrag = () => {
-    scrollTimeout.current = setTimeout(() => {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 250,
-        useNativeDriver: true,
-      }).start(() => setIsToTop(false));
-    }, 1000);
-  };
-
-  useEffect(() => {
-    const listenerId = scrollY.addListener(({value}) => {
-      if (
-        value >= Dimensions.get('window').height / 2.25 - insets.top - 50 &&
-        !isTabVisible
-      ) {
-        setIsTabVisible(true);
-      } else if (
-        value < Dimensions.get('window').height / 2.25 - insets.top - 50 &&
-        isTabVisible
-      ) {
-        setIsTabVisible(false);
-      }
-    });
-
-    return () => {
-      scrollY.removeListener(listenerId);
-    };
-  }, [scrollY, isTabVisible, insets.top]);
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
 
   if (playerIsLoading) {
     return null;
   }
+
   return (
-    <View key={refreshKey} style={{flex: 1, paddingBottom: insets.bottom}}>
-      <CommunityHeader playerData={playerData} scrollY={scrollY} />
-      {isTabVisible && (
-        <CommunityTopTab
-          type="absolute"
-          scrollY={scrollY}
-          curTab={curTab}
-          setCurTab={setCurTab}
-        />
-      )}
-      <CommunityFlatList
-        ref={flatListRef}
-        playerData={playerData}
-        handleScrollBeginDrag={handleScrollBeginDrag}
-        handleScrollEndDrag={handleScrollEndDrag}
-        setIsModalOpen={setIsModalOpen}
-        scrollY={scrollY}
-        curTab={curTab}
-        setCurTab={setCurTab}
-      />
+    <>
+      <CommunityHeader playerData={playerData} />
+      <Tabs.Container
+        renderHeader={() => <CommunityProfile playerData={playerData} />}
+        headerHeight={HEADER_HEIGHT}
+        minHeaderHeight={45 + insets.top}
+        renderTabBar={props => <CommunityTabBar {...props} />}>
+        <Tabs.Tab name="피드">
+          <FeedList
+            playerData={playerData.result}
+            handlePresentModalPress={handlePresentModalPress}
+          />
+        </Tabs.Tab>
+        <Tabs.Tab name="채팅">
+          <ChatList
+            playerData={playerData.result}
+            handlePresentModalPress={handlePresentModalPress}
+          />
+        </Tabs.Tab>
+      </Tabs.Container>
       <JoinModal
-        playerData={playerData}
-        isModalOpen={isModalOpen}
+        playerData={playerData.result}
         setRefreshKey={setRefreshKey}
+        isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
+        bottomSheetModalRef={bottomSheetModalRef}
       />
-      {playerData.result.user && (
-        <FloatButton
-          playerId={playerData.result.id}
-          fadeAnim={fadeAnim}
-          flatListRef={flatListRef}
-          isToTop={isToTop}
-          offset={WINDOW_HEIGHT / 2.25 - insets.top - 50}
-        />
-      )}
-    </View>
+    </>
   );
 };
 

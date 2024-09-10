@@ -201,6 +201,8 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
       } else if (data.message === '회원가입되었습니다.') {
         const {accessToken: sessionToken, refreshToken} = data.result;
 
+        console.log(sessionToken);
+
         Toast.show({
           type: 'default',
           position: 'top',

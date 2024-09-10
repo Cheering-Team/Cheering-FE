@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Animated, FlatList, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {getMyPlayers} from '../../apis/player';
@@ -8,6 +8,7 @@ import HomeTopTab from '../../components/home/HomeTopTab/HomeTopTab';
 import HomeFlatList from '../../components/home/HomeFlatList/HomeFlatList';
 import FloatButton from '../../components/community/FloatButton/FloatButton';
 import messaging from '@react-native-firebase/messaging';
+import {useFocusEffect} from '@react-navigation/native';
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
@@ -20,7 +21,11 @@ const HomeScreen = () => {
   const scrollTimeout = useRef(setTimeout(() => {}));
   const scrollY = useRef(new Animated.Value(0)).current;
 
-  const {data: playerData, isLoading} = useQuery({
+  const {
+    data: playerData,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ['my', 'players'],
     queryFn: getMyPlayers,
   });
@@ -85,12 +90,6 @@ const HomeScreen = () => {
         hotTab={hotTab}
         setHotTab={setHotTab}
         scrollY={scrollY}
-      />
-      <FloatButton
-        fadeAnim={fadeAnim}
-        flatListRef={flatListRef}
-        isToTop={isToTop}
-        offset={205}
       />
     </View>
   );
