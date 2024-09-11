@@ -101,6 +101,8 @@ function SignInScreen({navigation}: {navigation: SignInScreenNavigationProp}) {
     if (data.message === '로그인에 성공하였습니다.') {
       const {accessToken, refreshToken} = data.result;
 
+      console.log(accessToken);
+
       Toast.show({
         type: 'default',
         position: 'top',

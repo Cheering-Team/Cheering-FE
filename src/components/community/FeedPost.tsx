@@ -17,7 +17,6 @@ import InteractBar from '../post/InteractBar';
 
 interface FeedPostProps {
   feed: any;
-  playerId: number;
   postId: number;
   selectedFilter?: any;
   hotTab?: any;

@@ -35,7 +35,6 @@ const FeedList = (props: Props) => {
   const renderFeed: ListRenderItem<PostInfoResponse> = ({item}) => (
     <FeedPost
       feed={item}
-      playerId={playerData.id}
       postId={item.id}
       selectedFilter={selectedFilter}
       type="community"

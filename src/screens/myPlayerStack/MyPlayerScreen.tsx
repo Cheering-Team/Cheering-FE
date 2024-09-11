@@ -1,13 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Dimensions, FlatList, Pressable, View} from 'react-native';
 import {useQuery} from '@tanstack/react-query';
-import {getMyPlayers} from '../../apis/player';
 import {useIsFocused} from '@react-navigation/native';
 import ChevronDownSvg from '../../../assets/images/chevron-down-black-thin.svg';
 import {CommonActions} from '@react-navigation/native';
 import CustomText from '../../components/common/CustomText';
 import Avatar from '../../components/common/Avatar';
 import OptionModal from '../../components/common/OptionModal';
+import {useGetMyPlayers} from '../../apis/player/usePlayers';
 
 const MyPlayerScreen = ({navigation}) => {
   const isFocused = useIsFocused();
@@ -15,10 +15,7 @@ const MyPlayerScreen = ({navigation}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(0);
 
-  const {data, isLoading, refetch} = useQuery({
-    queryKey: ['my', 'players'],
-    queryFn: getMyPlayers,
-  });
+  const {data, isLoading, refetch} = useGetMyPlayers();
 
   useEffect(() => {
     if (isFocused) {
