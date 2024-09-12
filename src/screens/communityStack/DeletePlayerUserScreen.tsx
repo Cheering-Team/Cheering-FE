@@ -1,46 +1,22 @@
 import React, {useState} from 'react';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {deletePlayerUser} from '../../apis/player';
-import Toast from 'react-native-toast-message';
+import {SafeAreaView} from 'react-native-safe-area-context';
+
 import {Pressable, View} from 'react-native';
 import BackSvg from '../../../assets/images/arrow-left.svg';
 import CustomText from '../../components/common/CustomText';
 import CheckBox from '../../components/common/CheckBox';
 import CustomButton from '../../components/common/CustomButton';
+import {useDeletePlayerUser} from '../../apis/player/usePlayers';
 
 const DeletePlayerUserScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;
 
-  const insets = useSafeAreaInsets();
-  const queryClient = useQueryClient();
   const [isAgree, setIsAgree] = useState(false);
 
-  const mutation = useMutation({
-    mutationFn: deletePlayerUser,
-    onSuccess: () => {
-      queryClient.removeQueries({queryKey: ['posts'], exact: false});
-      queryClient.removeQueries({queryKey: ['player'], exact: false});
-    },
-  });
+  const {mutate} = useDeletePlayerUser();
 
-  const handleDeleteUser = async () => {
-    const data = await mutation.mutateAsync({playerUserId});
-
-    if (data.message === '커뮤니티에서 탈퇴했습니다.') {
-      Toast.show({
-        type: 'default',
-        position: 'top',
-        visibilityTime: 3000,
-        topOffset: insets.top + 20,
-        text1: '커뮤니티에서 탈퇴했습니다.',
-      });
-
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'HomeStack'}],
-      });
-    }
+  const handleDeleteUser = () => {
+    mutate({playerUserId});
   };
 
   return (
