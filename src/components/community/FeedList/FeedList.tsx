@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import FeedFilter from '../FeedFilter';
 import {useFeedList} from './useFeedList';
-import {ListRenderItem, Pressable} from 'react-native';
+import {ListRenderItem, Pressable, RefreshControl} from 'react-native';
 import {PostInfoResponse} from '../../../types/post';
 import FeedPost from '../FeedPost';
 import ListLoading from '../../common/ListLoading/ListLoading';
@@ -23,23 +23,30 @@ const FeedList = (props: Props) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const {
     selectedFilter,
     setSelectedFilter,
     feedData,
     isLoading,
+    refetch,
     isFetchingNextPage,
     loadFeed,
   } = useFeedList(playerData);
 
   const renderFeed: ListRenderItem<PostInfoResponse> = ({item}) => (
-    <FeedPost
-      feed={item}
-      postId={item.id}
-      selectedFilter={selectedFilter}
-      type="community"
-    />
+    <FeedPost feed={item} type="community" />
   );
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    refetch();
+
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  };
 
   return (
     <>
@@ -73,6 +80,14 @@ const FeedList = (props: Props) => {
           ) : (
             <ListEmpty />
           )
+        }
+        refreshControl={
+          playerData.user ? (
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+            />
+          ) : undefined
         }
       />
       {playerData.user && (
