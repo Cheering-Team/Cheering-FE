@@ -14,3 +14,10 @@ export interface Player {
 export interface PlayerIdPayload {
   playerId: number;
 }
+
+// 응답
+export interface GetPlayerUserInfoResponse {
+  user: PlayerUser;
+  isUser: boolean;
+  player: Player;
+}

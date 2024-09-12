@@ -62,23 +62,6 @@ export const postCommunityJoin = async (data: postComminityJoinRequest) => {
 
 // PLAYERUSER
 
-export const getPlayerUserInfo = async ({queryKey}) => {
-  const [_key, playerUserId] = queryKey;
-  const response = await axiosInstance.get(`/playerusers/${playerUserId}`);
-
-  return response.data;
-};
-
-export const getPlayerUserPosts = async ({pageParam, queryKey}) => {
-  const [_key, playerUserId] = queryKey;
-
-  const response = await axiosInstance.get(
-    `/playerusers/${playerUserId}/posts?page=${pageParam}&size=5`,
-  );
-
-  return response.data;
-};
-
 export const updatePlayerUserImage = async data => {
   const {playerUserId, image} = data;
 

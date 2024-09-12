@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   FlatList,
   ListRenderItem,
@@ -16,9 +16,7 @@ import ListLoading from '../../components/common/ListLoading/ListLoading';
 import ListEmpty from '../../components/common/ListEmpty/ListEmpty';
 import Animated, {
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
-  withTiming,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Drawer} from 'react-native-drawer-layout';
@@ -26,7 +24,6 @@ import {useGetMyPlayers} from '../../apis/player/usePlayers';
 import {useNavigation, useScrollToTop} from '@react-navigation/native';
 import Avatar from '../../components/common/Avatar';
 import ChevronDownSvg from '../../../assets/images/chevron-down-black-thin.svg';
-import RefreshSvg from '../../../assets/images/refresh.svg';
 import OptionModal from '../../components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {Player} from '../../apis/player/types';
