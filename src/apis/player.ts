@@ -60,12 +60,6 @@ export const postCommunityJoin = async (data: postComminityJoinRequest) => {
   return response.data;
 };
 
-export const getMyPlayers = async () => {
-  const response = await axiosInstance.get('/my/players');
-
-  return response.data;
-};
-
 // PLAYERUSER
 
 export const getPlayerUserInfo = async ({queryKey}) => {

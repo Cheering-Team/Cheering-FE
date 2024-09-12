@@ -12,17 +12,24 @@ import TrashSvg from '../../../assets/images/trash-red.svg';
 import ReportSvg from '../../../assets/images/report-red.svg';
 import EditSvg from '../../../assets/images/edit.svg';
 import ExitSvg from '../../../assets/images/exit.svg';
+import Avatar from './Avatar';
+import EnterSvg from '../../../assets/images/enter.svg';
 
 interface OptionModalProps {
   modalRef: RefObject<BottomSheetModalMethods>;
-  firstText: string;
+  firstText?: string;
   firstColor?: string;
   firstSvg?: 'trash' | 'report' | 'edit' | 'exit';
   firstOnPress: any;
+  firstAvatar?: string;
   secondText?: string;
   secondColor?: string;
-  secondSvg?: 'trash' | 'report' | 'edit' | 'exit';
+  secondSvg?: 'trash' | 'report' | 'edit' | 'exit' | 'enter';
   secondOnPress?: any;
+  thirdText?: string;
+  thirdColor?: string;
+  thirdSvg?: 'trash' | 'report' | 'edit' | 'exit';
+  thirdOnPress?: any;
 }
 
 const OptionModal = (props: OptionModalProps) => {
@@ -32,16 +39,27 @@ const OptionModal = (props: OptionModalProps) => {
     firstColor = '#000000',
     firstSvg,
     firstOnPress,
+    firstAvatar,
     secondText,
     secondColor = '#000000',
     secondSvg,
     secondOnPress,
+    thirdText,
+    thirdColor = '#000000',
+    thirdSvg,
+    thirdOnPress,
   } = props;
   const insets = useSafeAreaInsets();
 
   const snapPoints = useMemo(
-    () => [secondText ? 160 + insets.bottom : 110 + insets.bottom],
-    [insets.bottom, secondText],
+    () => [
+      thirdText
+        ? 220 + insets.bottom
+        : secondText
+        ? 160 + insets.bottom
+        : 110 + insets.bottom,
+    ],
+    [insets.bottom, secondText, thirdText],
   );
 
   const renderBackdrop = useCallback(
@@ -73,20 +91,21 @@ const OptionModal = (props: OptionModalProps) => {
           style={{
             backgroundColor: 'white',
             width: '90%',
-            paddingVertical: 14,
+            height: 52,
             paddingHorizontal: 20,
             borderRadius: 15,
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: firstAvatar ? undefined : 'space-between',
             alignItems: 'center',
           }}
           onPress={() => {
             modalRef.current?.close();
             firstOnPress();
           }}>
+          {firstAvatar && <Avatar uri={firstAvatar} size={30} />}
           <CustomText
-            fontWeight="600"
-            style={{color: firstColor, fontSize: 15}}>
+            fontWeight="500"
+            style={{color: firstColor, fontSize: 15, marginLeft: 10}}>
             {firstText}
           </CustomText>
           {firstSvg === 'trash' && <TrashSvg width={20} height={20} />}
@@ -99,7 +118,7 @@ const OptionModal = (props: OptionModalProps) => {
             style={{
               backgroundColor: 'white',
               width: '90%',
-              paddingVertical: 14,
+              height: 52,
               paddingHorizontal: 20,
               borderRadius: 15,
               flexDirection: 'row',
@@ -112,7 +131,7 @@ const OptionModal = (props: OptionModalProps) => {
               secondOnPress();
             }}>
             <CustomText
-              fontWeight="600"
+              fontWeight="500"
               style={{color: secondColor, fontSize: 15}}>
               {secondText}
             </CustomText>
@@ -120,6 +139,35 @@ const OptionModal = (props: OptionModalProps) => {
             {secondSvg === 'report' && <ReportSvg width={20} height={20} />}
             {secondSvg === 'edit' && <EditSvg width={16} height={16} />}
             {secondSvg === 'exit' && <ExitSvg width={16} height={16} />}
+            {secondSvg === 'enter' && <EnterSvg width={16} height={16} />}
+          </Pressable>
+        )}
+        {thirdText && (
+          <Pressable
+            style={{
+              backgroundColor: 'white',
+              width: '90%',
+              height: 52,
+              paddingHorizontal: 20,
+              borderRadius: 15,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 10,
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              modalRef.current?.close();
+              thirdOnPress();
+            }}>
+            <CustomText
+              fontWeight="500"
+              style={{color: thirdColor, fontSize: 15}}>
+              {thirdText}
+            </CustomText>
+            {thirdSvg === 'trash' && <TrashSvg width={20} height={20} />}
+            {thirdSvg === 'report' && <ReportSvg width={20} height={20} />}
+            {thirdSvg === 'edit' && <EditSvg width={16} height={16} />}
+            {thirdSvg === 'exit' && <ExitSvg width={16} height={16} />}
           </Pressable>
         )}
       </BottomSheetView>

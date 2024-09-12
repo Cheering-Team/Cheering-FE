@@ -25,6 +25,8 @@ const Avatar = (props: AvatarProps) => {
           width: size,
           height: size,
           borderRadius: size,
+          borderWidth: 0.5,
+          borderColor: '#ebebeb',
         },
         style,
       ]}

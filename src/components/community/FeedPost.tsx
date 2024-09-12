@@ -1,52 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
-import HeartSvg from '../../../assets/images/heart.svg';
-import HeartFillSvg from '../../../assets/images/heart_fill.svg';
-import CommentSvg from '../../../assets//images/comment.svg';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {postPostsLikes} from '../../apis/post';
-import Toast from 'react-native-toast-message';
 import {useNavigation} from '@react-navigation/native';
 import CustomText from '../common/CustomText';
 import Avatar from '../common/Avatar';
 import {WINDOW_WIDTH} from '../../constants/dimension';
 import ImageView from 'react-native-image-viewing';
 import PostWriter from '../post/PostWriter';
-import {useLikePost} from '../../apis/post/usePosts';
 import InteractBar from '../post/InteractBar';
 
 interface FeedPostProps {
   feed: any;
-  playerId: number;
-  postId: number;
-  selectedFilter?: any;
-  hotTab?: any;
   type: 'community' | 'home';
 }
 
 const FeedPost = (props: FeedPostProps) => {
   const navigation = useNavigation();
 
-  const {feed, playerId, postId, selectedFilter, hotTab, type} = props;
-
-  const [likeStatus, setLikeStatus] = useState<boolean>(false);
-  const [likeCount, setLikeCount] = useState<number>(0);
+  const {feed, type} = props;
 
   const [imageHeight, setImageHeight] = useState(0);
 
-  const queryClient = useQueryClient();
-
   const [isViewer, setIsViewer] = useState(false);
   const [curImage, setCurImage] = useState(0);
-
-  const {mutateAsync: likePost} = useLikePost(postId);
-
-  const toggleLike = async () => {
-    setLikeCount(prev => (likeStatus ? prev - 1 : prev + 1));
-    setLikeStatus(prev => !prev);
-
-    await likePost({postId});
-  };
 
   useEffect(() => {
     if (feed.images.length) {
@@ -63,11 +38,6 @@ const FeedPost = (props: FeedPostProps) => {
       }
     }
   }, [feed.images]);
-
-  useEffect(() => {
-    setLikeStatus(feed.isLike);
-    setLikeCount(feed.likeCount);
-  }, [feed.isLike, feed.likeCount]);
 
   return (
     <>
@@ -112,7 +82,12 @@ const FeedPost = (props: FeedPostProps) => {
           }}>
           <Pressable
             onPress={() => {
-              navigation.navigate('Profile', {playerUserId: feed.writer.id});
+              type === 'community'
+                ? navigation.navigate('Profile', {playerUserId: feed.writer.id})
+                : navigation.navigate('CommunityStack', {
+                    screen: 'Profile',
+                    params: {playerUserId: feed.writer.id},
+                  });
             }}>
             <Avatar uri={feed.writer.image} size={33} style={{marginTop: 3}} />
           </Pressable>
@@ -122,6 +97,7 @@ const FeedPost = (props: FeedPostProps) => {
               feed={feed}
               isWriter={feed.playerUser.id === feed.writer.id}
               type="feed"
+              location={type}
             />
             <CustomText
               style={{
