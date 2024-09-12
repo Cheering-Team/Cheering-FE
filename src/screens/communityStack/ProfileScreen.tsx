@@ -26,8 +26,6 @@ const ProfileScreen = ({navigation, route}) => {
   const isFocused = useIsFocused();
   const insets = useSafeAreaInsets();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef<FlatList<any>>(null);
   const scrollTimeout = useRef(null);

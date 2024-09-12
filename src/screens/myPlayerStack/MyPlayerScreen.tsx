@@ -8,12 +8,15 @@ import CustomText from '../../components/common/CustomText';
 import Avatar from '../../components/common/Avatar';
 import OptionModal from '../../components/common/OptionModal';
 import {useGetMyPlayers} from '../../apis/player/usePlayers';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 
 const MyPlayerScreen = ({navigation}) => {
   const isFocused = useIsFocused();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(0);
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const {data, isLoading, refetch} = useGetMyPlayers();
 
@@ -66,7 +69,7 @@ const MyPlayerScreen = ({navigation}) => {
                 setIsModalOpen(true);
               }}>
               <Avatar
-                uri={item.user.image}
+                uri={item.user?.image}
                 size={22}
                 style={{marginRight: 7}}
               />
@@ -110,23 +113,9 @@ const MyPlayerScreen = ({navigation}) => {
         }
       />
       <OptionModal
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        option1Text="내 프로필"
-        option1Press={() => {
-          navigation.navigate('CommunityStack', {
-            screen: 'Profile',
-            params: {playerUserId: data.result[selectedIdx].user.id},
-          });
-        }}
-        option2Text="커뮤니티 탈퇴"
-        option2color="#fe6363"
-        option2Press={() => {
-          navigation.navigate('CommunityStack', {
-            screen: 'DeletePlayerUser',
-            params: {playerUserId: data.result[selectedIdx].user.id},
-          });
-        }}
+        modalRef={bottomSheetModalRef}
+        firstText="프로필 바로가기"
+        firstOnPress={() => {}}
       />
     </>
   );

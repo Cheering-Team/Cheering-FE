@@ -6,8 +6,6 @@ import {useNavigation} from '@react-navigation/native';
 import MoreSvg from '../../../assets/images/three-dots.svg';
 import OptionModal from '../common/OptionModal';
 import AlertModal from '../common/AlertModal/AlertModal';
-import {useQueryClient} from '@tanstack/react-query';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useDeletePost, useReportPost} from '../../apis/post/usePosts';
 
@@ -15,10 +13,11 @@ interface PostWriterProps {
   feed: any;
   isWriter: boolean;
   type: 'post' | 'feed';
+  location?: 'community' | 'home';
 }
 
 const PostWriter = (props: PostWriterProps) => {
-  const {feed, isWriter, type} = props;
+  const {feed, isWriter, type, location = 'community'} = props;
 
   const navigation = useNavigation();
 
@@ -58,7 +57,12 @@ const PostWriter = (props: PostWriterProps) => {
         <Pressable
           style={{flexDirection: 'row'}}
           onPress={() => {
-            navigation.navigate('Profile', {playerUserId: feed.writer.id});
+            location === 'community'
+              ? navigation.navigate('Profile', {playerUserId: feed.writer.id})
+              : navigation.navigate('CommunityStack', {
+                  screen: 'Profile',
+                  params: {playerUserId: feed.writer.id},
+                });
           }}>
           <CustomText fontWeight="500" style={styles.writerName}>
             {feed.writer.nickname}
