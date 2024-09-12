@@ -2,53 +2,55 @@ import React, {useEffect, useState} from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
 import BackSvg from '../../../assets/images/arrow-left.svg';
 import {NICKNAME_REGEX} from '../../constants/regex';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {updateUserNickname} from '../../apis/user';
-import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import CustomButton from '../../components/common/CustomButton';
-import {updatePlayerUserNickname} from '../../apis/player';
+import {useUpdatePlayerUserNickname} from '../../apis/player/usePlayers';
+import {showBottomToast} from '../../utils/\btoast';
 
 const EditNicknameScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;
   const insets = useSafeAreaInsets();
-  const queryClient = useQueryClient();
   const [nickname, setNickname] = useState(route.params.nickname);
   const [isNicknameValid, setIsNicknameValid] = useState(true);
+  const [nicknameInvalidMessage, setNicknameInvalidMessage] = useState('');
 
-  const userMutation = useMutation({
-    mutationFn: updateUserNickname,
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['users']});
-    },
-  });
+  const {mutateAsync} = useUpdatePlayerUserNickname();
+  // const playerUserMutation = useMutation({
+  //   mutationFn: updatePlayerUserNickname,
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({
+  //       queryKey: ['playerusers', playerUserId],
+  //     });
+  //   },
+  // });
 
-  const playerUserMutation = useMutation({
-    mutationFn: updatePlayerUserNickname,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['playerusers', playerUserId],
-      });
-    },
-  });
-
-  const updateNickname = async () => {
-    const data = playerUserId
-      ? await playerUserMutation.mutateAsync({playerUserId, nickname})
-      : await userMutation.mutateAsync({nickname});
-
-    if (data.message === '닉네임을 변경하였습니다.') {
-      Toast.show({
-        type: 'default',
-        position: 'top',
-        visibilityTime: 3000,
-        topOffset: insets.top + 20,
-        text1: '닉네임을 변경하였습니다.',
-      });
+  const handlePlayerUserNickname = async () => {
+    const data = await mutateAsync({playerUserId, nickname});
+    if (data.message === '이미 존재하는 닉네임입니다.') {
+      setIsNicknameValid(false);
+      setNicknameInvalidMessage('이미 존재하는 닉네임입니다.');
+    } else {
+      showBottomToast(insets.bottom + 20, '닉네임을 변경하였습니다.');
       navigation.pop();
     }
+  };
+
+  const handleUserNickname = async () => {
+    // const data = playerUserId
+    //   ? await playerUserMutation.mutateAsync({playerUserId, nickname})
+    //   : await userMutation.mutateAsync({nickname});
+    // if (data.message === '닉네임을 변경하였습니다.') {
+    //   Toast.show({
+    //     type: 'default',
+    //     position: 'top',
+    //     visibilityTime: 3000,
+    //     topOffset: insets.top + 20,
+    //     text1: '닉네임을 변경하였습니다.',
+    //   });
+    //   navigation.pop();
+    // }
   };
 
   useEffect(() => {
@@ -85,7 +87,7 @@ const EditNicknameScreen = ({navigation, route}) => {
           curLength={nickname.length}
           length
           isValid={isNicknameValid}
-          inValidMessage="2자~20자, 한글과 영어만 사용 가능합니다."
+          inValidMessage={nicknameInvalidMessage}
         />
       </View>
       <View style={{padding: 15}}>
@@ -93,7 +95,7 @@ const EditNicknameScreen = ({navigation, route}) => {
           type="normal"
           text="변경 완료"
           disabled={!isNicknameValid || nickname === route.params.nickname}
-          onPress={() => updateNickname()}
+          onPress={playerUserId ? handlePlayerUserNickname : handleUserNickname}
         />
       </View>
     </SafeAreaView>

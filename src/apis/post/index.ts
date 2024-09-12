@@ -1,11 +1,9 @@
 import {axiosInstance} from '..';
-import {Image} from '../player';
 import {ApiResponse, Id} from '../types';
 import {postKeys} from './queries';
 import {
   EditPostPayload,
   GetPostsResponse,
-  LikePostPayload,
   Post,
   PostIdPayload,
   WritePostPayload,
@@ -40,11 +38,26 @@ export const getPosts = async ({
   queryKey: ReturnType<typeof postKeys.list>;
   pageParam: number;
 }) => {
-  let [, , {playerId, filter}] = queryKey;
+  const [, , {playerId, filter}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<GetPostsResponse>>(
     `/players/${playerId}/posts?tag=${
       filter === 'all' ? '' : filter
-    }&page=${pageParam}&size=5`,
+    }&page=${pageParam}&size=10`,
+  );
+  return response.data;
+};
+
+// 유저 게시글 불러오기 (무한 스크롤)
+export const getPlayerUserPosts = async ({
+  queryKey,
+  pageParam = 0,
+}: {
+  queryKey: ReturnType<typeof postKeys.list>;
+  pageParam: number;
+}) => {
+  const [, , {playerUserId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<GetPostsResponse>>(
+    `/playerusers/${playerUserId}/posts?page=${pageParam}&size=10`,
   );
   return response.data;
 };

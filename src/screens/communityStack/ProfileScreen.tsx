@@ -1,40 +1,30 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   ActivityIndicator,
-  Animated,
   Dimensions,
   Pressable,
+  RefreshControl,
   SafeAreaView,
   View,
 } from 'react-native';
 import CloseSvg from '../../../assets/images/close-black.svg';
 import MoreSvg from '../../../assets/images/three-dots-black.svg';
 import {FlatList} from 'react-native-gesture-handler';
-import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
-import {getPlayerUserInfo, getPlayerUserPosts} from '../../apis/player';
 import Avatar from '../../components/common/Avatar';
 import CustomText from '../../components/common/CustomText';
 import FeedPost from '../../components/community/FeedPost';
-import {useIsFocused} from '@react-navigation/native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import ChevronTopSvg from '../../../assets/images/chevron-top-black.svg';
 import OptionModal from '../../components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {useGetPlayerUserInfo} from '../../apis/player/usePlayers';
+import {useGetPlayerUserPosts} from '../../apis/post/usePosts';
 
 const ProfileScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;
-  const isFocused = useIsFocused();
-  const insets = useSafeAreaInsets();
-
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const flatListRef = useRef<FlatList<any>>(null);
-  const scrollTimeout = useRef(null);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {data, isLoading} = useQuery({
-    queryKey: ['playerusers', playerUserId],
-    queryFn: getPlayerUserInfo,
-  });
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const {data} = useGetPlayerUserInfo(playerUserId);
 
   const {
     data: feedData,
@@ -43,17 +33,7 @@ const ProfileScreen = ({navigation, route}) => {
     hasNextPage,
     refetch,
     isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['playerusers', playerUserId, 'posts'],
-    queryFn: getPlayerUserPosts,
-    initialPageParam: 0,
-    getNextPageParam: (lastpage, pages) => {
-      if (lastpage.result.last) {
-        return undefined;
-      }
-      return pages.length;
-    },
-  });
+  } = useGetPlayerUserPosts(playerUserId);
 
   const loadFeed = () => {
     if (hasNextPage) {
@@ -61,37 +41,16 @@ const ProfileScreen = ({navigation, route}) => {
     }
   };
 
-  const handleScrollBeginDrag = () => {
-    if (scrollTimeout.current) {
-      clearTimeout(scrollTimeout.current);
-    }
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    refetch();
 
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
   };
 
-  const handleScrollEndDrag = () => {
-    scrollTimeout.current = setTimeout(() => {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start();
-    }, 1700);
-  };
-
-  useEffect(() => {
-    if (isFocused) {
-      refetch();
-    }
-  }, [isFocused, refetch]);
-
-  const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-  if (isLoading) {
+  if (!data) {
     return null;
   }
 
@@ -102,7 +61,9 @@ const ProfileScreen = ({navigation, route}) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: 11,
+          height: 45,
+          paddingLeft: 8,
+          paddingRight: 11,
         }}>
         <Pressable onPress={() => navigation.goBack()}>
           <CloseSvg width={30} height={30} />
@@ -111,24 +72,25 @@ const ProfileScreen = ({navigation, route}) => {
           <CustomText
             fontWeight="500"
             style={{
-              fontSize: 18,
+              fontSize: 17,
             }}>{`${data.result.player.koreanName} / `}</CustomText>
           <CustomText
             fontWeight="500"
             style={{
-              fontSize: 18,
+              fontSize: 17,
             }}>
             {data.result.player.englishName}
           </CustomText>
         </View>
-        <Pressable onPress={() => bottomSheetModalRef.current?.present()}>
-          <MoreSvg width={18} height={18} />
-        </Pressable>
+        {data.result.isUser ? (
+          <Pressable onPress={() => bottomSheetModalRef.current?.present()}>
+            <MoreSvg width={18} height={18} />
+          </Pressable>
+        ) : (
+          <View style={{width: 18, height: 18}} />
+        )}
       </View>
-      <Animated.FlatList
-        ref={flatListRef}
-        onScrollBeginDrag={handleScrollBeginDrag}
-        onScrollEndDrag={handleScrollEndDrag}
+      <FlatList
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 50}}
         ListHeaderComponent={
@@ -136,7 +98,6 @@ const ProfileScreen = ({navigation, route}) => {
             style={{
               borderBottomWidth: 1,
               borderColor: '#efefef',
-              paddingBottom: 20,
             }}>
             <View
               style={{flexDirection: 'row', padding: 22, alignItems: 'center'}}>
@@ -153,17 +114,18 @@ const ProfileScreen = ({navigation, route}) => {
                   style={{
                     borderWidth: 1,
                     borderColor: '#d6d6d6',
-                    height: 50,
-                    borderRadius: 5,
+                    height: 40,
+                    borderRadius: 10,
                     alignItems: 'center',
                     justifyContent: 'center',
+                    marginBottom: 20,
                   }}
                   onPress={() =>
                     navigation.navigate('ProfileEdit', {
                       playerUserId: data.result.user.id,
                     })
                   }>
-                  <CustomText fontWeight="500" style={{fontSize: 17}}>
+                  <CustomText fontWeight="500" style={{fontSize: 16}}>
                     프로필 편집
                   </CustomText>
                 </Pressable>
@@ -171,12 +133,6 @@ const ProfileScreen = ({navigation, route}) => {
             </View>
           </View>
         }
-        keyboardShouldPersistTaps="always"
-        ItemSeparatorComponent={() => (
-          <View
-            style={{backgroundColor: '#F0F2F5', height: 6, width: '100%'}}
-          />
-        )}
         data={feedData?.pages.flatMap(page => page.result.posts)}
         renderItem={({item}) => (
           <Pressable
@@ -187,12 +143,7 @@ const ProfileScreen = ({navigation, route}) => {
                 playerUser: item.playerUser,
               });
             }}>
-            <FeedPost
-              feed={item}
-              postId={item.id}
-              playerId={data.result.player.id}
-              type="community"
-            />
+            <FeedPost feed={item} type="community" />
           </Pressable>
         )}
         onEndReached={loadFeed}
@@ -230,35 +181,15 @@ const ProfileScreen = ({navigation, route}) => {
             <></>
           )
         }
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            progressViewOffset={10}
+            colors={['#787878']}
+          />
+        }
       />
-      <AnimatedPressable
-        style={[
-          {
-            position: 'absolute',
-            bottom: insets.bottom + 67,
-            right: 17,
-            borderRadius: 100,
-            width: 48,
-            height: 48,
-            marginBottom: 12,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'white',
-            shadowColor: '#bdbdbd',
-            shadowOffset: {width: 1, height: 2},
-            shadowOpacity: 0.7,
-            shadowRadius: 3,
-            elevation: 5,
-          },
-          {opacity: fadeAnim},
-        ]}
-        onPress={() => {
-          if (flatListRef.current) {
-            flatListRef.current.scrollToOffset({offset: 0, animated: true});
-          }
-        }}>
-        <ChevronTopSvg width={25} height={25} />
-      </AnimatedPressable>
       {data.result.isUser && (
         <OptionModal
           modalRef={bottomSheetModalRef}

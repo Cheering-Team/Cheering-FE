@@ -12,7 +12,7 @@ import {WINDOW_HEIGHT} from '../../constants/dimension';
 import JoinModal from '../../components/community/JoinModal/JoinModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 
-const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
+const HEADER_HEIGHT = WINDOW_HEIGHT / 2.3;
 
 const CommunityScreen: React.FC = ({route}) => {
   const {playerId} = route.params;

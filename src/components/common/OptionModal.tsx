@@ -105,7 +105,11 @@ const OptionModal = (props: OptionModalProps) => {
           {firstAvatar && <Avatar uri={firstAvatar} size={30} />}
           <CustomText
             fontWeight="500"
-            style={{color: firstColor, fontSize: 15, marginLeft: 10}}>
+            style={{
+              color: firstColor,
+              fontSize: 15,
+              marginLeft: firstAvatar ? 10 : undefined,
+            }}>
             {firstText}
           </CustomText>
           {firstSvg === 'trash' && <TrashSvg width={20} height={20} />}

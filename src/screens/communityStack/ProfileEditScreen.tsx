@@ -1,39 +1,25 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {ImageBackground, Pressable, SafeAreaView, View} from 'react-native';
 import CustomText from '../../components/common/CustomText';
 import BackSvg from '../../../assets/images/arrow-left.svg';
 import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
 import CameraSvg from '../../../assets/images/camera-01.svg';
 import ImagePicker from 'react-native-image-crop-picker';
-import OptionModal, {
-  closeModalHandle,
-} from '../../components/common/OptionModal';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {getPlayerUserInfo, updatePlayerUserImage} from '../../apis/player';
-import Toast from 'react-native-toast-message';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import OptionModal from '../../components/common/OptionModal';
+import {
+  useGetPlayerUserInfo,
+  useUpdatePlayerUserImage,
+} from '../../apis/player/usePlayers';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 
 const ProfileEditScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;
-  const insets = useSafeAreaInsets();
-  const queryClient = useQueryClient();
 
-  const closeModalRef = useRef<closeModalHandle>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {data, isLoading} = useQuery({
-    queryKey: ['playerusers', playerUserId],
-    queryFn: getPlayerUserInfo,
-  });
+  const {data} = useGetPlayerUserInfo(playerUserId);
 
-  const mutation = useMutation({
-    mutationFn: updatePlayerUserImage,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['playerusers', playerUserId],
-      });
-    },
-  });
+  const {mutate} = useUpdatePlayerUserImage();
 
   const imageUpload = async () => {
     try {
@@ -44,23 +30,10 @@ const ProfileEditScreen = ({navigation, route}) => {
         cropperCancelText: '취소',
         cropperToolbarTitle: '사진 선택',
       });
-
-      const updateData = await mutation.mutateAsync({
+      mutate({
         playerUserId: playerUserId,
         image: {uri: image.path, name: image.filename || '', type: image.mime},
       });
-
-      if (updateData.message === '프로필 이미지를 수정했습니다.') {
-        Toast.show({
-          type: 'default',
-          position: 'top',
-          visibilityTime: 3000,
-          topOffset: insets.top + 20,
-          text1: '수정이 완료되었습니다.',
-        });
-
-        closeModalRef?.current?.closeModal();
-      }
     } catch (error: any) {
       if (error.code === 'E_PICKER_CANCELLED') {
         return;
@@ -69,25 +42,13 @@ const ProfileEditScreen = ({navigation, route}) => {
   };
 
   const imageDelete = async () => {
-    const updateData = await mutation.mutateAsync({
+    mutate({
       playerUserId: playerUserId,
       image: null,
     });
-
-    if (updateData.message === '프로필 이미지를 수정했습니다.') {
-      Toast.show({
-        type: 'default',
-        position: 'top',
-        visibilityTime: 3000,
-        topOffset: insets.top + 20,
-        text1: '삭제가 완료되었습니다.',
-      });
-
-      closeModalRef?.current?.closeModal();
-    }
   };
 
-  if (isLoading) {
+  if (!data) {
     return null;
   }
 
@@ -112,7 +73,7 @@ const ProfileEditScreen = ({navigation, route}) => {
       <View style={{padding: 20, alignItems: 'center'}}>
         <Pressable
           onPress={() => {
-            setIsModalOpen(true);
+            bottomSheetModalRef.current?.present();
           }}
           style={{
             borderRadius: 95,
@@ -170,22 +131,18 @@ const ProfileEditScreen = ({navigation, route}) => {
       {data.result.user.image ===
       'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/default-profile.jpg' ? (
         <OptionModal
-          ref={closeModalRef}
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          option1Text="내 사진 선택"
-          option1Press={imageUpload}
+          modalRef={bottomSheetModalRef}
+          firstText="내 사진 선택"
+          firstOnPress={imageUpload}
         />
       ) : (
         <OptionModal
-          ref={closeModalRef}
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          option1Text="내 사진 선택"
-          option2Text="현재 사진 삭제"
-          option2color="#fe6363"
-          option1Press={imageUpload}
-          option2Press={imageDelete}
+          modalRef={bottomSheetModalRef}
+          firstText="내 사진 선택"
+          secondText="현재 사진 삭제"
+          secondColor="#fe6363"
+          firstOnPress={imageUpload}
+          secondOnPress={imageDelete}
         />
       )}
     </SafeAreaView>

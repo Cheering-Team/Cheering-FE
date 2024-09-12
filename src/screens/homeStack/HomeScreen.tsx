@@ -1,5 +1,11 @@
 import React, {useRef, useState} from 'react';
-import {FlatList, ListRenderItem, Pressable, View} from 'react-native';
+import {
+  FlatList,
+  ListRenderItem,
+  Pressable,
+  RefreshControl,
+  View,
+} from 'react-native';
 import HomeBanner from '../../components/home/HomeBanner';
 import HomeHeader from '../../components/home/HomeHeader';
 import CustomText from '../../components/common/CustomText';
@@ -15,10 +21,9 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Drawer} from 'react-native-drawer-layout';
 import {useGetMyPlayers} from '../../apis/player/usePlayers';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useScrollToTop} from '@react-navigation/native';
 import Avatar from '../../components/common/Avatar';
 import ChevronDownSvg from '../../../assets/images/chevron-down-black-thin.svg';
-import StarSvg from '../../../assets/images/star-gray.svg';
 import OptionModal from '../../components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {Player} from '../../apis/player/types';
@@ -31,14 +36,31 @@ const HomeScreen = () => {
   const translateY = useSharedValue(0);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const flatListRef = useRef<FlatList>(null);
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
-  const {data, isLoading, hasNextPage, fetchNextPage, isFetchingNextPage} =
-    useGetPosts(0, 'all', true);
+  const {
+    data,
+    isLoading,
+    refetch,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useGetPosts(0, 'all', true);
 
   const {data: playerData} = useGetMyPlayers();
+
+  useScrollToTop(
+    useRef({
+      scrollToTop: () => {
+        flatListRef.current?.scrollToOffset({offset: 0, animated: true});
+        handleRefresh();
+      },
+    }),
+  );
 
   const renderFeed: ListRenderItem<PostInfoResponse> = ({item}) => (
     <FeedPost feed={item} type="home" />
@@ -95,6 +117,15 @@ const HomeScreen = () => {
     translateY.value = calcTranslateY(offsetY, lastScrollY);
     return;
   });
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    refetch();
+
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  };
 
   return (
     <Drawer
@@ -172,7 +203,8 @@ const HomeScreen = () => {
       <View style={{flex: 1}}>
         <HomeHeader translateY={translateY} setIsOpen={setIsDrawerOpen} />
         <Animated.FlatList
-          style={{paddingTop: insets.top + 53}}
+          ref={flatListRef}
+          style={{marginTop: insets.top, paddingTop: 53}}
           data={data ? data?.pages.flatMap(page => page.result.posts) : []}
           renderItem={renderFeed}
           ListHeaderComponent={
@@ -183,7 +215,8 @@ const HomeScreen = () => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  paddingHorizontal: 13,
+                  paddingLeft: 13,
+                  paddingRight: 15,
                   paddingVertical: 7,
                   backgroundColor: 'white',
                   borderBottomWidth: 1,
@@ -204,6 +237,14 @@ const HomeScreen = () => {
           onEndReachedThreshold={1}
           ListFooterComponent={isFetchingNextPage ? <ListLoading /> : null}
           ListEmptyComponent={isLoading ? <ListLoading /> : <ListEmpty />}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+              progressViewOffset={53}
+              colors={['#787878']}
+            />
+          }
         />
       </View>
       <OptionModal

@@ -18,7 +18,7 @@ const CheckBox = (props: CheckBoxProps) => {
           ? {
               width: 22,
               height: 22,
-              backgroundColor: '#6abe5b',
+              backgroundColor: 'black',
               borderRadius: 5,
               marginRight: 10,
               alignItems: 'center',

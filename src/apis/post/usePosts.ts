@@ -8,6 +8,7 @@ import {postKeys} from './queries';
 import {
   deletePost,
   editPost,
+  getPlayerUserPosts,
   getPostById,
   getPosts,
   likePost,
@@ -59,6 +60,21 @@ export const useGetPosts = (
       return pages.length;
     },
     enabled: enabled,
+  });
+};
+
+// 유저 게시글 불러오기 (무한 스크롤)
+export const useGetPlayerUserPosts = (playerUserId: number) => {
+  return useInfiniteQuery({
+    queryKey: postKeys.list(0, 'all', playerUserId),
+    queryFn: getPlayerUserPosts,
+    initialPageParam: 0,
+    getNextPageParam: (lastpage, pages) => {
+      if (lastpage.result.last) {
+        return undefined;
+      }
+      return pages.length;
+    },
   });
 };
 

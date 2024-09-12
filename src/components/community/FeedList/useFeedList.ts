@@ -9,6 +9,7 @@ export const useFeedList = (playerData: GetPlayersInfoResponse) => {
   const {
     data: feedData,
     isLoading,
+    refetch,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -25,6 +26,7 @@ export const useFeedList = (playerData: GetPlayersInfoResponse) => {
     setSelectedFilter,
     feedData,
     isLoading,
+    refetch,
     isFetchingNextPage,
     loadFeed,
   };

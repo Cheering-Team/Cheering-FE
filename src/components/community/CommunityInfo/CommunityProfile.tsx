@@ -19,7 +19,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2}]}>
+    <View style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2.3}]}>
       <View style={[styles.infoContainer, {top: insets.top + 65}]}>
         <TeamList playerData={playerData} />
         <View style={{paddingLeft: 15}}>
