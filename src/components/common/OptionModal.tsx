@@ -104,7 +104,7 @@ const OptionModal = (props: OptionModalProps) => {
           }}>
           {firstAvatar && <Avatar uri={firstAvatar} size={30} />}
           <CustomText
-            fontWeight="600"
+            fontWeight="500"
             style={{color: firstColor, fontSize: 15, marginLeft: 10}}>
             {firstText}
           </CustomText>
@@ -131,7 +131,7 @@ const OptionModal = (props: OptionModalProps) => {
               secondOnPress();
             }}>
             <CustomText
-              fontWeight="600"
+              fontWeight="500"
               style={{color: secondColor, fontSize: 15}}>
               {secondText}
             </CustomText>
@@ -160,7 +160,7 @@ const OptionModal = (props: OptionModalProps) => {
               thirdOnPress();
             }}>
             <CustomText
-              fontWeight="600"
+              fontWeight="500"
               style={{color: thirdColor, fontSize: 15}}>
               {thirdText}
             </CustomText>

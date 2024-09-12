@@ -4,12 +4,12 @@ import CategoryGraySvg from '../../../assets/images/category-gray.svg';
 import CategorBlackSvg from '../../../assets/images/category-black.svg';
 import HomeGraySvg from '../../../assets/images/home-gray.svg';
 import HomeBlackSvg from '../../../assets/images/home-black.svg';
-import StarGraySvg from '../../../assets/images/star-gray.svg';
-import StarBlackSvg from '../../../assets/images/star-black.svg';
 import ChatGraySvg from '../../../assets/images/chat-gray.svg';
 import ChatBlackSvg from '../../../assets/images/chat-black.svg';
 import MoreGraySvg from '../../../assets/images/more-gray.svg';
 import MoreBlackSvg from '../../../assets/images/more-black.svg';
+import AlertSvg from '../../../assets/images/alert.svg';
+import AlertGraySvg from '../../../assets/images/alert-gray.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from './CustomText';
 import {getActiveRouteName} from '../../utils/getActiveRouteName';
@@ -138,16 +138,16 @@ function CustomTabBar({state, descriptors, navigation}) {
               ) : index === 1 ? (
                 isFocused ? (
                   <>
-                    <StarBlackSvg width={20} height={20} />
+                    <AlertSvg width={20} height={20} />
                     <CustomText fontWeight="600" style={styles.TabLabelFocused}>
-                      내 선수
+                      알림
                     </CustomText>
                   </>
                 ) : (
                   <>
-                    <StarGraySvg width={20} height={20} />
+                    <AlertGraySvg width={20} height={20} />
                     <CustomText fontWeight="600" style={styles.TabLabel}>
-                      내 선수
+                      알림
                     </CustomText>
                   </>
                 )

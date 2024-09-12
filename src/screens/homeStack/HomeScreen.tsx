@@ -114,7 +114,7 @@ const HomeScreen = () => {
                 flexDirection: 'row',
               }}>
               <CustomText
-                fontWeight="600"
+                fontWeight="500"
                 style={{fontSize: 18, marginRight: 5}}>
                 나의 선수
               </CustomText>
@@ -138,8 +138,10 @@ const HomeScreen = () => {
                 })
               }>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Avatar uri={item.image} size={35} />
-                <CustomText style={{fontSize: 15, marginLeft: 15}}>
+                <Avatar uri={item.image} size={37} />
+                <CustomText
+                  fontWeight="500"
+                  style={{fontSize: 15, marginLeft: 15, color: '#222222'}}>
                   {item.koreanName}
                 </CustomText>
               </View>
@@ -181,7 +183,7 @@ const HomeScreen = () => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  paddingHorizontal: 16,
+                  paddingHorizontal: 13,
                   paddingVertical: 7,
                   backgroundColor: 'white',
                   borderBottomWidth: 1,
