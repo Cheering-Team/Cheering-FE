@@ -24,7 +24,6 @@ const NotificationScreen = ({navigation}) => {
         style={{
           flexDirection: 'row',
           padding: 10,
-          alignItems: 'center',
         }}
         onPress={() =>
           navigation.navigate('CommunityStack', {
@@ -33,19 +32,60 @@ const NotificationScreen = ({navigation}) => {
           })
         }>
         <Avatar uri={item.from.image} size={43} />
-        <View
-          style={{
-            flexDirection: 'row',
-            flex: 1,
-            marginLeft: 10,
-          }}>
-          <CustomText style={{flex: 1, color: '#282828'}}>
-            <CustomText fontWeight="500">{item.from.nickname}</CustomText>
-            {item.count > 1
-              ? `님 외 ${item.count - 1}명이 회원님의 게시글을 좋아합니다.`
-              : '님이 회원님의 게시글을 좋아합니다.'}
-          </CustomText>
-        </View>
+        {item.type === 'LIKE' ? (
+          <View
+            style={{
+              flexDirection: 'row',
+              flex: 1,
+              marginLeft: 10,
+            }}>
+            <CustomText style={{flex: 1, color: '#282828'}}>
+              <CustomText fontWeight="500">{item.from.nickname}</CustomText>
+              {item.count > 1
+                ? `님 외 ${item.count - 1}명이 회원님의 게시글을 좋아합니다.`
+                : '님이 회원님의 게시글을 좋아합니다.'}
+            </CustomText>
+          </View>
+        ) : item.type === 'COMMENT' ? (
+          <View
+            style={{
+              flexDirection: 'row',
+              flex: 1,
+              marginLeft: 10,
+              marginTop: 3,
+            }}>
+            <CustomText
+              style={{flex: 1, color: '#282828'}}
+              numberOfLines={3}
+              ellipsizeMode="tail">
+              <CustomText fontWeight="500">{item.from.nickname}</CustomText>
+              {`님이 댓글을 남겼습니다: `}
+              <CustomText fontWeight="500">{item.content}</CustomText>
+            </CustomText>
+          </View>
+        ) : (
+          <View
+            style={{
+              flexDirection: 'row',
+              flex: 1,
+              marginLeft: 10,
+              marginTop: 3,
+            }}>
+            <CustomText
+              style={{flex: 1, color: '#282828'}}
+              numberOfLines={3}
+              ellipsizeMode="tail">
+              <CustomText fontWeight="500">{item.from.nickname}</CustomText>
+              {`님이 답글을 남겼습니다: `}
+              <CustomText
+                fontWeight="500"
+                style={{
+                  color: '#939393',
+                }}>{`@${item.to.nickname} `}</CustomText>
+              <CustomText fontWeight="500">{item.content}</CustomText>
+            </CustomText>
+          </View>
+        )}
 
         {item.post.image && (
           <Image
