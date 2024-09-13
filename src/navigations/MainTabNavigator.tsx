@@ -5,7 +5,7 @@ import MyChatScreen from '../screens/MyChatScreen';
 import CategoryStackNavigator from './CategoryStackNavigator';
 import MoreStackNavigator from './MoreStackNavigator';
 import CustomTabBar from '../components/common/CustomHomeTab';
-import MyAlertStackNavigator from './MyAlertStackNavigator';
+import NotificationStackNavigator from './NotificationStackNavigator';
 
 const MainTabNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -25,8 +25,8 @@ const MainTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="MyAlertStack"
-        component={MyAlertStackNavigator}
+        name="MyNotificationStack"
+        component={NotificationStackNavigator}
         options={{
           headerShown: false,
         }}

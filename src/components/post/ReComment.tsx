@@ -36,7 +36,15 @@ const ReComment = (props: Props) => {
 
       <View style={{marginLeft: 10, flex: 1}}>
         <CommentWriter comment={reComment} type="reComment" />
-        <CustomText style={{color: '#282828'}}>{reComment.content}</CustomText>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <CustomText fontWeight="500" style={{color: '#939393', fontSize: 13}}>
+            {`@${reComment.to.nickname} `}
+          </CustomText>
+          <CustomText style={{color: '#282828'}}>
+            {reComment.content}
+          </CustomText>
+        </View>
+
         <Pressable
           onPress={() => {
             setUnder(commentId);
