@@ -18,6 +18,7 @@ import {queryClient} from '../../../App';
 import {notificationKeys} from '../../apis/notification/queries';
 import ListLoading from '../../components/common/ListLoading/ListLoading';
 import ListEmpty from '../../components/common/ListEmpty/ListEmpty';
+import {formatBeforeDate} from '../../utils/format';
 
 const NotificationScreen = ({navigation}) => {
   const insets = useSafeAreaInsets();
@@ -39,7 +40,6 @@ const NotificationScreen = ({navigation}) => {
   const {
     data,
     isLoading,
-    isRefetching,
     refetch,
     isFetchingNextPage,
     hasNextPage,
@@ -67,12 +67,19 @@ const NotificationScreen = ({navigation}) => {
               flexDirection: 'row',
               flex: 1,
               marginLeft: 10,
+              marginTop: 3,
             }}>
-            <CustomText style={{flex: 1, color: '#282828'}}>
+            <CustomText
+              style={{flex: 1, color: '#282828'}}
+              numberOfLines={3}
+              ellipsizeMode="tail">
               <CustomText fontWeight="500">{item.from.nickname}</CustomText>
               {item.count > 1
                 ? `님 외 ${item.count - 1}명이 회원님의 게시글을 좋아합니다.`
-                : '님이 회원님의 게시글을 좋아합니다.'}
+                : '님이 회원님의 게시글을 좋아합니다.  '}
+              <CustomText style={{color: '#a2a2a2'}}>
+                {formatBeforeDate(item.createdAt)}
+              </CustomText>
             </CustomText>
           </View>
         ) : item.type === 'COMMENT' ? (
@@ -89,7 +96,10 @@ const NotificationScreen = ({navigation}) => {
               ellipsizeMode="tail">
               <CustomText fontWeight="500">{item.from.nickname}</CustomText>
               {`님이 댓글을 남겼습니다: `}
-              <CustomText fontWeight="500">{item.content}</CustomText>
+              <CustomText fontWeight="500">{`${item.content}  `}</CustomText>
+              <CustomText style={{color: '#a2a2a2'}}>
+                {formatBeforeDate(item.createdAt)}
+              </CustomText>
             </CustomText>
           </View>
         ) : (
@@ -111,7 +121,10 @@ const NotificationScreen = ({navigation}) => {
                 style={{
                   color: '#939393',
                 }}>{`@${item.to.nickname} `}</CustomText>
-              <CustomText fontWeight="500">{item.content}</CustomText>
+              <CustomText fontWeight="500">{`${item.content}  `}</CustomText>
+              <CustomText style={{color: '#a2a2a2'}}>
+                {formatBeforeDate(item.createdAt)}
+              </CustomText>
             </CustomText>
           </View>
         )}

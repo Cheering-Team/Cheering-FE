@@ -12,6 +12,7 @@ export interface Notification {
   post: NotificationPost;
   content: string;
   isRead: boolean;
+  createdAt: Date;
 }
 
 export interface NotificationPost {
