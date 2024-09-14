@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
-import {formatDate} from '../../utils/format';
+import {formatBeforeDate, formatDate} from '../../utils/format';
 import CustomText from '../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import MoreSvg from '../../../assets/images/three-dots.svg';
@@ -68,7 +68,7 @@ const PostWriter = (props: PostWriterProps) => {
             {feed.writer.nickname}
           </CustomText>
           <CustomText style={styles.createdAt}>
-            {formatDate(feed.createdAt)}
+            {formatBeforeDate(feed.createdAt)}
           </CustomText>
         </Pressable>
         <Pressable

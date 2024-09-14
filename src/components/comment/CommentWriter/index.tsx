@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useRef, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import CustomText from '../../common/CustomText';
-import {formatDate} from '../../../utils/format';
+import {formatBeforeDate, formatDate} from '../../../utils/format';
 import MoreSvg from '../../../../assets/images/three-dots.svg';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from '../../common/OptionModal';
@@ -65,7 +65,7 @@ const CommentWriter = (props: CommentWriterProps) => {
         }}>
         <CustomText fontWeight="500">{comment.writer.nickname}</CustomText>
         <CustomText style={{color: '#a5a5a5', marginLeft: 5}}>
-          {formatDate(comment.createdAt)}
+          {formatBeforeDate(comment.createdAt)}
         </CustomText>
       </Pressable>
       <Pressable

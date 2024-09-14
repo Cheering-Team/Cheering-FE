@@ -36,3 +36,32 @@ export const formatTime = (inputTimeString: string) => {
 
   return `${ampm} ${hours}:${formattedMinutes}`;
 };
+
+export const formatBeforeDate = (input: Date) => {
+  const inputDate = new Date(input);
+  const now = new Date();
+
+  const diffInSeconds = Math.floor(
+    (now.getTime() - inputDate.getTime()) / 1000,
+  );
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  const diffInHours = Math.floor(diffInMinutes / 60);
+
+  if (diffInSeconds < 60) {
+    return '방금';
+  } else if (diffInMinutes < 60) {
+    return `${diffInMinutes}분 전`;
+  } else if (diffInHours < 24) {
+    return `${diffInHours}시간 전`;
+  } else {
+    // 날짜와 시간을 "MM.DD HH:mm" 형식으로 출력
+    const formattedDate = new Intl.DateTimeFormat('ko-KR', {
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(inputDate);
+
+    return formattedDate.replace(', ', ' ');
+  }
+};

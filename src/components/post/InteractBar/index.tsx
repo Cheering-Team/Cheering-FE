@@ -45,9 +45,7 @@ const InteractBar = (props: InteractBarProps) => {
         alignItems: 'center',
         justifyContent: 'space-between',
         marginHorizontal: 15,
-        paddingBottom: 12,
         borderBottomWidth: 1,
-        marginTop: 10,
         borderBottomColor: '#eeeeee',
         marginLeft: type === 'post' ? undefined : 53,
       }}>
@@ -57,7 +55,10 @@ const InteractBar = (props: InteractBarProps) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            marginRight: 40,
+            marginRight: 20,
+            paddingRight: 20,
+            paddingTop: 10,
+            paddingBottom: 12,
           }}>
           {likeStatus ? (
             <HeartFillSvg width={18} height={18} />

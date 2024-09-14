@@ -26,9 +26,14 @@ const FeedPost = (props: FeedPostProps) => {
   useEffect(() => {
     if (feed.images.length) {
       if (WINDOW_WIDTH - 90 < feed.images[0].width) {
-        setImageHeight(
-          feed.images[0].height * ((WINDOW_WIDTH - 90) / feed.images[0].width),
-        );
+        if (feed.images[0].height > 350) {
+          setImageHeight(350);
+        } else {
+          setImageHeight(
+            feed.images[0].height *
+              ((WINDOW_WIDTH - 90) / feed.images[0].width),
+          );
+        }
       } else {
         if (feed.images[0].height > 350) {
           setImageHeight(350);
