@@ -11,6 +11,7 @@ export interface Notification {
   count: number;
   post: NotificationPost;
   content: string;
+  isRead: boolean;
 }
 
 export interface NotificationPost {

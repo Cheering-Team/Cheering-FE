@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import CategoryGraySvg from '../../../assets/images/category-gray.svg';
 import CategorBlackSvg from '../../../assets/images/category-black.svg';
@@ -13,11 +13,14 @@ import AlertGraySvg from '../../../assets/images/alert-gray.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from './CustomText';
 import {getActiveRouteName} from '../../utils/getActiveRouteName';
+import {useGetIsUnread} from '../../apis/notification/useNotifications';
 
 function CustomTabBar({state, descriptors, navigation}) {
   // 탭 애니메이션 상태
   const [modeValue, setModeValue] = React.useState(false);
   const mode = React.useRef(new Animated.Value(0)).current;
+
+  const {data} = useGetIsUnread();
 
   // 현재 화면 이름
   let routeName = getActiveRouteName(state);
@@ -83,30 +86,6 @@ function CustomTabBar({state, descriptors, navigation}) {
               target: route.key,
             });
           };
-
-          // if (index === 2) {
-          //   return (
-          //     <Pressable
-          //       key={index}
-          //       accessibilityRole="button"
-          //       accessibilityState={isFocused ? {selected: true} : {}}
-          //       accessibilityLabel={options.tabBarAccessibilityLabel}
-          //       testID={options.tabBarTestID}
-          //       onPress={onPress}
-          //       onLongPress={onLongPress}
-          //       style={styles.Tab}>
-          //       {isFocused ? (
-          //         <View style={styles.HomeTabFocused}>
-          //           <HomeSvg width={30} height={30} />
-          //         </View>
-          //       ) : (
-          //         <View style={styles.HomeTab}>
-          //           <HomeBackGraySvg width={30} height={30} />
-          //         </View>
-          //       )}
-          //     </Pressable>
-          //   );
-          // } else {
           return (
             // gray: B7B7B7
             // black: 323232
@@ -145,6 +124,21 @@ function CustomTabBar({state, descriptors, navigation}) {
                   </>
                 ) : (
                   <>
+                    {data?.result && (
+                      <View
+                        style={{
+                          position: 'absolute',
+                          zIndex: 100,
+                          width: 10,
+                          height: 10,
+                          backgroundColor: 'red',
+                          borderRadius: 100,
+                          top: 4,
+                          left: 40,
+                        }}
+                      />
+                    )}
+
                     <AlertGraySvg width={20} height={20} />
                     <CustomText fontWeight="600" style={styles.TabLabel}>
                       알림

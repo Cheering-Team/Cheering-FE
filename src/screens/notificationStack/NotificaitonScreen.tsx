@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useGetNotifications} from '../../apis/notification/useNotifications';
 import {
   ActivityIndicator,
@@ -6,17 +6,45 @@ import {
   Image,
   ListRenderItem,
   Pressable,
+  RefreshControl,
   View,
 } from 'react-native';
 import {Notification} from '../../apis/notification/types';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Avatar from '../../components/common/Avatar';
 import CustomText from '../../components/common/CustomText';
+import {useIsFocused, useScrollToTop} from '@react-navigation/native';
+import {queryClient} from '../../../App';
+import {notificationKeys} from '../../apis/notification/queries';
+import ListLoading from '../../components/common/ListLoading/ListLoading';
+import ListEmpty from '../../components/common/ListEmpty/ListEmpty';
 
 const NotificationScreen = ({navigation}) => {
   const insets = useSafeAreaInsets();
+  const isFocused = useIsFocused();
 
-  const {data, isLoading} = useGetNotifications();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const flatListRef = useRef<FlatList>(null);
+
+  useScrollToTop(
+    useRef({
+      scrollToTop: () => {
+        flatListRef.current?.scrollToOffset({offset: 0, animated: true});
+        handleRefresh();
+      },
+    }),
+  );
+
+  const {
+    data,
+    isLoading,
+    isRefetching,
+    refetch,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useGetNotifications();
 
   const renderNotification: ListRenderItem<Notification> = ({item}) => {
     return (
@@ -24,6 +52,7 @@ const NotificationScreen = ({navigation}) => {
         style={{
           flexDirection: 'row',
           padding: 10,
+          backgroundColor: item.isRead ? '#f7f7f7' : 'white',
         }}
         onPress={() =>
           navigation.navigate('CommunityStack', {
@@ -97,13 +126,51 @@ const NotificationScreen = ({navigation}) => {
     );
   };
 
-  if (isLoading) {
+  const loadNotifications = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    refetch();
+
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  };
+
+  useEffect(() => {
+    const fetchNotification = async () => {
+      await refetch();
+      queryClient.invalidateQueries({queryKey: notificationKeys.isUnread()});
+    };
+
+    if (isFocused) {
+      fetchNotification();
+    }
+  }, [isFocused, refetch]);
+
+  if (!data) {
     return <ActivityIndicator size={'large'} style={{marginTop: insets.top}} />;
   }
+
   return (
     <FlatList
-      data={data?.pages.flatMap(page => page.result.notifications)}
+      ref={flatListRef}
+      data={data.pages.flatMap(page => page.result.notifications)}
       renderItem={renderNotification}
+      contentContainerStyle={{paddingBottom: insets.bottom + 50}}
+      onEndReached={loadNotifications}
+      onEndReachedThreshold={1}
+      ListFooterComponent={isFetchingNextPage ? <ListLoading /> : null}
+      ListEmptyComponent={
+        isLoading ? <ListLoading /> : <ListEmpty type="notification" />
+      }
+      refreshControl={
+        <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+      }
     />
   );
 };

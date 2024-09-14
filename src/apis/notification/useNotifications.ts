@@ -1,6 +1,6 @@
-import {useInfiniteQuery} from '@tanstack/react-query';
+import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 import {notificationKeys} from './queries';
-import {getNotifications} from '.';
+import {getIsUnread, getNotifications} from '.';
 
 export const useGetNotifications = () => {
   return useInfiniteQuery({
@@ -13,5 +13,14 @@ export const useGetNotifications = () => {
       }
       return pages.length;
     },
+    enabled: false,
+  });
+};
+
+export const useGetIsUnread = () => {
+  return useQuery({
+    queryKey: notificationKeys.isUnread(),
+    queryFn: getIsUnread,
+    refetchInterval: 30000,
   });
 };
