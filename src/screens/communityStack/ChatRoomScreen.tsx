@@ -4,7 +4,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  Keyboard,
   KeyboardAvoidingView,
   ListRenderItem,
   NativeScrollEvent,
@@ -314,9 +313,12 @@ const ChatRoomScreen = ({route}) => {
                     marginHorizontal: 4,
                   }}
                 />
-                <CustomText style={{color: '#626262', marginRight: 2}}>
-                  커뮤니티 바로가기
-                </CustomText>
+                <Pressable>
+                  <CustomText style={{color: '#626262', marginRight: 2}}>
+                    커뮤니티 바로가기
+                  </CustomText>
+                </Pressable>
+
                 <ChevronRightSvg width={9} height={9} />
               </View>
             </View>

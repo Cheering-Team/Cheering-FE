@@ -139,14 +139,14 @@ const HomeScreen = () => {
           ListHeaderComponent={
             <View
               style={{
-                height: 53,
+                height: 52,
                 alignItems: 'center',
                 paddingHorizontal: 15,
                 flexDirection: 'row',
               }}>
               <CustomText
                 fontWeight="500"
-                style={{fontSize: 18, marginRight: 5}}>
+                style={{fontSize: 19, marginRight: 5, paddingBottom: 0}}>
                 나의 선수
               </CustomText>
             </View>
@@ -204,7 +204,7 @@ const HomeScreen = () => {
         <HomeHeader translateY={translateY} setIsOpen={setIsDrawerOpen} />
         <Animated.FlatList
           ref={flatListRef}
-          style={{marginTop: insets.top, paddingTop: 53}}
+          style={{marginTop: insets.top, paddingTop: 52}}
           data={data ? data?.pages.flatMap(page => page.result.posts) : []}
           renderItem={renderFeed}
           ListHeaderComponent={

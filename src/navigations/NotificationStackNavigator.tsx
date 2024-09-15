@@ -17,7 +17,7 @@ const NotificationStackNavigator = () => {
       <NotificationStack.Screen
         name="Notification"
         component={NotificationScreen}
-        options={{headerTitle: '알림'}}
+        options={{headerShown: false}}
       />
       <NotificationStack.Screen
         name="CommunityStack"

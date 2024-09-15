@@ -1,11 +1,11 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import HomeStackNavigator from './HomeStackNavigator';
-import MyChatScreen from '../screens/MyChatScreen';
 import CategoryStackNavigator from './CategoryStackNavigator';
 import MoreStackNavigator from './MoreStackNavigator';
 import CustomTabBar from '../components/common/CustomHomeTab';
 import NotificationStackNavigator from './NotificationStackNavigator';
+import MyChatStackNavigator from './MyChatStackNavigator';
 
 const MainTabNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -25,21 +25,20 @@ const MainTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="MyNotificationStack"
+        name="NotificationStack"
         component={NotificationStackNavigator}
         options={{
           headerShown: false,
         }}
       />
-
       <Tab.Screen
         name="HomeStack"
         component={HomeStackNavigator}
         options={{headerShown: false}}
       />
       <Tab.Screen
-        name="MyChat"
-        component={MyChatScreen}
+        name="MyChatStack"
+        component={MyChatStackNavigator}
         options={{
           headerShown: false,
         }}
