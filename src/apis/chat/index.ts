@@ -16,6 +16,14 @@ export const getChatRooms = async ({
   return response.data;
 };
 
+// 내 채팅방 목록 불러오기
+export const getMyChatRooms = async () => {
+  const response = await axiosInstance.get<ApiResponse<ChatRoom[]>>(
+    '/my/chatrooms',
+  );
+  return response.data;
+};
+
 // 채팅방 불러오기
 export const getChatRoomById = async ({
   queryKey,

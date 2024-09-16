@@ -40,7 +40,7 @@ const HomeHeader = (props: HomeHeaderProps) => {
       <Animated.View
         style={[
           {
-            height: 53,
+            height: 52,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -48,6 +48,8 @@ const HomeHeader = (props: HomeHeaderProps) => {
             backgroundColor: 'white',
             width: '100%',
             paddingHorizontal: 10,
+            borderBottomWidth: 1,
+            borderBottomColor: '#eeeeee',
           },
           animatedHeaderStyle,
         ]}>

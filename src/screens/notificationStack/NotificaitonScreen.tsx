@@ -7,6 +7,7 @@ import {
   ListRenderItem,
   Pressable,
   RefreshControl,
+  SafeAreaView,
   View,
 } from 'react-native';
 import {Notification} from '../../apis/notification/types';
@@ -165,26 +166,45 @@ const NotificationScreen = ({navigation}) => {
     }
   }, [isFocused, refetch]);
 
-  if (!data) {
-    return <ActivityIndicator size={'large'} style={{marginTop: insets.top}} />;
-  }
-
   return (
-    <FlatList
-      ref={flatListRef}
-      data={data.pages.flatMap(page => page.result.notifications)}
-      renderItem={renderNotification}
-      contentContainerStyle={{paddingBottom: insets.bottom + 50}}
-      onEndReached={loadNotifications}
-      onEndReachedThreshold={1}
-      ListFooterComponent={isFetchingNextPage ? <ListLoading /> : null}
-      ListEmptyComponent={
-        isLoading ? <ListLoading /> : <ListEmpty type="notification" />
-      }
-      refreshControl={
-        <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
-      }
-    />
+    <SafeAreaView style={{flex: 1}}>
+      <View
+        style={{
+          height: 52,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'white',
+          borderBottomWidth: 1,
+          borderBottomColor: '#eeeeee',
+        }}>
+        <CustomText fontWeight="500" style={{fontSize: 20, paddingBottom: 0}}>
+          알림
+        </CustomText>
+      </View>
+      {data ? (
+        <FlatList
+          ref={flatListRef}
+          data={data.pages.flatMap(page => page.result.notifications)}
+          renderItem={renderNotification}
+          contentContainerStyle={{paddingBottom: insets.bottom + 50}}
+          onEndReached={loadNotifications}
+          onEndReachedThreshold={1}
+          ListFooterComponent={isFetchingNextPage ? <ListLoading /> : null}
+          ListEmptyComponent={
+            isLoading ? <ListLoading /> : <ListEmpty type="notification" />
+          }
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+            />
+          }
+        />
+      ) : (
+        <ActivityIndicator style={{marginTop: insets.top}} />
+      )}
+    </SafeAreaView>
   );
 };
 
