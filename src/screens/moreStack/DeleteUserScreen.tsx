@@ -25,7 +25,7 @@ const DeleteUserScreen = ({
   const insets = useSafeAreaInsets();
   const [isAgree, setIsAgree] = useState(false);
 
-  const {mutateAsync: deleteUser} = useDeleteUser();
+  const {mutateAsync: deleteUser, isPending} = useDeleteUser();
 
   const handleDeleteUser = async () => {
     const data = await deleteUser();
@@ -72,7 +72,7 @@ const DeleteUserScreen = ({
         <CustomButton
           type="normal"
           text="계정 삭제하기"
-          disabled={!isAgree}
+          disabled={!isAgree || isPending}
           onPress={handleDeleteUser}
         />
       </View>

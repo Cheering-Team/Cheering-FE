@@ -9,31 +9,27 @@ import {
 } from 'react-native';
 import SearchSvg from '../../../assets/images/search-sm.svg';
 import React, {useEffect, useState} from 'react';
-import {useQuery} from '@tanstack/react-query';
-import {getLeagues, getSports, getTeams} from '../../apis/team';
 import CustomText from '../../components/common/CustomText';
+import {useGetLeagues, useGetSports, useGetTeams} from 'apis/player/usePlayers';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
 
-const CategoryScreen = ({navigation}) => {
-  const [selectedSport, setSelectedSport] = useState(null);
-  const [selectedLeague, setSelectedLeague] = useState(null);
+type CategoryScreenNavigationProp = NativeStackNavigationProp<
+  CategoryStackParamList,
+  'Category'
+>;
 
-  const {data: sports, isLoading: sportsLoading} = useQuery({
-    queryKey: ['sports'],
-    queryFn: getSports,
-    enabled: true,
-  });
+const CategoryScreen = ({
+  navigation,
+}: {
+  navigation: CategoryScreenNavigationProp;
+}) => {
+  const [selectedSport, setSelectedSport] = useState<number | null>(null);
+  const [selectedLeague, setSelectedLeague] = useState<number | null>(null);
 
-  const {data: leagues} = useQuery({
-    queryKey: ['leagues', selectedSport],
-    queryFn: getLeagues,
-    enabled: !!selectedSport,
-  });
-
-  const {data: teams} = useQuery({
-    queryKey: ['teams', selectedLeague],
-    queryFn: getTeams,
-    enabled: !!selectedLeague,
-  });
+  const {data: sports, isLoading: sportsLoading} = useGetSports();
+  const {data: leagues} = useGetLeagues(selectedSport);
+  const {data: teams} = useGetTeams(selectedLeague);
 
   useEffect(() => {
     if (sports && sports.result.length) {
@@ -48,35 +44,19 @@ const CategoryScreen = ({navigation}) => {
   }, [leagues]);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView className="flex-1">
       <Pressable
-        style={{
-          flexDirection: 'row',
-          paddingVertical: 12,
-          paddingHorizontal: 15,
-          borderBottomColor: '#f2f2f2',
-          borderBottomWidth: 1,
-        }}
+        className="flex-row py-3 px-4 border-b-gray-200 border-b"
         onPress={() => navigation.navigate('Search')}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            backgroundColor: '#f0f0f0',
-            height: 40,
-            borderRadius: 3,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingHorizontal: 13,
-          }}>
-          <CustomText fontWeight="400" style={{fontSize: 16, color: '#777777'}}>
+        <View className="flex-1 flex-row bg-[#f0f0f0] h-10 rounded justify-between items-center px-3">
+          <CustomText fontWeight="400" className="text-base text-[#777777]">
             선수 또는 팀을 입력해주세요.
           </CustomText>
           <SearchSvg />
         </View>
       </Pressable>
       {sportsLoading ? (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <View className="flex-1 items-center justify-center">
           <ActivityIndicator color={'#737373'} />
         </View>
       ) : (
@@ -90,45 +70,24 @@ const CategoryScreen = ({navigation}) => {
             renderItem={({item}) => (
               <Pressable
                 onPress={() => setSelectedSport(item.id)}
-                style={[
-                  {
-                    alignItems: 'center',
-                    paddingHorizontal: 10,
-                    paddingTop: 8,
-                    paddingBottom: 5,
-                  },
-                  selectedSport === item.id && {backgroundColor: '#f4f4f4'},
-                ]}>
-                <View
-                  style={{
-                    width: 55,
-                    height: 55,
-                    backgroundColor: 'black',
-                    borderRadius: 10,
-                    marginBottom: 6,
-                  }}></View>
+                className={`items-center px-[10] pt-2 pb-[5] ${selectedSport === item.id && 'bg-[#f4f4f4]'}`}>
+                <View className="w-[55] h-[55] bg-black rounded-[10px] mb-[6]" />
                 <CustomText>{item.name}</CustomText>
               </Pressable>
             )}
           />
-          <View style={{flexDirection: 'row', flex: 1}}>
+          <View className="flex-row flex-1">
             <FlatList
-              style={{width: 120}}
+              className="w-[120]"
               data={leagues ? leagues.result : []}
               keyExtractor={item => item.id.toString()}
               renderItem={({item}) => (
                 <Pressable
                   onPress={() => setSelectedLeague(item.id)}
-                  style={[
-                    {paddingVertical: 9, paddingLeft: 12},
-                    selectedLeague === item.id && {backgroundColor: '#f4f4f4'},
-                  ]}>
+                  className={`py-[9] pl-3 ${selectedLeague === item.id && 'bg-[#f4f4f4]'}`}>
                   <CustomText
                     fontWeight={selectedLeague === item.id ? '500' : '400'}
-                    style={[
-                      {color: '#9b9b9b', fontSize: 15},
-                      selectedLeague === item.id && {color: 'black'},
-                    ]}>
+                    className={`color-[#9b9b9b] text-[15px] ${selectedLeague === item.id && 'text-black'}`}>
                     {item.name}
                   </CustomText>
                 </Pressable>
@@ -149,7 +108,7 @@ const CategoryScreen = ({navigation}) => {
               renderItem={({item}) => (
                 <Pressable
                   key={item.name}
-                  style={{alignItems: 'center', width: 55}}
+                  className="items-center w-[55]"
                   onPress={() => {
                     navigation.navigate('PlayerList', {
                       teamId: item.id,
@@ -158,20 +117,9 @@ const CategoryScreen = ({navigation}) => {
                   <Image
                     resizeMode="center"
                     source={{uri: item.image}}
-                    style={{
-                      width: 55,
-                      height: 55,
-                      backgroundColor: 'white',
-                      borderRadius: 20,
-                      marginBottom: 5,
-                    }}
+                    className="w-[55] h-[55] bg-white rounded-[20px] mb-[5]"
                   />
-                  <CustomText
-                    style={{
-                      marginBottom: 15,
-                      fontSize: 13,
-                      textAlign: 'center',
-                    }}>
+                  <CustomText className="mb-[15] text-[13px] text-center">
                     {item.name}
                   </CustomText>
                 </Pressable>

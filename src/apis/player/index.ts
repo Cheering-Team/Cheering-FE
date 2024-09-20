@@ -1,6 +1,6 @@
-import {axiosInstance} from '..';
-import {ApiResponse} from '../types';
-import {playerUserKeys} from './queries';
+import {axiosInstance} from '../index';
+import {ApiResponse, IdName} from '../types';
+import {leagueKeys, playerKeys, playerUserKeys, teamKeys} from './queries';
 import {
   GetPlayerUserInfoResponse,
   Player,
@@ -9,11 +9,38 @@ import {
   UpdatedPlayerUserNicknamePayload,
 } from './types';
 
+// 종목 불러오기
+export const getSports = async () => {
+  const response = await axiosInstance.get<ApiResponse<IdName[]>>('/sports');
+  return response.data;
+};
+
+// 리그 불러오기
+export const getLeagues = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof leagueKeys.list>;
+}) => {
+  const [, , {sportId}] = queryKey;
+  const response = await axiosInstance.get(`/sports/${sportId}/leagues`);
+  return response.data;
+};
+
+// 팀 불러오기
+export const getTeams = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof teamKeys.list>;
+}) => {
+  const [, , {leagueId}] = queryKey;
+  const response = await axiosInstance.get(`/leagues/${leagueId}/teams`);
+  return response.data;
+};
+
 // 내 선수 불러오기
 export const getMyPlayers = async () => {
-  const response = await axiosInstance.get<ApiResponse<Player[]>>(
-    '/my/players',
-  );
+  const response =
+    await axiosInstance.get<ApiResponse<Player[]>>('/my/players');
   return response.data;
 };
 
