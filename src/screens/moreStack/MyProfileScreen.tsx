@@ -1,92 +1,73 @@
 import React from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
 import BackSvg from '../../../assets/images/arrow-left.svg';
-import {useQuery} from '@tanstack/react-query';
-import {getUserInfo} from '../../apis/user';
 import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
 import CustomText from '../../components/common/CustomText';
+import {useGetUserInfo} from 'apis/user/useUsers';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {MoreStackParamList} from 'navigations/MoreStackNavigator';
 
-const MyProfileScreen = ({navigation}) => {
-  const {data, isLoading} = useQuery({
-    queryKey: ['users'],
-    queryFn: getUserInfo,
-  });
+type MyProfileScreenNavigationProp = NativeStackNavigationProp<
+  MoreStackParamList,
+  'MyProfile'
+>;
 
-  if (isLoading) {
+const MyProfileScreen = ({
+  navigation,
+}: {
+  navigation: MyProfileScreenNavigationProp;
+}) => {
+  const {data, isLoading} = useGetUserInfo();
+
+  if (isLoading || !data) {
     return null;
   }
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: 10,
-        }}>
+    <SafeAreaView className="flex-1">
+      <View className="flex-row justify-between items-center p-[10]">
         <Pressable onPress={() => navigation.goBack()}>
           <BackSvg width={32} height={32} />
         </Pressable>
 
-        <CustomText fontWeight="600" style={{fontSize: 20}}>
+        <CustomText fontWeight="600" className="text-xl">
           내 정보 수정
         </CustomText>
-        <View style={{width: 32, height: 32}} />
+        <View className="w-8 h-8" />
       </View>
-      <View style={{padding: 20}}>
+      <View className="p-5">
         <Pressable
-          style={{
-            borderWidth: 1,
-            borderColor: '#e5e5e5',
-            padding: 18,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            borderRadius: 10,
-          }}
+          className="border border-slate-200 p-[18] flex-row items-center justify-between rounded-lg"
           onPress={() =>
             navigation.navigate('EditNickname', {
               nickname: data.result.nickname,
               playerUserId: null,
             })
           }>
-          <CustomText fontWeight="600" style={{fontSize: 18}}>
+          <CustomText fontWeight="600" className="text-lg">
             닉네임
           </CustomText>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View className="flex-row items-center">
             <CustomText
               fontWeight="500"
-              style={{
-                color: '#a0a0a0',
-                fontSize: 17,
-                marginRight: 3,
-              }}>
+              className="text-gray-400 text-[17px] mr-1">
               {data.result.nickname}
             </CustomText>
             <ChevronRightSvg width={13} height={13} />
           </View>
         </Pressable>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            marginTop: 30,
-          }}>
+        <View className="flex-row justify-center mt-7">
           <Pressable onPress={() => navigation.replace('SignOut')}>
-            <CustomText style={{color: '#969696', fontSize: 15}}>
+            <CustomText className="text-gray-400 text-base">
               로그아웃
             </CustomText>
           </Pressable>
-          <CustomText
-            style={{marginHorizontal: 9, color: '#969696', fontSize: 14}}>
-            |
-          </CustomText>
+          <CustomText className="mx-2 text-gray-400 text-sm">|</CustomText>
           <Pressable
             onPress={() =>
               navigation.navigate('DeleteUser', {playerUserId: null})
             }>
-            <CustomText style={{color: '#969696', fontSize: 15}}>
+            <CustomText className="text-gray-400 text-base">
               회원탈퇴
             </CustomText>
           </Pressable>

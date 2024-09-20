@@ -1,14 +1,19 @@
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   checkCode,
   checkCodeToKakao,
   connectSocial,
+  deleteUser,
+  getUserInfo,
   kakaoSignIn,
   naverSignIn,
   sendSMS,
   signIn,
   signUp,
+  updateUserNickname,
 } from './index';
+import {userKeys} from './queries';
+import {queryClient} from '../../../App';
 
 export const useSendSMS = () => {
   return useMutation({mutationFn: sendSMS});
@@ -40,4 +45,23 @@ export const useNaverSignIn = () => {
 
 export const useConnectSocial = () => {
   return useMutation({mutationFn: connectSocial});
+};
+
+export const useGetUserInfo = () => {
+  return useQuery({queryKey: userKeys.detail(), queryFn: getUserInfo});
+};
+
+export const useUpdateUserNickname = () => {
+  return useMutation({
+    mutationFn: updateUserNickname,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: userKeys.detail()});
+    },
+  });
+};
+
+export const useDeleteUser = () => {
+  return useMutation({
+    mutationFn: deleteUser,
+  });
 };

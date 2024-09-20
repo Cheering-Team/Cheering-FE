@@ -8,6 +8,7 @@ import {
   SignUpPayload,
   Token,
   TokenPayload,
+  UpdateUserNicknamePayload,
   User,
 } from './types';
 
@@ -82,5 +83,23 @@ export const connectSocial = async (data: ConnectSocialPayload) => {
     `/connect?accessToken=${encodeURIComponent(accessToken)}&type=${type}`,
     {userId},
   );
+  return response.data;
+};
+
+export const getUserInfo = async () => {
+  const response = await axiosInstance.get<ApiResponse<User>>('/users');
+  return response.data;
+};
+
+export const updateUserNickname = async (data: UpdateUserNicknamePayload) => {
+  const response = await axiosInstance.put<ApiResponse<null>>(
+    '/users/nickname',
+    data,
+  );
+  return response.data;
+};
+
+export const deleteUser = async () => {
+  const response = await axiosInstance.delete<ApiResponse<null>>('/users');
   return response.data;
 };

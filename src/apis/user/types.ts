@@ -46,3 +46,7 @@ export interface ConnectSocialPayload {
   type: 'kakao' | 'naver';
   userId: number;
 }
+
+export interface UpdateUserNicknamePayload {
+  nickname: string;
+}

@@ -10,8 +10,8 @@ import DeleteUserScreen from '../screens/moreStack/DeleteUserScreen';
 export type MoreStackParamList = {
   More: undefined;
   MyProfile: undefined;
-  EditNickname: {nickname: string};
-  DeleteUser: undefined;
+  EditNickname: {nickname: string; playerUserId: null};
+  DeleteUser: {playerUserId: null};
   Setting: undefined;
   SignOut: undefined;
 };

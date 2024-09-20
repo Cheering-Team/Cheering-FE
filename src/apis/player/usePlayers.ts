@@ -59,6 +59,7 @@ export const useUpdatePlayerUserNickname = () => {
     },
   });
 };
+
 // 커뮤니티 탈퇴하기
 export const useDeletePlayerUser = () => {
   const insets = useSafeAreaInsets();
