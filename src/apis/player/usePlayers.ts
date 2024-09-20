@@ -8,7 +8,7 @@ import {
   updatePlayerUserNickname,
 } from './index';
 import {queryClient} from '../../../App';
-import {showBottomToast} from '../../utils/\btoast';
+import {showBottomToast} from '../../utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {postKeys} from '../post/queries';

@@ -4,7 +4,7 @@ import CustomText from './CustomText';
 
 export interface CustomTextInputProps extends TextInputProps {
   label: string;
-  containerStyle?: any;
+  containerStyle?: string;
   isValid?: boolean;
   inValidMessage?: string;
   curLength?: number;
@@ -38,6 +38,7 @@ const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
         style={[{width: '100%'}, style]}
         onPress={() => internalRef.current?.focus()}>
         <View
+          className={containerStyle}
           style={[
             {
               width: '100%',
@@ -50,7 +51,6 @@ const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
               justifyContent: 'center',
               backgroundColor: 'white',
             },
-            containerStyle,
           ]}>
           <CustomText
             fontWeight={isValid ? '400' : '500'}

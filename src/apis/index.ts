@@ -3,7 +3,7 @@ import * as RootNavigation from '../navigations/RootNavigation';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import Toast from 'react-native-toast-message';
 import {queryClient} from '../../App';
-import {showBottomToast} from '../utils/\btoast';
+import {showBottomToast} from '../utils/toast';
 import {postKeys} from './post/queries';
 import {commentKeys, reCommentKeys} from './comment/queries';
 

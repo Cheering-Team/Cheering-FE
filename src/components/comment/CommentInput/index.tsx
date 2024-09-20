@@ -9,7 +9,7 @@ import {
   useWriteComment,
   useWriteReComment,
 } from '../../../apis/comment/useComments';
-import {hideToast, showBottomToast} from '../../../utils/\btoast';
+import {hideToast, showBottomToast} from '../../../utils/toast';
 
 interface CommentInputProps {
   postId: number;

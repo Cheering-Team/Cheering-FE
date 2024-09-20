@@ -7,7 +7,7 @@ import CustomText from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import CustomButton from '../../components/common/CustomButton';
 import {useUpdatePlayerUserNickname} from '../../apis/player/usePlayers';
-import {showBottomToast} from '../../utils/\btoast';
+import {showBottomToast} from '../../utils/toast';
 
 const EditNicknameScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;

@@ -1,43 +1,51 @@
 import React, {useContext} from 'react';
 import Close from '../../hooks/Close';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
 import CustomText from '../../components/common/CustomText';
 import CustomButton from '../../components/common/CustomButton';
-import {useMutation} from '@tanstack/react-query';
-import {postConnect} from '../../apis/user';
-import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {AuthContext} from '../../navigations/AuthSwitch';
+import {useConnectSocial} from 'apis/user/useUsers';
+import {showTopToast} from 'utils/toast';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {AuthStackParamList} from 'navigations/AuthStackNavigator';
+import {RouteProp} from '@react-navigation/native';
 
-const SocialConnectScreen = ({navigation, route}) => {
+type SocialConnectScreenNavigationProp = NativeStackNavigationProp<
+  AuthStackParamList,
+  'SocialConnect'
+>;
+
+type SocialConnectScreenRouteProp = RouteProp<
+  AuthStackParamList,
+  'SocialConnect'
+>;
+
+const SocialConnectScreen = ({
+  navigation,
+  route,
+}: {
+  navigation: SocialConnectScreenNavigationProp;
+  route: SocialConnectScreenRouteProp;
+}) => {
   Close(navigation);
   const {accessToken, user, type} = route.params;
 
   const insets = useSafeAreaInsets();
   const signIn = useContext(AuthContext)?.signIn;
 
-  const mutation = useMutation({mutationFn: postConnect});
+  const {mutateAsync: connectSocial} = useConnectSocial();
 
   const handleConnectSocial = async () => {
-    const data = await mutation.mutateAsync({
+    const data = await connectSocial({
       accessToken,
       type,
       userId: user.id,
     });
-
-    if (data.message === '연결되었습니다.') {
+    if (data.message === '계정이 연결되었습니다.') {
       const {accessToken: sessionToken, refreshToken} = data.result;
-
-      Toast.show({
-        type: 'default',
-        position: 'top',
-        visibilityTime: 3000,
-        topOffset: insets.top + 20,
-        text1: '계정이 연결되었습니다.',
-      });
-
+      showTopToast(insets.top + 20, data.message);
       signIn?.(sessionToken, refreshToken);
-      return;
     }
   };
 
@@ -49,35 +57,28 @@ const SocialConnectScreen = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={{flex: 1, padding: 20}}>
-        <CustomText fontWeight="500" style={styles.signInTitle}>
+    <SafeAreaView className="flex-1">
+      <View className="flex-1 p-5">
+        <CustomText fontWeight="500" className="text-[22px] mb-[5]">
           이미 아이디가 있어요
         </CustomText>
-        <CustomText style={styles.infoText}>
+        <CustomText className="text-gray-500 text-base mt-[1]">
           해당 휴대폰 번호로 가입된 아이디가 있어요
         </CustomText>
-        <CustomText style={styles.infoText}>
+        <CustomText className="text-gray-500 text-base mt-[1]">
           아이디와 SNS계정을 연결해드릴게요
         </CustomText>
-        <View
-          style={{
-            marginTop: 50,
-            borderWidth: 1,
-            borderColor: '#e3e3e3',
-            borderRadius: 5,
-            padding: 15,
-          }}>
-          <CustomText fontWeight="500" style={{fontSize: 18}}>
+        <View className="mt-[50] border border-gray-300 rounded p-4">
+          <CustomText fontWeight="500" className="text-lg">
             {user.nickname}
           </CustomText>
-          <CustomText style={{fontSize: 16}}>{user.phone}</CustomText>
-          <CustomText fontWeight="500" style={{color: '#838383'}}>
-            {formatDate(user.createdAt)}
+          <CustomText className="text-base">{user.phone}</CustomText>
+          <CustomText fontWeight="500" className="text-zinc-400">
+            {user.createdAt && formatDate(user.createdAt)}
           </CustomText>
         </View>
       </View>
-      <View style={{padding: 15}}>
+      <View className="p-4">
         <CustomButton
           type="normal"
           text="연결하기"
@@ -87,18 +88,5 @@ const SocialConnectScreen = ({navigation, route}) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  signInTitle: {
-    fontSize: 22,
-    color: '#000000',
-    marginBottom: 5,
-  },
-  infoText: {
-    color: '#838383',
-    fontSize: 16,
-    marginTop: 1,
-  },
-});
 
 export default SocialConnectScreen;
