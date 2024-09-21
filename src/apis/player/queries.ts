@@ -16,7 +16,11 @@ export const teamKeys = {
 export const playerKeys = {
   all: ['players'] as const,
   lists: () => [...playerKeys.all, 'list'] as const,
-  list: (filter: 'my') => [...playerKeys.lists(), {filter}] as const,
+  list: (filter: string) => [...playerKeys.lists(), {filter}] as const,
+  listByTeam: (teamId: number) => [...playerKeys.lists(), {teamId}] as const,
+  details: () => [...playerKeys.all, 'detail'] as const,
+  detail: (playerId: number, refreshKey: number) =>
+    [...playerKeys.details(), playerId, refreshKey] as const,
 };
 
 // 커뮤니티 유저

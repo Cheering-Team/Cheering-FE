@@ -3,9 +3,13 @@ import {
   deletePlayerUser,
   getLeagues,
   getMyPlayers,
+  getPlayers,
+  getPlayersByTeam,
+  getPlayersInfo,
   getPlayerUserInfo,
   getSports,
   getTeams,
+  joinCommunity,
   updatePlayerUserImage,
   updatePlayerUserNickname,
 } from './index';
@@ -40,6 +44,41 @@ export const useGetTeams = (leagueId: number | null) => {
     queryKey: teamKeys.list(leagueId),
     queryFn: getTeams,
     enabled: !!leagueId,
+  });
+};
+
+// 선수 검색
+export const useGetPlayers = (name: string) => {
+  return useQuery({
+    queryKey: playerKeys.lists(),
+    queryFn: () => getPlayers(name),
+    enabled: false,
+  });
+};
+
+// 특정 팀 선수 불러오기
+export const useGetPlayersByTeam = (teamId: number) => {
+  return useQuery({
+    queryKey: playerKeys.listByTeam(teamId),
+    queryFn: getPlayersByTeam,
+  });
+};
+
+// 선수 정보 불러오기
+export const useGetPlayersInfo = (playerId: number, refreshKey: number) => {
+  return useQuery({
+    queryKey: playerKeys.detail(playerId, refreshKey),
+    queryFn: getPlayersInfo,
+  });
+};
+
+// 커뮤니티 가입
+export const useJoinCommunity = () => {
+  return useMutation({
+    mutationFn: joinCommunity,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: playerKeys.list('my')});
+    },
   });
 };
 

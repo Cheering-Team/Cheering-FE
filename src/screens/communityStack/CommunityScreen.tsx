@@ -1,8 +1,6 @@
 import React, {useCallback, useRef, useState} from 'react';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import CommunityHeader from '../../components/community/CommunityInfo/CommunityHeader';
-import {useQuery} from '@tanstack/react-query';
-import {getPlayersInfo} from '../../apis/player';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CommunityProfile from '../../components/community/CommunityInfo/CommunityProfile';
 import {CommunityTabBar} from '../../components/community/CommunityTabBar/CommunityTabBar';
@@ -11,10 +9,15 @@ import ChatList from '../../components/community/ChatList/ChatList';
 import {WINDOW_HEIGHT} from '../../constants/dimension';
 import JoinModal from '../../components/community/JoinModal/JoinModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {useGetPlayersInfo} from 'apis/player/usePlayers';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {RouteProp} from '@react-navigation/native';
 
 const HEADER_HEIGHT = WINDOW_HEIGHT / 2.3;
 
-const CommunityScreen: React.FC = ({route}) => {
+type CommunityScreenRouteProp = RouteProp<CommunityStackParamList, 'Community'>;
+
+const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
   const {playerId} = route.params;
   const [refreshKey, setRefreshKey] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,16 +25,16 @@ const CommunityScreen: React.FC = ({route}) => {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {data: playerData, isLoading: playerIsLoading} = useQuery({
-    queryKey: ['player', playerId, refreshKey],
-    queryFn: getPlayersInfo,
-  });
+  const {data: playerData, isLoading: playerIsLoading} = useGetPlayersInfo(
+    playerId,
+    refreshKey,
+  );
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
 
-  if (playerIsLoading) {
+  if (playerIsLoading || !playerData) {
     return null;
   }
 

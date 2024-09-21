@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useState} from 'react';
+import React, {Dispatch, RefObject, SetStateAction, useState} from 'react';
 import {
   ImageBackground,
   Keyboard,
@@ -12,24 +12,24 @@ import CustomButton from '../../../common/CustomButton';
 import CameraSvg from '../../../../../assets/images/camera-01.svg';
 import {ImageType} from '../JoinModal';
 import {NICKNAME_REGEX} from '../../../../constants/regex';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {postCommunityJoin} from '../../../../apis/player';
-import Toast from 'react-native-toast-message';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ImagePicker from 'react-native-image-crop-picker';
 import CustomBottomSheetTextInput from '../../../common/CustomBottomSheetTextInput';
+import {useJoinCommunity} from 'apis/player/usePlayers';
+import {showTopToast} from 'utils/toast';
+import {Player} from 'apis/player/types';
+import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
 interface Props {
-  playerData: any;
+  playerData: Player;
   setRefreshKey: Dispatch<SetStateAction<number>>;
-  bottomSheetModalRef: any;
+  bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
 }
 
 const JoinProfile = (props: Props) => {
   const {playerData, setRefreshKey, bottomSheetModalRef} = props;
 
   const insets = useSafeAreaInsets();
-  const queryClient = useQueryClient();
 
   const [imageData, setImageData] = useState<ImageType>({
     uri: '',
@@ -41,14 +41,7 @@ const JoinProfile = (props: Props) => {
   const [isValid, setIsValid] = useState(true);
   const [nicknameInvalidMessage, setNicknameInvalidMessage] = useState('');
 
-  const mutation = useMutation({
-    mutationFn: postCommunityJoin,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['my', 'players'],
-      });
-    },
-  });
+  const {mutateAsync: joinCommunity} = useJoinCommunity();
 
   const imageUpload = async () => {
     try {
@@ -80,7 +73,7 @@ const JoinProfile = (props: Props) => {
       return;
     }
 
-    const joinData = await mutation.mutateAsync({
+    const joinData = await joinCommunity({
       playerId: playerData.id,
       nickname,
       image: imageData,
@@ -93,32 +86,15 @@ const JoinProfile = (props: Props) => {
     }
 
     if (joinData.message === '가입이 완료되었습니다.') {
-      bottomSheetModalRef?.current.dismiss();
+      bottomSheetModalRef.current?.dismiss();
       setRefreshKey((prev: number) => prev + 1);
-      Toast.show({
-        type: 'default',
-        position: 'top',
-        visibilityTime: 3000,
-        topOffset: insets.top + 20,
-        text1: '가입이 완료되었습니다.',
-      });
+      showTopToast(insets.top + 20, joinData.message);
     }
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        width: '90%',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginTop: 5,
-      }}>
-      <View
-        style={{
-          width: '100%',
-          alignItems: 'center',
-        }}>
+    <View className="flex-1 w-[90%] items-center justify-between mt-1">
+      <View className="w-full items-center">
         <CustomText fontWeight="600" style={styles.profileTitle}>
           커뮤니티 가입
         </CustomText>

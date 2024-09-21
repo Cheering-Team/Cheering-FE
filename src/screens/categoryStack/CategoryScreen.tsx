@@ -5,6 +5,7 @@ import {
   Image,
   Pressable,
   SafeAreaView,
+  StyleSheet,
   View,
 } from 'react-native';
 import SearchSvg from '../../../assets/images/search-sm.svg';
@@ -64,7 +65,7 @@ const CategoryScreen = ({
           <FlatList
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            style={{flexGrow: 0}}
+            className="flex-grow-0"
             data={sports ? sports.result : []}
             keyExtractor={item => item.id.toString()}
             renderItem={({item}) => (
@@ -95,15 +96,12 @@ const CategoryScreen = ({
             />
             <FlatList
               numColumns={3}
+              className="bg-[#f4f4f4]"
               style={{
                 width: Dimensions.get('window').width - 120,
-                backgroundColor: '#f4f4f4',
               }}
-              columnWrapperStyle={{justifyContent: 'space-around'}}
-              contentContainerStyle={{
-                paddingVertical: 20,
-                paddingHorizontal: 5,
-              }}
+              columnWrapperStyle={styles.justifyaround}
+              contentContainerStyle={styles.padding}
               data={teams ? teams.result : []}
               renderItem={({item}) => (
                 <Pressable
@@ -131,5 +129,10 @@ const CategoryScreen = ({
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  justifyaround: {justifyContent: 'space-around'},
+  padding: {paddingVertical: 20, paddingHorizontal: 5},
+});
 
 export default CategoryScreen;

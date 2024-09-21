@@ -2,9 +2,12 @@ import {axiosInstance} from '../index';
 import {ApiResponse, IdName} from '../types';
 import {leagueKeys, playerKeys, playerUserKeys, teamKeys} from './queries';
 import {
+  GetPlayersByTeamResponse,
   GetPlayerUserInfoResponse,
+  JoinCommunityPayload,
   Player,
   PlayerUserIdPayload,
+  Team,
   UpdatedPlayerUserImagePayload,
   UpdatedPlayerUserNicknamePayload,
 } from './types';
@@ -22,7 +25,9 @@ export const getLeagues = async ({
   queryKey: ReturnType<typeof leagueKeys.list>;
 }) => {
   const [, , {sportId}] = queryKey;
-  const response = await axiosInstance.get(`/sports/${sportId}/leagues`);
+  const response = await axiosInstance.get<ApiResponse<IdName[]>>(
+    `/sports/${sportId}/leagues`,
+  );
   return response.data;
 };
 
@@ -33,7 +38,63 @@ export const getTeams = async ({
   queryKey: ReturnType<typeof teamKeys.list>;
 }) => {
   const [, , {leagueId}] = queryKey;
-  const response = await axiosInstance.get(`/leagues/${leagueId}/teams`);
+  const response = await axiosInstance.get<ApiResponse<Team[]>>(
+    `/leagues/${leagueId}/teams`,
+  );
+  return response.data;
+};
+
+// 선수 검색
+export const getPlayers = async (name: string) => {
+  const response = await axiosInstance.get<ApiResponse<Player[]>>(
+    `/players?name=${name}`,
+  );
+  return response.data;
+};
+
+// 특정 팀 선수 불러오기
+export const getPlayersByTeam = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof playerKeys.listByTeam>;
+}) => {
+  const [, , {teamId}] = queryKey;
+  const response = await axiosInstance.get<
+    ApiResponse<GetPlayersByTeamResponse>
+  >(`/teams/${teamId}/players`);
+  return response.data;
+};
+
+// 선수 정보 불러오기
+export const getPlayersInfo = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof playerKeys.detail>;
+}) => {
+  const [, , playerId] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<Player>>(
+    `/players/${playerId}`,
+  );
+  return response.data;
+};
+
+// 커뮤니티 가입
+export const joinCommunity = async (data: JoinCommunityPayload) => {
+  const {playerId, nickname, image} = data;
+  const formData = new FormData();
+  formData.append('nickname', nickname);
+  if (image.uri) {
+    formData.append('image', image);
+  }
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/players/${playerId}/users`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  );
   return response.data;
 };
 
@@ -82,7 +143,6 @@ export const updatePlayerUserImage = async (
 };
 
 // 커뮤니티 프로필 닉네임 바꾸기
-
 export const updatePlayerUserNickname = async (
   data: UpdatedPlayerUserNicknamePayload,
 ) => {
@@ -94,6 +154,7 @@ export const updatePlayerUserNickname = async (
   return response.data;
 };
 
+// 커뮤니티 탈퇴
 export const deletePlayerUser = async (data: PlayerUserIdPayload) => {
   const {playerUserId} = data;
   const response = await axiosInstance.delete(`/playerusers/${playerUserId}`);

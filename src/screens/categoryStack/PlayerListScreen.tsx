@@ -1,20 +1,35 @@
 import React, {useLayoutEffect} from 'react';
 import {Image, SafeAreaView, View} from 'react-native';
 import Back from '../../hooks/Back';
-import {useQuery} from '@tanstack/react-query';
-import {getPlayersByTeam} from '../../apis/player';
 import CustomText from '../../components/common/CustomText';
 import PlayerList from '../../components/common/PlayerList';
+import {useGetPlayersByTeam} from 'apis/player/usePlayers';
+import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RouteProp} from '@react-navigation/native';
 
-const PlayerListScreen = ({navigation, route}) => {
+type PlayerListScreenNavigationProp = NativeStackNavigationProp<
+  CategoryStackParamList,
+  'PlayerList'
+>;
+
+type PlayerListScreenRouteProp = RouteProp<
+  CategoryStackParamList,
+  'PlayerList'
+>;
+
+const PlayerListScreen = ({
+  navigation,
+  route,
+}: {
+  navigation: PlayerListScreenNavigationProp;
+  route: PlayerListScreenRouteProp;
+}) => {
   Back(navigation);
 
   const teamId = route.params.teamId;
 
-  const {data, isLoading} = useQuery({
-    queryKey: ['players', teamId],
-    queryFn: getPlayersByTeam,
-  });
+  const {data, isLoading} = useGetPlayersByTeam(teamId);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -24,45 +39,24 @@ const PlayerListScreen = ({navigation, route}) => {
     });
   }, [navigation, data]);
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return <></>;
   }
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View
-        style={{
-          position: 'absolute',
-          zIndex: 10,
-          backgroundColor: 'white',
-          width: '100%',
-          height: 80,
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 15,
-          borderBottomLeftRadius: 15,
-          borderBottomRightRadius: 15,
-          borderTopWidth: 1,
-          borderTopColor: '#efefef',
-        }}>
+    <SafeAreaView className="flex-1">
+      <View className="absolute z-10 bg-white w-full h-20 flex-row items-center px-[15] border-t border-t-[#efefef] rounded-b-2xl">
         <Image
           source={{
             uri: data.result.team.image,
           }}
-          style={{height: 75, width: 75}}
+          className="h-[75] w-[75]"
         />
-        <View
-          style={{
-            flex: 1,
-            padding: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
+        <View className="flex-1 p-[10] flex-row items-center justify-between">
           <View>
             <CustomText
               fontWeight="600"
-              style={{fontSize: 20, paddingBottom: 0, color: '#2b2b2b'}}>
+              className="text-xl pb-0 text-[#2b2b2b]">
               {data.result.team.name}
             </CustomText>
             {/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
