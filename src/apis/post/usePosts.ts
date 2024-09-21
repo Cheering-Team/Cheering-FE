@@ -18,7 +18,7 @@ import {
 import {FilterType} from './types';
 import {useNavigation} from '@react-navigation/native';
 import {PostWriteScreenNavigationProp} from '../../screens/communityStack/PostWriteScreen';
-import {hideToast, showBottomToast} from '../../utils/\btoast';
+import {hideToast, showBottomToast} from '../../utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 // 게시글 작성

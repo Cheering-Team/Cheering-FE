@@ -1,13 +1,20 @@
-import React, {Dispatch, SetStateAction, useCallback, useMemo} from 'react';
+import React, {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useCallback,
+  useMemo,
+} from 'react';
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import {StyleSheet} from 'react-native';
-import {GetPlayersInfoResponse} from '../../../types/player';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import JoinProfile from './JoinProfile/JoinProfile';
+import {Player} from 'apis/player/types';
+import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
 export interface ImageType {
   uri: string;
@@ -16,11 +23,11 @@ export interface ImageType {
 }
 
 interface Props {
-  playerData: GetPlayersInfoResponse;
+  playerData: Player;
   isModalOpen: boolean;
   setRefreshKey: Dispatch<SetStateAction<number>>;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
-  bottomSheetModalRef: any;
+  bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
 }
 
 const JoinModal = (props: Props) => {

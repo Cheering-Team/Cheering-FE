@@ -3,25 +3,33 @@ import {
   ActivityIndicator,
   Pressable,
   SafeAreaView,
+  StyleSheet,
   TextInput,
   View,
 } from 'react-native';
 import SearchSvg from '../../../assets/images/search-sm.svg';
 import CloseSvg from '../../../assets/images/close-black.svg';
-import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {getPlayers} from '../../apis/player';
+import {useQueryClient} from '@tanstack/react-query';
 import PlayerList from '../../components/common/PlayerList';
+import {useGetPlayers} from 'apis/player/usePlayers';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
 
-const SearchScreen = ({navigation}) => {
+type SearchScreenNavigationProp = NativeStackNavigationProp<
+  CategoryStackParamList,
+  'Search'
+>;
+
+const SearchScreen = ({
+  navigation,
+}: {
+  navigation: SearchScreenNavigationProp;
+}) => {
   const queryClient = useQueryClient();
 
   const [content, setContent] = useState('');
 
-  const {data, isLoading, refetch} = useQuery({
-    queryKey: ['players'],
-    queryFn: () => getPlayers({name: content}),
-    enabled: false,
-  });
+  const {data, isLoading, refetch} = useGetPlayers(content);
 
   const searchPlayer = () => {
     if (content.length > 0) {
@@ -30,17 +38,8 @@ const SearchScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingVertical: 12,
-          paddingLeft: 8,
-          paddingRight: 15,
-          borderBottomColor: '#f2f2f2',
-          borderBottomWidth: 1,
-        }}>
+    <SafeAreaView className="flex-1">
+      <View className="flex-row items-center py-3 pl-2 pr-4 border-b-[#f2f2f2] border-b">
         <Pressable
           onPress={() => {
             queryClient.removeQueries({queryKey: ['players']});
@@ -49,26 +48,11 @@ const SearchScreen = ({navigation}) => {
           <CloseSvg width={30} height={30} />
         </Pressable>
 
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            backgroundColor: '#f0f0f0',
-            height: 40,
-            borderRadius: 3,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingHorizontal: 13,
-            marginLeft: 7,
-          }}>
+        <View className="flex-1 flex-row bg-[#f0f0f0] h-10 rounded-[3px] justify-between items-center px-3 ml-2">
           <TextInput
             placeholder="선수 또는 팀을 입력해주세요."
-            style={{
-              fontSize: 16,
-              fontFamily: 'NotoSansKR-Regular',
-              includeFontPadding: false,
-              flex: 1,
-            }}
+            className="text-base flex-1"
+            style={styles.textInputFont}
             placeholderTextColor={'#777777'}
             returnKeyType="search"
             value={content}
@@ -81,7 +65,7 @@ const SearchScreen = ({navigation}) => {
         </View>
       </View>
       {isLoading ? (
-        <View style={{marginTop: 50}}>
+        <View className="mt-[50]">
           <ActivityIndicator size={'large'} />
         </View>
       ) : data ? (
@@ -92,5 +76,12 @@ const SearchScreen = ({navigation}) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  textInputFont: {
+    fontFamily: 'NotoSansKR-Regular',
+    paddingBottom: 1,
+  },
+});
 
 export default SearchScreen;

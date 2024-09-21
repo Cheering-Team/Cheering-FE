@@ -1,23 +1,91 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
-import {playerKeys, playerUserKeys} from './queries';
 import {
   deletePlayerUser,
+  getLeagues,
   getMyPlayers,
+  getPlayers,
+  getPlayersByTeam,
+  getPlayersInfo,
   getPlayerUserInfo,
+  getSports,
+  getTeams,
+  joinCommunity,
   updatePlayerUserImage,
   updatePlayerUserNickname,
 } from './index';
 import {queryClient} from '../../../App';
-import {showBottomToast} from '../../utils/\btoast';
+import {showBottomToast} from '../../utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {postKeys} from '../post/queries';
 import {chatRoomKeys} from '../chat/queries';
+import {leagueKeys, playerKeys, playerUserKeys, teamKeys} from './queries';
+
+// 종목 불러오기
+export const useGetSports = () => {
+  return useQuery({
+    queryKey: ['sports'],
+    queryFn: getSports,
+  });
+};
+
+// 리그 불러오기
+export const useGetLeagues = (sportId: number | null) => {
+  return useQuery({
+    queryKey: leagueKeys.list(sportId),
+    queryFn: getLeagues,
+    enabled: !!sportId,
+  });
+};
+
+// 팀 불러오기
+export const useGetTeams = (leagueId: number | null) => {
+  return useQuery({
+    queryKey: teamKeys.list(leagueId),
+    queryFn: getTeams,
+    enabled: !!leagueId,
+  });
+};
+
+// 선수 검색
+export const useGetPlayers = (name: string) => {
+  return useQuery({
+    queryKey: playerKeys.lists(),
+    queryFn: () => getPlayers(name),
+    enabled: false,
+  });
+};
+
+// 특정 팀 선수 불러오기
+export const useGetPlayersByTeam = (teamId: number) => {
+  return useQuery({
+    queryKey: playerKeys.listByTeam(teamId),
+    queryFn: getPlayersByTeam,
+  });
+};
+
+// 선수 정보 불러오기
+export const useGetPlayersInfo = (playerId: number, refreshKey: number) => {
+  return useQuery({
+    queryKey: playerKeys.detail(playerId, refreshKey),
+    queryFn: getPlayersInfo,
+  });
+};
+
+// 커뮤니티 가입
+export const useJoinCommunity = () => {
+  return useMutation({
+    mutationFn: joinCommunity,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: playerKeys.list('my')});
+    },
+  });
+};
 
 // 내 선수 불러오기
 export const useGetMyPlayers = () => {
   return useQuery({
-    queryKey: playerKeys.lists(),
+    queryKey: playerKeys.list('my'),
     queryFn: getMyPlayers,
   });
 };
@@ -59,6 +127,7 @@ export const useUpdatePlayerUserNickname = () => {
     },
   });
 };
+
 // 커뮤니티 탈퇴하기
 export const useDeletePlayerUser = () => {
   const insets = useSafeAreaInsets();

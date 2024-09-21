@@ -15,6 +15,21 @@ export const showBottomToast = (
   });
 };
 
+export const showTopToast = (
+  offset: number,
+  message: string,
+  autoHide: boolean = true,
+) => {
+  Toast.show({
+    type: 'default',
+    position: 'top',
+    visibilityTime: 2000,
+    autoHide: autoHide,
+    topOffset: offset,
+    text1: message,
+  });
+};
+
 export const hideToast = () => {
   Toast.hide();
 };

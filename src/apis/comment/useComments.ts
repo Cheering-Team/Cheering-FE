@@ -16,7 +16,7 @@ import {
 } from '.';
 import {commentKeys, reCommentKeys} from './queries';
 import {postKeys} from '../post/queries';
-import {showBottomToast} from '../../utils/\btoast';
+import {showBottomToast} from '../../utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 // 댓글 작성

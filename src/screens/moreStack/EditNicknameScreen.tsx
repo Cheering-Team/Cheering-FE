@@ -7,27 +7,42 @@ import CustomText from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import CustomButton from '../../components/common/CustomButton';
 import {useUpdatePlayerUserNickname} from '../../apis/player/usePlayers';
-import {showBottomToast} from '../../utils/\btoast';
+import {showBottomToast} from '../../utils/toast';
+import {useUpdateUserNickname} from 'apis/user/useUsers';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RouteProp} from '@react-navigation/native';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 
-const EditNicknameScreen = ({navigation, route}) => {
+type EditNicknameScreenNavigationProp = NativeStackNavigationProp<
+  CommunityStackParamList,
+  'EditNickname'
+>;
+
+type EditNicknameScreenRouteProp = RouteProp<
+  CommunityStackParamList,
+  'EditNickname'
+>;
+
+const EditNicknameScreen = ({
+  navigation,
+  route,
+}: {
+  navigation: EditNicknameScreenNavigationProp;
+  route: EditNicknameScreenRouteProp;
+}) => {
   const {playerUserId} = route.params;
   const insets = useSafeAreaInsets();
   const [nickname, setNickname] = useState(route.params.nickname);
   const [isNicknameValid, setIsNicknameValid] = useState(true);
   const [nicknameInvalidMessage, setNicknameInvalidMessage] = useState('');
 
-  const {mutateAsync} = useUpdatePlayerUserNickname();
-  // const playerUserMutation = useMutation({
-  //   mutationFn: updatePlayerUserNickname,
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({
-  //       queryKey: ['playerusers', playerUserId],
-  //     });
-  //   },
-  // });
+  const {mutateAsync: updatePlayerUserNickname} = useUpdatePlayerUserNickname();
+  const {mutateAsync: updateUserNickname} = useUpdateUserNickname();
 
   const handlePlayerUserNickname = async () => {
-    const data = await mutateAsync({playerUserId, nickname});
+    const data = playerUserId
+      ? await updatePlayerUserNickname({playerUserId, nickname})
+      : await updateUserNickname({nickname});
     if (data.message === '이미 존재하는 닉네임입니다.') {
       setIsNicknameValid(false);
       setNicknameInvalidMessage('이미 존재하는 닉네임입니다.');
@@ -37,46 +52,24 @@ const EditNicknameScreen = ({navigation, route}) => {
     }
   };
 
-  const handleUserNickname = async () => {
-    // const data = playerUserId
-    //   ? await playerUserMutation.mutateAsync({playerUserId, nickname})
-    //   : await userMutation.mutateAsync({nickname});
-    // if (data.message === '닉네임을 변경하였습니다.') {
-    //   Toast.show({
-    //     type: 'default',
-    //     position: 'top',
-    //     visibilityTime: 3000,
-    //     topOffset: insets.top + 20,
-    //     text1: '닉네임을 변경하였습니다.',
-    //   });
-    //   navigation.pop();
-    // }
-  };
-
   useEffect(() => {
     setIsNicknameValid(NICKNAME_REGEX.test(nickname) ? true : false);
   }, [nickname]);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: 10,
-        }}>
+    <SafeAreaView className="flex-1">
+      <View className="flex-row justify-between items-center p-[10]">
         <Pressable onPress={() => navigation.goBack()}>
           <BackSvg width={32} height={32} />
         </Pressable>
 
-        <CustomText fontWeight="600" style={{fontSize: 20}}>
+        <CustomText fontWeight="600" className="text-xl">
           닉네임 변경
         </CustomText>
-        <View style={{width: 32, height: 32}} />
+        <View className="w-8 h-8" />
       </View>
-      <View style={{flex: 1, padding: 15}}>
-        <CustomText fontWeight="500" style={{fontSize: 17, marginBottom: 15}}>
+      <View className="flex-1 p-4">
+        <CustomText fontWeight="500" className="text-[17px] mb-4">
           새로운 닉네임을 입력해주세요
         </CustomText>
         <CustomTextInput
@@ -90,12 +83,12 @@ const EditNicknameScreen = ({navigation, route}) => {
           inValidMessage={nicknameInvalidMessage}
         />
       </View>
-      <View style={{padding: 15}}>
+      <View className="p-4">
         <CustomButton
           type="normal"
           text="변경 완료"
           disabled={!isNicknameValid || nickname === route.params.nickname}
-          onPress={playerUserId ? handlePlayerUserNickname : handleUserNickname}
+          onPress={handlePlayerUserNickname}
         />
       </View>
     </SafeAreaView>

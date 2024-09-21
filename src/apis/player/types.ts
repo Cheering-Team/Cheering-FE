@@ -9,11 +9,25 @@ export interface Player {
   backgroundImage: string;
   fanCount: number | null;
   user: PlayerUser | null;
+  teams?: Team[];
+}
+
+export interface Team {
+  id: number;
+  name: string;
+  image: string;
+  fanCount: number;
 }
 
 // 요청
 export interface PlayerIdPayload {
   playerId: number;
+}
+
+export interface JoinCommunityPayload {
+  playerId: number;
+  nickname: string;
+  image: ImageType;
 }
 
 export interface PlayerUserIdPayload {
@@ -33,4 +47,11 @@ export interface GetPlayerUserInfoResponse {
   user: PlayerUser;
   isUser: boolean;
   player: Player;
+}
+
+export interface GetPlayersByTeamResponse {
+  sportName: string;
+  leagueName: string;
+  team: Team;
+  players: Player[];
 }

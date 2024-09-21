@@ -1,4 +1,4 @@
-import {axiosInstance} from '..';
+import {axiosInstance} from '../index';
 import {ApiResponse} from '../types';
 import {GetNotificationsResponse} from './types';
 

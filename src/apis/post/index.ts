@@ -1,4 +1,4 @@
-import {axiosInstance} from '..';
+import {axiosInstance} from '../index';
 import {ApiResponse, Id} from '../types';
 import {postKeys} from './queries';
 import {

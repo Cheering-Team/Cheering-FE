@@ -1,4 +1,4 @@
-import {axiosInstance} from '..';
+import {axiosInstance} from '../index';
 import {ApiResponse} from '../types';
 import {chatRoomKeys} from './queries';
 import {ChatRoom} from './types';
@@ -18,9 +18,8 @@ export const getChatRooms = async ({
 
 // 내 채팅방 목록 불러오기
 export const getMyChatRooms = async () => {
-  const response = await axiosInstance.get<ApiResponse<ChatRoom[]>>(
-    '/my/chatrooms',
-  );
+  const response =
+    await axiosInstance.get<ApiResponse<ChatRoom[]>>('/my/chatrooms');
   return response.data;
 };
 

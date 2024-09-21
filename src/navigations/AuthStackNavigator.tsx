@@ -6,7 +6,7 @@ import SetNickNameScreen from '../screens/auth/SetNicknameScreen';
 import CustomText from '../components/common/CustomText';
 import PhoneVerifyScreen from '../screens/auth/PhoneVerifyScreen';
 import SocialConnectScreen from '../screens/auth/SocialConnectScreen';
-import {User} from '../types/user';
+import {User} from 'apis/user/types';
 
 export type AuthStackParamList = {
   Intro: undefined;

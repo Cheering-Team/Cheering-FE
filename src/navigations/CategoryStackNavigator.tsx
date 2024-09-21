@@ -8,7 +8,7 @@ import CommunityStackNavigator from './CommunityStackNavigator';
 export type CategoryStackParamList = {
   Category: {teamId: number};
   Search: undefined;
-  PlayerList: undefined;
+  PlayerList: {teamId: number};
   CommunityStack: undefined;
 };
 

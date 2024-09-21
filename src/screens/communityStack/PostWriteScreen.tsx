@@ -19,7 +19,7 @@ import {CommunityStackParamList} from '../../navigations/CommunityStackNavigator
 import {RouteProp} from '@react-navigation/native';
 import {ImageType, TagType} from '../../apis/post/types';
 import {useEditPost, useWritePost} from '../../apis/post/usePosts';
-import {showBottomToast} from '../../utils/\btoast';
+import {showBottomToast} from '../../utils/toast';
 
 export type PostWriteScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
