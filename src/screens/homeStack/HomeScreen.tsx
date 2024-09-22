@@ -30,10 +30,17 @@ import {Player} from '../../apis/player/types';
 import messaging from '@react-native-firebase/messaging';
 import {saveFCMToken} from 'apis/user';
 import {useGetIsUnread} from 'apis/notification/useNotifications';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {HomeStackParamList} from 'navigations/HomeStackNavigator';
+
+type HomeScreenNavigationProp = NativeStackNavigationProp<
+  HomeStackParamList,
+  'Home'
+>;
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
 
   const scrollY = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -168,6 +175,38 @@ const HomeScreen = () => {
 
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      if (remoteMessage && remoteMessage.data) {
+        const {postId} = remoteMessage.data;
+
+        navigation.navigate('HomeStack', {
+          screen: 'CommunityStack',
+          params: {
+            screen: 'Post',
+            params: {postId},
+          },
+        });
+      }
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage && remoteMessage.data) {
+          const {postId} = remoteMessage.data;
+
+          navigation.navigate('HomeStack', {
+            screen: 'CommunityStack',
+            params: {
+              screen: 'Post',
+              params: {postId},
+            },
+          });
+        }
+      });
+  }, [navigation]);
 
   return (
     <Drawer
