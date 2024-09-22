@@ -20,6 +20,11 @@ export interface NotificationPost {
   image: ImageSizeType;
 }
 
+// 요청
+export interface ReadNotificationPayload {
+  notificationId: number;
+}
+
 // 응답
 export interface GetNotificationsResponse extends Page {
   notifications: Notification[];

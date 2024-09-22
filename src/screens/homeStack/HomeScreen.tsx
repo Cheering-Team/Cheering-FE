@@ -29,7 +29,10 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {Player} from '../../apis/player/types';
 import messaging from '@react-native-firebase/messaging';
 import {saveFCMToken} from 'apis/user';
-import {useGetIsUnread} from 'apis/notification/useNotifications';
+import {
+  useGetIsUnread,
+  useReadNotification,
+} from 'apis/notification/useNotifications';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 
@@ -62,7 +65,7 @@ const HomeScreen = () => {
   } = useGetPosts(0, 'all', true);
 
   const {refetch: refetchUnRead} = useGetIsUnread();
-
+  const {mutate} = useReadNotification();
   const {data: playerData} = useGetMyPlayers();
 
   useScrollToTop(
@@ -179,7 +182,7 @@ const HomeScreen = () => {
   useEffect(() => {
     messaging().onNotificationOpenedApp(remoteMessage => {
       if (remoteMessage && remoteMessage.data) {
-        const {postId} = remoteMessage.data;
+        const {postId, notificationId} = remoteMessage.data;
 
         navigation.navigate('HomeStack', {
           screen: 'CommunityStack',
@@ -188,6 +191,7 @@ const HomeScreen = () => {
             params: {postId},
           },
         });
+        mutate({notificationId: Number(notificationId)});
       }
     });
 
@@ -195,7 +199,7 @@ const HomeScreen = () => {
       .getInitialNotification()
       .then(remoteMessage => {
         if (remoteMessage && remoteMessage.data) {
-          const {postId} = remoteMessage.data;
+          const {postId, notificationId} = remoteMessage.data;
 
           navigation.navigate('HomeStack', {
             screen: 'CommunityStack',
@@ -204,6 +208,7 @@ const HomeScreen = () => {
               params: {postId},
             },
           });
+          mutate({notificationId: Number(notificationId)});
         }
       });
   }, [navigation]);
