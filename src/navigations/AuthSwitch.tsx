@@ -4,6 +4,8 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import SplashScreen from '../screens/auth/SplashScreen';
 import AuthStackNavigator from './AuthStackNavigator';
 import MainTabNavigator from './MainTabNavigator';
+import messaging from '@react-native-firebase/messaging';
+import {deleteFCMToken, saveFCMToken} from 'apis/user';
 
 interface AuthState {
   isLoading: boolean;
@@ -90,6 +92,10 @@ const AuthSwitch = () => {
         try {
           await EncryptedStorage.setItem('accessToken', access);
           await EncryptedStorage.setItem('refreshToken', refresh);
+          const fcmToken = await messaging().getToken();
+          if (fcmToken) {
+            await saveFCMToken({token: fcmToken});
+          }
         } catch (e) {
           // 에러 처리
         }
@@ -97,6 +103,7 @@ const AuthSwitch = () => {
       },
       signOut: async () => {
         try {
+          await deleteFCMToken();
           await EncryptedStorage.removeItem('accessToken');
           await EncryptedStorage.removeItem('refreshToken');
         } catch (e) {

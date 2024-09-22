@@ -5,11 +5,12 @@ import CustomText from '../../components/common/CustomText';
 import CustomButton from '../../components/common/CustomButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {AuthContext} from '../../navigations/AuthSwitch';
-import {useConnectSocial} from 'apis/user/useUsers';
+import {useConnectSocial, useSaveFCMToken} from 'apis/user/useUsers';
 import {showTopToast} from 'utils/toast';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AuthStackParamList} from 'navigations/AuthStackNavigator';
 import {RouteProp} from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
 
 type SocialConnectScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -46,6 +47,7 @@ const SocialConnectScreen = ({
       const {accessToken: sessionToken, refreshToken} = data.result;
       showTopToast(insets.top + 20, data.message);
       signIn?.(sessionToken, refreshToken);
+      return;
     }
   };
 

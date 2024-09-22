@@ -1,5 +1,6 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
+  Alert,
   FlatList,
   ListRenderItem,
   Pressable,
@@ -10,7 +11,6 @@ import HomeBanner from '../../components/home/HomeBanner';
 import HomeHeader from '../../components/home/HomeHeader';
 import CustomText from '../../components/common/CustomText';
 import {useGetPosts} from '../../apis/post/usePosts';
-import {PostInfoResponse} from '../../types/post';
 import FeedPost from '../../components/community/FeedPost';
 import ListLoading from '../../components/common/ListLoading/ListLoading';
 import ListEmpty from '../../components/common/ListEmpty/ListEmpty';
@@ -27,10 +27,23 @@ import ChevronDownSvg from '../../../assets/images/chevron-down-black-thin.svg';
 import OptionModal from '../../components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {Player} from '../../apis/player/types';
+import messaging from '@react-native-firebase/messaging';
+import {saveFCMToken} from 'apis/user';
+import {
+  useGetIsUnread,
+  useReadNotification,
+} from 'apis/notification/useNotifications';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {HomeStackParamList} from 'navigations/HomeStackNavigator';
+
+type HomeScreenNavigationProp = NativeStackNavigationProp<
+  HomeStackParamList,
+  'Home'
+>;
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
 
   const scrollY = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -51,6 +64,8 @@ const HomeScreen = () => {
     isFetchingNextPage,
   } = useGetPosts(0, 'all', true);
 
+  const {refetch: refetchUnRead} = useGetIsUnread();
+  const {mutate} = useReadNotification();
   const {data: playerData} = useGetMyPlayers();
 
   useScrollToTop(
@@ -126,6 +141,77 @@ const HomeScreen = () => {
       setIsRefreshing(false);
     }, 1000);
   };
+
+  useEffect(() => {
+    const getToken = async () => {
+      const fcmToken = await messaging().getToken();
+      if (fcmToken) {
+        await saveFCMToken({token: fcmToken});
+      }
+    };
+
+    const onTokenRefreshListener = messaging().onTokenRefresh(
+      async newToken => {
+        await saveFCMToken({token: newToken});
+      },
+    );
+
+    const requestPermission = async () => {
+      const authorizationStatus = await messaging().requestPermission();
+
+      if (authorizationStatus) {
+        getToken();
+      }
+    };
+
+    requestPermission();
+
+    return () => {
+      onTokenRefreshListener();
+    };
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async () => {
+      refetchUnRead();
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      if (remoteMessage && remoteMessage.data) {
+        const {postId, notificationId} = remoteMessage.data;
+
+        navigation.navigate('HomeStack', {
+          screen: 'CommunityStack',
+          params: {
+            screen: 'Post',
+            params: {postId},
+          },
+        });
+        mutate({notificationId: Number(notificationId)});
+      }
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage && remoteMessage.data) {
+          const {postId, notificationId} = remoteMessage.data;
+
+          navigation.navigate('HomeStack', {
+            screen: 'CommunityStack',
+            params: {
+              screen: 'Post',
+              params: {postId},
+            },
+          });
+          mutate({notificationId: Number(notificationId)});
+        }
+      });
+  }, [navigation]);
 
   return (
     <Drawer

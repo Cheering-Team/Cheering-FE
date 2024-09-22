@@ -11,9 +11,14 @@ import CustomText from 'components/common/CustomText';
 import KakaoSvg from '../../../assets/images/kakao.svg';
 import NaverSvg from '../../../assets/images/naver.svg';
 import {AuthContext} from 'navigations/AuthSwitch';
-import {useKakaoSignIn, useNaverSignIn} from 'apis/user/useUsers';
+import {
+  useKakaoSignIn,
+  useNaverSignIn,
+  useSaveFCMToken,
+} from 'apis/user/useUsers';
 import {showTopToast} from 'utils/toast';
 import PhoneVerify from 'components/auth/phoneVerify';
+import messaging from '@react-native-firebase/messaging';
 
 export type SignInScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,

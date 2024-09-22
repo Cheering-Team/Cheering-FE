@@ -3,6 +3,7 @@ import {User} from 'apis/user/types';
 import {
   useCheckCode,
   useCheckCodeToKakao,
+  useSaveFCMToken,
   useSendSMS,
   useSignIn,
 } from 'apis/user/useUsers';
@@ -24,6 +25,7 @@ import {Pressable, TextInput, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {SignInScreenNavigationProp} from 'screens/auth/SignInScreen';
 import {showTopToast} from 'utils/toast';
+import messaging from '@react-native-firebase/messaging';
 
 interface PhoneVerifyProps {
   status: 'phone' | 'code';
@@ -139,6 +141,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
       const {accessToken: sessionToken, refreshToken} = data.result;
       showTopToast(insets.top + 20, data.message);
       signIn?.(sessionToken, refreshToken);
+      return;
     }
     invalidCode(data.message);
   }, [
