@@ -11,9 +11,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		615C06FBD1091465327552ED /* libPods-Cheering.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 117C6F74C31D997424F79DCF /* libPods-Cheering.a */; };
+		35C6B67E2EDED0A637B12679 /* Pods_Cheering.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24006CC1C9376D0C92D3C3BE /* Pods_Cheering.framework */; };
+		596990BD16C55AADD5E660CB /* Pods_Cheering_CheeringTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FB5F3F57CD7AEC74A795DCD /* Pods_Cheering_CheeringTests.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		F519A39DE7F12809E587C4E7 /* libPods-Cheering-CheeringTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CB103802AB966025AF8ABAD0 /* libPods-Cheering-CheeringTests.a */; };
 		F70E37392C7104C700900D88 /* SwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70E37382C7104C700900D88 /* SwiftBridge.swift */; };
 		F78DA8652B625C640085C6E4 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = F78DA8642B625C640085C6E4 /* Fonts */; };
 		F79C52D32C6CE55B00973EBD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F79C52D22C6CE55B00973EBD /* GoogleService-Info.plist */; };
@@ -33,24 +33,25 @@
 		00E356EE1AD99517003FC87E /* CheeringTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CheeringTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* CheeringTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CheeringTests.m; sourceTree = "<group>"; };
-		117C6F74C31D997424F79DCF /* libPods-Cheering.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Cheering.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* Cheering.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cheering.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Cheering/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Cheering/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Cheering/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Cheering/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Cheering/main.m; sourceTree = "<group>"; };
+		24006CC1C9376D0C92D3C3BE /* Pods_Cheering.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cheering.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7FB5F3F57CD7AEC74A795DCD /* Pods_Cheering_CheeringTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cheering_CheeringTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Cheering/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		91ABDDED432AC09611B5C83D /* Pods-Cheering-CheeringTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cheering-CheeringTests.release.xcconfig"; path = "Target Support Files/Pods-Cheering-CheeringTests/Pods-Cheering-CheeringTests.release.xcconfig"; sourceTree = "<group>"; };
 		C2F3644F497458DFDA078FF1 /* Pods-Cheering.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cheering.release.xcconfig"; path = "Target Support Files/Pods-Cheering/Pods-Cheering.release.xcconfig"; sourceTree = "<group>"; };
 		C7714E607EFD4E9CE9F84BAD /* Pods-Cheering.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cheering.debug.xcconfig"; path = "Target Support Files/Pods-Cheering/Pods-Cheering.debug.xcconfig"; sourceTree = "<group>"; };
-		CB103802AB966025AF8ABAD0 /* libPods-Cheering-CheeringTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Cheering-CheeringTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE365BCF3581BBA2E7493084 /* Pods-Cheering-CheeringTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cheering-CheeringTests.debug.xcconfig"; path = "Target Support Files/Pods-Cheering-CheeringTests/Pods-Cheering-CheeringTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F70E37372C7104C600900D88 /* Cheering-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cheering-Bridging-Header.h"; sourceTree = "<group>"; };
 		F70E37382C7104C700900D88 /* SwiftBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBridge.swift; sourceTree = "<group>"; };
 		F78DA8642B625C640085C6E4 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		F79C52D22C6CE55B00973EBD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F79E44C52C9FAE5E00B1AC52 /* Cheering.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Cheering.entitlements; path = Cheering/Cheering.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F519A39DE7F12809E587C4E7 /* libPods-Cheering-CheeringTests.a in Frameworks */,
+				596990BD16C55AADD5E660CB /* Pods_Cheering_CheeringTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,7 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				615C06FBD1091465327552ED /* libPods-Cheering.a in Frameworks */,
+				35C6B67E2EDED0A637B12679 /* Pods_Cheering.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +94,7 @@
 		13B07FAE1A68108700A75B9A /* Cheering */ = {
 			isa = PBXGroup;
 			children = (
+				F79E44C52C9FAE5E00B1AC52 /* Cheering.entitlements */,
 				F79C52D22C6CE55B00973EBD /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -108,8 +110,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				117C6F74C31D997424F79DCF /* libPods-Cheering.a */,
-				CB103802AB966025AF8ABAD0 /* libPods-Cheering-CheeringTests.a */,
+				24006CC1C9376D0C92D3C3BE /* Pods_Cheering.framework */,
+				7FB5F3F57CD7AEC74A795DCD /* Pods_Cheering_CheeringTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -508,6 +510,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Cheering/Cheering.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -541,6 +544,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Cheering/Cheering.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -616,6 +620,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers/react/nativemodule/core",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers/platform/ios",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
@@ -685,6 +700,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers/react/nativemodule/core",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers/platform/ios",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,

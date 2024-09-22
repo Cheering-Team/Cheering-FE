@@ -50,3 +50,7 @@ export interface ConnectSocialPayload {
 export interface UpdateUserNicknamePayload {
   nickname: string;
 }
+
+export interface SaveFCMTokenPayload {
+  token: string;
+}

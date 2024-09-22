@@ -21,6 +21,5 @@ export const useGetIsUnread = () => {
   return useQuery({
     queryKey: notificationKeys.isUnread(),
     queryFn: getIsUnread,
-    refetchInterval: 30000,
   });
 };

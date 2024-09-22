@@ -4,6 +4,7 @@ import {
   CheckCodePayload,
   CheckCodeToKakaoPayload,
   ConnectSocialPayload,
+  SaveFCMTokenPayload,
   SendSMSPayload,
   SignUpPayload,
   Token,
@@ -101,5 +102,19 @@ export const updateUserNickname = async (data: UpdateUserNicknamePayload) => {
 
 export const deleteUser = async () => {
   const response = await axiosInstance.delete<ApiResponse<null>>('/users');
+  return response.data;
+};
+
+export const saveFCMToken = async (data: SaveFCMTokenPayload) => {
+  const {token} = data;
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/fcm-token?token=${encodeURIComponent(token)}`,
+    data,
+  );
+  return response.data;
+};
+
+export const deleteFCMToken = async () => {
+  const response = await axiosInstance.delete<ApiResponse<null>>('/fcm-token');
   return response.data;
 };

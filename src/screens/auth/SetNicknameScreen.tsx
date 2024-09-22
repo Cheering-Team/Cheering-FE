@@ -11,8 +11,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import CustomButton from '../../components/common/CustomButton';
-import {useSignUp} from 'apis/user/useUsers';
+import {useSaveFCMToken, useSignUp} from 'apis/user/useUsers';
 import {showTopToast} from 'utils/toast';
+import messaging from '@react-native-firebase/messaging';
 
 type SetNicknameScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -49,6 +50,7 @@ const SetNickNameScreen = ({
       const {accessToken, refreshToken} = data.result;
       showTopToast(insets.top + 20, data.message);
       signIn?.(accessToken, refreshToken);
+      return;
     }
   };
 

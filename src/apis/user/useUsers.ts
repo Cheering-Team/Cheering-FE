@@ -7,6 +7,7 @@ import {
   getUserInfo,
   kakaoSignIn,
   naverSignIn,
+  saveFCMToken,
   sendSMS,
   signIn,
   signUp,
@@ -63,5 +64,11 @@ export const useUpdateUserNickname = () => {
 export const useDeleteUser = () => {
   return useMutation({
     mutationFn: deleteUser,
+  });
+};
+
+export const useSaveFCMToken = () => {
+  return useMutation({
+    mutationFn: saveFCMToken,
   });
 };
