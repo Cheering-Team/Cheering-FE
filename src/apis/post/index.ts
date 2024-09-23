@@ -11,7 +11,7 @@ import {
 
 // 게시글 작성
 export const writePost = async (data: WritePostPayload) => {
-  const {playerId, content, tags, images} = data;
+  const {playerId, content, tags, images, handleProgress} = data;
 
   const formData = new FormData();
   formData.append('content', content);
@@ -24,6 +24,9 @@ export const writePost = async (data: WritePostPayload) => {
     {
       headers: {
         'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: progressEvent => {
+        handleProgress(progressEvent);
       },
     },
   );
@@ -86,7 +89,7 @@ export const likePost = async (data: PostIdPayload) => {
 
 // 게시글 수정
 export const editPost = async (data: EditPostPayload) => {
-  const {postId, content, tags, images} = data;
+  const {postId, content, tags, images, handleProgress} = data;
 
   const formData = new FormData();
   formData.append('content', content);
@@ -99,6 +102,9 @@ export const editPost = async (data: EditPostPayload) => {
     {
       headers: {
         'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: progressEvent => {
+        handleProgress(progressEvent);
       },
     },
   );

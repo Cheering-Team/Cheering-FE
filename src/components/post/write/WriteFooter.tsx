@@ -76,6 +76,7 @@ const WriteFooter = (props: WriterFooterProps) => {
         multiple: true,
         mediaType: 'photo',
         forceJpg: true,
+        compressImageQuality: 0.4,
       });
 
       const imageObj = images.map(image => ({

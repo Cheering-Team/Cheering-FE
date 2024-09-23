@@ -3,6 +3,7 @@ import {FlatList, Image, Pressable} from 'react-native';
 import {ImageSizeType} from '../../apis/post/types';
 import {WINDOW_WIDTH} from '../../constants/dimension';
 import ImageView from 'react-native-image-viewing';
+import FastImage from 'react-native-fast-image';
 
 interface PostImageProps {
   images: ImageSizeType[];
@@ -43,7 +44,7 @@ const PostImage = (props: PostImageProps) => {
               setCurImage(index);
               setIsViewer(true);
             }}>
-            <Image
+            <FastImage
               source={{uri: item.url}}
               resizeMode="cover"
               style={[

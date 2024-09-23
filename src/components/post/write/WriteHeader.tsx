@@ -6,10 +6,12 @@ import CloseSvg from '../../../../assets/images/close-black.svg';
 
 interface WriterHeaderProps {
   handleWritePost: () => void;
+  isWritePending: boolean;
+  isEditPending: boolean;
 }
 
 const WriteHeader = (props: WriterHeaderProps) => {
-  const {handleWritePost} = props;
+  const {handleWritePost, isWritePending, isEditPending} = props;
 
   const navigation = useNavigation();
 
@@ -35,6 +37,7 @@ const WriteHeader = (props: WriterHeaderProps) => {
         onPress={() => {
           handleWritePost();
         }}
+        disabled={isWritePending || isEditPending}
         style={{
           backgroundColor: 'black',
           paddingVertical: 6,

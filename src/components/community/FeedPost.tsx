@@ -7,6 +7,7 @@ import {WINDOW_WIDTH} from '../../constants/dimension';
 import ImageView from 'react-native-image-viewing';
 import PostWriter from '../post/PostWriter';
 import InteractBar from '../post/InteractBar';
+import FastImage from 'react-native-fast-image';
 
 interface FeedPostProps {
   feed: any;
@@ -126,7 +127,7 @@ const FeedPost = (props: FeedPostProps) => {
                 setCurImage(index);
                 setIsViewer(true);
               }}>
-              <Image
+              <FastImage
                 source={{uri: item.url}}
                 resizeMode="cover"
                 style={[

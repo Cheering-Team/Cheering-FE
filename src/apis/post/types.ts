@@ -1,3 +1,4 @@
+import {AxiosProgressEvent} from 'axios';
 import {Player} from '../player/types';
 import {Page} from '../types';
 import {PlayerUser} from '../user/types';
@@ -43,6 +44,7 @@ export interface WritePostPayload {
   content: string;
   tags: TagType[];
   images: ImageType[];
+  handleProgress: (progressEvent: AxiosProgressEvent) => void;
 }
 
 export interface EditPostPayload {
@@ -50,6 +52,7 @@ export interface EditPostPayload {
   content: string;
   tags: TagType[];
   images: ImageType[];
+  handleProgress: (progressEvent: AxiosProgressEvent) => void;
 }
 
 // 응답
