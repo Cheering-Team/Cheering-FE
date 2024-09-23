@@ -6,6 +6,7 @@ import AuthStackNavigator from './AuthStackNavigator';
 import MainTabNavigator from './MainTabNavigator';
 import messaging from '@react-native-firebase/messaging';
 import {deleteFCMToken, saveFCMToken} from 'apis/user';
+import {queryClient} from '../../App';
 
 interface AuthState {
   isLoading: boolean;
@@ -106,6 +107,7 @@ const AuthSwitch = () => {
           await deleteFCMToken();
           await EncryptedStorage.removeItem('accessToken');
           await EncryptedStorage.removeItem('refreshToken');
+          queryClient.invalidateQueries();
         } catch (e) {
           // 에러 처리
         }

@@ -98,6 +98,7 @@ const InteractBar = (props: InteractBarProps) => {
             flexDirection: 'row',
             alignItems: 'center',
             alignSelf: 'flex-end',
+            marginBottom: 13,
           }}>
           <Avatar
             uri={post.player.image}
