@@ -13,10 +13,10 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		35C6B67E2EDED0A637B12679 /* Pods_Cheering.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24006CC1C9376D0C92D3C3BE /* Pods_Cheering.framework */; };
 		596990BD16C55AADD5E660CB /* Pods_Cheering_CheeringTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FB5F3F57CD7AEC74A795DCD /* Pods_Cheering_CheeringTests.framework */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		F70E37392C7104C700900D88 /* SwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70E37382C7104C700900D88 /* SwiftBridge.swift */; };
 		F78DA8652B625C640085C6E4 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = F78DA8642B625C640085C6E4 /* Fonts */; };
 		F79C52D32C6CE55B00973EBD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F79C52D22C6CE55B00973EBD /* GoogleService-Info.plist */; };
+		F79E44C72CA2C6D900B1AC52 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F79E44C62CA2C6D900B1AC52 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,7 +41,6 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Cheering/main.m; sourceTree = "<group>"; };
 		24006CC1C9376D0C92D3C3BE /* Pods_Cheering.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cheering.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FB5F3F57CD7AEC74A795DCD /* Pods_Cheering_CheeringTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cheering_CheeringTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Cheering/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		91ABDDED432AC09611B5C83D /* Pods-Cheering-CheeringTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cheering-CheeringTests.release.xcconfig"; path = "Target Support Files/Pods-Cheering-CheeringTests/Pods-Cheering-CheeringTests.release.xcconfig"; sourceTree = "<group>"; };
 		C2F3644F497458DFDA078FF1 /* Pods-Cheering.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cheering.release.xcconfig"; path = "Target Support Files/Pods-Cheering/Pods-Cheering.release.xcconfig"; sourceTree = "<group>"; };
 		C7714E607EFD4E9CE9F84BAD /* Pods-Cheering.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cheering.debug.xcconfig"; path = "Target Support Files/Pods-Cheering/Pods-Cheering.debug.xcconfig"; sourceTree = "<group>"; };
@@ -52,6 +51,7 @@
 		F78DA8642B625C640085C6E4 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		F79C52D22C6CE55B00973EBD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F79E44C52C9FAE5E00B1AC52 /* Cheering.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Cheering.entitlements; path = Cheering/Cheering.entitlements; sourceTree = "<group>"; };
+		F79E44C62CA2C6D900B1AC52 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Cheering/LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,13 +94,13 @@
 		13B07FAE1A68108700A75B9A /* Cheering */ = {
 			isa = PBXGroup;
 			children = (
+				F79E44C62CA2C6D900B1AC52 /* LaunchScreen.storyboard */,
 				F79E44C52C9FAE5E00B1AC52 /* Cheering.entitlements */,
 				F79C52D22C6CE55B00973EBD /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = Cheering;
@@ -265,8 +265,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				F79C52D32C6CE55B00973EBD /* GoogleService-Info.plist in Resources */,
+				F79E44C72CA2C6D900B1AC52 /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				F78DA8652B625C640085C6E4 /* Fonts in Resources */,
 			);

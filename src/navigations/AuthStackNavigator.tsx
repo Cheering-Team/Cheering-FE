@@ -3,7 +3,6 @@ import React from 'react';
 import IntroScreen from '../screens/auth/IntroScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SetNickNameScreen from '../screens/auth/SetNicknameScreen';
-import CustomText from '../components/common/CustomText';
 import PhoneVerifyScreen from '../screens/auth/PhoneVerifyScreen';
 import SocialConnectScreen from '../screens/auth/SocialConnectScreen';
 import {User} from 'apis/user/types';

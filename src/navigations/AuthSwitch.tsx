@@ -74,13 +74,11 @@ const AuthSwitch = () => {
         dispatch({type: 'SIGN_OUT'});
       }
       if (accessToken && refreshToken) {
-        setTimeout(() => {
-          dispatch({
-            type: 'RESTORE_TOKEN',
-            access: accessToken,
-            refresh: refreshToken,
-          });
-        }, 2000);
+        dispatch({
+          type: 'RESTORE_TOKEN',
+          access: accessToken,
+          refresh: refreshToken,
+        });
       } else {
         dispatch({type: 'SIGN_OUT'});
       }
@@ -129,19 +127,11 @@ const AuthSwitch = () => {
     [],
   );
 
-  const Stack = createNativeStackNavigator<{Splash: undefined}>();
+  // const Stack = createNativeStackNavigator<{Splash: undefined}>();
 
   return (
     <AuthContext.Provider value={authContext}>
-      {state.isLoading ? (
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Splash"
-            component={SplashScreen}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      ) : state.accessToken == null ? (
+      {state.isLoading ? null : state.accessToken == null ? (
         <AuthStackNavigator />
       ) : (
         <MainTabNavigator />

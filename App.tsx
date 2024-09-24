@@ -17,6 +17,7 @@ import NaverLogin from '@react-native-seoul/naver-login';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import './gesture-handler';
+import SplashScreen from 'react-native-splash-screen';
 
 export const toastConfig = {
   /*
@@ -62,6 +63,12 @@ function App(): React.JSX.Element {
       background: '#ffffff',
     },
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 1000); //스플래시 활성화 시간
+  });
 
   useEffect(() => {
     NaverLogin.initialize({
