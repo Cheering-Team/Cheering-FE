@@ -168,17 +168,8 @@ const NotificationScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View
-        style={{
-          height: 52,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'white',
-          borderBottomWidth: 1,
-          borderBottomColor: '#eeeeee',
-        }}>
-        <CustomText fontWeight="500" style={{fontSize: 20, paddingBottom: 0}}>
+      <View className="h-[48] flex-row justify-center items-center bg-white border-b border-b-[#eeeeee]">
+        <CustomText fontWeight="500" className="text-lg pb-0">
           알림
         </CustomText>
       </View>

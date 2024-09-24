@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import AuthSwitch from './src/navigations/AuthSwitch';
@@ -18,12 +11,11 @@ import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import './gesture-handler';
 import SplashScreen from 'react-native-splash-screen';
+import messaging from '@react-native-firebase/messaging';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {deleteFCMToken, saveFCMToken} from 'apis/user';
 
 export const toastConfig = {
-  /*
-    Overwrite 'success' type,
-    by modifying the existing `BaseToast` component
-  */
   default: props => (
     <BaseToast
       {...props}
@@ -67,7 +59,7 @@ function App(): React.JSX.Element {
   useEffect(() => {
     setTimeout(() => {
       SplashScreen.hide();
-    }, 1000); //스플래시 활성화 시간
+    }, 1000);
   });
 
   useEffect(() => {
@@ -78,6 +70,26 @@ function App(): React.JSX.Element {
       serviceUrlSchemeIOS: serviceUrlScheme,
       disableNaverAppAuthIOS: true,
     });
+  }, []);
+
+  useEffect(() => {
+    const checkPermission = async () => {
+      const accessToken = await EncryptedStorage.getItem('accessToken');
+
+      if (accessToken) {
+        const authorizationStatus = await messaging().requestPermission();
+
+        if (authorizationStatus === messaging.AuthorizationStatus.DENIED) {
+          await deleteFCMToken();
+        }
+        if (authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED) {
+          const fcmToken = await messaging().getToken();
+          await saveFCMToken({token: fcmToken});
+        }
+      }
+    };
+
+    checkPermission();
   }, []);
 
   return (

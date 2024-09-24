@@ -1,11 +1,11 @@
 import React from 'react';
-import {Pressable, SafeAreaView, View} from 'react-native';
+import {Pressable, SafeAreaView, ScrollView, View} from 'react-native';
 import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
-import SettingSvg from '../../../assets/images/setting-svg.svg';
 import CustomText from '../../components/common/CustomText';
 import {useGetUserInfo} from 'apis/user/useUsers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {MoreStackParamList} from 'navigations/MoreStackNavigator';
+import BellSvg from '../../../assets/images/bell-line.svg';
 
 type MoreScreenNavigationProp = NativeStackNavigationProp<
   MoreStackParamList,
@@ -21,19 +21,44 @@ const MoreScreen = ({navigation}: {navigation: MoreScreenNavigationProp}) => {
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="px-6 py-4">
-        <View className="flex-row justify-between items-center">
+      <View className="h-[48] flex-row justify-center items-center bg-white border-b border-b-[#eeeeee]">
+        <CustomText fontWeight="500" className="text-lg pb-0">
+          계정 및 설정
+        </CustomText>
+      </View>
+      <ScrollView className="flex-1">
+        <View className="pt-3 px-3 bg-white">
+          <CustomText fontWeight="500" className="color-[#5c5c5c] text-[13px]">
+            내 계정
+          </CustomText>
           <Pressable
-            className="flex-row items-center"
+            className="flex-row justify-between items-center py-2"
             onPress={() => navigation.navigate('MyProfile')}>
-            <CustomText fontWeight="600" className="text-xl mr-1 pb-[1]">
+            <CustomText fontWeight="500" className="text-lg mr-1 pb-[1]">
               {data?.result.nickname}
             </CustomText>
-            <ChevronRightSvg width={14} height={14} />
+            <ChevronRightSvg width={16} height={16} />
           </Pressable>
-          <SettingSvg width={23} height={23} />
         </View>
-      </View>
+        <View className="mt-[6] pt-3 px-3 bg-white">
+          <CustomText fontWeight="500" className="color-[#5c5c5c] text-[13px]">
+            설정
+          </CustomText>
+          <Pressable
+            className="flex-row justify-between items-center py-[14]"
+            onPress={() => {
+              navigation.navigate('SetNotification');
+            }}>
+            <View className="flex-row items-center">
+              <BellSvg width={20} height={20} />
+              <CustomText fontWeight="400" className="text-base pb-[1] ml-3">
+                알림
+              </CustomText>
+            </View>
+            <ChevronRightSvg width={16} height={16} />
+          </Pressable>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

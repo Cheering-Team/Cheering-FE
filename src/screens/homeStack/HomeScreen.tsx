@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
-  Alert,
   FlatList,
   ListRenderItem,
   Pressable,
@@ -71,6 +70,7 @@ const HomeScreen = () => {
   useScrollToTop(
     useRef({
       scrollToTop: () => {
+        setIsDrawerOpen(false);
         flatListRef.current?.scrollToOffset({offset: 0, animated: true});
         handleRefresh();
       },
@@ -215,6 +215,7 @@ const HomeScreen = () => {
 
   return (
     <Drawer
+      drawerType="front"
       open={isDrawerOpen}
       onOpen={() => setIsDrawerOpen(true)}
       onClose={() => setIsDrawerOpen(false)}

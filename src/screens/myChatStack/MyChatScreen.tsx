@@ -17,6 +17,7 @@ import {useScrollToTop} from '@react-navigation/native';
 import {ChatRoom} from '../../apis/chat/types';
 import Avatar from '../../components/common/Avatar';
 import OfficialSvg from '../../../assets/images/official.svg';
+import ChatCard from 'components/common/ChatCard';
 
 const MyChatScreen = ({navigation}) => {
   const insets = useSafeAreaInsets();
@@ -46,54 +47,13 @@ const MyChatScreen = ({navigation}) => {
   };
 
   const renderChatRoom: ListRenderItem<ChatRoom> = ({item}) => {
-    return (
-      <Pressable
-        style={{
-          flexDirection: 'row',
-          paddingHorizontal: 15,
-          paddingVertical: 10,
-        }}
-        onPress={() =>
-          navigation.navigate('CommunityStack', {
-            screen: 'ChatRoom',
-            params: {chatRoomId: item.id},
-          })
-        }>
-        <Avatar uri={item.image} size={55} style={{marginTop: 2}} />
-        <View style={{marginLeft: 12}}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <CustomText
-              fontWeight="500"
-              style={{fontSize: 16, marginRight: 2, paddingBottom: 0}}>
-              {item.name}
-            </CustomText>
-            <OfficialSvg width={17} height={17} />
-          </View>
-          <CustomText style={{color: '#8a8a8a'}}>{item.description}</CustomText>
-          <CustomText
-            fontWeight="500"
-            style={{
-              color: '#4e4e4e',
-              fontSize: 12,
-            }}>{`${item.count}명`}</CustomText>
-        </View>
-      </Pressable>
-    );
+    return <ChatCard key={item.id} chatRoom={item} />;
   };
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View
-        style={{
-          height: 52,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'white',
-          borderBottomWidth: 1,
-          borderBottomColor: '#eeeeee',
-        }}>
-        <CustomText fontWeight="500" style={{fontSize: 20, paddingBottom: 0}}>
+      <View className="h-[48] flex-row justify-center items-center bg-white border-b border-b-[#eeeeee]">
+        <CustomText fontWeight="500" className="text-lg pb-0">
           내 채팅
         </CustomText>
       </View>

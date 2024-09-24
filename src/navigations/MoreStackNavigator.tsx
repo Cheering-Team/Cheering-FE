@@ -2,17 +2,17 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import MoreScreen from '../screens/moreStack/MoreScreen';
 import MyProfileScreen from '../screens/moreStack/MyProfileScreen';
-import SettingScreen from '../screens/moreStack/SettingScreen';
 import SignOutScreen from '../screens/moreStack/SignOutScreen';
 import EditNicknameScreen from '../screens/moreStack/EditNicknameScreen';
 import DeleteUserScreen from '../screens/moreStack/DeleteUserScreen';
+import SetNotificationScreen from '../screens/moreStack/SetNotificationScreen';
 
 export type MoreStackParamList = {
   More: undefined;
   MyProfile: undefined;
   EditNickname: {nickname: string; playerUserId: null};
   DeleteUser: {playerUserId: null};
-  Setting: undefined;
+  SetNotification: undefined;
   SignOut: undefined;
 };
 
@@ -42,9 +42,9 @@ const MoreStackNavigator = () => {
         options={{headerShown: false}}
       />
       <MoreStack.Screen
-        name="Setting"
-        component={SettingScreen}
-        options={{headerTitle: '설정'}}
+        name="SetNotification"
+        component={SetNotificationScreen}
+        options={{headerShown: false}}
       />
       <MoreStack.Screen
         name="SignOut"
