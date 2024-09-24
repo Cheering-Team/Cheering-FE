@@ -1,27 +1,18 @@
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import {ActivityIndicator, Image, SafeAreaView} from 'react-native';
 import React from 'react';
+import LogoTitleSvg from '../../../assets/images/logo-title.svg';
 
 const SplashScreen = () => {
   return (
-    <SafeAreaView style={styles.splashBack}>
-      <Text style={styles.splashTitle}>Cheering</Text>
+    <SafeAreaView className="flex-1 bg-black items-center">
+      <LogoTitleSvg width={'90%'} height={'55%'} />
+      <ActivityIndicator size="large" />
+      <Image
+        className="absolute bottom-[-50] w-full"
+        source={require('../../../assets/images/logo-graphic.png')}
+      />
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  splashBack: {
-    flex: 1,
-    alignItems: 'center',
-
-    backgroundColor: '#EF4365',
-  },
-  splashTitle: {
-    marginTop: '45%',
-    color: 'white',
-    fontSize: 50,
-    fontWeight: '700',
-  },
-});
 
 export default SplashScreen;

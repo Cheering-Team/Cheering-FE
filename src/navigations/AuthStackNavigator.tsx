@@ -7,6 +7,7 @@ import CustomText from '../components/common/CustomText';
 import PhoneVerifyScreen from '../screens/auth/PhoneVerifyScreen';
 import SocialConnectScreen from '../screens/auth/SocialConnectScreen';
 import {User} from 'apis/user/types';
+import LogoSvg from '../../assets/images/logo-text.svg';
 
 export type AuthStackParamList = {
   Intro: undefined;
@@ -30,16 +31,7 @@ const AuthStack = () => {
         name="SignIn"
         component={SignInScreen}
         options={{
-          headerTitle: () => (
-            <CustomText
-              fontWeight="700"
-              style={{
-                fontSize: 30,
-                letterSpacing: 1.1,
-              }}>
-              cheering
-            </CustomText>
-          ),
+          headerTitle: () => <LogoSvg width={200} height={50} />,
           contentStyle: {
             borderBottomWidth: 0,
           },
@@ -52,16 +44,7 @@ const AuthStack = () => {
         name="SetNickname"
         component={SetNickNameScreen}
         options={{
-          headerTitle: () => (
-            <CustomText
-              fontWeight="700"
-              style={{
-                fontSize: 30,
-                letterSpacing: 1.1,
-              }}>
-              cheering
-            </CustomText>
-          ),
+          headerTitle: () => <LogoSvg width={200} height={50} />,
           contentStyle: {
             borderBottomWidth: 0,
           },
@@ -74,16 +57,7 @@ const AuthStack = () => {
         name="PhoneVerify"
         component={PhoneVerifyScreen}
         options={{
-          headerTitle: () => (
-            <CustomText
-              fontWeight="700"
-              style={{
-                fontSize: 30,
-                letterSpacing: 1.1,
-              }}>
-              cheering
-            </CustomText>
-          ),
+          headerTitle: () => <LogoSvg width={200} height={50} />,
           contentStyle: {
             borderBottomWidth: 0,
           },
@@ -96,16 +70,7 @@ const AuthStack = () => {
         name="SocialConnect"
         component={SocialConnectScreen}
         options={{
-          headerTitle: () => (
-            <CustomText
-              fontWeight="700"
-              style={{
-                fontSize: 30,
-                letterSpacing: 1.1,
-              }}>
-              cheering
-            </CustomText>
-          ),
+          headerTitle: () => <LogoSvg width={200} height={50} />,
           contentStyle: {
             borderBottomWidth: 0,
           },

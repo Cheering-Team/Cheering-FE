@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {Pressable, View} from 'react-native';
 import DrawerSvg from '../../../../assets/images/drawer-star.svg';
+import LogoSvg from '../../../../assets/images/logo-text.svg';
 
 interface HomeHeaderProps {
   translateY: SharedValue<number>;
@@ -60,13 +61,7 @@ const HomeHeader = (props: HomeHeaderProps) => {
           <DrawerSvg width={30} height={30} style={{marginTop: 5}} />
         </Pressable>
 
-        <CustomText
-          fontWeight="600"
-          style={{
-            fontSize: 28,
-          }}>
-          Cheering
-        </CustomText>
+        <LogoSvg width={200} height={50} />
         <View style={{width: 30, height: 30}} />
       </Animated.View>
     </View>

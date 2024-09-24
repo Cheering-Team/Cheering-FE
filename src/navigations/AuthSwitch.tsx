@@ -74,11 +74,13 @@ const AuthSwitch = () => {
         dispatch({type: 'SIGN_OUT'});
       }
       if (accessToken && refreshToken) {
-        dispatch({
-          type: 'RESTORE_TOKEN',
-          access: accessToken,
-          refresh: refreshToken,
-        });
+        setTimeout(() => {
+          dispatch({
+            type: 'RESTORE_TOKEN',
+            access: accessToken,
+            refresh: refreshToken,
+          });
+        }, 2000);
       } else {
         dispatch({type: 'SIGN_OUT'});
       }
@@ -104,10 +106,10 @@ const AuthSwitch = () => {
       },
       signOut: async () => {
         try {
-          await deleteFCMToken();
+          queryClient.removeQueries();
           await EncryptedStorage.removeItem('accessToken');
           await EncryptedStorage.removeItem('refreshToken');
-          queryClient.invalidateQueries();
+          await deleteFCMToken();
         } catch (e) {
           // 에러 처리
         }

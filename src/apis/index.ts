@@ -67,8 +67,6 @@ axiosInstance.interceptors.response.use(
 
     if (message === '토큰이 유효하지 않습니다.') {
       if (config.url === '/refresh') {
-        await EncryptedStorage.removeItem('accessToken');
-        await EncryptedStorage.removeItem('refreshToken');
         RootNavigation.navigate('MoreStack', {screen: 'SignOut'});
         return;
       } else {
