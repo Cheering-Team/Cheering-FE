@@ -8,20 +8,17 @@ import {useNavigation} from '@react-navigation/native';
 
 interface ChatCardProps {
   chatRoom: ChatRoom;
+  onPress: () => void;
 }
 
 const ChatCard = (props: ChatCardProps) => {
-  const {chatRoom} = props;
-
-  const navigation = useNavigation();
+  const {chatRoom, onPress} = props;
 
   return (
     <Pressable
       key={chatRoom.id}
       className="flex-row px-[15] py-[10]"
-      onPress={() =>
-        navigation.navigate('ChatRoom', {chatRoomId: chatRoom.id})
-      }>
+      onPress={onPress}>
       <Avatar uri={chatRoom.image} size={59} className="rounded-2xl mt-1" />
       <View className="ml-3">
         <View className="flex-row items-center">

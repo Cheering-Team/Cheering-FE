@@ -47,7 +47,18 @@ const MyChatScreen = ({navigation}) => {
   };
 
   const renderChatRoom: ListRenderItem<ChatRoom> = ({item}) => {
-    return <ChatCard key={item.id} chatRoom={item} />;
+    return (
+      <ChatCard
+        key={item.id}
+        chatRoom={item}
+        onPress={() => {
+          navigation.navigate('CommunityStack', {
+            screen: 'ChatRoom',
+            params: {chatRoomId: item.id},
+          });
+        }}
+      />
+    );
   };
 
   return (

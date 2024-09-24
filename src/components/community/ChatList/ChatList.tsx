@@ -35,7 +35,13 @@ const ChatList = (props: Props) => {
         playerData.user ? (
           <>
             {data?.result.map(chatRoom => (
-              <ChatCard key={chatRoom.id} chatRoom={chatRoom} />
+              <ChatCard
+                key={chatRoom.id}
+                chatRoom={chatRoom}
+                onPress={() => {
+                  navigation.navigate('ChatRoom', {chatRoomId: chatRoom.id});
+                }}
+              />
             ))}
           </>
         ) : (
