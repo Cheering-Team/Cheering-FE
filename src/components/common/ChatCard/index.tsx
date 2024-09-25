@@ -19,7 +19,7 @@ const ChatCard = (props: ChatCardProps) => {
       key={chatRoom.id}
       className="flex-row px-[15] py-[10]"
       onPress={onPress}>
-      <Avatar uri={chatRoom.image} size={59} className="rounded-2xl mt-1" />
+      <Avatar uri={chatRoom.image} size={59} className="rounded-2xl mt-[3]" />
       <View className="ml-3">
         <View className="flex-row items-center">
           <CustomText fontWeight="500" className="text-base mr-[2] pb-0">

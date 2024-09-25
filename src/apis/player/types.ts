@@ -12,6 +12,12 @@ export interface Player {
   teams?: Team[];
 }
 
+export interface Sport {
+  id: number;
+  name: string;
+  image: string;
+}
+
 export interface Team {
   id: number;
   name: string;

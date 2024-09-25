@@ -14,6 +14,7 @@ import CustomText from '../../components/common/CustomText';
 import {useGetLeagues, useGetSports, useGetTeams} from 'apis/player/usePlayers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
+import FastImage from 'react-native-fast-image';
 
 type CategoryScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -72,7 +73,10 @@ const CategoryScreen = ({
               <Pressable
                 onPress={() => setSelectedSport(item.id)}
                 className={`items-center px-[10] pt-2 pb-[5] ${selectedSport === item.id && 'bg-[#f4f4f4]'}`}>
-                <View className="w-[55] h-[55] bg-black rounded-[10px] mb-[6]" />
+                <FastImage
+                  source={{uri: item.image}}
+                  className="w-[55] h-[55] bg-slate-50 rounded-lg border border-slate-100 mb-1"
+                />
                 <CustomText>{item.name}</CustomText>
               </Pressable>
             )}

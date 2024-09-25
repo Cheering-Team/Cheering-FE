@@ -7,6 +7,7 @@ import {
   JoinCommunityPayload,
   Player,
   PlayerUserIdPayload,
+  Sport,
   Team,
   UpdatedPlayerUserImagePayload,
   UpdatedPlayerUserNicknamePayload,
@@ -14,7 +15,7 @@ import {
 
 // 종목 불러오기
 export const getSports = async () => {
-  const response = await axiosInstance.get<ApiResponse<IdName[]>>('/sports');
+  const response = await axiosInstance.get<ApiResponse<Sport[]>>('/sports');
   return response.data;
 };
 
