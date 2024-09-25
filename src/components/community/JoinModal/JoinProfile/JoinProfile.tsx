@@ -99,7 +99,7 @@ const JoinProfile = (props: Props) => {
           커뮤니티 가입
         </CustomText>
         <CustomText fontWeight="400" style={styles.profileInfo}>
-          {`${playerData.koreanName} 선수의 팬이 되신 걸 환영합니다!`}
+          {`${playerData.koreanName}의 팬이 되신 걸 환영합니다!`}
         </CustomText>
         <View style={styles.imageContainer}>
           <Avatar uri={playerData.image} size={85} style={styles.playerImage} />

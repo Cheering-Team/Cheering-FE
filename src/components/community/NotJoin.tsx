@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     flexDirection: 'row',
   },
-  playerImage: {left: 8, zIndex: 1},
+  playerImage: {left: 8, zIndex: 1, backgroundColor: 'white'},
   starImage: {
     right: 8,
     width: 85,

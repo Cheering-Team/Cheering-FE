@@ -1,5 +1,5 @@
 import React, {useLayoutEffect} from 'react';
-import {Image, SafeAreaView, View} from 'react-native';
+import {Image, Pressable, SafeAreaView, View} from 'react-native';
 import Back from '../../hooks/Back';
 import CustomText from '../../components/common/CustomText';
 import PlayerList from '../../components/common/PlayerList';
@@ -7,6 +7,9 @@ import {useGetPlayersByTeam} from 'apis/player/usePlayers';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
+import ChevronRightGraySvg from '../../../assets/images/chevron-right-gray.svg';
+import StarOrangeSvg from '../../../assets/images/star-orange.svg';
+import {formatComma} from 'utils/format';
 
 type PlayerListScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -59,7 +62,7 @@ const PlayerListScreen = ({
               className="text-xl pb-0 text-[#2b2b2b]">
               {data.result.team.name}
             </CustomText>
-            {/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <StarOrangeSvg width={11} height={11} />
               <CustomText
                 fontWeight="600"
@@ -71,10 +74,17 @@ const PlayerListScreen = ({
                 }}>
                 {formatComma(data.result.team.fanCount)}
               </CustomText>
-            </View> */}
+            </View>
           </View>
 
-          {/* <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Pressable
+            style={{flexDirection: 'row', alignItems: 'center'}}
+            onPress={() =>
+              navigation.navigate('CommunityStack', {
+                screen: 'Community',
+                params: {playerId: data.result.team.communityId},
+              })
+            }>
             <CustomText
               fontWeight="600"
               style={{
@@ -85,7 +95,7 @@ const PlayerListScreen = ({
               이동하기
             </CustomText>
             <ChevronRightGraySvg width={12} height={12} />
-          </View> */}
+          </Pressable>
         </View>
       </View>
       <PlayerList

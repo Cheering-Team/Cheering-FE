@@ -6,8 +6,15 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Avatar from './Avatar';
 import {CategoryStackParamList} from '../../navigations/CategoryStackNavigator';
 import {formatComma} from '../../utils/format';
+import {Player} from 'apis/player/types';
 
-const PlayerList = props => {
+interface PlayerListProps {
+  teamName?: string;
+  players: Player[];
+  paddingTop: boolean;
+}
+
+const PlayerList = (props: PlayerListProps) => {
   const {teamName, players, paddingTop = false} = props;
   const navigation = useNavigation<NavigationProp<CategoryStackParamList>>();
 
@@ -27,7 +34,7 @@ const PlayerList = props => {
           }}>
           <Image
             source={{uri: item.image}}
-            resizeMode="cover"
+            resizeMode={item.sportName ? 'contain' : 'cover'}
             style={{
               height: 150,
               width: Dimensions.get('window').width / 3,
@@ -40,10 +47,18 @@ const PlayerList = props => {
               paddingVertical: 6,
             }}>
             <View>
-              <CustomText
-                style={{fontSize: 12, color: '#3f3f3f', paddingBottom: 0}}>
-                {teamName || item.teams[0].name}
-              </CustomText>
+              {item.sportName ? (
+                <CustomText
+                  style={{fontSize: 12, color: '#3f3f3f', paddingBottom: 0}}>
+                  {`${item.sportName}/${item.leagueName}`}
+                </CustomText>
+              ) : (
+                <CustomText
+                  style={{fontSize: 12, color: '#3f3f3f', paddingBottom: 0}}>
+                  {teamName || (item.teams && item.teams[0].name)}
+                </CustomText>
+              )}
+
               <CustomText fontWeight="500" style={{fontSize: 16}}>
                 {item.koreanName}
               </CustomText>
@@ -53,7 +68,7 @@ const PlayerList = props => {
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginTop: 5,
+                marginTop: 20,
               }}>
               <StarOrangeSvg width={11} height={11} />
               <CustomText

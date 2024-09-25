@@ -8,9 +8,11 @@ import TeamList from './TeamList';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../common/CustomText';
 import {WINDOW_HEIGHT} from '../../../constants/dimension';
+import {ApiResponse} from 'apis/types';
+import {Player} from 'apis/player/types';
 
 interface CommunityProfileProps {
-  playerData: any;
+  playerData: ApiResponse<Player>;
 }
 
 const CommunityProfile = (props: CommunityProfileProps) => {
@@ -21,7 +23,12 @@ const CommunityProfile = (props: CommunityProfileProps) => {
   return (
     <View style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2.3}]}>
       <View style={[styles.infoContainer, {top: insets.top + 65}]}>
-        <TeamList playerData={playerData} />
+        {playerData.result.sportName ? (
+          <CustomText className="ml-4 text-white text-[13px]">{`${playerData.result.sportName} / ${playerData.result.leagueName}`}</CustomText>
+        ) : (
+          <TeamList playerData={playerData} />
+        )}
+
         <View style={{paddingLeft: 15}}>
           <CustomText fontWeight="500" style={styles.englishName}>
             {playerData.result.englishName}

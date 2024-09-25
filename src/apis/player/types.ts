@@ -10,6 +10,8 @@ export interface Player {
   fanCount: number | null;
   user: PlayerUser | null;
   teams?: Team[];
+  sportName: string | null;
+  leagueName: string | null;
 }
 
 export interface Sport {
@@ -23,6 +25,7 @@ export interface Team {
   name: string;
   image: string;
   fanCount: number;
+  communityId: number | null;
 }
 
 // 요청

@@ -123,6 +123,7 @@ const CategoryScreen = ({
                   />
                   {item.name.split(' ').map((word, index) => (
                     <CustomText
+                      key={index}
                       className={`pb-0 text-[12px] text-center ${index === item.name.split(' ').length && 'mb-2'}`}>
                       {word}
                     </CustomText>
