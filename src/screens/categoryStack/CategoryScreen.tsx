@@ -121,9 +121,12 @@ const CategoryScreen = ({
                     source={{uri: item.image}}
                     className="w-[55] h-[55] bg-white rounded-[20px] mb-[5]"
                   />
-                  <CustomText className="mb-[15] text-[13px] text-center">
-                    {item.name}
-                  </CustomText>
+                  {item.name.split(' ').map((word, index) => (
+                    <CustomText
+                      className={`pb-0 text-[12px] text-center ${index === item.name.split(' ').length && 'mb-2'}`}>
+                      {word}
+                    </CustomText>
+                  ))}
                 </Pressable>
               )}
             />
