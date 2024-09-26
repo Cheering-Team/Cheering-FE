@@ -6,6 +6,7 @@ import {useGetUserInfo} from 'apis/user/useUsers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {MoreStackParamList} from 'navigations/MoreStackNavigator';
 import BellSvg from '../../../assets/images/bell-line.svg';
+import NoticeSvg from '../../../assets/images/megaphone-black.svg';
 
 type MoreScreenNavigationProp = NativeStackNavigationProp<
   MoreStackParamList,
@@ -37,6 +38,24 @@ const MoreScreen = ({navigation}: {navigation: MoreScreenNavigationProp}) => {
             <CustomText fontWeight="500" className="text-lg mr-1 pb-[1]">
               {data?.result.nickname}
             </CustomText>
+            <ChevronRightSvg width={16} height={16} />
+          </Pressable>
+        </View>
+        <View className="mt-[6] pt-3 px-3 bg-white">
+          <CustomText fontWeight="500" className="color-[#5c5c5c] text-[13px]">
+            소식
+          </CustomText>
+          <Pressable
+            className="flex-row justify-between items-center py-[14]"
+            onPress={() => {
+              navigation.navigate('NoticeList');
+            }}>
+            <View className="flex-row items-center">
+              <NoticeSvg width={20} height={20} />
+              <CustomText fontWeight="400" className="text-base pb-[1] ml-3">
+                공지사항
+              </CustomText>
+            </View>
             <ChevronRightSvg width={16} height={16} />
           </Pressable>
         </View>

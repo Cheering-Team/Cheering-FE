@@ -47,7 +47,6 @@ const CommentInput: FC<CommentInputProps> = props => {
     if (commentResponse.message === '댓글이 작성되었습니다.') {
       setComment('');
       Keyboard.dismiss();
-      showBottomToast(insets.bottom + 20, '작성이 완료되었습니다.');
     } else {
       showBottomToast(insets.bottom + 20, '잠시 후 다시시도 해주세요.');
     }

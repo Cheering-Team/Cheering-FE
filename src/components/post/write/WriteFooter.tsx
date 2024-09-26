@@ -5,10 +5,8 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 import CustomText from '../../common/CustomText';
 import PlusSvg from '../../../../assets/images/plus-gray.svg';
-import CropSvg from '../../../../assets/images/crop-white.svg';
 import CloseWhiteSvg from '../../../../assets/images/x_white.svg';
 import ImagePicker from 'react-native-image-crop-picker';
-import {SizeImage} from '../../../screens/communityStack/PostWriteScreen';
 
 interface WriterFooterProps {
   imageData: SizeImage[];
