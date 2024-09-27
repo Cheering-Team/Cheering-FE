@@ -12,6 +12,7 @@ const NoticeScreen = ({navigation, route}) => {
   const {noticeId} = route.params;
 
   const {data} = useGetNoticeById(noticeId);
+
   return (
     <SafeAreaView className="flex-1 pb-10">
       <View className="h-[48] px-[5] flex-row justify-between items-center bg-white border-b border-b-[#eeeeee]">

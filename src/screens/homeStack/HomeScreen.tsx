@@ -234,7 +234,7 @@ const HomeScreen = () => {
               <CustomText
                 fontWeight="500"
                 style={{fontSize: 19, marginRight: 5, paddingBottom: 0}}>
-                나의 선수
+                나의 스타
               </CustomText>
             </View>
           }
