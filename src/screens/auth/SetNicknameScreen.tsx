@@ -11,9 +11,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import CustomButton from '../../components/common/CustomButton';
-import {useSaveFCMToken, useSignUp} from 'apis/user/useUsers';
+import {useSignUp} from 'apis/user/useUsers';
 import {showTopToast} from 'utils/toast';
-import messaging from '@react-native-firebase/messaging';
 
 type SetNicknameScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,

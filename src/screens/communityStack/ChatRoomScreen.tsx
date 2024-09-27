@@ -31,6 +31,7 @@ import Avatar from '../../components/common/Avatar';
 import {formatTime} from '../../utils/format';
 import {WINDOW_WIDTH} from '@gorhom/bottom-sheet';
 import ChevronDownSvg from '../../../assets/images/chevron-down-black-thin.svg';
+import PersonSvg from '../../../assets/images/person-gray.svg';
 
 const TextEncodingPolyfill = require('text-encoding');
 
@@ -301,10 +302,8 @@ const ChatRoomScreen = ({route}) => {
               </View>
 
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <CustomText
-                  style={{
-                    color: '#626262',
-                  }}>{`${data.result.count}명`}</CustomText>
+                <PersonSvg width={10} height={10} />
+                <CustomText className="color-[#626262] ml-[3]">{`${data.result.count}`}</CustomText>
                 <View
                   style={{
                     width: 1,

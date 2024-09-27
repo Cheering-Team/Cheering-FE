@@ -4,8 +4,7 @@ import Avatar from '../Avatar';
 import CustomText from '../CustomText';
 import OfficialSvg from '../../../../assets/images/official.svg';
 import {ChatRoom} from 'apis/chat/types';
-import {useNavigation} from '@react-navigation/native';
-
+import PersonSvg from '../../../../assets/images/person-gray.svg';
 interface ChatCardProps {
   chatRoom: ChatRoom;
   onPress: () => void;
@@ -30,9 +29,14 @@ const ChatCard = (props: ChatCardProps) => {
         <CustomText className="color-[#8a8a8a]">
           {chatRoom.description}
         </CustomText>
-        <CustomText fontWeight="500" className="color-[#4e4e4e] text-xs">
-          {`${chatRoom.count} 명`}
-        </CustomText>
+        <View className="flex-row items-center">
+          <PersonSvg width={10} height={10} />
+          <CustomText
+            fontWeight="600"
+            className="color-[#777777] text-xs pb-0 ml-[3]">
+            {`${chatRoom.count}`}
+          </CustomText>
+        </View>
       </View>
     </Pressable>
   );

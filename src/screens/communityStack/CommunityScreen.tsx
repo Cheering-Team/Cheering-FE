@@ -12,8 +12,14 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useGetPlayersInfo} from 'apis/player/usePlayers';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {RouteProp} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 const HEADER_HEIGHT = WINDOW_HEIGHT / 2.3;
+
+export type CommunityScreenNavigationProp = NativeStackNavigationProp<
+  CommunityStackParamList,
+  'Community'
+>;
 
 type CommunityScreenRouteProp = RouteProp<CommunityStackParamList, 'Community'>;
 
