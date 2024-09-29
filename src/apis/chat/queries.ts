@@ -7,3 +7,9 @@ export const chatRoomKeys = {
   detail: (chatRoomId: number) =>
     [...chatRoomKeys.details(), chatRoomId] as const,
 };
+
+export const chatKeys = {
+  all: ['chats'] as const,
+  lists: () => [...chatKeys.all, 'list'] as const,
+  list: (chatRoomId: number) => [...chatKeys.lists(), {chatRoomId}] as const,
+};

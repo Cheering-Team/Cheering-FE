@@ -5,6 +5,7 @@ import {
   ListRenderItem,
   Pressable,
   RefreshControl,
+  SectionList,
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native';
@@ -24,14 +25,18 @@ const MyChatScreen = ({navigation}) => {
 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const flatListRef = useRef<FlatList>(null);
+  const sectionListRef = useRef<SectionList<ChatRoom>>(null);
 
   const {data, isLoading, refetch} = useGetMyChatRooms();
 
   useScrollToTop(
     useRef({
       scrollToTop: () => {
-        flatListRef.current?.scrollToOffset({offset: 0, animated: true});
+        sectionListRef.current?.scrollToLocation({
+          sectionIndex: 0,
+          itemIndex: 0,
+          animated: true,
+        });
         handleRefresh();
       },
     }),
@@ -52,10 +57,15 @@ const MyChatScreen = ({navigation}) => {
         key={item.id}
         chatRoom={item}
         onPress={() => {
-          navigation.navigate('CommunityStack', {
-            screen: 'ChatRoom',
-            params: {chatRoomId: item.id},
-          });
+          item.type === 'OFFICIAL' || item.isParticipating
+            ? navigation.navigate('CommunityStack', {
+                screen: 'ChatRoom',
+                params: {chatRoomId: item.id},
+              })
+            : navigation.navigate('CommunityStack', {
+                screen: 'ChatRoomEnter',
+                params: {chatRoomId: item.id},
+              });
         }}
       />
     );
@@ -69,9 +79,9 @@ const MyChatScreen = ({navigation}) => {
         </CustomText>
       </View>
       {data ? (
-        <FlatList
-          ref={flatListRef}
-          data={data.result}
+        <SectionList
+          ref={sectionListRef}
+          sections={data.result}
           renderItem={renderChatRoom}
           contentContainerStyle={{paddingBottom: insets.bottom + 50}}
           onEndReachedThreshold={1}
@@ -84,6 +94,13 @@ const MyChatScreen = ({navigation}) => {
               onRefresh={handleRefresh}
             />
           }
+          renderSectionFooter={({section: {title}}) => {
+            if (title === 'official') {
+              return <View className="h-[1] mx-3 bg-gray-100 my-[2]" />;
+            } else {
+              return null;
+            }
+          }}
         />
       ) : (
         <ActivityIndicator style={{marginTop: insets.top}} />

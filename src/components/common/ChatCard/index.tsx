@@ -4,7 +4,6 @@ import Avatar from '../Avatar';
 import CustomText from '../CustomText';
 import OfficialSvg from '../../../../assets/images/official.svg';
 import {ChatRoom} from 'apis/chat/types';
-import PersonSvg from '../../../../assets/images/person-gray.svg';
 interface ChatCardProps {
   chatRoom: ChatRoom;
   onPress: () => void;
@@ -19,23 +18,53 @@ const ChatCard = (props: ChatCardProps) => {
       className="flex-row px-[15] py-[10]"
       onPress={onPress}>
       <Avatar uri={chatRoom.image} size={59} className="rounded-2xl mt-[3]" />
-      <View className="ml-3">
+      <View className="ml-3 flex-1">
         <View className="flex-row items-center">
-          <CustomText fontWeight="500" className="text-base mr-[2] pb-0">
+          <CustomText
+            fontWeight="500"
+            className="text-base mr-[2] pb-0"
+            numberOfLines={1}
+            ellipsizeMode="tail">
             {chatRoom.name}
           </CustomText>
-          <OfficialSvg width={15} height={15} />
+          {chatRoom.type === 'OFFICIAL' && (
+            <OfficialSvg width={15} height={15} />
+          )}
         </View>
-        <CustomText className="color-[#8a8a8a]">
+        <CustomText
+          className="color-[#8a8a8a]"
+          numberOfLines={1}
+          ellipsizeMode="tail">
           {chatRoom.description}
         </CustomText>
         <View className="flex-row items-center">
-          <PersonSvg width={10} height={10} />
-          <CustomText
-            fontWeight="600"
-            className="color-[#777777] text-xs pb-0 ml-[3]">
-            {`${chatRoom.count}`}
-          </CustomText>
+          {chatRoom.type === 'OFFICIAL' ? (
+            <>
+              <CustomText
+                fontWeight="700"
+                className="color-[#767676] text-xs pb-0 ml-[3]">
+                {`${chatRoom.count}`}
+              </CustomText>
+              <CustomText
+                fontWeight="400"
+                className="color-[#767676] text-xs pb-0 ml-[3]">
+                {`명 참여중`}
+              </CustomText>
+            </>
+          ) : (
+            <>
+              <CustomText
+                fontWeight="700"
+                className="color-[#767676] text-xs pb-0 ml-[3]">
+                {`${chatRoom.count}`}
+              </CustomText>
+              <CustomText
+                fontWeight="400"
+                className="color-[#767676] text-xs pb-0">
+                {`/${chatRoom.max}명`}
+              </CustomText>
+            </>
+          )}
         </View>
       </View>
     </Pressable>

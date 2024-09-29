@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import NotJoin from '../NotJoin';
 import {useGetChatRooms} from '../../../apis/chat/useChats';
 import {useNavigation} from '@react-navigation/native';
 import ChatCard from 'components/common/ChatCard';
-import {Pressable} from 'react-native';
+import {Pressable, View} from 'react-native';
 import PlusSvg from '../../../../assets/images/plus-gray.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CommunityScreenNavigationProp} from 'screens/communityStack/CommunityScreen';
@@ -30,26 +30,26 @@ const ChatList = (props: Props) => {
 
   return (
     <>
-      <Tabs.FlatList
-        data={[]}
-        renderItem={() => <></>}
-        ListHeaderComponent={
-          playerData.user ? (
-            <>
-              {data?.result.map(chatRoom => (
-                <ChatCard
-                  key={chatRoom.id}
-                  chatRoom={chatRoom}
-                  onPress={() => {
-                    navigation.navigate('ChatRoom', {chatRoomId: chatRoom.id});
-                  }}
-                />
-              ))}
-            </>
-          ) : (
-            <></>
-          )
-        }
+      <Tabs.SectionList
+        sections={data?.result || []}
+        renderItem={({item}) => (
+          <ChatCard
+            key={item.id}
+            chatRoom={item}
+            onPress={() => {
+              item.type === 'OFFICIAL' || item.isParticipating
+                ? navigation.navigate('ChatRoom', {chatRoomId: item.id})
+                : navigation.navigate('ChatRoomEnter', {chatRoomId: item.id});
+            }}
+          />
+        )}
+        renderSectionFooter={({section: {title}}) => {
+          if (title === 'official') {
+            return <View className="h-[1] mx-3 bg-gray-100 my-[2]" />;
+          } else {
+            return null;
+          }
+        }}
         ListEmptyComponent={
           !playerData.user ? (
             <NotJoin

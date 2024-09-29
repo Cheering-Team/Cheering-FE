@@ -1180,6 +1180,8 @@ PODS:
     - React-jsi (= 0.73.1)
     - React-logger (= 0.73.1)
     - React-perflogger (= 0.73.1)
+  - RNCPicker (2.8.1):
+    - React-Core
   - RNFastImage (8.6.3):
     - React-Core
     - SDWebImage (~> 5.11.1)
@@ -1302,6 +1304,7 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
@@ -1448,6 +1451,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCPicker:
+    :path: "../node_modules/@react-native-picker/picker"
   RNFastImage:
     :path: "../node_modules/react-native-fast-image"
   RNFBApp:
@@ -1542,6 +1547,7 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 83d1cc129804991a02f378f5d7094467d0aed15e
   React-utils: fefa27e6d4a5b733f5e76cf8802ccf023ff8cc94
   ReactCommon: 73242ec9768e71688f35ad97ae3d0709a0f66435
+  RNCPicker: 0b6860a6b208d4046227d2f626ad0722f99a969c
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFBApp: 10819a4f67d634fe34aa607c6d1e8a8aef019308
   RNFBMessaging: 652aac21d91b8ddb85a5e25c0f04150ef60b5384
