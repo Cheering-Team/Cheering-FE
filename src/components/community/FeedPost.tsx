@@ -16,6 +16,7 @@ import InteractBar from '../post/InteractBar';
 import FastImage from 'react-native-fast-image';
 import {ImageSizeType} from 'apis/post/types';
 import PostVideo from 'components/common/PostVideo';
+import ImageVideoViewer from 'components/post/ImageVideoViewer';
 
 interface FeedPostProps {
   feed: any;
@@ -180,13 +181,11 @@ const FeedPost = (props: FeedPostProps) => {
         {/* 상호작용 */}
         <InteractBar post={feed} type={type} />
       </Pressable>
-      <ImageView
-        images={feed.images.map(item => ({uri: item.url}))}
-        imageIndex={curImage}
-        visible={isViewer}
-        onRequestClose={() => setIsViewer(false)}
-        presentationStyle="overFullScreen"
-        backgroundColor="rgba(0,0,0,0.9)"
+      <ImageVideoViewer
+        isViewer={isViewer}
+        setIsViewer={setIsViewer}
+        images={feed.images}
+        curImage={curImage}
       />
     </>
   );

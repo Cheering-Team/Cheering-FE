@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.6.4",
+    "@likashefqet/react-native-image-zoom": "^4.2.0",
     "@react-native-community/blur": "^4.4.1",
     "@react-native-firebase/app": "^20.4.0",
     "@react-native-firebase/messaging": "^20.4.0",

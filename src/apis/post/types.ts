@@ -29,6 +29,7 @@ export interface ImageSizeType {
   url: string;
   width: number;
   height: number;
+  type?: 'IMAGE' | 'VIDEO';
 }
 
 export type FilterType = 'all' | 'hot' | 'photo' | 'viewing' | 'information';

@@ -1980,6 +1980,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@likashefqet/react-native-image-zoom@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.npmjs.org/@likashefqet/react-native-image-zoom/-/react-native-image-zoom-4.2.0.tgz"
+  integrity sha512-Hpr0m/RYk36sse2kxd+yDS1+HsNavaEudHD2QKtrg/2LNL4L1LpU0auZSqGzXT8BVRykmk6MTW1IcDzY9S7+7w==
+
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
   resolved "https://registry.npmjs.org/@nicolo-ribaudo/eslint-scope-5-internals/-/eslint-scope-5-internals-5.1.1-v1.tgz"
@@ -8189,7 +8194,7 @@ react-native-fast-image@^8.6.3:
   resolved "https://registry.npmjs.org/react-native-fast-image/-/react-native-fast-image-8.6.3.tgz"
   integrity sha512-Sdw4ESidXCXOmQ9EcYguNY2swyoWmx53kym2zRsvi+VeFCHEdkO+WG1DK+6W81juot40bbfLNhkc63QnWtesNg==
 
-react-native-gesture-handler@^2.19.0, "react-native-gesture-handler@>= 1.0.0", react-native-gesture-handler@>=1.10.1, react-native-gesture-handler@>=2.0.0:
+react-native-gesture-handler@^2.19.0, "react-native-gesture-handler@>= 1.0.0", react-native-gesture-handler@>=1.10.1, react-native-gesture-handler@>=2.0.0, react-native-gesture-handler@>=2.x.x:
   version "2.19.0"
   resolved "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.19.0.tgz"
   integrity sha512-Cc6DnSnn5hhgiuJOtlOJmXkbBBOZkW9UnJJG+DrWPq2jJuNvM4g5qq2plsywhxQj9xT7FyXZwVVblaXabfGZvQ==
@@ -8237,7 +8242,7 @@ react-native-reanimated-carousel@^3.5.1:
   resolved "https://registry.npmjs.org/react-native-reanimated-carousel/-/react-native-reanimated-carousel-3.5.1.tgz"
   integrity sha512-9BBQV6JAYSQm2lV7MFtT4mzapXmW4IZO6s38gfiJL84Jg23ivGB1UykcNQauKgtHyhtW2NuZJzItb1s42lM+hA==
 
-react-native-reanimated@^3.15.1, "react-native-reanimated@>= 1.0.0", react-native-reanimated@>=2.2.0, react-native-reanimated@>=2.8.0, react-native-reanimated@>=3.0.0, react-native-reanimated@>=3.8.1:
+react-native-reanimated@^3.15.1, "react-native-reanimated@>= 1.0.0", react-native-reanimated@>=2.2.0, react-native-reanimated@>=2.8.0, react-native-reanimated@>=2.x.x, react-native-reanimated@>=3.0.0, react-native-reanimated@>=3.8.1:
   version "3.15.1"
   resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.15.1.tgz"
   integrity sha512-DbBeUUExtJ1x1nfE94I8qgDgWjq5ztM3IO/+XFO+agOkPeVpBs5cRnxHfJKrjqJ2MgwhJOUDmtHxo+tDsoeitg==
@@ -8319,7 +8324,7 @@ react-native-video@^6.6.3:
   resolved "https://registry.npmjs.org/react-native-video/-/react-native-video-6.6.3.tgz"
   integrity sha512-Exu9Taaj1QibEQLAI8P8ax+KTZQ8UKQ6dsp1qMVnG35tR477hT0pKgXceo7tUmC6PibI8D7MTZzNRzXf88+TDA==
 
-react-native@*, react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.48.4, react-native@>=0.57.0, react-native@>=0.59.0, react-native@>=0.6.0, react-native@>=0.60.0, react-native@>=0.61.3, react-native@>=0.64.0, react-native@0.73.1:
+react-native@*, react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.48.4, react-native@>=0.57.0, react-native@>=0.59.0, react-native@>=0.6.0, react-native@>=0.60.0, react-native@>=0.61.3, react-native@>=0.62.x, react-native@>=0.64.0, react-native@0.73.1:
   version "0.73.1"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.73.1.tgz"
   integrity sha512-nLl9O2yKRh1nMXwsk4SUiD0ddd19RqlKgNU9AU8bTK/zD2xwnVOG56YK1/22SN67niWyoeG83vVg1eTk+S6ReA==
@@ -8384,7 +8389,7 @@ react-test-renderer@18.2.0:
     react-shallow-renderer "^16.15.0"
     scheduler "^0.23.0"
 
-react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17 || ^18", react@^18.0.0, react@^18.2.0, "react@>= 16.8.0", react@>=16.11.0, react@>=16.8, react@>=16.8.0, react@>=17.0.0, react@18.2.0:
+react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17 || ^18", react@^18.0.0, react@^18.2.0, "react@>= 16.8.0", react@>=16.11.0, react@>=16.8, react@>=16.8.0, react@>=16.x.x, react@>=17.0.0, react@18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
