@@ -31,6 +31,10 @@ export interface ChatResponse {
 }
 
 // 요청
+export interface ChatRoomIdPayload {
+  chatRoomId: number;
+}
+
 export interface CreateChatRoomPayload {
   playerId: number;
   name: string;

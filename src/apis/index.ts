@@ -8,7 +8,7 @@ import {postKeys} from './post/queries';
 import {commentKeys, reCommentKeys} from './comment/queries';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://172.30.1.55:8080/api',
+  baseURL: 'http://172.30.1.5:8080/api',
 });
 
 axiosInstance.interceptors.request.use(async config => {

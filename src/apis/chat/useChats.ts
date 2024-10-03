@@ -2,10 +2,12 @@ import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import {chatKeys, chatRoomKeys} from './queries';
 import {
   createChatRoom,
+  deleteChatRoom,
   getChatRoomById,
   getChatRooms,
   getChats,
   getMyChatRooms,
+  getParticipants,
 } from './index';
 
 // 채팅방 개설
@@ -51,6 +53,20 @@ export const useGetChats = (chatRoomId: number) => {
       }
       return pages.length;
     },
-    enabled: false,
+  });
+};
+
+// 채팅 참여자 목록 불러오기
+export const useGetParticipants = (chatRoomId: number) => {
+  return useQuery({
+    queryKey: chatRoomKeys.participants(chatRoomId),
+    queryFn: getParticipants,
+  });
+};
+
+// 채팅방 삭제
+export const useDeleteChatRoom = () => {
+  return useMutation({
+    mutationFn: deleteChatRoom,
   });
 };

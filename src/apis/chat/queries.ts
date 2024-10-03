@@ -6,6 +6,8 @@ export const chatRoomKeys = {
   details: () => [...chatRoomKeys.all, 'detail'] as const,
   detail: (chatRoomId: number) =>
     [...chatRoomKeys.details(), chatRoomId] as const,
+  participants: (chatRoomId: number) =>
+    [...chatRoomKeys.all, 'participants', {chatRoomId}] as const,
 };
 
 export const chatKeys = {

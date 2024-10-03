@@ -1,8 +1,10 @@
+import {PlayerUser} from 'apis/user/types';
 import {axiosInstance} from '../index';
 import {ApiResponse, Id} from '../types';
 import {chatKeys, chatRoomKeys} from './queries';
 import {
   ChatRoom,
+  ChatRoomIdPayload,
   ChatRoomListResponse,
   CreateChatRoomPayload,
   GetChatsResponse,
@@ -76,6 +78,28 @@ export const getChats = async ({
   const [, , {chatRoomId}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<GetChatsResponse>>(
     `/chatrooms/${chatRoomId}/chats?page=${pageParam}&size=20`,
+  );
+  return response.data;
+};
+
+// 채팅 참여자 목록 불러오기
+export const getParticipants = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof chatRoomKeys.participants>;
+}) => {
+  const [, , {chatRoomId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<PlayerUser[]>>(
+    `/chatrooms/${chatRoomId}/participants`,
+  );
+  return response.data;
+};
+
+// 채팅방 삭제
+export const deleteChatRoom = async (data: ChatRoomIdPayload) => {
+  const {chatRoomId} = data;
+  const response = await axiosInstance.delete<ApiResponse<null>>(
+    `/chatrooms/${chatRoomId}`,
   );
   return response.data;
 };

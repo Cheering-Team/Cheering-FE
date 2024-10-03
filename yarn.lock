@@ -8314,6 +8314,11 @@ react-native-toast-message@^2.2.0:
   resolved "https://registry.npmjs.org/react-native-toast-message/-/react-native-toast-message-2.2.0.tgz"
   integrity sha512-AFti8VzUk6JvyGAlLm9/BknTNDXrrhqnUk7ak/pM7uCTxDPveAu2ekszU0on6vnUPFnG04H/QfYE2IlETqeaWw==
 
+react-native-video@^6.6.3:
+  version "6.6.3"
+  resolved "https://registry.npmjs.org/react-native-video/-/react-native-video-6.6.3.tgz"
+  integrity sha512-Exu9Taaj1QibEQLAI8P8ax+KTZQ8UKQ6dsp1qMVnG35tR477hT0pKgXceo7tUmC6PibI8D7MTZzNRzXf88+TDA==
+
 react-native@*, react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.48.4, react-native@>=0.57.0, react-native@>=0.59.0, react-native@>=0.6.0, react-native@>=0.60.0, react-native@>=0.61.3, react-native@>=0.64.0, react-native@0.73.1:
   version "0.73.1"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.73.1.tgz"

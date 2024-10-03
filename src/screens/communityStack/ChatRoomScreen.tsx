@@ -20,7 +20,12 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ArrowSvg from '../../../assets/images/arrow_up.svg';
 import CustomText from '../../components/common/CustomText';
 import ChevronLeftSvg from '../../../assets/images/chevron-left.svg';
-import {useGetChatRoomById, useGetChats} from '../../apis/chat/useChats';
+import {
+  useDeleteChatRoom,
+  useGetChatRoomById,
+  useGetChats,
+  useGetParticipants,
+} from '../../apis/chat/useChats';
 import {BlurView} from '@react-native-community/blur';
 import OfficialSvg from '../../../assets/images/official.svg';
 import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
@@ -39,6 +44,7 @@ import {Drawer} from 'react-native-drawer-layout';
 import DrawerSvg from '../../../assets/images/drawer.svg';
 import ExitSvg from '../../../assets/images/exit-gray.svg';
 import AlertModal from 'components/common/AlertModal/AlertModal';
+import {showBottomToast} from 'utils/toast';
 
 const TextEncodingPolyfill = require('text-encoding');
 
@@ -62,27 +68,24 @@ const ChatRoomScreen = ({route}) => {
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isExitAlertOpen, setIsExitAlertOpen] = useState(false);
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
 
   const client = useRef<StompJs.Client | null>(null);
   const flatListRef = useRef<FlatList>(null);
 
   const {data, refetch} = useGetChatRoomById(chatRoomId, false);
-  const {
-    data: chatData,
-    refetch: chatRefetch,
-    hasNextPage,
-    fetchNextPage,
-  } = useGetChats(chatRoomId);
+  const {data: chatData, hasNextPage, fetchNextPage} = useGetChats(chatRoomId);
+  const {data: participants} = useGetParticipants(chatRoomId);
+  const {mutateAsync: deleteChatRoom} = useDeleteChatRoom();
 
   const connect = async () => {
     const accessToken = await EncryptedStorage.getItem('accessToken');
 
     if (accessToken) {
       client.current = new StompJs.Client({
-        brokerURL: 'ws://172.30.1.55:8080/ws',
+        brokerURL: 'ws://172.30.1.5:8080/ws',
         onConnect: () => {
           subscribe();
-          chatRefetch();
 
           setTimeout(() => {
             refetch();
@@ -275,6 +278,16 @@ const ChatRoomScreen = ({route}) => {
     }
   };
 
+  const handleDeleteChatRoom = async () => {
+    const data = await deleteChatRoom({chatRoomId});
+    if (data.message === '채팅방을 삭제하였습니다.') {
+      client.current?.deactivate();
+      queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
+      showBottomToast(insets.bottom + 20, data.message);
+      navigation.goBack();
+    }
+  };
+
   useEffect(() => {
     connect();
 
@@ -311,35 +324,102 @@ const ChatRoomScreen = ({route}) => {
       onClose={() => setIsDrawerOpen(false)}
       renderDrawerContent={() => (
         <SafeAreaView className="flex-1">
-          <View className="flex-1" />
+          {data.result.type === 'OFFICIAL' ? (
+            <View className="flex-1" />
+          ) : (
+            <FlatList
+              data={participants?.result}
+              contentContainerStyle={{
+                paddingHorizontal: 15,
+                paddingVertical: 5,
+              }}
+              ListHeaderComponent={
+                <>
+                  <CustomText fontWeight="500" className="text-[17px] mb-2">
+                    대화상대
+                  </CustomText>
+                  <Pressable
+                    className="flex-row items-center py-[7]"
+                    onPress={() =>
+                      navigation.navigate('Profile', {
+                        playerUserId: data.result.creator.id,
+                      })
+                    }>
+                    <Avatar uri={data.result.creator?.image} size={32} />
+                    <View className="bg-gray-800 rounded-xl px-1 py-[1] mx-[5]">
+                      <CustomText
+                        fontWeight="600"
+                        className="text-[11px] text-white">
+                        방장
+                      </CustomText>
+                    </View>
+                    <CustomText>{data.result.creator?.nickname}</CustomText>
+                  </Pressable>
+                </>
+              }
+              renderItem={({item}) => (
+                <Pressable
+                  className="flex-row items-center py-[7]"
+                  onPress={() =>
+                    navigation.navigate('Profile', {
+                      playerUserId: item.id,
+                    })
+                  }>
+                  <Avatar uri={item.image} size={32} />
+                  <CustomText className="ml-2">{item.nickname}</CustomText>
+                </Pressable>
+              )}
+              className="flex-1"
+            />
+          )}
+
           <Pressable
             className="h-[48] border-t border-t-[#eeeeee] items-center px-4 flex-row-reverse"
-            onPress={() => setIsExitAlertOpen(true)}>
+            onPress={() =>
+              data.result.creator?.id === data.result.playerUser?.id
+                ? setIsDeleteAlertOpen(true)
+                : setIsExitAlertOpen(true)
+            }>
             <ExitSvg width={24} height={24} />
             <CustomText className="mr-3 text-[#555555] text-[15px]">
-              채팅방 나가기
+              {data.result.creator?.id === data.result.playerUser?.id
+                ? '채팅방 삭제'
+                : '채팅방 나가기'}
             </CustomText>
           </Pressable>
-          <AlertModal
-            isModalOpen={isExitAlertOpen}
-            setIsModalOpen={setIsExitAlertOpen}
-            title="채팅방에서 나가시겠습니까?"
-            content="모든 대화내용이 삭제됩니다."
-            button1Text="나가기"
-            button1Color="#ff2626"
-            button2Text="취소"
-            button1Press={() => {
-              client.current?.publish({
-                destination: '/pub/disconnect',
-                body: JSON.stringify({
-                  chatRoomId: chatRoomId,
-                }),
-              });
-              client.current?.deactivate();
-              queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
-              navigation.goBack();
-            }}
-          />
+          {data.result.creator?.id === data.result.playerUser?.id ? (
+            <AlertModal
+              isModalOpen={isDeleteAlertOpen}
+              setIsModalOpen={setIsDeleteAlertOpen}
+              title="채팅방을 삭제하시겠습니까?"
+              content="방장이기 때문에 나가실 경우 채팅방이 삭제됩니다."
+              button1Text="삭제"
+              button1Color="#ff2626"
+              button2Text="취소"
+              button1Press={handleDeleteChatRoom}
+            />
+          ) : (
+            <AlertModal
+              isModalOpen={isExitAlertOpen}
+              setIsModalOpen={setIsExitAlertOpen}
+              title="채팅방에서 나가시겠습니까?"
+              content="모든 대화내용이 삭제됩니다."
+              button1Text="나가기"
+              button1Color="#ff2626"
+              button2Text="취소"
+              button1Press={() => {
+                client.current?.publish({
+                  destination: '/pub/disconnect',
+                  body: JSON.stringify({
+                    chatRoomId: chatRoomId,
+                  }),
+                });
+                client.current?.deactivate();
+                queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
+                navigation.goBack();
+              }}
+            />
+          )}
         </SafeAreaView>
       )}
       style={{flex: 1}}>

@@ -7,10 +7,12 @@ import CustomText from '../../common/CustomText';
 import PlusSvg from '../../../../assets/images/plus-gray.svg';
 import CloseWhiteSvg from '../../../../assets/images/x_white.svg';
 import ImagePicker from 'react-native-image-crop-picker';
+import {ImageType} from 'apis/post/types';
+import Video, {VideoRef} from 'react-native-video';
 
 interface WriterFooterProps {
-  imageData: SizeImage[];
-  setImageData: Dispatch<SetStateAction<SizeImage[]>>;
+  imageData: ImageType[];
+  setImageData: Dispatch<SetStateAction<ImageType[]>>;
   setIsImageInfo: Dispatch<SetStateAction<boolean>>;
   fadeAnim: Animated.Value;
 }
@@ -24,7 +26,7 @@ const WriteFooter = (props: WriterFooterProps) => {
     drag,
     isActive,
   }: {
-    item: SizeImage;
+    item: ImageType;
     getIndex: () => number | undefined;
     drag: () => void;
     isActive: boolean;
@@ -32,16 +34,32 @@ const WriteFooter = (props: WriterFooterProps) => {
     return (
       <ScaleDecorator key={item.name}>
         <TouchableOpacity onLongPress={drag} disabled={isActive}>
-          <Image
-            source={{uri: item.uri}}
-            style={{
-              width: 100,
-              height: 130,
-              borderRadius: 3,
-              marginRight: 10,
-            }}
-            resizeMode="cover"
-          />
+          {item.type.startsWith('video') ? (
+            <View
+              style={{borderRadius: 3, overflow: 'hidden', marginRight: 10}}>
+              <Video
+                source={{uri: item.uri}}
+                repeat={true}
+                muted={true}
+                style={{
+                  width: 100,
+                  height: 130,
+                }}
+              />
+            </View>
+          ) : (
+            <Image
+              source={{uri: item.uri}}
+              style={{
+                width: 100,
+                height: 130,
+                borderRadius: 3,
+                marginRight: 10,
+              }}
+              resizeMode="cover"
+            />
+          )}
+
           <View
             style={{
               flexDirection: 'row',
@@ -72,10 +90,11 @@ const WriteFooter = (props: WriterFooterProps) => {
     try {
       const images = await ImagePicker.openPicker({
         multiple: true,
-        mediaType: 'photo',
-        forceJpg: true,
+        mediaType: 'any',
         compressImageQuality: 0.4,
       });
+
+      console.log(JSON.stringify(images));
 
       const imageObj = images.map(image => ({
         uri: image.path,

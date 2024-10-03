@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
+import {
+  FlatList,
+  ListRenderItem,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import CustomText from '../common/CustomText';
 import Avatar from '../common/Avatar';
@@ -8,6 +14,8 @@ import ImageView from 'react-native-image-viewing';
 import PostWriter from '../post/PostWriter';
 import InteractBar from '../post/InteractBar';
 import FastImage from 'react-native-fast-image';
+import {ImageSizeType} from 'apis/post/types';
+import PostVideo from 'components/common/PostVideo';
 
 interface FeedPostProps {
   feed: any;
@@ -19,28 +27,74 @@ const FeedPost = (props: FeedPostProps) => {
 
   const {feed, type} = props;
 
-  const [imageHeight, setImageHeight] = useState(0);
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
 
   const [isViewer, setIsViewer] = useState(false);
   const [curImage, setCurImage] = useState(0);
 
+  const renderItem: ListRenderItem<ImageSizeType> = ({item, index}) => {
+    return (
+      <Pressable
+        onPress={() => {
+          setCurImage(index);
+          setIsViewer(true);
+        }}>
+        {item.url.endsWith('MOV') || item.url.endsWith('MP4') ? (
+          <PostVideo
+            video={item}
+            index={index}
+            imagesLength={feed.images.length}
+            width={width}
+            height={height}
+            type="FEED"
+          />
+        ) : (
+          <FastImage
+            source={{uri: item.url}}
+            resizeMode="cover"
+            style={[
+              {
+                width:
+                  feed.images.length === 1
+                    ? width
+                    : Math.max(
+                        Math.min(
+                          item.width * (220 / item.height),
+                          WINDOW_WIDTH - 85,
+                        ),
+                        150,
+                      ),
+                height: feed.images.length === 1 ? height : 220,
+                borderRadius: 5,
+                marginLeft: 10,
+                borderWidth: 0.5,
+                borderColor: '#d1d1d1',
+              },
+              index === 0 && {marginLeft: 53},
+            ]}
+          />
+        )}
+      </Pressable>
+    );
+  };
+
   useEffect(() => {
     if (feed.images.length) {
-      if (WINDOW_WIDTH - 90 < feed.images[0].width) {
-        if (feed.images[0].height > 350) {
-          setImageHeight(350);
-        } else {
-          setImageHeight(
-            feed.images[0].height *
-              ((WINDOW_WIDTH - 90) / feed.images[0].width),
-          );
-        }
+      if (feed.images[0].width / feed.images[0].height >= 0.75) {
+        setWidth(WINDOW_WIDTH - 63);
+        setHeight(
+          feed.images[0].height * ((WINDOW_WIDTH - 63) / feed.images[0].width),
+        );
       } else {
-        if (feed.images[0].height > 350) {
-          setImageHeight(350);
-        } else {
-          setImageHeight(feed.images[0].height);
-        }
+        const IMAGE_HEIGHT = (WINDOW_WIDTH - 63) / 0.75;
+        setHeight(IMAGE_HEIGHT);
+        setWidth(
+          Math.max(
+            feed.images[0].width * (IMAGE_HEIGHT / feed.images[0].height),
+            105,
+          ),
+        );
       }
     }
   }, [feed.images]);
@@ -121,29 +175,7 @@ const FeedPost = (props: FeedPostProps) => {
           data={feed.images}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
-          renderItem={({item, index}) => (
-            <Pressable
-              onPress={() => {
-                setCurImage(index);
-                setIsViewer(true);
-              }}>
-              <FastImage
-                source={{uri: item.url}}
-                resizeMode="cover"
-                style={[
-                  {
-                    width: item.width * (imageHeight / item.height),
-                    height: imageHeight,
-                    borderRadius: 5,
-                    marginLeft: 15,
-                    borderWidth: 0.5,
-                    borderColor: '#d1d1d1',
-                  },
-                  index === 0 && {marginLeft: 53},
-                ]}
-              />
-            </Pressable>
-          )}
+          renderItem={renderItem}
         />
         {/* 상호작용 */}
         <InteractBar post={feed} type={type} />
