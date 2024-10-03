@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Image, Pressable} from 'react-native';
+import {FlatList, Image, Pressable, View} from 'react-native';
 import {ImageSizeType} from '../../apis/post/types';
 import {WINDOW_WIDTH} from '../../constants/dimension';
 import ImageView from 'react-native-image-viewing';
 import FastImage from 'react-native-fast-image';
 import PostVideo from 'components/common/PostVideo';
+import Video from 'react-native-video';
+import ImageVideoViewer from './ImageVideoViewer';
 
 interface PostImageProps {
   images: ImageSizeType[];
@@ -83,13 +85,11 @@ const PostImage = (props: PostImageProps) => {
           </Pressable>
         )}
       />
-      <ImageView
-        images={images.map(item => ({uri: item.url}))}
-        imageIndex={curImage}
-        visible={isViewer}
-        onRequestClose={() => setIsViewer(false)}
-        presentationStyle="overFullScreen"
-        backgroundColor="rgba(0,0,0,0.9)"
+      <ImageVideoViewer
+        isViewer={isViewer}
+        setIsViewer={setIsViewer}
+        images={images}
+        curImage={curImage}
       />
     </>
   );

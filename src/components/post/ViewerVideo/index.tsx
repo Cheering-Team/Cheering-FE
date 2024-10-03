@@ -14,7 +14,6 @@ interface ViewerVideoProps {
 
 const ViewerVideo = (props: ViewerVideoProps) => {
   const {uri, width, height} = props;
-  const insets = useSafeAreaInsets();
 
   const [isMute, setIsMute] = useState(false);
 
