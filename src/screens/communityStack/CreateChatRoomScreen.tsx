@@ -83,6 +83,11 @@ const CreateChatRoomScreen = ({navigation, route}) => {
 
     const data = await createChatRoom({playerId, ...formData});
 
+    if (data.message === '부적절한 단어가 포함되어 있습니다.') {
+      showBottomToast(insets.bottom + 20, data.message);
+      return;
+    }
+
     if (data.message === '채팅방을 개설하였습니다.') {
       showBottomToast(insets.bottom + 20, data.message);
       navigation.replace('ChatRoom', {chatRoomId: data.result.id});

@@ -12,7 +12,7 @@ import CustomText from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import CustomButton from '../../components/common/CustomButton';
 import {useSignUp} from 'apis/user/useUsers';
-import {showTopToast} from 'utils/toast';
+import {showBottomToast, showTopToast} from 'utils/toast';
 
 type SetNicknameScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -45,6 +45,10 @@ const SetNickNameScreen = ({
       return;
     }
     const data = await signUp({phone, nickname});
+    if (data.message === '부적절한 단어가 포함되어 있습니다.') {
+      showBottomToast(insets.bottom + 20, '부적절한 단어가 포함되어 있습니다.');
+      return;
+    }
     if (data.message === '회원가입이 완료되었습니다.') {
       const {accessToken, refreshToken} = data.result;
       showTopToast(insets.top + 20, data.message);
@@ -78,7 +82,7 @@ const SetNickNameScreen = ({
           maxLength={20}
           curLength={nickname.length}
           length={true}
-          inValidMessage="2자~20자, 한글과 영어만 사용 가능합니다."
+          inValidMessage="2자~20자, 한글 영어 숫자 . _ 만 사용 가능합니다."
           onChangeText={e => {
             setNickname(e);
             setNicknameValid(true);

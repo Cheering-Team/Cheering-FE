@@ -50,6 +50,10 @@ const CommentInput: FC<CommentInputProps> = props => {
     } else {
       showBottomToast(insets.bottom + 20, '잠시 후 다시시도 해주세요.');
     }
+
+    if (commentResponse.message === '부적절한 단어가 포함되어 있습니다.') {
+      showBottomToast(insets.bottom + 20, commentResponse.message);
+    }
   };
 
   const handleWriteReComment = async () => {
@@ -75,6 +79,10 @@ const CommentInput: FC<CommentInputProps> = props => {
       showBottomToast(insets.bottom + 20, '작성이 완료되었습니다.');
     } else {
       showBottomToast(insets.bottom + 20, '잠시 후 다시시도 해주세요.');
+    }
+
+    if (reCommentResponse.message === '부적절한 단어가 포함되어 있습니다.') {
+      showBottomToast(insets.bottom + 20, reCommentResponse.message);
     }
   };
 

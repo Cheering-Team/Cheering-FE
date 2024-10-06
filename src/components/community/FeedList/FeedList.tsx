@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import FeedFilter from '../FeedFilter';
 import {useFeedList} from './useFeedList';

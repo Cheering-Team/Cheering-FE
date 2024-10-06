@@ -9,6 +9,7 @@ import {
   PlayerUserIdPayload,
   Sport,
   Team,
+  TeamName,
   UpdatedPlayerUserImagePayload,
   UpdatedPlayerUserNicknamePayload,
 } from './types';
@@ -39,7 +40,7 @@ export const getTeams = async ({
   queryKey: ReturnType<typeof teamKeys.list>;
 }) => {
   const [, , {leagueId}] = queryKey;
-  const response = await axiosInstance.get<ApiResponse<Team[]>>(
+  const response = await axiosInstance.get<ApiResponse<TeamName[]>>(
     `/leagues/${leagueId}/teams`,
   );
   return response.data;

@@ -11,7 +11,7 @@ import {Player} from 'apis/player/types';
 interface PlayerListProps {
   teamName?: string;
   players: Player[];
-  paddingTop: boolean;
+  paddingTop?: boolean;
 }
 
 const PlayerList = (props: PlayerListProps) => {
@@ -25,7 +25,11 @@ const PlayerList = (props: PlayerListProps) => {
       data={players}
       renderItem={({item}) => (
         <Pressable
-          style={{paddingBottom: 10, backgroundColor: 'white'}}
+          style={{
+            paddingBottom: 10,
+            width: Dimensions.get('window').width / 3,
+            backgroundColor: 'white',
+          }}
           onPress={() => {
             navigation.navigate('CommunityStack', {
               screen: 'Community',
@@ -116,9 +120,6 @@ const PlayerList = (props: PlayerListProps) => {
           <CustomText fontWeight="600" style={{fontSize: 23, marginBottom: 5}}>
             등록된 선수 또는 팀이 없어요
           </CustomText>
-          {/* <CustomText style={{color: '#5b5b5b'}}>
-            좋아하는 선수를 찾아보세요
-          </CustomText> */}
         </View>
       }
     />

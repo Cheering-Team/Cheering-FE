@@ -259,7 +259,14 @@ const HomeScreen = () => {
                 <Avatar uri={item.image} size={37} />
                 <CustomText
                   fontWeight="500"
-                  style={{fontSize: 15, marginLeft: 15, color: '#222222'}}>
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={{
+                    fontSize: 15,
+                    marginLeft: 15,
+                    color: '#222222',
+                    width: 120,
+                  }}>
                   {item.koreanName}
                 </CustomText>
               </View>

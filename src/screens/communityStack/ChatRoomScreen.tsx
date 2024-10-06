@@ -83,7 +83,7 @@ const ChatRoomScreen = ({route}) => {
 
     if (accessToken) {
       client.current = new StompJs.Client({
-        brokerURL: 'ws://172.30.1.5:8080/ws',
+        brokerURL: 'ws://172.30.1.38:8080/ws',
         onConnect: () => {
           subscribe();
 

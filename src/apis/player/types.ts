@@ -24,8 +24,15 @@ export interface Team {
   id: number;
   name: string;
   image: string;
-  fanCount: number;
+  fanCount: number | null;
   communityId: number | null;
+}
+
+export interface TeamName {
+  id: number;
+  firstName: string;
+  secondName: string;
+  image: string;
 }
 
 // 요청

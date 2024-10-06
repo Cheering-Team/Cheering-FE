@@ -141,6 +141,9 @@ export const useDeletePlayerUser = () => {
         routes: [{name: 'HomeStack'}],
       });
       queryClient.removeQueries({
+        queryKey: playerKeys.details(),
+      });
+      queryClient.removeQueries({
         queryKey: postKeys.lists(),
       });
       queryClient.removeQueries({

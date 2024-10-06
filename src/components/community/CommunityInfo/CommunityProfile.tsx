@@ -33,7 +33,13 @@ const CommunityProfile = (props: CommunityProfileProps) => {
           <CustomText fontWeight="500" style={styles.englishName}>
             {playerData.result.englishName}
           </CustomText>
-          <CustomText fontWeight="600" style={styles.koreanName}>
+          <CustomText
+            fontWeight="600"
+            style={
+              playerData.result.koreanName.length > 10
+                ? styles.koreanNameLong
+                : styles.koreanName
+            }>
             {playerData.result.koreanName}
           </CustomText>
           <View style={styles.fanCountContainer}>
@@ -73,10 +79,12 @@ const CommunityProfile = (props: CommunityProfileProps) => {
 const styles = StyleSheet.create({
   profileContainer: {
     width: '100%',
+    backgroundColor: 'black',
   },
   infoContainer: {position: 'absolute', zIndex: 2, width: '100%'},
   englishName: {color: 'white', fontSize: 17, marginLeft: 2},
   koreanName: {color: 'white', fontSize: 41, lineHeight: 53},
+  koreanNameLong: {color: 'white', fontSize: 35, lineHeight: 53},
   fanCountContainer: {
     flexDirection: 'row',
     alignItems: 'center',

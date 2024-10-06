@@ -59,7 +59,7 @@ const PlayerListScreen = ({
           <View>
             <CustomText
               fontWeight="600"
-              className="text-xl pb-0 text-[#2b2b2b]">
+              className="text-lg pb-0 text-[#2b2b2b]">
               {data.result.team.name}
             </CustomText>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>

@@ -69,7 +69,9 @@ const JoinProfile = (props: Props) => {
   const handleJoinCommunity = async () => {
     if (!NICKNAME_REGEX.test(nickname)) {
       setIsValid(false);
-      setNicknameInvalidMessage('2자~20자, 한글과 영어만 사용 가능합니다.');
+      setNicknameInvalidMessage(
+        '2자~20자, 한글 영어 숫자 . _ 만 사용 가능합니다.',
+      );
       return;
     }
 
@@ -79,9 +81,15 @@ const JoinProfile = (props: Props) => {
       image: imageData,
     });
 
+    if (joinData?.message === '부적절한 단어가 포함되어 있습니다.') {
+      setIsValid(false);
+      setNicknameInvalidMessage(joinData?.message);
+      return;
+    }
+
     if (joinData?.message === '이미 존재하는 닉네임입니다.') {
       setIsValid(false);
-      setNicknameInvalidMessage('이미 존재하는 닉네임입니다.');
+      setNicknameInvalidMessage(joinData?.message);
       return;
     }
 

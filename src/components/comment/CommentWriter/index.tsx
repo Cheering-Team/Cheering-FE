@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useRef, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import CustomText from '../../common/CustomText';
-import {formatBeforeDate, formatDate} from '../../../utils/format';
+import {formatBeforeDate} from '../../../utils/format';
 import MoreSvg from '../../../../assets/images/three-dots.svg';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from '../../common/OptionModal';

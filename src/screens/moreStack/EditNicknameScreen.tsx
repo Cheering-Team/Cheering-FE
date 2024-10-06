@@ -43,11 +43,16 @@ const EditNicknameScreen = ({
     const data = playerUserId
       ? await updatePlayerUserNickname({playerUserId, nickname})
       : await updateUserNickname({nickname});
+    if (data.message === '부적절한 단어가 포함되어 있습니다.') {
+      setIsNicknameValid(false);
+      setNicknameInvalidMessage(data.message);
+    }
     if (data.message === '이미 존재하는 닉네임입니다.') {
       setIsNicknameValid(false);
-      setNicknameInvalidMessage('이미 존재하는 닉네임입니다.');
-    } else {
-      showBottomToast(insets.bottom + 20, '닉네임을 변경하였습니다.');
+      setNicknameInvalidMessage(data.message);
+    }
+    if (data.message === '닉네임을 변경하였습니다.') {
+      showBottomToast(insets.bottom + 20, data.message);
       navigation.pop();
     }
   };

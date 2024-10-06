@@ -14,7 +14,7 @@ import CustomText from '../../components/common/CustomText';
 import {useGetLeagues, useGetSports, useGetTeams} from 'apis/player/usePlayers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
-import FastImage from 'react-native-fast-image';
+import {SvgUri} from 'react-native-svg';
 
 type CategoryScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -73,10 +73,15 @@ const CategoryScreen = ({
               <Pressable
                 onPress={() => setSelectedSport(item.id)}
                 className={`items-center px-[10] pt-2 pb-[5] ${selectedSport === item.id && 'bg-[#f4f4f4]'}`}>
-                <FastImage
-                  source={{uri: item.image}}
-                  className="w-[55] h-[55] bg-slate-50 rounded-lg border border-slate-100 mb-1"
-                />
+                <View className="p-[5]">
+                  <SvgUri
+                    uri={item.image}
+                    width={45}
+                    height={45}
+                    className="rounded-lg border border-slate-100 mb-1"
+                  />
+                </View>
+
                 <CustomText>{item.name}</CustomText>
               </Pressable>
             )}
@@ -106,30 +111,44 @@ const CategoryScreen = ({
               }}
               columnWrapperStyle={styles.justifyaround}
               contentContainerStyle={styles.padding}
-              data={teams ? teams.result : []}
-              renderItem={({item}) => (
-                <Pressable
-                  key={item.name}
-                  className="items-center w-[55]"
-                  onPress={() => {
-                    navigation.navigate('PlayerList', {
-                      teamId: item.id,
-                    });
-                  }}>
-                  <Image
-                    resizeMode="center"
-                    source={{uri: item.image}}
-                    className="w-[55] h-[55] bg-white rounded-[20px] mb-[5]"
-                  />
-                  {item.name.split(' ').map((word, index) => (
-                    <CustomText
-                      key={index}
-                      className={`pb-0 text-[12px] text-center ${index === item.name.split(' ').length && 'mb-2'}`}>
-                      {word}
+              data={
+                teams
+                  ? [
+                      ...teams.result,
+                      ...new Array(3 - (teams.result.length % 3)).fill({
+                        name: null,
+                      }),
+                    ]
+                  : []
+              }
+              renderItem={({item}) => {
+                if (item.name === null) {
+                  return <View className="flex-1" />;
+                }
+                return (
+                  <Pressable
+                    key={item.name}
+                    className="items-center flex-1"
+                    onPress={() => {
+                      navigation.navigate('PlayerList', {
+                        teamId: item.id,
+                      });
+                    }}>
+                    <Image
+                      resizeMode="center"
+                      source={{uri: item.image}}
+                      className="w-[55] h-[55] bg-white rounded-[15px] mb-[5]"
+                    />
+
+                    <CustomText className="pb-0 text-[11.5px] text-center">
+                      {item.firstName}
                     </CustomText>
-                  ))}
-                </Pressable>
-              )}
+                    <CustomText className="pb-0 text-[11.5px] text-center">
+                      {item.secondName}
+                    </CustomText>
+                  </Pressable>
+                );
+              }}
             />
           </View>
         </>
@@ -139,8 +158,8 @@ const CategoryScreen = ({
 };
 
 const styles = StyleSheet.create({
-  justifyaround: {justifyContent: 'space-around'},
-  padding: {paddingVertical: 20, paddingHorizontal: 5},
+  justifyaround: {marginBottom: 25},
+  padding: {paddingVertical: 20, paddingHorizontal: 5, paddingBottom: 40},
 });
 
 export default CategoryScreen;

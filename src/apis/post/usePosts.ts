@@ -14,7 +14,7 @@ import {
   likePost,
   reportPost,
   writePost,
-} from '.';
+} from './index';
 import {FilterType} from './types';
 import {useNavigation} from '@react-navigation/native';
 import {PostWriteScreenNavigationProp} from '../../screens/communityStack/PostWriteScreen';
@@ -29,6 +29,10 @@ export const useWritePost = () => {
   return useMutation({
     mutationFn: writePost,
     onSuccess: data => {
+      if (data.message === '부적절한 단어가 포함되어 있습니다.') {
+        showBottomToast(insets.bottom + 20, data.message);
+        return;
+      }
       queryClient.prefetchQuery({
         queryKey: postKeys.detail(data.result.id),
         queryFn: getPostById,
@@ -103,7 +107,11 @@ export const useEditPost = () => {
   const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: editPost,
-    onSuccess: (_, variables) => {
+    onSuccess: (data, variables) => {
+      if (data.message === '부적절한 단어가 포함되어 있습니다.') {
+        showBottomToast(insets.bottom + 20, data.message);
+        return;
+      }
       queryClient.prefetchQuery({
         queryKey: postKeys.detail(variables.postId),
         queryFn: getPostById,
