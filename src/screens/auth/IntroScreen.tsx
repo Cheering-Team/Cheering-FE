@@ -5,11 +5,14 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {AuthStackParamList} from '../../navigations/AuthStackNavigator';
 import CustomText from '../../components/common/CustomText';
 import CustomButton from '../../components/common/CustomButton';
+import Carousel from 'react-native-reanimated-carousel';
 
 type IntroScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
   'Intro'
 >;
+
+const INTRO_DATA = [{image: ''}];
 
 const IntroScreen = ({navigation}: {navigation: IntroScreenNavigationProp}) => {
   const insets = useSafeAreaInsets();
@@ -28,6 +31,7 @@ const IntroScreen = ({navigation}: {navigation: IntroScreenNavigationProp}) => {
           내 선수를 응원할 때
         </CustomText>
       </View>
+      {/* <Carousel data={} /> */}
       <CustomButton
         text="시작하기"
         type="normal"

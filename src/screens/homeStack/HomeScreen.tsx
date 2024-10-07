@@ -319,7 +319,7 @@ const HomeScreen = () => {
                 <CustomText
                   fontWeight="500"
                   style={{color: '#686868', fontSize: 15, paddingBottom: 2}}>
-                  🔥 실시간 인기 게시글
+                  🔥 최근 게시글
                 </CustomText>
               </View>
             </>

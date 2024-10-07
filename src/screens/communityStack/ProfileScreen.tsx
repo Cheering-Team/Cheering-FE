@@ -73,14 +73,18 @@ const ProfileScreen = ({navigation, route}) => {
             fontWeight="500"
             style={{
               fontSize: 17,
-            }}>{`${data.result.player.koreanName} / `}</CustomText>
-          <CustomText
-            fontWeight="500"
-            style={{
-              fontSize: 17,
             }}>
-            {data.result.player.englishName}
+            {data.result.player.koreanName}
           </CustomText>
+          {data.result.player.englishName.length < 20 && (
+            <CustomText
+              fontWeight="500"
+              style={{
+                fontSize: 17,
+              }}>
+              {` / ${data.result.player.englishName}`}
+            </CustomText>
+          )}
         </View>
         {data.result.isUser ? (
           <Pressable onPress={() => bottomSheetModalRef.current?.present()}>
