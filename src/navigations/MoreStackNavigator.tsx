@@ -6,9 +6,9 @@ import SignOutScreen from '../screens/moreStack/SignOutScreen';
 import EditNicknameScreen from '../screens/moreStack/EditNicknameScreen';
 import DeleteUserScreen from '../screens/moreStack/DeleteUserScreen';
 import SetNotificationScreen from '../screens/moreStack/SetNotificationScreen';
-import NotificationScreen from 'screens/notificationStack/NotificaitonScreen';
 import NoticeListScreen from 'screens/moreStack/NoticeListScreen';
 import NoticeScreen from 'screens/moreStack/NoticeScreen';
+import PrivacyPolicyScreen from 'screens/moreStack/PrivacyPolicyScreen';
 
 export type MoreStackParamList = {
   More: undefined;
@@ -18,6 +18,7 @@ export type MoreStackParamList = {
   NoticeList: undefined;
   Notice: {noticeId: number};
   SetNotification: undefined;
+  PrivacyPolicy: undefined;
   SignOut: undefined;
 };
 
@@ -59,6 +60,11 @@ const MoreStackNavigator = () => {
       <MoreStack.Screen
         name="SetNotification"
         component={SetNotificationScreen}
+        options={{headerShown: false}}
+      />
+      <MoreStack.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicyScreen}
         options={{headerShown: false}}
       />
       <MoreStack.Screen

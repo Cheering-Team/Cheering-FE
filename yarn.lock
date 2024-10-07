@@ -5617,7 +5617,7 @@ internal-slot@^1.0.7:
     hasown "^2.0.0"
     side-channel "^1.0.4"
 
-invariant@^2.2.4:
+invariant@^2.2.4, invariant@2.2.4:
   version "2.2.4"
   resolved "https://registry.npmjs.org/invariant/-/invariant-2.2.4.tgz"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -8323,6 +8323,14 @@ react-native-video@^6.6.3:
   version "6.6.3"
   resolved "https://registry.npmjs.org/react-native-video/-/react-native-video-6.6.3.tgz"
   integrity sha512-Exu9Taaj1QibEQLAI8P8ax+KTZQ8UKQ6dsp1qMVnG35tR477hT0pKgXceo7tUmC6PibI8D7MTZzNRzXf88+TDA==
+
+react-native-webview@^13.12.3:
+  version "13.12.3"
+  resolved "https://registry.npmjs.org/react-native-webview/-/react-native-webview-13.12.3.tgz"
+  integrity sha512-Y1I5YyDYyE7NC96RHLhd2nxh7ymLYOYLTefgx5ixxw2OToQK0ow3OJ+o77QcI1Tuevj5PCxwqC/14ceS/7yPJQ==
+  dependencies:
+    escape-string-regexp "^4.0.0"
+    invariant "2.2.4"
 
 react-native@*, react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.48.4, react-native@>=0.57.0, react-native@>=0.59.0, react-native@>=0.6.0, react-native@>=0.60.0, react-native@>=0.61.3, react-native@>=0.62.x, react-native@>=0.64.0, react-native@0.73.1:
   version "0.73.1"

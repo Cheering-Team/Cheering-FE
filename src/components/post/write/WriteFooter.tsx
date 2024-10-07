@@ -94,8 +94,6 @@ const WriteFooter = (props: WriterFooterProps) => {
         compressImageQuality: 0.4,
       });
 
-      console.log(JSON.stringify(images));
-
       const imageObj = images.map(image => ({
         uri: image.path,
         name: image.filename,
