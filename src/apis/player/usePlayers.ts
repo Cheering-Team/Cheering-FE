@@ -1,6 +1,8 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {
+  blockUser,
   deletePlayerUser,
+  getBlockedUsers,
   getLeagues,
   getMyPlayers,
   getPlayers,
@@ -10,6 +12,7 @@ import {
   getSports,
   getTeams,
   joinCommunity,
+  unblockUser,
   updatePlayerUserImage,
   updatePlayerUserNickname,
 } from './index';
@@ -20,6 +23,8 @@ import {useNavigation} from '@react-navigation/native';
 import {postKeys} from '../post/queries';
 import {chatRoomKeys} from '../chat/queries';
 import {leagueKeys, playerKeys, playerUserKeys, teamKeys} from './queries';
+import {commentKeys, reCommentKeys} from 'apis/comment/queries';
+import {notificationKeys} from 'apis/notification/queries';
 
 // 종목 불러오기
 export const useGetSports = () => {
@@ -149,6 +154,51 @@ export const useDeletePlayerUser = () => {
       queryClient.removeQueries({
         queryKey: chatRoomKeys.lists(),
       });
+    },
+  });
+};
+
+// 커뮤니티 유저 차단하기
+export const useBlockUser = () => {
+  const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
+  return useMutation({
+    mutationFn: blockUser,
+    onSuccess: data => {
+      showBottomToast(insets.bottom + 20, data.message);
+      navigation.goBack();
+      queryClient.invalidateQueries({queryKey: postKeys.lists()});
+      queryClient.invalidateQueries({queryKey: commentKeys.lists()});
+      queryClient.invalidateQueries({queryKey: reCommentKeys.lists()});
+      queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
+      queryClient.invalidateQueries({queryKey: notificationKeys.lists()});
+    },
+  });
+};
+
+// 차단한 유저 목록 불러오기
+export const useGetBlockedUsers = (playerUserId: number) => {
+  return useQuery({
+    queryKey: playerUserKeys.blockList(playerUserId),
+    queryFn: getBlockedUsers,
+  });
+};
+
+// 차단 해제하기
+export const useUnblockUser = (playerUserId: number) => {
+  const insets = useSafeAreaInsets();
+  return useMutation({
+    mutationFn: unblockUser,
+    onSuccess: data => {
+      showBottomToast(insets.bottom + 20, data.message);
+      queryClient.invalidateQueries({
+        queryKey: playerUserKeys.blockList(playerUserId),
+      });
+      queryClient.invalidateQueries({queryKey: postKeys.lists()});
+      queryClient.invalidateQueries({queryKey: commentKeys.lists()});
+      queryClient.invalidateQueries({queryKey: reCommentKeys.lists()});
+      queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
+      queryClient.invalidateQueries({queryKey: notificationKeys.lists()});
     },
   });
 };

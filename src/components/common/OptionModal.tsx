@@ -14,12 +14,13 @@ import EditSvg from '../../../assets/images/edit.svg';
 import ExitSvg from '../../../assets/images/exit.svg';
 import Avatar from './Avatar';
 import EnterSvg from '../../../assets/images/enter.svg';
+import BlockSvg from '../../../assets/images/block.svg';
 
 interface OptionModalProps {
   modalRef: RefObject<BottomSheetModalMethods>;
   firstText?: string;
   firstColor?: string;
-  firstSvg?: 'trash' | 'report' | 'edit' | 'exit';
+  firstSvg?: 'trash' | 'report' | 'edit' | 'exit' | 'block';
   firstOnPress: any;
   firstAvatar?: string;
   secondText?: string;
@@ -56,8 +57,8 @@ const OptionModal = (props: OptionModalProps) => {
       thirdText
         ? 220 + insets.bottom
         : secondText
-        ? 160 + insets.bottom
-        : 110 + insets.bottom,
+          ? 160 + insets.bottom
+          : 110 + insets.bottom,
     ],
     [insets.bottom, secondText, thirdText],
   );
@@ -116,6 +117,7 @@ const OptionModal = (props: OptionModalProps) => {
           {firstSvg === 'report' && <ReportSvg width={20} height={20} />}
           {firstSvg === 'edit' && <EditSvg width={16} height={16} />}
           {firstSvg === 'exit' && <ExitSvg width={16} height={16} />}
+          {firstSvg === 'block' && <BlockSvg width={22} height={22} />}
         </Pressable>
         {secondText && (
           <Pressable

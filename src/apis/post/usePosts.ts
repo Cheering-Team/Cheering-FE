@@ -20,6 +20,7 @@ import {useNavigation} from '@react-navigation/native';
 import {PostWriteScreenNavigationProp} from '../../screens/communityStack/PostWriteScreen';
 import {hideToast, showBottomToast} from '../../utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {queryClient} from '../../../App';
 
 // 게시글 작성
 export const useWritePost = () => {
@@ -132,6 +133,7 @@ export const useReportPost = () => {
     onSuccess: data => {
       const {message} = data;
       showBottomToast(insets.bottom + 20, message);
+      queryClient.invalidateQueries({queryKey: postKeys.lists()});
     },
   });
 };

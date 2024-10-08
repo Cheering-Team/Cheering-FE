@@ -1,3 +1,4 @@
+import {PlayerUser} from 'apis/user/types';
 import {axiosInstance} from '../index';
 import {ApiResponse, IdName} from '../types';
 import {leagueKeys, playerKeys, playerUserKeys, teamKeys} from './queries';
@@ -159,6 +160,39 @@ export const updatePlayerUserNickname = async (
 // 커뮤니티 탈퇴
 export const deletePlayerUser = async (data: PlayerUserIdPayload) => {
   const {playerUserId} = data;
-  const response = await axiosInstance.delete(`/playerusers/${playerUserId}`);
+  const response = await axiosInstance.delete<ApiResponse<null>>(
+    `/playerusers/${playerUserId}`,
+  );
+  return response.data;
+};
+
+// 커뮤니티 유저 차단하기
+export const blockUser = async (data: PlayerUserIdPayload) => {
+  const {playerUserId} = data;
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/blocks/${playerUserId}`,
+  );
+  return response.data;
+};
+
+// 차단한 유저 목록 불러오기
+export const getBlockedUsers = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof playerUserKeys.blockList>;
+}) => {
+  const [, , , {playerUserId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<PlayerUser[]>>(
+    `/blocks/${playerUserId}`,
+  );
+  return response.data;
+};
+
+// 차단 해제하기
+export const unblockUser = async (data: PlayerUserIdPayload) => {
+  const {playerUserId} = data;
+  const response = await axiosInstance.delete<ApiResponse<null>>(
+    `/blocks/${playerUserId}`,
+  );
   return response.data;
 };

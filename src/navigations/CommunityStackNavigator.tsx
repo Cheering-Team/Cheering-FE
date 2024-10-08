@@ -10,6 +10,7 @@ import DeletePlayerUserScreen from '../screens/communityStack/DeletePlayerUserSc
 import ChatRoomScreen from '../screens/communityStack/ChatRoomScreen';
 import CreateChatRoomScreen from 'screens/communityStack/CreateChatRoomScreen';
 import ChatRoomEnterScreen from 'screens/communityStack/ChatRoomEnterScreen';
+import BlockListScreen from 'screens/communityStack/BlockListScreen';
 
 export type CommunityStackParamList = {
   Community: {playerId: number};
@@ -22,6 +23,7 @@ export type CommunityStackParamList = {
   ProfileEdit: {playerUserId: number};
   EditNickname: {nickname: string; playerUserId: number | null};
   DeletePlayerUser: {playerUserId: number};
+  BlockList: {playerUserId: number};
 };
 
 const CommunityStackNavigator = () => {
@@ -76,6 +78,11 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="DeletePlayerUser"
         component={DeletePlayerUserScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="BlockList"
+        component={BlockListScreen}
         options={{headerShown: false}}
       />
     </CommunityStack.Navigator>

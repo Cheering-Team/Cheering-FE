@@ -74,7 +74,7 @@ const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
           <TextInput
             ref={internalRef}
             value={value}
-            style={{fontSize: 16, height: height}}
+            style={{fontSize: 16, height: 19, color: 'black'}}
             onFocus={e => {
               onFocus?.(e);
               setFocus(true);

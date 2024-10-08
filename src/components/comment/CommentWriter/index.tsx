@@ -98,7 +98,7 @@ const CommentWriter = (props: CommentWriterProps) => {
         isModalOpen={isReportAlertOpen}
         setIsModalOpen={setIsReportAlertOpen}
         title="댓글을 신고하시겠습니까?"
-        content="정상적인 글에 대한 신고가 계속될 경우 신고자가 제재받을 수 있습니다."
+        content="해당 댓글은 숨겨집니다. 정상적인 댓글에 대한 신고가 계속될 경우 신고자가 제재받을 수 있습니다."
         button1Text="신고하기"
         button1Color="#ff2626"
         button2Text="취소"

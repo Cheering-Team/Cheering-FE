@@ -15,16 +15,19 @@ import CustomText from '../../components/common/CustomText';
 import FeedPost from '../../components/community/FeedPost';
 import OptionModal from '../../components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {useGetPlayerUserInfo} from '../../apis/player/usePlayers';
+import {useBlockUser, useGetPlayerUserInfo} from '../../apis/player/usePlayers';
 import {useGetPlayerUserPosts} from '../../apis/post/usePosts';
+import AlertModal from 'components/common/AlertModal/AlertModal';
 
 const ProfileScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {data} = useGetPlayerUserInfo(playerUserId);
+  const {mutate: blockUser} = useBlockUser();
 
   const {
     data: feedData,
@@ -113,7 +116,7 @@ const ProfileScreen = ({navigation, route}) => {
               </View>
             </View>
             <View style={{paddingHorizontal: 20}}>
-              {data.result.isUser && (
+              {data.result.isUser ? (
                 <Pressable
                   style={{
                     borderWidth: 1,
@@ -131,6 +134,26 @@ const ProfileScreen = ({navigation, route}) => {
                   }>
                   <CustomText fontWeight="500" style={{fontSize: 16}}>
                     프로필 편집
+                  </CustomText>
+                </Pressable>
+              ) : (
+                <Pressable
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#fe9393',
+                    height: 40,
+                    borderRadius: 7,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 20,
+                  }}
+                  onPress={() => {
+                    setIsModalOpen(true);
+                  }}>
+                  <CustomText
+                    fontWeight="500"
+                    className="text-base text-red-500">
+                    차단하기
                   </CustomText>
                 </Pressable>
               )}
@@ -197,13 +220,34 @@ const ProfileScreen = ({navigation, route}) => {
       {data.result.isUser && (
         <OptionModal
           modalRef={bottomSheetModalRef}
-          firstText="커뮤니티 탈퇴"
-          firstColor="#ff2626"
-          firstSvg="exit"
+          firstText="차단한 계정"
+          firstSvg="block"
           firstOnPress={() => {
+            navigation.navigate('BlockList', {
+              playerUserId,
+            });
+          }}
+          secondText="커뮤니티 탈퇴"
+          secondColor="#ff2626"
+          secondSvg="exit"
+          secondOnPress={() => {
             navigation.navigate('DeletePlayerUser', {
               playerUserId,
             });
+          }}
+        />
+      )}
+      {!data.result.isUser && (
+        <AlertModal
+          title="사용자를 차단하시겠습니까?"
+          content="해당 사용자의 모든 활동이 더이상 보이지 않습니다."
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          button1Text="차단"
+          button1Color="#ff2626"
+          button2Text="취소"
+          button1Press={() => {
+            blockUser({playerUserId});
           }}
         />
       )}

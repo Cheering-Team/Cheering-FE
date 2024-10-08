@@ -29,4 +29,6 @@ export const playerUserKeys = {
   details: () => [...playerUserKeys.all, 'detail'] as const,
   detail: (playerUserId: number) =>
     [...playerUserKeys.details(), playerUserId] as const,
+  blockList: (playerUserId: number) =>
+    [...playerUserKeys.all, 'list', 'blocked', {playerUserId}] as const,
 };

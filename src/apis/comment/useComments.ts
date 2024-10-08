@@ -18,6 +18,7 @@ import {commentKeys, reCommentKeys} from './queries';
 import {postKeys} from '../post/queries';
 import {showBottomToast} from '../../utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {queryClient} from '../../../App';
 
 // 댓글 작성
 export const useWriteComment = () => {
@@ -69,6 +70,7 @@ export const useReportComment = () => {
     onSuccess: data => {
       const {message} = data;
       showBottomToast(insets.bottom + 20, message);
+      queryClient.invalidateQueries({queryKey: commentKeys.lists()});
     },
   });
 };
@@ -122,6 +124,7 @@ export const useReportReComment = () => {
     onSuccess: data => {
       const {message} = data;
       showBottomToast(insets.bottom + 20, message);
+      queryClient.invalidateQueries({queryKey: reCommentKeys.lists()});
     },
   });
 };

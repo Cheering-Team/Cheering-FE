@@ -3,7 +3,6 @@ import {User} from 'apis/user/types';
 import {
   useCheckCode,
   useCheckCodeToKakao,
-  useSaveFCMToken,
   useSendSMS,
   useSignIn,
 } from 'apis/user/useUsers';
@@ -12,7 +11,7 @@ import CustomText from 'components/common/CustomText';
 import CustomTextInput from 'components/common/CustomTextInput';
 import {PHONE_REGEX} from 'constants/regex';
 
-import {
+import React, {
   Dispatch,
   MutableRefObject,
   SetStateAction,
@@ -25,7 +24,6 @@ import {Pressable, TextInput, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {SignInScreenNavigationProp} from 'screens/auth/SignInScreen';
 import {showTopToast} from 'utils/toast';
-import messaging from '@react-native-firebase/messaging';
 
 interface PhoneVerifyProps {
   status: 'phone' | 'code';
@@ -209,7 +207,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
         label="휴대폰 번호"
         isValid={phoneValid === 'valid'}
         inValidMessage={'올바르지 않은 휴대폰 번호입니다.'}
-        keyboardType="number-pad"
+        // keyboardType="number-pad"
         maxLength={11}
         onChangeText={e => {
           setPhoneValid('valid');
