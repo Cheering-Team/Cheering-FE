@@ -2,7 +2,7 @@ import {axiosInstance} from '../index';
 import {ApiResponse} from '../types';
 import {
   CheckCodePayload,
-  CheckCodeToKakaoPayload,
+  CheckCodeSocialPayload,
   ConnectSocialPayload,
   SaveFCMTokenPayload,
   SendSMSPayload,
@@ -25,15 +25,6 @@ export const checkCode = async (data: CheckCodePayload) => {
   const response = await axiosInstance.post<ApiResponse<null>>(
     '/phone/code',
     data,
-  );
-  return response.data;
-};
-
-export const checkCodeToKakao = async (data: CheckCodeToKakaoPayload) => {
-  const {accessToken, phone, code} = data;
-  const response = await axiosInstance.post<ApiResponse<Token | User>>(
-    `/phone/code/kakao?accessToken=${encodeURIComponent(accessToken)}`,
-    {phone, code},
   );
   return response.data;
 };
@@ -72,8 +63,17 @@ export const kakaoSignIn = async (data: TokenPayload) => {
 
 export const naverSignIn = async (data: TokenPayload) => {
   const {accessToken} = data;
-  const response = await axiosInstance.post<ApiResponse<Token | User>>(
+  const response = await axiosInstance.post<ApiResponse<Token | null>>(
     `/signin/naver?accessToken=${encodeURIComponent(accessToken)}`,
+  );
+  return response.data;
+};
+
+export const checkCodeSocial = async (data: CheckCodeSocialPayload) => {
+  const {accessToken, phone, code, type} = data;
+  const response = await axiosInstance.post<ApiResponse<Token | User>>(
+    `/phone/code/social?accessToken=${encodeURIComponent(accessToken)}&type=${type}`,
+    {phone, code},
   );
   return response.data;
 };

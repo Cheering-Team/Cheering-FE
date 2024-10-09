@@ -24,7 +24,7 @@ const PhoneVerifyScreen = ({
   route: PhoneVerifyScreenRouteProp;
 }) => {
   BackClose(navigation);
-  const {accessToken} = route.params;
+  const {accessToken, type} = route.params;
 
   const signIn = useContext(AuthContext)?.signIn;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -54,7 +54,7 @@ const PhoneVerifyScreen = ({
         setPhone={setPhone}
         timerRef={timerRef}
         signIn={signIn}
-        type="kakao"
+        type={type}
         accessToken={accessToken}
       />
     </KeyboardAwareScrollView>

@@ -26,10 +26,11 @@ export interface CheckCodePayload {
   code: string;
 }
 
-export interface CheckCodeToKakaoPayload {
+export interface CheckCodeSocialPayload {
   accessToken: string;
   phone: string;
   code: string;
+  type: 'kakao' | 'naver';
 }
 
 export interface TokenPayload {

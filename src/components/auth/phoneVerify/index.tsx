@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {User} from 'apis/user/types';
 import {
   useCheckCode,
-  useCheckCodeToKakao,
+  useCheckCodeSocial,
   useSendSMS,
   useSignIn,
 } from 'apis/user/useUsers';
@@ -32,7 +32,7 @@ interface PhoneVerifyProps {
   setPhone: Dispatch<SetStateAction<string>>;
   timerRef: MutableRefObject<NodeJS.Timeout | null>;
   signIn: ((access: string, refresh: string) => void) | undefined;
-  type?: 'default' | 'kakao';
+  type?: 'default' | 'kakao' | 'naver';
   accessToken?: string;
 }
 
@@ -62,7 +62,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
   const {mutateAsync: sendSMS, isPending} = useSendSMS();
   const {mutateAsync: checkCode} = useCheckCode();
   const {mutateAsync: signInApi} = useSignIn();
-  const {mutateAsync: checkCodeToKakao} = useCheckCodeToKakao();
+  const {mutateAsync: checkCodeSocial} = useCheckCodeSocial();
 
   const invalidCode = useCallback(
     (message: string) => {
@@ -115,36 +115,39 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
     invalidCode(data.message);
   }, [code, insets.top, invalidCode, phone, signIn, signInApi]);
 
-  const handleCheckCodeToKakao = useCallback(async () => {
-    const data = await checkCodeToKakao({
-      accessToken,
-      phone,
-      code,
-    });
-
-    if (data.message === '이미 가입된 유저입니다.' && 'id' in data.result) {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      navigation.replace('SocialConnect', {
+  const handleCheckCodeSocial = useCallback(async () => {
+    if (type === 'kakao' || type === 'naver') {
+      const data = await checkCodeSocial({
         accessToken,
-        user: data.result,
-        type: 'kakao',
+        phone,
+        code,
+        type,
       });
+
+      if (data.message === '이미 가입된 유저입니다.' && 'id' in data.result) {
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+        navigation.replace('SocialConnect', {
+          accessToken,
+          user: data.result,
+          type,
+        });
+      }
+      if (
+        data.message === '회원가입되었습니다.' &&
+        'accessToken' in data.result
+      ) {
+        const {accessToken: sessionToken, refreshToken} = data.result;
+        showTopToast(insets.top + 20, data.message);
+        signIn?.(sessionToken, refreshToken);
+        return;
+      }
+      invalidCode(data.message);
     }
-    if (
-      data.message === '회원가입되었습니다.' &&
-      'accessToken' in data.result
-    ) {
-      const {accessToken: sessionToken, refreshToken} = data.result;
-      showTopToast(insets.top + 20, data.message);
-      signIn?.(sessionToken, refreshToken);
-      return;
-    }
-    invalidCode(data.message);
   }, [
     accessToken,
-    checkCodeToKakao,
+    checkCodeSocial,
     code,
     insets.top,
     invalidCode,
@@ -152,6 +155,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
     phone,
     signIn,
     timerRef,
+    type,
   ]);
 
   const formatTime = (seconds: number): string => {
@@ -164,8 +168,8 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
 
   useEffect(() => {
     if (code.length === 6) {
-      if (type === 'kakao') {
-        handleCheckCodeToKakao();
+      if (type === 'kakao' || type === 'naver') {
+        handleCheckCodeSocial();
       } else if (user) {
         handleCheckCodeToSignIn();
       } else {
@@ -174,7 +178,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
     }
   }, [
     code.length,
-    handleCheckCodeToKakao,
+    handleCheckCodeSocial,
     handleCheckCodeToSignIn,
     handleCheckCodeToSignUp,
     type,
@@ -207,7 +211,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
         label="휴대폰 번호"
         isValid={phoneValid === 'valid'}
         inValidMessage={'올바르지 않은 휴대폰 번호입니다.'}
-        // keyboardType="number-pad"
+        keyboardType="number-pad"
         maxLength={11}
         onChangeText={e => {
           setPhoneValid('valid');

@@ -12,7 +12,7 @@ export type AuthStackParamList = {
   Intro: undefined;
   SignIn: undefined;
   SetNickname: {phone: string};
-  PhoneVerify: {accessToken: string};
+  PhoneVerify: {accessToken: string; type: 'kakao' | 'naver'};
   SocialConnect: {accessToken: string; user: User; type: 'kakao' | 'naver'};
 };
 

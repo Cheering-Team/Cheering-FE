@@ -54,7 +54,10 @@ const SignInScreen = ({
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
-      navigation.navigate('PhoneVerify', {accessToken: token.accessToken});
+      navigation.navigate('PhoneVerify', {
+        accessToken: token.accessToken,
+        type: 'kakao',
+      });
       return;
     }
     if (data.message === '로그인되었습니다.' && data.result) {
@@ -72,17 +75,22 @@ const SignInScreen = ({
       const data = await naverSignIn({
         accessToken: token.successResponse.accessToken,
       });
-      if (data.message === '이미 가입된 유저입니다.' && 'id' in data.result) {
-        navigation.replace('SocialConnect', {
+      if (data.message === '네이버 회원가입이 필요합니다.') {
+        setStatus('phone');
+        setPhone('');
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+        navigation.navigate('PhoneVerify', {
           accessToken: token.successResponse.accessToken,
-          user: data.result,
           type: 'naver',
         });
         return;
-      } else if ('accessToken' in data.result) {
-        const {accessToken: sessionToken, refreshToken} = data.result;
-        showTopToast(insets.top + 20, data.message);
-        signIn?.(sessionToken, refreshToken);
+      }
+      if (data.message === '로그인되었습니다.' && data.result) {
+        const {accessToken, refreshToken} = data.result;
+        showTopToast(insets.bottom + 20, data.message);
+        signIn?.(accessToken, refreshToken);
         return;
       }
     }

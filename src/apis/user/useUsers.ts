@@ -1,7 +1,7 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   checkCode,
-  checkCodeToKakao,
+  checkCodeSocial,
   connectSocial,
   deleteUser,
   getUserInfo,
@@ -24,8 +24,8 @@ export const useCheckCode = () => {
   return useMutation({mutationFn: checkCode});
 };
 
-export const useCheckCodeToKakao = () => {
-  return useMutation({mutationFn: checkCodeToKakao});
+export const useCheckCodeSocial = () => {
+  return useMutation({mutationFn: checkCodeSocial});
 };
 
 export const useSignIn = () => {
