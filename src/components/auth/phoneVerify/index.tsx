@@ -98,7 +98,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
   const handleCheckCodeToSignUp = useCallback(async () => {
     const data = await checkCode({phone, code});
     if (data.message === '인증번호가 일치합니다.') {
-      navigation.replace('SetNickname', {phone});
+      navigation.replace('AgreeTerm', {phone});
       return;
     }
     invalidCode(data.message);

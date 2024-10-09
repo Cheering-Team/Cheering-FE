@@ -54,7 +54,7 @@ const SignInScreen = ({
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
-      navigation.navigate('PhoneVerify', {
+      navigation.navigate('AgreeTerm', {
         accessToken: token.accessToken,
         type: 'kakao',
       });
@@ -81,7 +81,7 @@ const SignInScreen = ({
         if (timerRef.current) {
           clearInterval(timerRef.current);
         }
-        navigation.navigate('PhoneVerify', {
+        navigation.navigate('AgreeTerm', {
           accessToken: token.successResponse.accessToken,
           type: 'naver',
         });

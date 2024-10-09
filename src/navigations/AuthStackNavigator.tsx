@@ -7,13 +7,17 @@ import PhoneVerifyScreen from '../screens/auth/PhoneVerifyScreen';
 import SocialConnectScreen from '../screens/auth/SocialConnectScreen';
 import {User} from 'apis/user/types';
 import LogoSvg from '../../assets/images/logo-text.svg';
+import AgreeTermScreen from 'screens/auth/AgreeTermScreen';
+import PrivacyPolicyScreen from 'screens/moreStack/PrivacyPolicyScreen';
 
 export type AuthStackParamList = {
   Intro: undefined;
   SignIn: undefined;
   SetNickname: {phone: string};
+  AgreeTerm: {phone?: string; accessToken?: string; type?: 'kakao' | 'naver'};
   PhoneVerify: {accessToken: string; type: 'kakao' | 'naver'};
   SocialConnect: {accessToken: string; user: User; type: 'kakao' | 'naver'};
+  PrivacyPolicy: undefined;
 };
 
 const AuthStack = () => {
@@ -66,6 +70,19 @@ const AuthStack = () => {
         }}
       />
       <Stack.Screen
+        name="AgreeTerm"
+        component={AgreeTermScreen}
+        options={{
+          headerTitle: () => <LogoSvg width={200} height={50} />,
+          contentStyle: {
+            borderBottomWidth: 0,
+          },
+          headerTitleAlign: 'center',
+          headerBackVisible: false,
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
         name="SocialConnect"
         component={SocialConnectScreen}
         options={{
@@ -76,6 +93,13 @@ const AuthStack = () => {
           headerTitleAlign: 'center',
           headerBackVisible: false,
           headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicyScreen}
+        options={{
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
