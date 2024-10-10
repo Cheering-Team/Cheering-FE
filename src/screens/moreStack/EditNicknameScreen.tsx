@@ -45,7 +45,7 @@ const EditNicknameScreen = ({
       : await updateUserNickname({nickname});
     if (data.message === '부적절한 단어가 포함되어 있습니다.') {
       setIsNicknameValid(false);
-      setNicknameInvalidMessage(data.message);
+      setNicknameInvalidMessage('부적절한 닉네임입니다.');
     }
     if (data.message === '이미 존재하는 닉네임입니다.') {
       setIsNicknameValid(false);
