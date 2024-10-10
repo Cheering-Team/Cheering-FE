@@ -1,4 +1,4 @@
-package com.cheering
+package com.stardium
 
 import android.os.Build
 import android.view.WindowManager

@@ -217,6 +217,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
               fontSize: 18,
               flex: 1,
               paddingHorizontal: 12,
+              textAlignVertical: 'top',
             }}
           />
           {isImageInfo && <ImageEditInfo fadeAnim={fadeAnim} />}

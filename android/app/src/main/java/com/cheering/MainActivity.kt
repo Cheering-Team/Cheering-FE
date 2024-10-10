@@ -1,4 +1,4 @@
-package com.cheering
+package com.stardium
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

@@ -42,10 +42,9 @@ const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
     useImperativeHandle(ref, () => internalRef.current as TextInput);
 
     return (
-      <Pressable
-        style={[{width: '100%'}, style]}
-        onPress={() => internalRef.current?.focus()}>
-        <View
+      <View style={[{width: '100%'}, style]}>
+        <Pressable
+          onPress={() => internalRef.current?.focus()}
           className={containerStyle}
           style={[
             {
@@ -57,7 +56,6 @@ const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
               paddingBottom: 10,
               paddingHorizontal: 10,
               justifyContent: 'center',
-              backgroundColor: 'white',
             },
           ]}>
           <CustomText
@@ -74,7 +72,7 @@ const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
           <TextInput
             ref={internalRef}
             value={value}
-            style={{fontSize: 16, height: 19, color: 'black'}}
+            className="text-[16px] text-black pl-0 py-0 h-[21]"
             onFocus={e => {
               onFocus?.(e);
               setFocus(true);
@@ -87,7 +85,7 @@ const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
             autoCapitalize="none"
             {...rest}
           />
-        </View>
+        </Pressable>
         <View
           style={{
             height: 27,
@@ -111,7 +109,7 @@ const CustomTextInput = forwardRef<TextInput, CustomTextInputProps>(
             </CustomText>
           )}
         </View>
-      </Pressable>
+      </View>
     );
   },
 );

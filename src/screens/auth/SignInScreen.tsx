@@ -1,6 +1,6 @@
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useContext, useRef, useState} from 'react';
-import {Pressable, View} from 'react-native';
+import {Pressable, TextInput, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {login} from '@react-native-seoul/kakao-login';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';

@@ -1,4 +1,4 @@
-package com.cheering
+package com.stardium
 
 import android.view.View
 import com.facebook.react.ReactPackage
