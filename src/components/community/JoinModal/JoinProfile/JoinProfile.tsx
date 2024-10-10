@@ -83,7 +83,7 @@ const JoinProfile = (props: Props) => {
 
     if (joinData?.message === '부적절한 단어가 포함되어 있습니다.') {
       setIsValid(false);
-      setNicknameInvalidMessage(joinData?.message);
+      setNicknameInvalidMessage('부적절한 닉네임입니다.');
       return;
     }
 
