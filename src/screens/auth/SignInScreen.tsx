@@ -10,15 +10,20 @@ import Close from 'hooks/Close';
 import CustomText from 'components/common/CustomText';
 import KakaoSvg from '../../../assets/images/kakao.svg';
 import NaverSvg from '../../../assets/images/naver.svg';
+import AppleSvg from '../../../assets/images/apple.svg';
 import {AuthContext} from 'navigations/AuthSwitch';
 import {
+  useAppleSignIn,
   useKakaoSignIn,
   useNaverSignIn,
-  useSaveFCMToken,
 } from 'apis/user/useUsers';
 import {showTopToast} from 'utils/toast';
 import PhoneVerify from 'components/auth/phoneVerify';
-import messaging from '@react-native-firebase/messaging';
+import {
+  AppleButton,
+  appleAuth,
+} from '@invertase/react-native-apple-authentication';
+import SignOutScreen from 'screens/moreStack/SignOutScreen';
 
 export type SignInScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -41,6 +46,7 @@ const SignInScreen = ({
 
   const {mutateAsync: kakaoSignIn} = useKakaoSignIn();
   const {mutateAsync: naverSignIn} = useNaverSignIn();
+  const {mutateAsync: appleSignIn} = useAppleSignIn();
 
   const handleKakaoSignIn = async (): Promise<void> => {
     const token = await login();
@@ -96,6 +102,38 @@ const SignInScreen = ({
     }
   };
 
+  const handleAppleSignIn = async () => {
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.FULL_NAME],
+    });
+
+    if (appleAuthRequestResponse.identityToken) {
+      const data = await appleSignIn({
+        accessToken: appleAuthRequestResponse.identityToken,
+        name: `${appleAuthRequestResponse.fullName?.familyName}${appleAuthRequestResponse.fullName?.givenName}`,
+      });
+      if (data.message === '애플 회원가입이 필요합니다.') {
+        setStatus('phone');
+        setPhone('');
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+        navigation.navigate('AgreeTerm', {
+          accessToken: appleAuthRequestResponse.identityToken,
+          type: 'apple',
+        });
+        return;
+      }
+      if (data.message === '로그인되었습니다.' && data.result) {
+        const {accessToken, refreshToken} = data.result;
+        showTopToast(insets.bottom + 20, data.message);
+        signIn?.(accessToken, refreshToken);
+        return;
+      }
+    }
+  };
+
   return (
     <KeyboardAwareScrollView
       enableOnAndroid
@@ -126,7 +164,7 @@ const SignInScreen = ({
         <CustomText
           fontWeight="500"
           className="text-[17px] text-center flex-1 text-black/[0.85]">
-          카카오로 시작하기
+          카카오로 계속하기
         </CustomText>
       </Pressable>
       <Pressable
@@ -136,7 +174,17 @@ const SignInScreen = ({
         <CustomText
           fontWeight="500"
           className="text-[17px] text-center flex-1 text-white">
-          네이버로 시작하기
+          네이버로 계속하기
+        </CustomText>
+      </Pressable>
+      <Pressable
+        className="flex-row items-center bg-white py-[11] px-3 rounded mt-5 border-black border"
+        onPress={handleAppleSignIn}>
+        <AppleSvg width={21} height={21} />
+        <CustomText
+          fontWeight="500"
+          className="text-[17px] text-center flex-1 text-black">
+          Apple로 계속하기
         </CustomText>
       </Pressable>
     </KeyboardAwareScrollView>

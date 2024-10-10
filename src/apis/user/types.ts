@@ -30,11 +30,12 @@ export interface CheckCodeSocialPayload {
   accessToken: string;
   phone: string;
   code: string;
-  type: 'kakao' | 'naver';
+  type: 'kakao' | 'naver' | 'apple';
 }
 
 export interface TokenPayload {
   accessToken: string;
+  name?: string;
 }
 
 export interface SignUpPayload {
@@ -44,7 +45,7 @@ export interface SignUpPayload {
 
 export interface ConnectSocialPayload {
   accessToken: string;
-  type: 'kakao' | 'naver';
+  type: 'kakao' | 'naver' | 'apple';
   userId: number;
 }
 

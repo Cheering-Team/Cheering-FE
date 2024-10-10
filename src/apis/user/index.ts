@@ -56,7 +56,8 @@ export const signUp = async (data: SignUpPayload) => {
 export const kakaoSignIn = async (data: TokenPayload) => {
   const {accessToken} = data;
   const response = await axiosInstance.post<ApiResponse<Token | null>>(
-    `/signin/kakao?accessToken=${encodeURIComponent(accessToken)}`,
+    '/signin/kakao',
+    {accessToken: encodeURIComponent(accessToken)},
   );
   return response.data;
 };
@@ -64,7 +65,17 @@ export const kakaoSignIn = async (data: TokenPayload) => {
 export const naverSignIn = async (data: TokenPayload) => {
   const {accessToken} = data;
   const response = await axiosInstance.post<ApiResponse<Token | null>>(
-    `/signin/naver?accessToken=${encodeURIComponent(accessToken)}`,
+    `/signin/naver`,
+    {accessToken: encodeURIComponent(accessToken)},
+  );
+  return response.data;
+};
+
+export const appleSignIn = async (data: TokenPayload) => {
+  const {accessToken, name} = data;
+  const response = await axiosInstance.post<ApiResponse<Token | null>>(
+    '/signin/apple',
+    {accessToken: encodeURIComponent(accessToken), name},
   );
   return response.data;
 };
@@ -72,8 +83,8 @@ export const naverSignIn = async (data: TokenPayload) => {
 export const checkCodeSocial = async (data: CheckCodeSocialPayload) => {
   const {accessToken, phone, code, type} = data;
   const response = await axiosInstance.post<ApiResponse<Token | User>>(
-    `/phone/code/social?accessToken=${encodeURIComponent(accessToken)}&type=${type}`,
-    {phone, code},
+    `/phone/code/social?type=${type}`,
+    {accessToken: encodeURIComponent(accessToken), phone, code},
   );
   return response.data;
 };
@@ -81,8 +92,8 @@ export const checkCodeSocial = async (data: CheckCodeSocialPayload) => {
 export const connectSocial = async (data: ConnectSocialPayload) => {
   const {accessToken, type, userId} = data;
   const response = await axiosInstance.post<ApiResponse<Token>>(
-    `/connect?accessToken=${encodeURIComponent(accessToken)}&type=${type}`,
-    {userId},
+    `/connect?&type=${type}`,
+    {accessToken: encodeURIComponent(accessToken), userId},
   );
   return response.data;
 };

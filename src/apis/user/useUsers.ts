@@ -1,5 +1,6 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {
+  appleSignIn,
   checkCode,
   checkCodeSocial,
   connectSocial,
@@ -42,6 +43,10 @@ export const useKakaoSignIn = () => {
 
 export const useNaverSignIn = () => {
   return useMutation({mutationFn: naverSignIn});
+};
+
+export const useAppleSignIn = () => {
+  return useMutation({mutationFn: appleSignIn});
 };
 
 export const useConnectSocial = () => {

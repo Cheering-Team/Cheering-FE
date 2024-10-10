@@ -14,9 +14,20 @@ export type AuthStackParamList = {
   Intro: undefined;
   SignIn: undefined;
   SetNickname: {phone: string};
-  AgreeTerm: {phone?: string; accessToken?: string; type?: 'kakao' | 'naver'};
-  PhoneVerify: {accessToken: string; type: 'kakao' | 'naver'};
-  SocialConnect: {accessToken: string; user: User; type: 'kakao' | 'naver'};
+  AgreeTerm: {
+    phone?: string;
+    accessToken?: string;
+    type?: 'kakao' | 'naver' | 'apple';
+  };
+  PhoneVerify: {
+    accessToken: string;
+    type: 'kakao' | 'naver' | 'apple';
+  };
+  SocialConnect: {
+    accessToken: string;
+    user: User;
+    type: 'kakao' | 'naver' | 'apple';
+  };
   PrivacyPolicy: undefined;
 };
 

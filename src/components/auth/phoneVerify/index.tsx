@@ -32,7 +32,7 @@ interface PhoneVerifyProps {
   setPhone: Dispatch<SetStateAction<string>>;
   timerRef: MutableRefObject<NodeJS.Timeout | null>;
   signIn: ((access: string, refresh: string) => void) | undefined;
-  type?: 'default' | 'kakao' | 'naver';
+  type?: 'default' | 'kakao' | 'naver' | 'apple';
   accessToken?: string;
 }
 
@@ -116,7 +116,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
   }, [code, insets.top, invalidCode, phone, signIn, signInApi]);
 
   const handleCheckCodeSocial = useCallback(async () => {
-    if (type === 'kakao' || type === 'naver') {
+    if (type === 'kakao' || type === 'naver' || type === 'apple') {
       const data = await checkCodeSocial({
         accessToken,
         phone,
@@ -168,7 +168,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
 
   useEffect(() => {
     if (code.length === 6) {
-      if (type === 'kakao' || type === 'naver') {
+      if (type === 'kakao' || type === 'naver' || type === 'apple') {
         handleCheckCodeSocial();
       } else if (user) {
         handleCheckCodeToSignIn();
