@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import FeedFilter from '../FeedFilter';
 import {useFeedList} from './useFeedList';
 import {ListRenderItem, Pressable, RefreshControl} from 'react-native';
-import {PostInfoResponse} from '../../../types/post';
 import FeedPost from '../FeedPost';
 import ListLoading from '../../common/ListLoading/ListLoading';
 import ListEmpty from '../../common/ListEmpty/ListEmpty';
@@ -11,6 +10,7 @@ import NotJoin from '../NotJoin';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PlusSvg from '../../../../assets/images/plus-gray.svg';
 import {useNavigation} from '@react-navigation/native';
+import {Post} from 'apis/post/types';
 
 interface Props {
   playerData: any;
@@ -35,7 +35,7 @@ const FeedList = (props: Props) => {
     loadFeed,
   } = useFeedList(playerData);
 
-  const renderFeed: ListRenderItem<PostInfoResponse> = ({item}) => (
+  const renderFeed: ListRenderItem<Post> = ({item}) => (
     <FeedPost feed={item} type="community" />
   );
 
@@ -78,7 +78,7 @@ const FeedList = (props: Props) => {
           ) : isLoading ? (
             <ListLoading />
           ) : (
-            <ListEmpty />
+            <ListEmpty type="feed" />
           )
         }
         refreshControl={
@@ -109,6 +109,7 @@ const FeedList = (props: Props) => {
             },
             shadowOpacity: 0.2,
             shadowRadius: 2,
+            elevation: 3,
           }}
           onPress={() => {
             navigation.navigate('PostWrite', {playerId: playerData.id});

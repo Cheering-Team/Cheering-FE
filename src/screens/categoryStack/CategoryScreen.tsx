@@ -3,6 +3,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Platform,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -15,6 +16,7 @@ import {useGetLeagues, useGetSports, useGetTeams} from 'apis/player/usePlayers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
 import {SvgUri} from 'react-native-svg';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type CategoryScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -26,6 +28,7 @@ const CategoryScreen = ({
 }: {
   navigation: CategoryScreenNavigationProp;
 }) => {
+  const insets = useSafeAreaInsets();
   const [selectedSport, setSelectedSport] = useState<number | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<number | null>(null);
 
@@ -48,7 +51,8 @@ const CategoryScreen = ({
   return (
     <SafeAreaView className="flex-1">
       <Pressable
-        className="flex-row py-3 px-4 border-b-gray-200 border-b"
+        className="flex-row pb-3 px-4 border-b-gray-200 border-b"
+        style={{paddingTop: Platform.OS === 'ios' ? 12 : insets.top + 12}}
         onPress={() => navigation.navigate('Search')}>
         <View className="flex-1 flex-row bg-[#f0f0f0] h-10 rounded justify-between items-center px-3">
           <CustomText fontWeight="400" className="text-base text-[#777777]">
@@ -76,8 +80,8 @@ const CategoryScreen = ({
                 <View className="p-[5]">
                   <SvgUri
                     uri={item.image}
-                    width={45}
-                    height={45}
+                    width={35}
+                    height={35}
                     className="rounded-lg border border-slate-100 mb-1"
                   />
                 </View>

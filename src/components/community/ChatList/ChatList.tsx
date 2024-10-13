@@ -71,6 +71,7 @@ const ChatList = (props: Props) => {
             },
             shadowOpacity: 0.2,
             shadowRadius: 2,
+            elevation: 3,
           }}
           onPress={() => {
             navigation.navigate('CreateChatRoom', {playerId: playerData.id});

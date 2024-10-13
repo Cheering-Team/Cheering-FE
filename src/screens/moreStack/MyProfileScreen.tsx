@@ -1,11 +1,11 @@
 import React from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
-import BackSvg from '../../../assets/images/arrow-left.svg';
 import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
 import CustomText from '../../components/common/CustomText';
 import {useGetUserInfo} from 'apis/user/useUsers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {MoreStackParamList} from 'navigations/MoreStackNavigator';
+import StackHeader from 'components/common/StackHeader';
 
 type MyProfileScreenNavigationProp = NativeStackNavigationProp<
   MoreStackParamList,
@@ -25,16 +25,7 @@ const MyProfileScreen = ({
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-row justify-between items-center p-[10]">
-        <Pressable onPress={() => navigation.goBack()}>
-          <BackSvg width={32} height={32} />
-        </Pressable>
-
-        <CustomText fontWeight="600" className="text-xl">
-          내 정보 수정
-        </CustomText>
-        <View className="w-8 h-8" />
-      </View>
+      <StackHeader title="내 정보 수정" type="back" />
       <View className="p-5">
         <Pressable
           className="border border-slate-200 p-[18] flex-row items-center justify-between rounded-lg"
@@ -56,6 +47,18 @@ const MyProfileScreen = ({
             <ChevronRightSvg width={13} height={13} />
           </View>
         </Pressable>
+        {data.result.role === 'ROLE_ADMIN' && (
+          <Pressable
+            className="border border-slate-200 p-[18] flex-row items-center justify-between rounded-lg mt-4"
+            onPress={() => navigation.navigate('Admin')}>
+            <CustomText fontWeight="600" className="text-lg">
+              관리자
+            </CustomText>
+            <View className="flex-row items-center">
+              <ChevronRightSvg width={13} height={13} />
+            </View>
+          </Pressable>
+        )}
         <View className="flex-row justify-center mt-7">
           <Pressable onPress={() => navigation.replace('SignOut')}>
             <CustomText className="text-gray-400 text-base">

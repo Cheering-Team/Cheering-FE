@@ -45,6 +45,7 @@ import DrawerSvg from '../../../assets/images/drawer.svg';
 import ExitSvg from '../../../assets/images/exit-gray.svg';
 import AlertModal from 'components/common/AlertModal/AlertModal';
 import {showBottomToast} from 'utils/toast';
+import SockJS from 'sockjs-client';
 
 const TextEncodingPolyfill = require('text-encoding');
 
@@ -82,35 +83,40 @@ const ChatRoomScreen = ({route}) => {
     const accessToken = await EncryptedStorage.getItem('accessToken');
 
     if (accessToken) {
+      const socket = new SockJS('http://172.30.1.14:8080/ws');
       client.current = new StompJs.Client({
-        brokerURL: 'ws://15.165.150.47/ws',
-        onConnect: () => {
-          subscribe();
-
-          setTimeout(() => {
-            refetch();
-            setIsLoading(false);
-          }, 500);
-        },
-        onStompError: async frame => {
-          if (frame.body === '토큰이 만료되었습니다.') {
-            client.current?.deactivate();
-
-            const tokenData = await reIssueToken();
-
-            const {accessToken: newToken, refreshToken} = tokenData.result;
-
-            await EncryptedStorage.setItem('accessToken', newToken);
-            await EncryptedStorage.setItem('refreshToken', refreshToken);
-
-            setIsRefresh(true);
-          }
-        },
-        connectHeaders: {
-          Authorization: accessToken,
-          chatRoomId: chatRoomId,
-        },
+        webSocketFactory: () => socket,
+        reconnectDelay: 5000, // 자동 재연결
+        heartbeatIncoming: 4000, // 서버에서 수신할 heartbeat 설정
+        heartbeatOutgoing: 4000, // 서버로 전송할 heartbeat 설정
       });
+      client.current.onConnect = () => {
+        subscribe();
+
+        setTimeout(() => {
+          refetch();
+          setIsLoading(false);
+        }, 500);
+      };
+      client.current.connectHeaders = {
+        Authorization: accessToken,
+        chatRoomId: chatRoomId,
+      };
+      client.current.onStompError = async frame => {
+        if (frame.body === '토큰이 만료되었습니다.') {
+          client.current?.deactivate();
+
+          const tokenData = await reIssueToken();
+
+          const {accessToken: newToken, refreshToken} = tokenData.result;
+
+          await EncryptedStorage.setItem('accessToken', newToken);
+          await EncryptedStorage.setItem('refreshToken', refreshToken);
+
+          setIsRefresh(true);
+        }
+      };
+
       client.current.activate();
     }
   };
@@ -331,7 +337,7 @@ const ChatRoomScreen = ({route}) => {
               data={participants?.result}
               contentContainerStyle={{
                 paddingHorizontal: 15,
-                paddingVertical: 5,
+                paddingTop: Platform.OS === 'ios' ? 5 : insets.top + 5,
               }}
               ListHeaderComponent={
                 <>
@@ -428,15 +434,15 @@ const ChatRoomScreen = ({route}) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={-insets.bottom}>
         <View style={{position: 'absolute', width: '100%', zIndex: 5, flex: 1}}>
-          <BlurView
+          <View
             className="justify-between flex-1"
-            blurType="light"
             style={{
               height: insets.top + 50,
               paddingTop: insets.top,
               flexDirection: 'row',
               paddingHorizontal: 5,
               alignItems: 'center',
+              backgroundColor: 'white',
             }}>
             <Pressable onPress={() => navigation.goBack()}>
               <ChevronLeftSvg width={35} height={35} />
@@ -481,7 +487,7 @@ const ChatRoomScreen = ({route}) => {
             <Pressable onPress={() => setIsDrawerOpen(true)}>
               <DrawerSvg width={27} height={27} style={{marginRight: 5}} />
             </Pressable>
-          </BlurView>
+          </View>
           {data?.result.description !== '' && (
             <View
               className="mt-[5] mx-[10] rounded-[10px] bg-white py-[10] px-[15] flex-row border border-[#eeeeee]"
@@ -563,44 +569,42 @@ const ChatRoomScreen = ({route}) => {
             </Pressable>
           )}
           <View
+            className="p-2"
             style={{
-              padding: 8,
               paddingBottom: insets.bottom + 8,
             }}>
-            <TextInput
-              multiline
-              value={text}
-              onChangeText={setText}
-              maxLength={150}
-              style={{
-                minHeight: 40,
-                maxHeight: 100,
-                paddingTop: 11,
-                paddingBottom: 10,
-                backgroundColor: '#f5f5f5',
-                borderRadius: 20,
-                fontSize: 16,
-                paddingLeft: 15,
-                paddingRight: 50,
-              }}
-            />
-            <Pressable
-              disabled={text.trim().length === 0}
-              onPress={sendMessage}
-              style={[
-                {
-                  backgroundColor: 'black',
-                  position: 'absolute',
-                  paddingHorizontal: 13,
-                  paddingVertical: 9,
-                  borderRadius: 20,
-                  bottom: insets.bottom + 12,
-                  right: 12,
-                },
-                text.trim().length === 0 && {backgroundColor: '#a1a1a1'},
-              ]}>
-              <ArrowSvg width={15} height={15} />
-            </Pressable>
+            <View
+              className="flex-row bg-[#f5f5f5] rounded-[20px] justify-between pl-3"
+              style={{paddingVertical: Platform.OS === 'ios' ? 9 : 7}}>
+              <TextInput
+                multiline
+                value={text}
+                onChangeText={setText}
+                maxLength={150}
+                className="text-base flex-1 p-0 m-0"
+                style={{
+                  fontFamily: 'NotoSansKR-Regular',
+                  includeFontPadding: false,
+                }}
+              />
+              <Pressable
+                disabled={text.trim().length === 0}
+                onPress={sendMessage}
+                style={[
+                  {
+                    position: 'absolute',
+                    right: 5,
+                    bottom: 4,
+                    backgroundColor: 'black',
+                    paddingHorizontal: 13,
+                    paddingVertical: 9,
+                    borderRadius: 20,
+                  },
+                  text.trim().length === 0 && {backgroundColor: '#a1a1a1'},
+                ]}>
+                <ArrowSvg width={15} height={15} />
+              </Pressable>
+            </View>
           </View>
         </View>
       </KeyboardAvoidingView>

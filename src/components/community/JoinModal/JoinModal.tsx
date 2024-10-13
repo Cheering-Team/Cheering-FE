@@ -55,7 +55,8 @@ const JoinModal = (props: Props) => {
       snapPoints={snapPoints}
       backdropComponent={renderBackdrop}
       keyboardBlurBehavior="restore"
-      keyboardBehavior="interactive">
+      keyboardBehavior="interactive"
+      android_keyboardInputMode="adjustResize">
       <BottomSheetView
         style={[styles.contentContainer, {paddingBottom: insets.bottom + 20}]}>
         <JoinProfile

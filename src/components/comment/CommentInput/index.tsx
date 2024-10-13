@@ -1,5 +1,5 @@
 import React, {Dispatch, FC, RefObject, SetStateAction, useState} from 'react';
-import {Keyboard, Pressable, TextInput, View} from 'react-native';
+import {Keyboard, Platform, Pressable, TextInput, View} from 'react-native';
 import CustomText from '../../common/CustomText';
 import CloseSvg from '../../../../assets/images/x_white.svg';
 import ArrowSvg from '../../../../assets/images/arrow_up.svg';
@@ -118,42 +118,47 @@ const CommentInput: FC<CommentInputProps> = props => {
       )}
       <View
         style={{
-          padding: 10,
-          paddingBottom: insets.bottom + 10,
+          paddingHorizontal: 8,
+          paddingBottom: insets.bottom + 5,
+          paddingTop: 5,
           borderTopWidth: 1,
           borderTopColor: '#eeeeee',
         }}>
-        <TextInput
-          ref={inputRef}
-          multiline
-          placeholder="댓글 남기기..."
-          value={comment}
-          onChangeText={setComment}
-          maxLength={999}
-          style={{
-            backgroundColor: '#f5f5f5',
-            paddingBottom: 11,
-            paddingTop: 11,
-            paddingLeft: 15,
-            paddingRight: 45,
-            borderRadius: 20,
-            fontSize: 15,
-          }}
-          placeholderTextColor={'#929292'}
-        />
-        <Pressable
-          style={{
-            backgroundColor: 'black',
-            position: 'absolute',
-            paddingHorizontal: 12,
-            paddingVertical: 7,
-            borderRadius: 20,
-            right: 16,
-            bottom: insets.bottom + 15,
-          }}
-          onPress={under ? handleWriteReComment : handleWriteComment}>
-          <ArrowSvg width={15} height={15} />
-        </Pressable>
+        <View
+          className="flex-row bg-[#f5f5f5] rounded-[20px] justify-between pl-3"
+          style={{paddingVertical: Platform.OS === 'ios' ? 9 : 6}}>
+          <TextInput
+            ref={inputRef}
+            multiline
+            placeholder="댓글 남기기..."
+            value={comment}
+            onChangeText={setComment}
+            maxLength={999}
+            className="text-[14px] flex-1 p-0 m-0"
+            style={{
+              fontFamily: 'NotoSansKR-Regular',
+              includeFontPadding: false,
+            }}
+            allowFontScaling={false}
+            placeholderTextColor={'#929292'}
+          />
+          <Pressable
+            style={[
+              {
+                position: 'absolute',
+                right: 5,
+                bottom: 3,
+                backgroundColor: 'black',
+                paddingHorizontal: 13,
+                paddingVertical: 9,
+                borderRadius: 20,
+              },
+              comment.trim().length === 0 && {backgroundColor: '#a1a1a1'},
+            ]}
+            onPress={under ? handleWriteReComment : handleWriteComment}>
+            <ArrowSvg width={15} height={15} />
+          </Pressable>
+        </View>
       </View>
     </>
   );

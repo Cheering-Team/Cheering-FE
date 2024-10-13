@@ -1,5 +1,5 @@
 import React, {useLayoutEffect} from 'react';
-import {Image, Pressable, SafeAreaView, View} from 'react-native';
+import {Image, Platform, Pressable, SafeAreaView, View} from 'react-native';
 import Back from '../../hooks/Back';
 import CustomText from '../../components/common/CustomText';
 import PlayerList from '../../components/common/PlayerList';
@@ -10,6 +10,8 @@ import {RouteProp} from '@react-navigation/native';
 import ChevronRightGraySvg from '../../../assets/images/chevron-right-gray.svg';
 import StarOrangeSvg from '../../../assets/images/star-orange.svg';
 import {formatComma} from 'utils/format';
+import StackHeader from 'components/common/StackHeader';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type PlayerListScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -28,19 +30,10 @@ const PlayerListScreen = ({
   navigation: PlayerListScreenNavigationProp;
   route: PlayerListScreenRouteProp;
 }) => {
-  Back(navigation);
-
+  const insets = useSafeAreaInsets();
   const teamId = route.params.teamId;
 
   const {data, isLoading} = useGetPlayersByTeam(teamId);
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: data
-        ? `${data?.result.sportName} / ${data?.result.leagueName}`
-        : '',
-    });
-  }, [navigation, data]);
 
   if (isLoading || !data) {
     return <></>;
@@ -48,7 +41,13 @@ const PlayerListScreen = ({
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="absolute z-10 bg-white w-full h-20 flex-row items-center px-[15] border-t border-t-[#efefef] rounded-b-2xl">
+      <StackHeader
+        title={`${data.result.sportName}/${data.result.leagueName}`}
+        type="back"
+      />
+      <View
+        className="absolute z-10 bg-white w-full h-20 flex-row items-center px-[15] border-t border-t-[#efefef] rounded-b-2xl"
+        style={{top: insets.top + 48}}>
         <Image
           source={{
             uri: data.result.team.image,

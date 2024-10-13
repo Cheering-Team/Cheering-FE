@@ -53,11 +53,11 @@ export const useGetTeams = (leagueId: number | null) => {
 };
 
 // 선수 검색
-export const useGetPlayers = (name: string) => {
+export const useGetPlayers = (name: string, enabled: boolean) => {
   return useQuery({
     queryKey: playerKeys.lists(),
     queryFn: () => getPlayers(name),
-    enabled: false,
+    enabled: enabled,
   });
 };
 

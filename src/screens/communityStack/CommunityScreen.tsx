@@ -58,6 +58,7 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
             handlePresentModalPress={handlePresentModalPress}
           />
         </Tabs.Tab>
+
         <Tabs.Tab name="채팅">
           <ChatList
             playerData={playerData.result}

@@ -9,7 +9,6 @@ import {
   Player,
   PlayerUserIdPayload,
   Sport,
-  Team,
   TeamName,
   UpdatedPlayerUserImagePayload,
   UpdatedPlayerUserNicknamePayload,

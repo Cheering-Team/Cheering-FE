@@ -1,8 +1,9 @@
 import React, {Dispatch, SetStateAction} from 'react';
-import {Pressable, View} from 'react-native';
+import {Platform, Pressable, View} from 'react-native';
 import CustomText from '../../common/CustomText';
 import {TagData} from './TagList';
 import {FilterType} from '../../../screens/communityStack/PostWriteScreen';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface TagModalProps {
   selectedTag: FilterType;
@@ -11,6 +12,7 @@ interface TagModalProps {
 
 const TagModal = (props: TagModalProps) => {
   const {selectedTag, setSelectedTag} = props;
+  const insets = useSafeAreaInsets();
 
   const selectTag = (tag: 'photo' | 'viewing' | 'information') => {
     setSelectedTag(prev => ({
@@ -26,7 +28,7 @@ const TagModal = (props: TagModalProps) => {
         flexDirection: 'row',
         flexWrap: 'wrap',
         position: 'absolute',
-        top: 45,
+        top: Platform.OS === 'android' ? insets.top + 45 : 45,
         zIndex: 2,
         paddingTop: 12,
         paddingHorizontal: 12,

@@ -8,6 +8,7 @@ import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import {showBottomToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import StackHeader from 'components/common/StackHeader';
 
 const ChatRoomEnterScreen = ({route}) => {
   const {chatRoomId} = route.params;
@@ -22,11 +23,7 @@ const ChatRoomEnterScreen = ({route}) => {
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="h-[48] px-[5] flex-row justify-between items-center bg-white border-b border-b-[#eeeeee]">
-        <Pressable onPress={() => navigation.goBack()}>
-          <CloseSvg width={32} height={32} />
-        </Pressable>
-      </View>
+      <StackHeader type="close" />
       <View className="px-[15] py-[10] justify-between flex-1">
         <View className="flex-1 items-center pt-10">
           <Avatar uri={data.result.image} size={120} />

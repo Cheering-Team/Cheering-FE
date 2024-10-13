@@ -1,5 +1,12 @@
 import React, {Dispatch, SetStateAction} from 'react';
-import {Animated, Image, Pressable, TouchableOpacity, View} from 'react-native';
+import {
+  Animated,
+  Image,
+  Platform,
+  Pressable,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import DraggableFlatList, {
   ScaleDecorator,
 } from 'react-native-draggable-flatlist';
@@ -96,7 +103,10 @@ const WriteFooter = (props: WriterFooterProps) => {
 
       const imageObj = images.map(image => ({
         uri: image.path,
-        name: image.filename,
+        name:
+          Platform.OS === 'ios'
+            ? image.filename
+            : image.path.substring(image.path.lastIndexOf('/') + 1),
         type: image.mime,
       }));
 

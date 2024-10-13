@@ -22,7 +22,7 @@ const PostHeader = (props: PostHeaderProps) => {
         alignItems: 'center',
         height: 45,
         paddingRight: 17,
-        paddingLeft: 10,
+        paddingLeft: 5,
       }}>
       <Pressable
         onPress={() => {

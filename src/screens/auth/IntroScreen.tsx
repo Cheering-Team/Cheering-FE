@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {AuthStackParamList} from '../../navigations/AuthStackNavigator';
@@ -11,8 +11,6 @@ type IntroScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
   'Intro'
 >;
-
-const INTRO_DATA = [{image: ''}];
 
 const IntroScreen = ({navigation}: {navigation: IntroScreenNavigationProp}) => {
   const insets = useSafeAreaInsets();

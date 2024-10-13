@@ -7,6 +7,7 @@ import {useGetNoticeById} from 'apis/notice/useNotices';
 import {formatDate} from 'utils/format';
 import PlayerForm from 'components/notice/PlayerForm';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import StackHeader from 'components/common/StackHeader';
 
 const NoticeScreen = ({navigation, route}) => {
   const {noticeId} = route.params;
@@ -15,16 +16,7 @@ const NoticeScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView className="flex-1 pb-10">
-      <View className="h-[48] px-[5] flex-row justify-between items-center bg-white border-b border-b-[#eeeeee]">
-        <Pressable onPress={() => navigation.goBack()}>
-          <CloseSvg width={32} height={32} />
-        </Pressable>
-
-        <CustomText fontWeight="500" className="text-lg">
-          공지사항
-        </CustomText>
-        <View className="w-8 h-8" />
-      </View>
+      <StackHeader title="공지사항" type="close" />
       {data && (
         <KeyboardAwareScrollView className="flex-1 p-3">
           <View className="border-b border-b-gray-100 mb-5">

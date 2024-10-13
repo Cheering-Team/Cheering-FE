@@ -11,6 +11,7 @@ import {
   useUpdatePlayerUserImage,
 } from '../../apis/player/usePlayers';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import StackHeader from 'components/common/StackHeader';
 
 const ProfileEditScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;
@@ -54,22 +55,7 @@ const ProfileEditScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: 10,
-        }}>
-        <Pressable onPress={() => navigation.goBack()}>
-          <BackSvg width={32} height={32} />
-        </Pressable>
-
-        <CustomText fontWeight="600" style={{fontSize: 20}}>
-          내 정보 수정
-        </CustomText>
-        <View style={{width: 32, height: 32}} />
-      </View>
+      <StackHeader title="내 정보 수정" type="back" />
       <View style={{padding: 20, alignItems: 'center'}}>
         <Pressable
           onPress={() => {

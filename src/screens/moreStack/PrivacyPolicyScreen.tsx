@@ -1,17 +1,13 @@
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
 import React from 'react';
-import {Pressable, SafeAreaView, View} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import WebView from 'react-native-webview';
-import BackSvg from '../../../assets/images/chevron-left.svg';
+import StackHeader from 'components/common/StackHeader';
 
 const PrivacyPolicyScreen = ({navigation}) => {
   return (
     <SafeAreaView className="flex-1">
-      <View className="h-[48] px-[5] flex-row items-center bg-white border-b border-b-[#eeeeee]">
-        <Pressable onPress={() => navigation.goBack()}>
-          <BackSvg width={32} height={32} />
-        </Pressable>
-      </View>
+      <StackHeader type="back" />
       <WebView
         style={{width: WINDOW_WIDTH, height: WINDOW_HEIGHT}}
         source={{

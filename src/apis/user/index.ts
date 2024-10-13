@@ -1,9 +1,11 @@
+import {PlayerIdPayload} from 'apis/player/types';
 import {axiosInstance} from '../index';
 import {ApiResponse} from '../types';
 import {
   CheckCodePayload,
   CheckCodeSocialPayload,
   ConnectSocialPayload,
+  RegisterPlayerAccountPayload,
   SaveFCMTokenPayload,
   SendSMSPayload,
   SignUpPayload,
@@ -12,6 +14,7 @@ import {
   UpdateUserNicknamePayload,
   User,
 } from './types';
+import {userKeys} from './queries';
 
 export const sendSMS = async (data: SendSMSPayload) => {
   const response = await axiosInstance.post<ApiResponse<User | null>>(
@@ -57,7 +60,7 @@ export const kakaoSignIn = async (data: TokenPayload) => {
   const {accessToken} = data;
   const response = await axiosInstance.post<ApiResponse<Token | null>>(
     '/signin/kakao',
-    {accessToken: encodeURIComponent(accessToken)},
+    {accessToken},
   );
   return response.data;
 };
@@ -66,7 +69,7 @@ export const naverSignIn = async (data: TokenPayload) => {
   const {accessToken} = data;
   const response = await axiosInstance.post<ApiResponse<Token | null>>(
     `/signin/naver`,
-    {accessToken: encodeURIComponent(accessToken)},
+    {accessToken},
   );
   return response.data;
 };
@@ -75,7 +78,7 @@ export const appleSignIn = async (data: TokenPayload) => {
   const {accessToken, name} = data;
   const response = await axiosInstance.post<ApiResponse<Token | null>>(
     '/signin/apple',
-    {accessToken: encodeURIComponent(accessToken), name},
+    {accessToken, name},
   );
   return response.data;
 };
@@ -84,7 +87,7 @@ export const checkCodeSocial = async (data: CheckCodeSocialPayload) => {
   const {accessToken, phone, code, type} = data;
   const response = await axiosInstance.post<ApiResponse<Token | User>>(
     `/phone/code/social?type=${type}`,
-    {accessToken: encodeURIComponent(accessToken), phone, code},
+    {accessToken, phone, code},
   );
   return response.data;
 };
@@ -93,7 +96,7 @@ export const connectSocial = async (data: ConnectSocialPayload) => {
   const {accessToken, type, userId} = data;
   const response = await axiosInstance.post<ApiResponse<Token>>(
     `/connect?&type=${type}`,
-    {accessToken: encodeURIComponent(accessToken), userId},
+    {accessToken, userId},
   );
   return response.data;
 };
@@ -127,5 +130,28 @@ export const saveFCMToken = async (data: SaveFCMTokenPayload) => {
 
 export const deleteFCMToken = async () => {
   const response = await axiosInstance.delete<ApiResponse<null>>('/fcm-token');
+  return response.data;
+};
+
+export const registerPlayerAccount = async (
+  data: RegisterPlayerAccountPayload,
+) => {
+  const {playerId, phone} = data;
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/users/player-account/${playerId}`,
+    {phone},
+  );
+  return response.data;
+};
+
+export const getPlayerAccountInfo = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof userKeys.playerAccount>;
+}) => {
+  const [, , playerId] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<SendSMSPayload | null>>(
+    `/users/player-account/${playerId}`,
+  );
   return response.data;
 };

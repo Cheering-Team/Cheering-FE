@@ -79,19 +79,18 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
   );
 
   const handleSendCode = async (): Promise<void> => {
-    if (!PHONE_REGEX.test(phone)) {
+    const data = await sendSMS({phone});
+    if (data.message === '올바르지 않은 휴대폰 번호입니다.') {
       setPhoneValid('invalid');
-    } else {
-      const data = await sendSMS({phone});
-      if (data.message === '인증번호가 전송되었습니다.') {
-        setLimitTime(300);
-        setStatus('code');
-        setCode('');
-        setCodeValid(true);
-        setUser(data.result);
-        showTopToast(insets.top + 20, data.message);
-        customTextInputRef.current?.focus();
-      }
+    }
+    if (data.message === '인증번호가 전송되었습니다.') {
+      setLimitTime(300);
+      setStatus('code');
+      setCode('');
+      setCodeValid(true);
+      setUser(data.result);
+      showTopToast(insets.top + 20, data.message);
+      customTextInputRef.current?.focus();
     }
   };
 

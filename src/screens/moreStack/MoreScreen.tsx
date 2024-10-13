@@ -8,6 +8,7 @@ import {MoreStackParamList} from 'navigations/MoreStackNavigator';
 import BellSvg from '../../../assets/images/bell-line.svg';
 import NoticeSvg from '../../../assets/images/megaphone-black.svg';
 import LockSvg from '../../../assets/images/lock.svg';
+import StackHeader from 'components/common/StackHeader';
 
 type MoreScreenNavigationProp = NativeStackNavigationProp<
   MoreStackParamList,
@@ -23,11 +24,7 @@ const MoreScreen = ({navigation}: {navigation: MoreScreenNavigationProp}) => {
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="h-[48] flex-row justify-center items-center bg-white border-b border-b-[#eeeeee]">
-        <CustomText fontWeight="500" className="text-lg pb-0">
-          계정 및 설정
-        </CustomText>
-      </View>
+      <StackHeader title="계정 및 설정" type="none" />
       <ScrollView className="flex-1">
         <View className="pt-3 px-3 bg-white">
           <CustomText fontWeight="500" className="color-[#5c5c5c] text-[13px]">

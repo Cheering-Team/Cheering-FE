@@ -98,7 +98,11 @@ function App(): React.JSX.Element {
         <GestureHandlerRootView style={{flex: 1}}>
           <BottomSheetModalProvider>
             <NavigationContainer theme={navTheme} ref={navigationRef}>
-              <StatusBar barStyle="dark-content" />
+              <StatusBar
+                barStyle="dark-content"
+                translucent={true}
+                backgroundColor="transparent"
+              />
               <AuthSwitch />
             </NavigationContainer>
             <Toast config={toastConfig} />

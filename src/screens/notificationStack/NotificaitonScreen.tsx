@@ -20,6 +20,7 @@ import {notificationKeys} from '../../apis/notification/queries';
 import ListLoading from '../../components/common/ListLoading/ListLoading';
 import ListEmpty from '../../components/common/ListEmpty/ListEmpty';
 import {formatBeforeDate} from '../../utils/format';
+import StackHeader from 'components/common/StackHeader';
 
 const NotificationScreen = ({navigation}) => {
   const insets = useSafeAreaInsets();
@@ -168,11 +169,7 @@ const NotificationScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View className="h-[48] flex-row justify-center items-center bg-white border-b border-b-[#eeeeee]">
-        <CustomText fontWeight="500" className="text-lg pb-0">
-          알림
-        </CustomText>
-      </View>
+      <StackHeader title="알림" type="none" />
       {data ? (
         <FlatList
           ref={flatListRef}

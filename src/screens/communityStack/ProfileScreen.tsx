@@ -2,6 +2,7 @@ import React, {useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Dimensions,
+  Platform,
   Pressable,
   RefreshControl,
   SafeAreaView,
@@ -18,9 +19,11 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useBlockUser, useGetPlayerUserInfo} from '../../apis/player/usePlayers';
 import {useGetPlayerUserPosts} from '../../apis/post/usePosts';
 import AlertModal from 'components/common/AlertModal/AlertModal';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const ProfileScreen = ({navigation, route}) => {
   const {playerUserId} = route.params;
+  const insets = useSafeAreaInsets();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -67,6 +70,7 @@ const ProfileScreen = ({navigation, route}) => {
           height: 45,
           paddingLeft: 8,
           paddingRight: 11,
+          marginTop: Platform.OS === 'android' ? insets.top : undefined,
         }}>
         <Pressable onPress={() => navigation.goBack()}>
           <CloseSvg width={30} height={30} />

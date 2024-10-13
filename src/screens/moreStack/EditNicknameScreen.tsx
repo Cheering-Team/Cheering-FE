@@ -12,6 +12,7 @@ import {useUpdateUserNickname} from 'apis/user/useUsers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import StackHeader from 'components/common/StackHeader';
 
 type EditNicknameScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
@@ -63,16 +64,7 @@ const EditNicknameScreen = ({
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-row justify-between items-center p-[10]">
-        <Pressable onPress={() => navigation.goBack()}>
-          <BackSvg width={32} height={32} />
-        </Pressable>
-
-        <CustomText fontWeight="600" className="text-xl">
-          닉네임 변경
-        </CustomText>
-        <View className="w-8 h-8" />
-      </View>
+      <StackHeader title="닉네임 변경" type="back" />
       <View className="flex-1 p-4">
         <CustomText fontWeight="500" className="text-[17px] mb-4">
           새로운 닉네임을 입력해주세요

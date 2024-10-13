@@ -1,26 +1,17 @@
 import CustomText from 'components/common/CustomText';
 import React from 'react';
 import {FlatList, Pressable, SafeAreaView, View} from 'react-native';
-import BackSvg from '../../../assets/images/chevron-left.svg';
 import {useGetNotices} from 'apis/notice/useNotices';
 import {formatBeforeDate} from 'utils/format';
 import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
+import StackHeader from 'components/common/StackHeader';
 
 const NoticeListScreen = ({navigation}) => {
   const {data} = useGetNotices();
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="h-[48] px-[5] flex-row justify-between items-center bg-white border-b border-b-[#eeeeee]">
-        <Pressable onPress={() => navigation.goBack()}>
-          <BackSvg width={32} height={32} />
-        </Pressable>
-
-        <CustomText fontWeight="500" className="text-lg pb-0">
-          공지사항
-        </CustomText>
-        <View className="w-8 h-8" />
-      </View>
+      <StackHeader title="공지사항" type="back" />
       {data && (
         <FlatList
           data={data.result}

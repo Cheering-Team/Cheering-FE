@@ -1,6 +1,6 @@
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useContext, useRef, useState} from 'react';
-import {Pressable, TextInput, View} from 'react-native';
+import {Platform, Pressable, TextInput, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {login} from '@react-native-seoul/kakao-login';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -19,11 +19,7 @@ import {
 } from 'apis/user/useUsers';
 import {showTopToast} from 'utils/toast';
 import PhoneVerify from 'components/auth/phoneVerify';
-import {
-  AppleButton,
-  appleAuth,
-} from '@invertase/react-native-apple-authentication';
-import SignOutScreen from 'screens/moreStack/SignOutScreen';
+import {appleAuth} from '@invertase/react-native-apple-authentication';
 
 export type SignInScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -143,7 +139,6 @@ const SignInScreen = ({
       <CustomText fontWeight="600" className="mt-[15] mb-[18] text-2xl ml-[3]">
         휴대폰 번호로 시작하기
       </CustomText>
-
       <PhoneVerify
         status={status}
         setStatus={setStatus}
@@ -177,16 +172,18 @@ const SignInScreen = ({
           네이버로 계속하기
         </CustomText>
       </Pressable>
-      <Pressable
-        className="flex-row items-center bg-white py-[11] px-3 rounded mt-5 border-black border"
-        onPress={handleAppleSignIn}>
-        <AppleSvg width={21} height={21} />
-        <CustomText
-          fontWeight="500"
-          className="text-[17px] text-center flex-1 text-black">
-          Apple로 계속하기
-        </CustomText>
-      </Pressable>
+      {Platform.OS === 'ios' && (
+        <Pressable
+          className="flex-row items-center bg-white py-[11] px-3 rounded mt-5 border-black border"
+          onPress={handleAppleSignIn}>
+          <AppleSvg width={21} height={21} />
+          <CustomText
+            fontWeight="500"
+            className="text-[17px] text-center flex-1 text-black">
+            Apple로 계속하기
+          </CustomText>
+        </Pressable>
+      )}
     </KeyboardAwareScrollView>
   );
 };

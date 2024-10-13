@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   ListRenderItem,
+  PermissionsAndroid,
+  Platform,
   Pressable,
   RefreshControl,
   View,
@@ -157,10 +159,20 @@ const HomeScreen = () => {
     );
 
     const requestPermission = async () => {
-      const authorizationStatus = await messaging().requestPermission();
+      if (Platform.OS === 'ios') {
+        const authorizationStatus = await messaging().requestPermission();
 
-      if (authorizationStatus) {
-        getToken();
+        if (authorizationStatus) {
+          getToken();
+        }
+      } else {
+        const authorizationStatus = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        );
+
+        if (authorizationStatus === PermissionsAndroid.RESULTS.GRANTED) {
+          getToken();
+        }
       }
     };
 

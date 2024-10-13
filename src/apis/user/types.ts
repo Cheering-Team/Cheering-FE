@@ -3,6 +3,7 @@ export interface User {
   phone: string;
   nickname: string;
   createdAt?: string;
+  role?: string;
 }
 
 export interface PlayerUser {
@@ -55,4 +56,9 @@ export interface UpdateUserNicknamePayload {
 
 export interface SaveFCMTokenPayload {
   token: string;
+}
+
+export interface RegisterPlayerAccountPayload {
+  playerId: number;
+  phone: string;
 }

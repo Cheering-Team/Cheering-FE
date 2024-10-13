@@ -26,7 +26,11 @@ const CategoryStackNavigator = () => {
         component={SearchScreen}
         options={{headerShown: false, animation: 'none'}}
       />
-      <CategoryStack.Screen name="PlayerList" component={PlayerListScreen} />
+      <CategoryStack.Screen
+        name="PlayerList"
+        component={PlayerListScreen}
+        options={{headerShown: false}}
+      />
       <CategoryStack.Screen
         name="CommunityStack"
         component={CommunityStackNavigator}

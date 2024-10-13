@@ -19,6 +19,7 @@ import {ChatRoom} from '../../apis/chat/types';
 import Avatar from '../../components/common/Avatar';
 import OfficialSvg from '../../../assets/images/official.svg';
 import ChatCard from 'components/common/ChatCard';
+import StackHeader from 'components/common/StackHeader';
 
 const MyChatScreen = ({navigation}) => {
   const insets = useSafeAreaInsets();
@@ -73,11 +74,7 @@ const MyChatScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View className="h-[48] flex-row justify-center items-center bg-white border-b border-b-[#eeeeee]">
-        <CustomText fontWeight="500" className="text-lg pb-0">
-          내 채팅
-        </CustomText>
-      </View>
+      <StackHeader title="내 채팅" type="none" />
       {data ? (
         <SectionList
           ref={sectionListRef}
