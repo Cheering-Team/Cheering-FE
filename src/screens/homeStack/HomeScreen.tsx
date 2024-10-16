@@ -4,11 +4,9 @@ import {
   ListRenderItem,
   PermissionsAndroid,
   Platform,
-  Pressable,
   RefreshControl,
   View,
 } from 'react-native';
-import HomeBanner from '../../components/home/HomeBanner';
 import HomeHeader from '../../components/home/HomeHeader';
 import CustomText from '../../components/common/CustomText';
 import {useGetPosts} from '../../apis/post/usePosts';
@@ -20,14 +18,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {Drawer} from 'react-native-drawer-layout';
-import {useGetMyPlayers} from '../../apis/player/usePlayers';
 import {useNavigation, useScrollToTop} from '@react-navigation/native';
-import Avatar from '../../components/common/Avatar';
-import ChevronDownSvg from '../../../assets/images/chevron-down-black-thin.svg';
-import OptionModal from '../../components/common/OptionModal';
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {Player} from '../../apis/player/types';
 import messaging from '@react-native-firebase/messaging';
 import {saveFCMToken} from 'apis/user';
 import {
@@ -36,6 +27,7 @@ import {
 } from 'apis/notification/useNotifications';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
+import MyStarCarousel from 'components/home/MyStarCarousel';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -49,12 +41,9 @@ const HomeScreen = () => {
   const scrollY = useSharedValue(0);
   const translateY = useSharedValue(0);
 
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const flatListRef = useRef<FlatList>(null);
 
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
   const {
     data,
@@ -67,12 +56,10 @@ const HomeScreen = () => {
 
   const {refetch: refetchUnRead} = useGetIsUnread();
   const {mutate} = useReadNotification();
-  const {data: playerData} = useGetMyPlayers();
 
   useScrollToTop(
     useRef({
       scrollToTop: () => {
-        setIsDrawerOpen(false);
         flatListRef.current?.scrollToOffset({offset: 0, animated: true});
         handleRefresh();
       },
@@ -226,111 +213,22 @@ const HomeScreen = () => {
   }, [navigation]);
 
   return (
-    <Drawer
-      drawerType="front"
-      open={isDrawerOpen}
-      onOpen={() => setIsDrawerOpen(true)}
-      onClose={() => setIsDrawerOpen(false)}
-      renderDrawerContent={() => (
-        <FlatList
-          style={{paddingTop: insets.top}}
-          data={playerData?.result}
-          ListHeaderComponent={
-            <View
-              style={{
-                height: 52,
-                alignItems: 'center',
-                paddingHorizontal: 15,
-                flexDirection: 'row',
-              }}>
-              <CustomText
-                fontWeight="500"
-                style={{fontSize: 19, marginRight: 5, paddingBottom: 0}}>
-                나의 스타
-              </CustomText>
-            </View>
-          }
-          renderItem={({item}) => (
-            <Pressable
-              style={{
-                flexDirection: 'row',
-                paddingHorizontal: 17,
-                paddingVertical: 10,
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                borderBottomWidth: 1,
-                borderBottomColor: '#f7f7f7',
-              }}
-              onPress={() =>
-                navigation.navigate('CommunityStack', {
-                  screen: 'Community',
-                  params: {playerId: item.id},
-                })
-              }>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Avatar uri={item.image} size={37} />
-                <CustomText
-                  fontWeight="500"
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={{
-                    fontSize: 15,
-                    marginLeft: 15,
-                    color: '#222222',
-                    width: 120,
-                  }}>
-                  {item.koreanName}
-                </CustomText>
-              </View>
-              <Pressable
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: '#ededed',
-                  paddingHorizontal: 9,
-                  paddingVertical: 4,
-                  borderRadius: 20,
-                }}
-                onPress={() => {
-                  setSelectedPlayer(item);
-                  bottomSheetModalRef.current?.present();
-                }}>
-                <Avatar
-                  uri={item.user?.image}
-                  size={19}
-                  style={{marginRight: 7}}
-                />
-                <ChevronDownSvg width={12} height={12} />
-              </Pressable>
-            </Pressable>
-          )}
-        />
-      )}>
-      <View style={{flex: 1}}>
-        <HomeHeader translateY={translateY} setIsOpen={setIsDrawerOpen} />
+    <>
+      <View className="flex-1">
+        <HomeHeader translateY={translateY} />
         <Animated.FlatList
           ref={flatListRef}
-          style={{marginTop: insets.top, paddingTop: 52}}
+          className="pt-[52]"
+          style={{marginTop: insets.top}}
           data={data ? data?.pages.flatMap(page => page.result.posts) : []}
           renderItem={renderFeed}
           ListHeaderComponent={
             <>
-              <HomeBanner />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  paddingLeft: 13,
-                  paddingRight: 15,
-                  paddingVertical: 7,
-                  backgroundColor: 'white',
-                  borderBottomWidth: 1,
-                  borderColor: '#e7e7e7',
-                }}>
+              <MyStarCarousel />
+              <View className="flex-row items-center justify-between pl-[13] pr-[15] py-[7] bg-white border-b border-[#e7e7e7]">
                 <CustomText
                   fontWeight="500"
-                  style={{color: '#686868', fontSize: 15, paddingBottom: 2}}>
+                  className="text-[#686868] text-[15px] pb-[2]">
                   🔥 최근 게시글
                 </CustomText>
               </View>
@@ -342,7 +240,9 @@ const HomeScreen = () => {
           onEndReached={loadFeed}
           onEndReachedThreshold={1}
           ListFooterComponent={isFetchingNextPage ? <ListLoading /> : null}
-          ListEmptyComponent={isLoading ? <ListLoading /> : <ListEmpty />}
+          ListEmptyComponent={
+            isLoading ? <ListLoading /> : <ListEmpty type="feed" />
+          }
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
@@ -353,35 +253,7 @@ const HomeScreen = () => {
           }
         />
       </View>
-      <OptionModal
-        modalRef={bottomSheetModalRef}
-        firstText={selectedPlayer?.user?.nickname}
-        firstAvatar={selectedPlayer?.user?.image}
-        firstOnPress={() => {
-          navigation.navigate('CommunityStack', {
-            screen: 'Profile',
-            params: {playerUserId: selectedPlayer?.user?.id},
-          });
-        }}
-        secondText="커뮤니티 바로가기"
-        secondSvg="enter"
-        secondOnPress={() => {
-          navigation.navigate('CommunityStack', {
-            screen: 'Community',
-            params: {playerId: selectedPlayer?.id},
-          });
-        }}
-        thirdText="커뮤니티 탈퇴"
-        thirdColor="#ff2626"
-        thirdSvg="exit"
-        thirdOnPress={() => {
-          navigation.navigate('CommunityStack', {
-            screen: 'DeletePlayerUser',
-            params: {playerUserId: selectedPlayer?.user?.id},
-          });
-        }}
-      />
-    </Drawer>
+    </>
   );
 };
 

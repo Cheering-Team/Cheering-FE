@@ -86,7 +86,11 @@ const CategoryScreen = ({
                   />
                 </View>
 
-                <CustomText>{item.name}</CustomText>
+                <CustomText
+                  fontWeight={selectedSport === item.id ? '500' : '400'}
+                  className={`color-[#9b9b9b] text-[14px] ${selectedSport === item.id && 'text-black'}`}>
+                  {item.name}
+                </CustomText>
               </Pressable>
             )}
           />

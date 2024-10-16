@@ -1,6 +1,7 @@
 import {axiosInstance} from '../index';
 import {ApiResponse, Id} from '../types';
 import {
+  Comment,
   CommentIdPayload,
   GetCommentsResponse,
   GetReCommentsResponse,
@@ -9,6 +10,7 @@ import {
   WriteReCommentPayload,
 } from './types';
 import {commentKeys, reCommentKeys} from './queries';
+import {PostIdPayload} from 'apis/post/types';
 
 //// 댓글
 
@@ -99,6 +101,19 @@ export const reportReComment = async (data: ReCommentIdPayload) => {
   const {reCommentId} = data;
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/reComments/${reCommentId}/reports`,
+  );
+  return response.data;
+};
+
+// 랜덤 댓글 불러오기
+export const getRandomComment = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof commentKeys.random>;
+}) => {
+  const [, , {postId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<Comment | null>>(
+    `/posts/${postId}/random-comments`,
   );
   return response.data;
 };

@@ -10,6 +10,7 @@ import CustomText from '../../common/CustomText';
 import {WINDOW_HEIGHT} from '../../../constants/dimension';
 import {ApiResponse} from 'apis/types';
 import {Player} from 'apis/player/types';
+import OfficialSvg from '../../../../assets/images/official.svg';
 
 interface CommunityProfileProps {
   playerData: ApiResponse<Player>;
@@ -21,7 +22,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2.3}]}>
+    <View style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2}]}>
       <View style={[styles.infoContainer, {top: insets.top + 65}]}>
         {playerData.result.sportName ? (
           <CustomText className="ml-4 text-white text-[13px]">{`${playerData.result.sportName} / ${playerData.result.leagueName}`}</CustomText>
@@ -33,15 +34,25 @@ const CommunityProfile = (props: CommunityProfileProps) => {
           <CustomText fontWeight="500" style={styles.englishName}>
             {playerData.result.englishName}
           </CustomText>
-          <CustomText
-            fontWeight="600"
-            style={
-              playerData.result.koreanName.length > 10
-                ? styles.koreanNameLong
-                : styles.koreanName
-            }>
-            {playerData.result.koreanName}
-          </CustomText>
+          <View className="flex-row">
+            <CustomText
+              fontWeight="600"
+              style={
+                playerData.result.koreanName.length > 10
+                  ? styles.koreanNameLong
+                  : styles.koreanName
+              }>
+              {playerData.result.koreanName}
+            </CustomText>
+            {playerData.result.owner && (
+              <OfficialSvg
+                width={18}
+                height={18}
+                style={{marginTop: 6, marginLeft: 3}}
+              />
+            )}
+          </View>
+
           <View style={styles.fanCountContainer}>
             <StarOrangeSvg width={14} height={14} />
             <CustomText style={styles.fanCount}>

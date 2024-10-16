@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import CommunityHeader from '../../components/community/CommunityInfo/CommunityHeader';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -13,8 +13,11 @@ import {useGetPlayersInfo} from 'apis/player/usePlayers';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import OwnerModal from 'components/community/OwnerModal';
+import StarFeedList from 'components/community/StarFeedList';
+import LiveList from 'components/community/LiveList';
 
-const HEADER_HEIGHT = WINDOW_HEIGHT / 2.3;
+const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
 
 export type CommunityScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
@@ -58,7 +61,16 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
             handlePresentModalPress={handlePresentModalPress}
           />
         </Tabs.Tab>
-
+        {playerData.result.owner != null && (
+          <Tabs.Tab name="스타">
+            <StarFeedList />
+          </Tabs.Tab>
+        )}
+        {playerData.result.owner != null && (
+          <Tabs.Tab name="라이브">
+            <LiveList />
+          </Tabs.Tab>
+        )}
         <Tabs.Tab name="채팅">
           <ChatList
             playerData={playerData.result}
@@ -73,6 +85,12 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
         setIsModalOpen={setIsModalOpen}
         bottomSheetModalRef={bottomSheetModalRef}
       />
+      {playerData.result.isOwner && playerData.result.user === null && (
+        <OwnerModal
+          playerData={playerData.result}
+          setRefreshKey={setRefreshKey}
+        />
+      )}
     </>
   );
 };

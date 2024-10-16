@@ -4,15 +4,19 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import {postKeys} from './queries';
+import {dailyKeys, postKeys} from './queries';
 import {
+  deleteDaily,
   deletePost,
+  editDaily,
   editPost,
+  getDailys,
   getPlayerUserPosts,
   getPostById,
   getPosts,
   likePost,
   reportPost,
+  writeDaily,
   writePost,
 } from './index';
 import {FilterType} from './types';
@@ -90,8 +94,6 @@ export const useGetPostById = (postId: number) => {
 
 // 게시글 좋아요 토글
 export const useLikePost = (postId: number) => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: likePost,
     onSuccess: () => {
@@ -147,6 +149,44 @@ export const useDeletePost = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
       showBottomToast(insets.bottom + 20, '삭제되었습니다.');
+    },
+  });
+};
+
+// 데일리 작성
+export const useWriteDaily = () => {
+  return useMutation({
+    mutationFn: writeDaily,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: dailyKeys.lists()});
+    },
+  });
+};
+
+// 데일리 목록 불러오기
+export const useGetDailys = (playerId: number, date: string) => {
+  return useQuery({
+    queryKey: dailyKeys.list(playerId, date),
+    queryFn: getDailys,
+  });
+};
+
+// 데일리 수정
+export const useEditDaily = () => {
+  return useMutation({
+    mutationFn: editDaily,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: dailyKeys.lists()});
+    },
+  });
+};
+
+// 데일리 수정
+export const useDeleteDaily = () => {
+  return useMutation({
+    mutationFn: deleteDaily,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: dailyKeys.lists()});
     },
   });
 };

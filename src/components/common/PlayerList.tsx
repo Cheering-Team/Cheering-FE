@@ -7,6 +7,7 @@ import Avatar from './Avatar';
 import {CategoryStackParamList} from '../../navigations/CategoryStackNavigator';
 import {formatComma} from '../../utils/format';
 import {Player} from 'apis/player/types';
+import OfficialSvg from '../../../assets/images/official.svg';
 
 interface PlayerListProps {
   teamName?: string;
@@ -21,7 +22,10 @@ const PlayerList = (props: PlayerListProps) => {
   return (
     <FlatList
       numColumns={3}
-      contentContainerStyle={paddingTop && {paddingTop: 80}}
+      contentContainerStyle={[
+        paddingTop && {paddingTop: 80},
+        {paddingBottom: 50},
+      ]}
       data={players}
       renderItem={({item}) => (
         <Pressable
@@ -62,10 +66,18 @@ const PlayerList = (props: PlayerListProps) => {
                   {teamName || (item.teams && item.teams[0].name)}
                 </CustomText>
               )}
-
-              <CustomText fontWeight="500" style={{fontSize: 16}}>
-                {item.koreanName}
-              </CustomText>
+              <View className="flex-row">
+                <CustomText fontWeight="500" style={{fontSize: 16}}>
+                  {item.koreanName}
+                </CustomText>
+                {item.owner && (
+                  <OfficialSvg
+                    width={12}
+                    height={12}
+                    style={{marginTop: 5, marginLeft: 1}}
+                  />
+                )}
+              </View>
             </View>
 
             <View

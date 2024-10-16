@@ -8,3 +8,10 @@ export const postKeys = {
   details: () => [...postKeys.all, 'detail'] as const,
   detail: (postId: number) => [...postKeys.details(), postId] as const,
 };
+
+export const dailyKeys = {
+  all: ['dailys'] as const,
+  lists: () => [...postKeys.all, 'list'] as const,
+  list: (playerId: number, date: string) =>
+    [...dailyKeys.lists(), {playerId, date}] as const,
+};

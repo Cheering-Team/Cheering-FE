@@ -10,6 +10,7 @@ import {
   kakaoSignIn,
   naverSignIn,
   registerPlayerAccount,
+  reissuePlayerAccountPassword,
   saveFCMToken,
   sendSMS,
   signIn,
@@ -92,10 +93,22 @@ export const useRegisterPlayerAccount = () => {
   });
 };
 
-export const useGetPlayerAccountInfo = (playerId: number) => {
+export const useGetPlayerAccount = (playerId: number) => {
   return useQuery({
     queryKey: userKeys.playerAccount(playerId),
     queryFn: getPlayerAccountInfo,
     enabled: playerId !== 0,
+  });
+};
+
+export const useReissuePlayerAccountPassword = () => {
+  return useMutation({
+    mutationFn: reissuePlayerAccountPassword,
+    onSuccess: (_, variables) => {
+      const {playerId} = variables;
+      queryClient.invalidateQueries({
+        queryKey: userKeys.playerAccount(playerId),
+      });
+    },
   });
 };

@@ -2,7 +2,6 @@ import React from 'react';
 import {Pressable, View} from 'react-native';
 import Avatar from '../Avatar';
 import CustomText from '../CustomText';
-import OfficialSvg from '../../../../assets/images/official.svg';
 import {ChatRoom} from 'apis/chat/types';
 interface ChatCardProps {
   chatRoom: ChatRoom;
@@ -15,7 +14,7 @@ const ChatCard = (props: ChatCardProps) => {
   return (
     <Pressable
       key={chatRoom.id}
-      className="flex-row px-[15] py-[10]"
+      className="flex-row px-[15] py-[7]"
       onPress={onPress}>
       <Avatar uri={chatRoom.image} size={59} className="rounded-2xl mt-[3]" />
       <View className="ml-3 flex-1">
@@ -27,9 +26,6 @@ const ChatCard = (props: ChatCardProps) => {
             ellipsizeMode="tail">
             {chatRoom.name}
           </CustomText>
-          {chatRoom.type === 'OFFICIAL' && (
-            <OfficialSvg width={15} height={15} />
-          )}
         </View>
         <CustomText
           className="color-[#8a8a8a]"

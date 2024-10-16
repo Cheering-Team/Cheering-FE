@@ -8,12 +8,13 @@ import {
   deleteComment,
   deleteReComment,
   getComments,
+  getRandomComment,
   getReComments,
   reportComment,
   reportReComment,
   writeComment,
   writeReComment,
-} from '.';
+} from './index';
 import {commentKeys, reCommentKeys} from './queries';
 import {postKeys} from '../post/queries';
 import {showBottomToast} from '../../utils/toast';
@@ -22,7 +23,6 @@ import {queryClient} from '../../../App';
 
 // 댓글 작성
 export const useWriteComment = () => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: writeComment,
     onSuccess: (_, variables) => {
@@ -35,7 +35,7 @@ export const useWriteComment = () => {
 };
 
 // 댓글 목록 불러오기
-export const useGetComments = (postId: number) => {
+export const useGetComments = (postId: number | null) => {
   return useInfiniteQuery({
     queryKey: commentKeys.list(postId),
     queryFn: getComments,
@@ -46,12 +46,12 @@ export const useGetComments = (postId: number) => {
       }
       return pages.length;
     },
+    enabled: postId !== null,
   });
 };
 
 // 댓글 삭제
 export const useDeleteComment = () => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteComment,
     onSuccess: () => {
@@ -126,5 +126,12 @@ export const useReportReComment = () => {
       showBottomToast(insets.bottom + 20, message);
       queryClient.invalidateQueries({queryKey: reCommentKeys.lists()});
     },
+  });
+};
+
+export const useGetRandomComment = (postId: number) => {
+  return useQuery({
+    queryKey: commentKeys.random(postId),
+    queryFn: getRandomComment,
   });
 };

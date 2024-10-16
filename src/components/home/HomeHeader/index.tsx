@@ -1,5 +1,4 @@
-import React, {Dispatch, SetStateAction} from 'react';
-import CustomText from '../../common/CustomText';
+import React from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Animated, {
   Easing,
@@ -7,17 +6,15 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
-import {Pressable, View} from 'react-native';
-import DrawerSvg from '../../../../assets/images/drawer-star.svg';
+import {View} from 'react-native';
 import LogoSvg from '../../../../assets/images/logo-text.svg';
 
 interface HomeHeaderProps {
   translateY: SharedValue<number>;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const HomeHeader = (props: HomeHeaderProps) => {
-  const {translateY, setIsOpen} = props;
+  const {translateY} = props;
   const insets = useSafeAreaInsets();
 
   const animatedHeaderStyle = useAnimatedStyle(() => {
@@ -54,13 +51,7 @@ const HomeHeader = (props: HomeHeaderProps) => {
           },
           animatedHeaderStyle,
         ]}>
-        <Pressable
-          onPress={() => {
-            setIsOpen(true);
-          }}>
-          <DrawerSvg width={30} height={30} style={{marginTop: 5}} />
-        </Pressable>
-
+        <View style={{width: 30, height: 30}} />
         <LogoSvg width={200} height={50} />
         <View style={{width: 30, height: 30}} />
       </Animated.View>

@@ -11,11 +11,13 @@ import ChatRoomScreen from '../screens/communityStack/ChatRoomScreen';
 import CreateChatRoomScreen from 'screens/communityStack/CreateChatRoomScreen';
 import ChatRoomEnterScreen from 'screens/communityStack/ChatRoomEnterScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
+import DailyScreen from 'screens/communityStack/DailyScreen';
 
 export type CommunityStackParamList = {
   Community: {playerId: number};
   PostWrite: {playerId: number; feed?: any};
   Post: {postId: number};
+  Daily: {playerId: number};
   ChatRoom: {chatRoomId: number};
   CreateChatRoom: {playerId: number};
   ChatRoomEnter: {chatRoomId: number};
@@ -48,6 +50,11 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="Post"
         component={PostScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="Daily"
+        component={DailyScreen}
         options={{headerShown: false}}
       />
       <CommunityStack.Screen

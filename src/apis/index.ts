@@ -6,9 +6,13 @@ import {queryClient} from '../../App';
 import {showBottomToast} from '../utils/toast';
 import {postKeys} from './post/queries';
 import {commentKeys, reCommentKeys} from './comment/queries';
+import {Platform} from 'react-native';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://172.30.1.14:8080/api',
+  baseURL:
+    Platform.OS === 'ios'
+      ? 'http://192.168.0.17:8080/api'
+      : 'http://10.0.2.2:8080/api',
 });
 
 axiosInstance.interceptors.request.use(async config => {

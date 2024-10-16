@@ -44,7 +44,7 @@ const CommentInput: FC<CommentInputProps> = props => {
 
     hideToast();
 
-    if (commentResponse.message === '댓글이 작성되었습니다.') {
+    if (commentResponse.message === '작성 완료') {
       setComment('');
       Keyboard.dismiss();
     } else {
@@ -134,7 +134,7 @@ const CommentInput: FC<CommentInputProps> = props => {
             value={comment}
             onChangeText={setComment}
             maxLength={999}
-            className="text-[14px] flex-1 p-0 m-0"
+            className="text-sm flex-1 p-0 m-0"
             style={{
               fontFamily: 'NotoSansKR-Regular',
               includeFontPadding: false,

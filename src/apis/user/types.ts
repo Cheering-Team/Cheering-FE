@@ -1,9 +1,12 @@
+import {Player} from 'apis/player/types';
+
 export interface User {
   id: number;
   phone: string;
   nickname: string;
   createdAt?: string;
   role?: string;
+  player?: Player;
 }
 
 export interface PlayerUser {

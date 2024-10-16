@@ -10,7 +10,7 @@ export interface Post {
   player: Player;
   content: string;
   isHide: boolean;
-  createdAt: Date;
+  createdAt: string;
   tags: string[];
   isLike: boolean;
   likeCount: number;
@@ -40,6 +40,10 @@ export interface PostIdPayload {
   postId: number;
 }
 
+export interface DailyIdPayload {
+  dailyId: number;
+}
+
 export interface WritePostPayload {
   playerId: number;
   content: string;
@@ -56,7 +60,23 @@ export interface EditPostPayload {
   handleProgress: (progressEvent: AxiosProgressEvent) => void;
 }
 
+export interface WriteDailyPayload {
+  playerId: number;
+  content: string;
+}
+
+export interface EditDailyPayload {
+  dailyId: number;
+  content: string;
+}
+
 // 응답
 export interface GetPostsResponse extends Page {
   posts: Post[];
+}
+
+export interface GetDailysResponse {
+  dailys: Post[];
+  isOwner: boolean;
+  owner: PlayerUser;
 }

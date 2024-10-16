@@ -7,6 +7,7 @@ import {useGetPlayers} from 'apis/player/usePlayers';
 import {
   useGetPlayerAccountInfo,
   useRegisterPlayerAccount,
+  useReissuePlayerAccountPassword,
 } from 'apis/user/useUsers';
 import Avatar from 'components/common/Avatar';
 import CustomBottomSheetTextInput from 'components/common/CustomBottomSheetTextInput';
@@ -44,11 +45,24 @@ const PlayerAccountScreen = ({navigation}) => {
   const {data: playersData, refetch} = useGetPlayers(name, false);
   const {data: playerAccountData} = useGetPlayerAccountInfo(playerId);
   const {mutateAsync: registerPlayerAccount} = useRegisterPlayerAccount();
+  const {mutateAsync: reissuePlayerAccountPassword} =
+    useReissuePlayerAccountPassword();
 
   const handleRegisterPlayerAccount = async () => {
     const data = await registerPlayerAccount({playerId, phone});
 
     if (data.message === '선수 계정을 등록하였습니다.') {
+      bottomSheetModalRef.current?.close();
+      showBottomToast(insets.bottom + 20, data.message);
+    }
+
+    setPhone('');
+  };
+
+  const handleReissuePlayerAccountPassword = async () => {
+    const data = await reissuePlayerAccountPassword({playerId, phone});
+
+    if (data.message === '비밀번호를 재발급하였습니다.') {
       bottomSheetModalRef.current?.close();
       showBottomToast(insets.bottom + 20, data.message);
     }
@@ -126,7 +140,7 @@ const PlayerAccountScreen = ({navigation}) => {
                 <CustomButton
                   text="비밀번호 재발급"
                   type="normal"
-                  onPress={handleRegisterPlayerAccount}
+                  onPress={handleReissuePlayerAccountPassword}
                 />
               </>
             )}

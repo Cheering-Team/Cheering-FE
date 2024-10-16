@@ -1,11 +1,15 @@
 import {axiosInstance} from '../index';
 import {ApiResponse, Id} from '../types';
-import {postKeys} from './queries';
+import {dailyKeys, postKeys} from './queries';
 import {
+  DailyIdPayload,
+  EditDailyPayload,
   EditPostPayload,
+  GetDailysResponse,
   GetPostsResponse,
   Post,
   PostIdPayload,
+  WriteDailyPayload,
   WritePostPayload,
 } from './types';
 
@@ -125,6 +129,48 @@ export const deletePost = async (data: PostIdPayload) => {
   const {postId} = data;
   const response = await axiosInstance.delete<ApiResponse<null>>(
     `/posts/${postId}`,
+  );
+  return response.data;
+};
+
+// 데일리 작성
+export const writeDaily = async (data: WriteDailyPayload) => {
+  const {playerId, content} = data;
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/players/${playerId}/dailys`,
+    {content},
+  );
+  return response.data;
+};
+
+// 데일리 불러오기
+export const getDailys = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof dailyKeys.list>;
+}) => {
+  const [, , {playerId, date}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<GetDailysResponse>>(
+    `/players/${playerId}/dailys?date=${date}`,
+  );
+  return response.data;
+};
+
+// 데일리 수정하기
+export const editDaily = async (data: EditDailyPayload) => {
+  const {dailyId, content} = data;
+  const response = await axiosInstance.put<ApiResponse<null>>(
+    `/dailys/${dailyId}`,
+    {content},
+  );
+  return response.data;
+};
+
+// 데일리 삭제하기
+export const deleteDaily = async (data: DailyIdPayload) => {
+  const {dailyId} = data;
+  const response = await axiosInstance.delete<ApiResponse<null>>(
+    `/dailys/${dailyId}`,
   );
   return response.data;
 };

@@ -12,6 +12,9 @@ export interface Player {
   teams?: Team[];
   sportName: string | null;
   leagueName: string | null;
+  isOwner?: boolean;
+  owner?: PlayerUser;
+  officialChatRoomId?: number;
 }
 
 export interface Sport {

@@ -144,7 +144,7 @@ export const registerPlayerAccount = async (
   return response.data;
 };
 
-export const getPlayerAccountInfo = async ({
+export const getPlayerAccount = async ({
   queryKey,
 }: {
   queryKey: ReturnType<typeof userKeys.playerAccount>;
@@ -152,6 +152,17 @@ export const getPlayerAccountInfo = async ({
   const [, , playerId] = queryKey;
   const response = await axiosInstance.get<ApiResponse<SendSMSPayload | null>>(
     `/users/player-account/${playerId}`,
+  );
+  return response.data;
+};
+
+export const reissuePlayerAccountPassword = async (
+  data: RegisterPlayerAccountPayload,
+) => {
+  const {playerId, phone} = data;
+  const response = await axiosInstance.put<ApiResponse<null>>(
+    `/users/player-account/${playerId}`,
+    {phone},
   );
   return response.data;
 };
