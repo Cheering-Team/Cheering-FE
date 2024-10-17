@@ -49,7 +49,7 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
 
   return (
     <>
-      <CommunityHeader playerData={playerData} />
+      <CommunityHeader playerData={playerData.result} />
       <Tabs.Container
         renderHeader={() => <CommunityProfile playerData={playerData} />}
         headerHeight={HEADER_HEIGHT}
@@ -63,7 +63,7 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
         </Tabs.Tab>
         {playerData.result.owner != null && (
           <Tabs.Tab name="스타">
-            <StarFeedList />
+            <StarFeedList player={playerData.result} />
           </Tabs.Tab>
         )}
         {playerData.result.owner != null && (

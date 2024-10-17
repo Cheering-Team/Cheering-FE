@@ -1,15 +1,11 @@
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import {dailyKeys, postKeys} from './queries';
+import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
+import {dailyKeys, postKeys} from './queries.ts';
 import {
   deleteDaily,
   deletePost,
   editDaily,
   editPost,
+  getDailyExist,
   getDailys,
   getPlayerUserPosts,
   getPostById,
@@ -29,7 +25,6 @@ import {queryClient} from '../../../App';
 // 게시글 작성
 export const useWritePost = () => {
   const navigaion = useNavigation<PostWriteScreenNavigationProp>();
-  const queryClient = useQueryClient();
   const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: writePost,
@@ -106,7 +101,6 @@ export const useLikePost = (postId: number) => {
 // 게시글 수정
 export const useEditPost = () => {
   const navigaion = useNavigation<PostWriteScreenNavigationProp>();
-  const queryClient = useQueryClient();
   const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: editPost,
@@ -143,7 +137,6 @@ export const useReportPost = () => {
 // 게시글 삭제
 export const useDeletePost = () => {
   const insets = useSafeAreaInsets();
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deletePost,
     onSuccess: () => {
@@ -165,9 +158,16 @@ export const useWriteDaily = () => {
 
 // 데일리 목록 불러오기
 export const useGetDailys = (playerId: number, date: string) => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: dailyKeys.list(playerId, date),
     queryFn: getDailys,
+    initialPageParam: 0,
+    getNextPageParam: (lastpage, pages) => {
+      if (lastpage.result.last) {
+        return undefined;
+      }
+      return pages.length;
+    },
   });
 };
 
@@ -188,5 +188,13 @@ export const useDeleteDaily = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: dailyKeys.lists()});
     },
+  });
+};
+
+// 데일리 유무 로드
+export const useGetDailyExist = (playerId: number) => {
+  return useQuery({
+    queryKey: dailyKeys.exist(playerId),
+    queryFn: getDailyExist,
   });
 };

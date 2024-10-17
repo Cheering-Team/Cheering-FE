@@ -14,4 +14,5 @@ export const dailyKeys = {
   lists: () => [...postKeys.all, 'list'] as const,
   list: (playerId: number, date: string) =>
     [...dailyKeys.lists(), {playerId, date}] as const,
+  exist: (playerId: number) => [...dailyKeys.all, 'exist', {playerId}] as const,
 };

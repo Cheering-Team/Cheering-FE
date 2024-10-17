@@ -10,10 +10,12 @@ import {useWriteComment} from 'apis/comment/useComments';
 
 interface DailyTextInputProps extends BottomSheetFooterProps {
   dailyId: number | null;
+  isToady: boolean;
 }
 
 const DailyTextInput = ({
   dailyId,
+  isToady,
   animatedFooterPosition,
 }: DailyTextInputProps) => {
   const [content, setContent] = useState('');
@@ -38,7 +40,10 @@ const DailyTextInput = ({
           style={{paddingVertical: Platform.OS === 'ios' ? 9 : 6}}>
           <BottomSheetTextInput
             multiline
-            placeholder="답글을 남겨보세요"
+            placeholder={
+              isToady ? '답글을 남겨보세요' : '당일에만 소통할 수 있어요'
+            }
+            // editable={isToady}
             value={content}
             onChangeText={setContent}
             allowFontScaling={false}

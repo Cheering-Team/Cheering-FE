@@ -75,7 +75,7 @@ export interface GetPostsResponse extends Page {
   posts: Post[];
 }
 
-export interface GetDailysResponse {
+export interface GetDailysResponse extends Page {
   dailys: Post[];
   isOwner: boolean;
   owner: PlayerUser;

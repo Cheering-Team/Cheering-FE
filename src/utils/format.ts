@@ -65,3 +65,42 @@ export const formatBeforeDate = (input: Date) => {
     return formattedDate.replace(', ', ' ');
   }
 };
+
+export const formatBarDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
+
+export const formatMonthDay = (dateString: string) => {
+  const date = new Date(dateString);
+
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return `${month}월 ${day}일`;
+};
+
+export const formatXDate = date => {
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  const monthNames = [
+    '1월',
+    '2월',
+    '3월',
+    '4월',
+    '5월',
+    '6월',
+    '7월',
+    '8월',
+    '9월',
+    '10월',
+    '11월',
+    '12월',
+  ];
+
+  return `${monthNames[month - 1]} ${year}`;
+};

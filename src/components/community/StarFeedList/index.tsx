@@ -1,7 +1,17 @@
+import {Player} from 'apis/player/types';
 import React from 'react';
+import DailyList from '../DailyList';
 
-const StarFeedList = () => {
-  return <></>;
+interface StarFeedListProps {
+  player: Player;
+}
+
+const StarFeedList = ({player}: StarFeedListProps) => {
+  return (
+    <>
+      <DailyList player={player} />
+    </>
+  );
 };
 
 export default StarFeedList;

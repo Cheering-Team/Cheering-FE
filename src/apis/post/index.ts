@@ -146,12 +146,14 @@ export const writeDaily = async (data: WriteDailyPayload) => {
 // 데일리 불러오기
 export const getDailys = async ({
   queryKey,
+  pageParam = 0,
 }: {
   queryKey: ReturnType<typeof dailyKeys.list>;
+  pageParam: number;
 }) => {
   const [, , {playerId, date}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<GetDailysResponse>>(
-    `/players/${playerId}/dailys?date=${date}`,
+    `/players/${playerId}/dailys?date=${date}&page=${pageParam}&size=10`,
   );
   return response.data;
 };
@@ -171,6 +173,19 @@ export const deleteDaily = async (data: DailyIdPayload) => {
   const {dailyId} = data;
   const response = await axiosInstance.delete<ApiResponse<null>>(
     `/dailys/${dailyId}`,
+  );
+  return response.data;
+};
+
+// 데일리 유무 로드
+export const getDailyExist = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof dailyKeys.exist>;
+}) => {
+  const [, , {playerId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<string[]>>(
+    `/players/${playerId}/dailys/exist`,
   );
   return response.data;
 };

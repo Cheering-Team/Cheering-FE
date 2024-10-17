@@ -1,18 +1,21 @@
 import {
   useDeleteDaily,
   useEditDaily,
+  useGetDailyExist,
   useGetDailys,
   useWriteDaily,
 } from 'apis/post/usePosts';
 import Avatar from 'components/common/Avatar';
-import StackHeader from 'components/common/StackHeader';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   FlatList,
+  LayoutAnimation,
   Modal,
+  Platform,
   Pressable,
   SafeAreaView,
   TextInput,
+  UIManager,
   View,
   ViewabilityConfig,
 } from 'react-native';
@@ -22,8 +25,8 @@ import {showBottomToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BottomSheet, {
   BottomSheetBackdrop,
+  BottomSheetBackdropProps,
   BottomSheetFlashList,
-  BottomSheetModal,
 } from '@gorhom/bottom-sheet';
 
 import AlertModal from 'components/common/AlertModal/AlertModal';
@@ -32,20 +35,35 @@ import {useGetComments} from 'apis/comment/useComments';
 import {WINDOW_HEIGHT} from 'constants/dimension';
 import Daily from 'components/post/Daily';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
+import DownSvg from '../../../assets/images/tri-down-gray.svg';
+import {Calendar} from 'react-native-calendars';
+import {formatBarDate, formatMonthDay, formatXDate} from 'utils/format';
 
-const DailyScreen = ({route}) => {
+if (Platform.OS === 'android') {
+  UIManager.setLayoutAnimationEnabledExperimental &&
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+type MarkingType = {
+  [key: string]: {
+    marked: boolean;
+    selected?: boolean;
+  };
+};
+
+const DailyScreen = ({navigation, route}) => {
   const {playerId} = route.params;
   const insets = useSafeAreaInsets();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = ['70%', WINDOW_HEIGHT - insets.top];
+  const snapPoints = ['80%'];
   const viewabilityConfig = useRef<ViewabilityConfig>({
     waitForInteraction: true,
     itemVisiblePercentThreshold: 50,
     minimumViewTime: 1000,
   }).current;
   const renderBackdrop = useCallback(
-    props => (
+    (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
         pressBehavior="close"
@@ -61,9 +79,17 @@ const DailyScreen = ({route}) => {
   const [content, setContent] = useState('');
   const [curId, setCurId] = useState<number | null>(null);
   const [curComment, setCurComment] = useState<number | null>(null);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(formatBarDate(new Date()));
+  const [markedDates, setMarkedDates] = useState({});
 
-  const {data: dailyData} = useGetDailys(playerId, '2024-10-16');
+  const {
+    data: dailyData,
+    hasNextPage,
+    fetchNextPage,
+  } = useGetDailys(playerId, selectedDate);
   const {data: commentData} = useGetComments(curComment);
+  const {data: dailyExistData} = useGetDailyExist(playerId);
   const {mutateAsync: writeDaily} = useWriteDaily();
   const {mutateAsync: editDaily} = useEditDaily();
   const {mutateAsync: deleteDaily} = useDeleteDaily();
@@ -98,16 +124,88 @@ const DailyScreen = ({route}) => {
     }
   };
 
+  const loadDaily = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  useEffect(() => {
+    if (dailyExistData) {
+      const marking: MarkingType = {};
+      for (const date of dailyExistData.result) {
+        marking[date] = {marked: true};
+      }
+      marking[selectedDate] = {...marking[selectedDate], selected: true};
+      setMarkedDates(marking);
+    }
+  }, [dailyExistData, selectedDate]);
+
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-1">
-        <StackHeader title="5월 15일" />
+        <View
+          className="h-[48] px-[5] flex-row justify-between items-center bg-white border-b border-b-[#eeeeee]"
+          style={Platform.OS === 'android' && {marginTop: insets.top}}>
+          <Pressable onPress={() => navigation.goBack()}>
+            <CloseSvg width={32} height={32} />
+          </Pressable>
+          <Pressable
+            className="flex-row items-center ml-4"
+            onPress={() => {
+              LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut,
+              );
+              setIsCalendarOpen(prev => !prev);
+            }}>
+            <CustomText className="text-lg pb-0 mr-1 text-sla" fontWeight="500">
+              {formatMonthDay(selectedDate)}
+            </CustomText>
+            <DownSvg width={15} height={15} />
+          </Pressable>
+          <View className="w-8 h-8" />
+        </View>
+        {isCalendarOpen && (
+          <Calendar
+            style={{
+              borderBottomWidth: 1,
+              borderBottomColor: '#eeeeee',
+            }}
+            onDayPress={day => {
+              setSelectedDate(day.dateString);
+            }}
+            maxDate={formatBarDate(new Date())}
+            monthFormat={'M월 yyyy'}
+            theme={{
+              arrowColor: 'black',
+              textDayHeaderFontSize: 13,
+              textMonthFontFamily: 'NotoSansKR-Medium',
+              dayTextColor: 'black',
+              textDayFontWeight: '500',
+              textSectionTitleColor: 'black',
+              todayTextColor: 'black',
+            }}
+            renderHeader={date => (
+              <CustomText fontWeight="500" className="text-base">
+                {formatXDate(date)}
+              </CustomText>
+            )}
+            markedDates={markedDates}
+          />
+        )}
         <FlatList
-          data={dailyData?.result.dailys}
-          contentContainerStyle={{paddingHorizontal: 15, paddingVertical: 10}}
+          data={dailyData?.pages.flatMap(page => page.result.dailys)}
+          className="bg-white"
+          contentContainerStyle={{
+            paddingHorizontal: 15,
+            paddingTop: 10,
+            paddingBottom: 100,
+          }}
+          onEndReached={loadDaily}
+          onEndReachedThreshold={1}
           renderItem={({item}) => (
             <Daily
-              dailyData={dailyData?.result}
+              dailyData={dailyData?.pages[0].result}
               post={item}
               setIsWriteOpen={setIsWriteOpen}
               setContent={setContent}
@@ -118,9 +216,10 @@ const DailyScreen = ({route}) => {
             />
           )}
           ListFooterComponent={
-            dailyData?.result.isOwner ? (
+            dailyData?.pages[0].result.isOwner &&
+            selectedDate === formatBarDate(new Date()) ? (
               <View className="flex-row items-center my-2">
-                <Avatar uri={dailyData.result.owner.image} size={40} />
+                <Avatar uri={dailyData.pages[0].result.owner.image} size={40} />
                 <Pressable
                   className="bg-white p-3 ml-3 rounded-[15px] flex-row items-center"
                   onPress={() => {
@@ -203,7 +302,11 @@ const DailyScreen = ({route}) => {
           backdropComponent={renderBackdrop}
           enableDynamicSizing={false}
           footerComponent={props => (
-            <DailyTextInput dailyId={curComment} {...props} />
+            <DailyTextInput
+              dailyId={curComment}
+              isToady={selectedDate === formatBarDate(new Date())}
+              {...props}
+            />
           )}
           keyboardBlurBehavior="restore"
           keyboardBehavior="fillParent"

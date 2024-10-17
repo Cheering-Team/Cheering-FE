@@ -1,12 +1,14 @@
 import React from 'react';
-import {Animated, Pressable, StyleSheet} from 'react-native';
+import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import CheveronLeft from '../../../../assets/images/chevron-left-white.svg';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Avatar from '../../common/Avatar';
+import DailySvg from '../../../../assets/images/comment-white.svg';
+import {Player} from 'apis/player/types';
 
 interface CommunityHeaderProps {
-  playerData: any;
+  playerData: Player;
 }
 
 const CommunityHeader = (props: CommunityHeaderProps) => {
@@ -29,19 +31,31 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
         <CheveronLeft width={20} height={20} />
       </Pressable>
 
-      {playerData.result.user && (
-        <Pressable
-          onPress={() =>
-            navigation.navigate('Profile', {
-              playerUserId: playerData.result.user.id,
-            })
-          }>
-          <Avatar
-            uri={playerData.result.user.image}
-            size={25}
-            style={styles.communityUserAvatar}
-          />
-        </Pressable>
+      {playerData.user && (
+        <View className="flex-row items-center">
+          {playerData.owner && (
+            <Pressable
+              onPress={() =>
+                navigation.navigate('Daily', {playerId: playerData.id})
+              }>
+              <DailySvg width={20} height={20} />
+            </Pressable>
+          )}
+
+          <Pressable
+            className="ml-5"
+            onPress={() =>
+              navigation.navigate('Profile', {
+                playerUserId: playerData.user.id,
+              })
+            }>
+            <Avatar
+              uri={playerData.user.image}
+              size={25}
+              style={styles.communityUserAvatar}
+            />
+          </Pressable>
+        </View>
       )}
     </Animated.View>
   );

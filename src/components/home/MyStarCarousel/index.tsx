@@ -106,7 +106,7 @@ const MyStarCarousel = () => {
               <Avatar uri={item.user.image} size={40} />
               <View className="ml-4">
                 <View className="bg-[#efefef] rounded-xl px-[13] py-[5] z-10">
-                  <CustomText className="text-[#737373] text-[14px]">
+                  <CustomText className="text-[14px]">
                     팬들에게 오늘의 한마디를 남겨주세요
                   </CustomText>
                 </View>
