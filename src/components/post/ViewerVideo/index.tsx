@@ -2,8 +2,8 @@ import {SCREEN_HEIGHT, WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
 import React, {useState} from 'react';
 import {Pressable, View} from 'react-native';
 import Video from 'react-native-video';
-import VolumeSvg from '../../../../assets/images/volume.svg';
-import VolumeMuteSvg from '../../../../assets/images/volume-mute.svg';
+import VolumeSvg from '../../../assets/images/volume.svg';
+import VolumeMuteSvg from '../../../assets/images/volume-mute.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface ViewerVideoProps {

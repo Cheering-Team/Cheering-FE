@@ -9,7 +9,7 @@ import {
 import CustomText from '../../../common/CustomText';
 import Avatar from '../../../common/Avatar';
 import CustomButton from '../../../common/CustomButton';
-import CameraSvg from '../../../../../assets/images/camera-01.svg';
+import CameraSvg from '../../../../assets/images/camera-01.svg';
 import {ImageType} from '../JoinModal';
 import {NICKNAME_REGEX} from '../../../../constants/regex';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';

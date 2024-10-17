@@ -3,39 +3,71 @@ import React from 'react';
 import Animated from 'react-native-reanimated';
 
 interface CustomTextProps extends TextProps {
-  fontWeight?: '300' | '400' | '500' | '600' | '700';
+  fontWeight?:
+    | '100'
+    | '200'
+    | '300'
+    | '400'
+    | '500'
+    | '600'
+    | '700'
+    | '800'
+    | '900';
 }
 
 const CustomText = (props: CustomTextProps) => {
   const {fontWeight = '400', style, children, ...rest} = props;
-
-  if (fontWeight === '300') {
+  if (fontWeight === '100') {
     return (
-      <Animated.Text style={[styles.LightFont, style]} {...rest}>
+      <Animated.Text style={[styles.Thin, style]} {...rest}>
+        {children}
+      </Animated.Text>
+    );
+  } else if (fontWeight === '200') {
+    return (
+      <Animated.Text style={[styles.ExtraLight, style]} {...rest}>
+        {children}
+      </Animated.Text>
+    );
+  } else if (fontWeight === '300') {
+    return (
+      <Animated.Text style={[styles.Light, style]} {...rest}>
         {children}
       </Animated.Text>
     );
   } else if (fontWeight === '400') {
     return (
-      <Animated.Text style={[styles.RegularFont, style]} {...rest}>
+      <Animated.Text style={[styles.Regular, style]} {...rest}>
         {children}
       </Animated.Text>
     );
   } else if (fontWeight === '500') {
     return (
-      <Animated.Text style={[styles.MediumFont, style]} {...rest}>
+      <Animated.Text style={[styles.Medium, style]} {...rest}>
         {children}
       </Animated.Text>
     );
   } else if (fontWeight === '600') {
     return (
-      <Animated.Text style={[styles.SemiBoldFont, style]} {...rest}>
+      <Animated.Text style={[styles.SemiBold, style]} {...rest}>
         {children}
       </Animated.Text>
     );
-  } else {
+  } else if (fontWeight === '700') {
     return (
-      <Animated.Text style={[styles.BoldFont, style]} {...rest}>
+      <Animated.Text style={[styles.Bold, style]} {...rest}>
+        {children}
+      </Animated.Text>
+    );
+  } else if (fontWeight === '800') {
+    return (
+      <Animated.Text style={[styles.ExtraBold, style]} {...rest}>
+        {children}
+      </Animated.Text>
+    );
+  } else if (fontWeight === '900') {
+    return (
+      <Animated.Text style={[styles.Black, style]} {...rest}>
         {children}
       </Animated.Text>
     );
@@ -43,30 +75,41 @@ const CustomText = (props: CustomTextProps) => {
 };
 
 const styles = StyleSheet.create({
-  LightFont: {
-    fontFamily: 'NotoSansKR-Light',
+  Thin: {
+    fontFamily: 'Pretendard-Thin',
     includeFontPadding: false,
-    paddingBottom: 2,
   },
-  RegularFont: {
-    fontFamily: 'NotoSansKR-Regular',
+  ExtraLight: {
+    fontFamily: 'Pretendard-ExtraLight',
     includeFontPadding: false,
-    paddingBottom: 2,
   },
-  MediumFont: {
-    fontFamily: 'NotoSansKR-Medium',
+  Light: {
+    fontFamily: 'Pretendard-Light',
     includeFontPadding: false,
-    paddingBottom: 2,
   },
-  SemiBoldFont: {
-    fontFamily: 'NotoSansKR-SemiBold',
+  Regular: {
+    fontFamily: 'Pretendard-Regular',
     includeFontPadding: false,
-    paddingBottom: 2,
   },
-  BoldFont: {
-    fontFamily: 'NotoSansKR-Bold',
+  Medium: {
+    fontFamily: 'Pretendard-Medium',
     includeFontPadding: false,
-    paddingBottom: 2,
+  },
+  SemiBold: {
+    fontFamily: 'Pretendard-SemiBold',
+    includeFontPadding: false,
+  },
+  Bold: {
+    fontFamily: 'Pretendard-Bold',
+    includeFontPadding: false,
+  },
+  ExtraBold: {
+    fontFamily: 'Pretendard-ExtraBold',
+    includeFontPadding: false,
+  },
+  Black: {
+    fontFamily: 'Pretendard-Black',
+    includeFontPadding: false,
   },
 });
 

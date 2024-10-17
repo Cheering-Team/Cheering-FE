@@ -9,7 +9,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import SearchSvg from '../../../assets/images/search-sm.svg';
+import SearchSvg from '../../assets/images/search-sm.svg';
 import React, {useEffect, useState} from 'react';
 import CustomText from '../../components/common/CustomText';
 import {useGetLeagues, useGetSports, useGetTeams} from 'apis/player/usePlayers';

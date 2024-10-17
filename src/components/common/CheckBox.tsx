@@ -1,6 +1,6 @@
 import React from 'react';
 import {Pressable} from 'react-native';
-import CheckSvg from '../../../assets/images/check-white.svg';
+import CheckSvg from '../../assets/images/check-white.svg';
 
 interface CheckBoxProps {
   isCheck: boolean;

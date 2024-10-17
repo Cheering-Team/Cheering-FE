@@ -17,7 +17,7 @@ export type CommunityStackParamList = {
   Community: {playerId: number};
   PostWrite: {playerId: number; feed?: any};
   Post: {postId: number};
-  Daily: {playerId: number};
+  Daily: {playerId: number; date: string};
   ChatRoom: {chatRoomId: number};
   CreateChatRoom: {playerId: number};
   ChatRoomEnter: {chatRoomId: number};

@@ -3,7 +3,7 @@ import {WINDOW_WIDTH} from 'constants/dimension';
 import React, {Dispatch, SetStateAction, useRef} from 'react';
 import {Animated, Modal, PanResponder, Pressable} from 'react-native';
 import Carousel, {CarouselRenderItem} from 'react-native-reanimated-carousel';
-import CloseSvg from '../../../../assets/images/x_white.svg';
+import CloseSvg from '../../../assets/images/x_white.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ImageZoom} from '@likashefqet/react-native-image-zoom';
 import ViewerVideo from '../ViewerVideo';

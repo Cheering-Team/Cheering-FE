@@ -1,6 +1,6 @@
 import {ActivityIndicator, Image, SafeAreaView} from 'react-native';
 import React from 'react';
-import LogoTitleSvg from '../../../assets/images/logo-title.svg';
+import LogoTitleSvg from '../../assets/images/logo-title.svg';
 
 const SplashScreen = () => {
   return (
@@ -9,7 +9,7 @@ const SplashScreen = () => {
       <ActivityIndicator size="large" />
       <Image
         className="absolute bottom-[-50] w-full"
-        source={require('../../../assets/images/logo-graphic.png')}
+        source={require('../../assets/images/logo-graphic.png')}
       />
     </SafeAreaView>
   );

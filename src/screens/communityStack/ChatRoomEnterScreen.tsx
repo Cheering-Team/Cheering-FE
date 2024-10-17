@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
-import CloseSvg from '../../../assets/images/close-black.svg';
+import CloseSvg from '../../assets/images/close-black.svg';
 import {useGetChatRoomById} from 'apis/chat/useChats';
 import CustomButton from 'components/common/CustomButton';
 import Avatar from 'components/common/Avatar';

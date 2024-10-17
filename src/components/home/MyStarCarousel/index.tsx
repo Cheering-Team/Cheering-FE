@@ -8,12 +8,12 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useSharedValue} from 'react-native-reanimated';
 import Carousel, {Pagination} from 'react-native-reanimated-carousel';
 import {useNavigation} from '@react-navigation/native';
-import MoreSvg from '../../../../assets/images/three-dots-vertical-white.svg';
+import MoreSvg from '../../../assets/images/three-dots-vertical-white.svg';
 import {Player} from 'apis/player/types';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from 'components/common/OptionModal';
 import {useGetNotices} from 'apis/notice/useNotices';
-import OfficialSvg from '../../../../assets/images/official.svg';
+import OfficialSvg from '../../../assets/images/official.svg';
 import Avatar from 'components/common/Avatar';
 
 const MyStarCarousel = () => {

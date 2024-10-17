@@ -1,13 +1,13 @@
 import React from 'react';
 import {Pressable, SafeAreaView, ScrollView, View} from 'react-native';
-import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
+import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
 import CustomText from '../../components/common/CustomText';
 import {useGetUserInfo} from 'apis/user/useUsers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {MoreStackParamList} from 'navigations/MoreStackNavigator';
-import BellSvg from '../../../assets/images/bell-line.svg';
-import NoticeSvg from '../../../assets/images/megaphone-black.svg';
-import LockSvg from '../../../assets/images/lock.svg';
+import BellSvg from '../../assets/images/bell-line.svg';
+import NoticeSvg from '../../assets/images/megaphone-black.svg';
+import LockSvg from '../../assets/images/lock.svg';
 import StackHeader from 'components/common/StackHeader';
 
 type MoreScreenNavigationProp = NativeStackNavigationProp<

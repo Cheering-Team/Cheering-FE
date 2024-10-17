@@ -2,19 +2,39 @@ import {Player} from 'apis/player/types';
 import {useGetDailys} from 'apis/post/usePosts';
 import DailyCard from 'components/post/DailyCard';
 import React from 'react';
-import {Tabs} from 'react-native-collapsible-tab-view';
+import {FlatList} from 'react-native';
 
 interface DailyListProps {
   player: Player;
 }
 
 const DailyList = ({player}: DailyListProps) => {
-  const {data: dailyData} = useGetDailys(player.id, '');
+  const {
+    data: dailyData,
+    hasNextPage,
+    fetchNextPage,
+  } = useGetDailys(player.id, '');
+
+  const loadDaily = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
   return (
-    <Tabs.FlashList
+    <FlatList
+      style={{height: 185}}
+      showsHorizontalScrollIndicator={false}
+      horizontal
+      onEndReached={loadDaily}
+      onEndReachedThreshold={1}
       data={dailyData?.pages.flatMap(page => page.result.dailys)}
       renderItem={({item}) => <DailyCard daily={item} />}
-      estimatedItemSize={100}
+      contentContainerStyle={{
+        paddingTop: 40,
+        paddingLeft: 10,
+        paddingBottom: 20,
+      }}
     />
   );
 };

@@ -1,7 +1,7 @@
 import CustomText from 'components/common/CustomText';
 import React from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
-import CloseSvg from '../../../assets/images/close-black.svg';
+import CloseSvg from '../../assets/images/close-black.svg';
 import FastImage from 'react-native-fast-image';
 import {useGetNoticeById} from 'apis/notice/useNotices';
 import {formatDate} from 'utils/format';

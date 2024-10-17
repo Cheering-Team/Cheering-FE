@@ -1,9 +1,9 @@
 import React, {useRef} from 'react';
 import {ImageBackground, Pressable, SafeAreaView, View} from 'react-native';
 import CustomText from '../../components/common/CustomText';
-import BackSvg from '../../../assets/images/arrow-left.svg';
-import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
-import CameraSvg from '../../../assets/images/camera-01.svg';
+import BackSvg from '../../assets/images/arrow-left.svg';
+import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
+import CameraSvg from '../../assets/images/camera-01.svg';
 import ImagePicker from 'react-native-image-crop-picker';
 import OptionModal from '../../components/common/OptionModal';
 import {

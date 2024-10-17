@@ -7,9 +7,9 @@ import {
   View,
 } from 'react-native';
 import CustomText from './CustomText';
-import HeartSvg from '../../assets/images/heart.svg';
-import HeartFillSvg from '../../assets/images/heart_fill.svg';
-import CommentSvg from '../../assets/images/comment.svg';
+import HeartSvg from '../assets/images/heart.svg';
+import HeartFillSvg from '../assets/images/heart_fill.svg';
+import CommentSvg from '../assets/images/comment.svg';
 import PostHeader from './WriterHeader';
 
 export interface PostType {

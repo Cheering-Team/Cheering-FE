@@ -8,8 +8,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import SearchSvg from '../../../assets/images/search-sm.svg';
-import CloseSvg from '../../../assets/images/close-black.svg';
+import SearchSvg from '../../assets/images/search-sm.svg';
+import CloseSvg from '../../assets/images/close-black.svg';
 import {useQueryClient} from '@tanstack/react-query';
 import PlayerList from '../../components/common/PlayerList';
 import {useGetPlayers} from 'apis/player/usePlayers';

@@ -2,7 +2,7 @@ import React from 'react';
 import {Pressable, View} from 'react-native';
 import CustomText from '../../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
-import ChevronLeftSvg from '../../../../assets/images/chevron-left.svg';
+import ChevronLeftSvg from '../../../assets/images/chevron-left.svg';
 import {Player} from '../../../apis/player/types';
 
 interface PostHeaderProps {

@@ -8,9 +8,9 @@ import NaverLogin from '@react-native-seoul/naver-login';
 import {AuthStackParamList} from 'navigations/AuthStackNavigator';
 import Close from 'hooks/Close';
 import CustomText from 'components/common/CustomText';
-import KakaoSvg from '../../../assets/images/kakao.svg';
-import NaverSvg from '../../../assets/images/naver.svg';
-import AppleSvg from '../../../assets/images/apple.svg';
+import KakaoSvg from '../../assets/images/kakao.svg';
+import NaverSvg from '../../assets/images/naver.svg';
+import AppleSvg from '../../assets/images/apple.svg';
 import {AuthContext} from 'navigations/AuthSwitch';
 import {
   useAppleSignIn,

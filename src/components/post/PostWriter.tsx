@@ -3,7 +3,7 @@ import {Pressable, StyleSheet, View} from 'react-native';
 import {formatBeforeDate, formatDate} from '../../utils/format';
 import CustomText from '../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
-import MoreSvg from '../../../assets/images/three-dots.svg';
+import MoreSvg from '../../assets/images/three-dots.svg';
 import OptionModal from '../common/OptionModal';
 import AlertModal from '../common/AlertModal/AlertModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';

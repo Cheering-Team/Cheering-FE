@@ -20,7 +20,7 @@ import {
   ViewabilityConfig,
 } from 'react-native';
 import CustomText from 'components/common/CustomText';
-import CloseSvg from '../../../assets/images/close-black.svg';
+import CloseSvg from '../../assets/images/close-black.svg';
 import {showBottomToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BottomSheet, {
@@ -35,7 +35,7 @@ import {useGetComments} from 'apis/comment/useComments';
 import {WINDOW_HEIGHT} from 'constants/dimension';
 import Daily from 'components/post/Daily';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
-import DownSvg from '../../../assets/images/tri-down-gray.svg';
+import DownSvg from '../../assets/images/tri-down-gray.svg';
 import {Calendar} from 'react-native-calendars';
 import {formatBarDate, formatMonthDay, formatXDate} from 'utils/format';
 
@@ -52,7 +52,7 @@ type MarkingType = {
 };
 
 const DailyScreen = ({navigation, route}) => {
-  const {playerId} = route.params;
+  const {playerId, date} = route.params;
   const insets = useSafeAreaInsets();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -80,14 +80,13 @@ const DailyScreen = ({navigation, route}) => {
   const [curId, setCurId] = useState<number | null>(null);
   const [curComment, setCurComment] = useState<number | null>(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(formatBarDate(new Date()));
   const [markedDates, setMarkedDates] = useState({});
 
   const {
     data: dailyData,
     hasNextPage,
     fetchNextPage,
-  } = useGetDailys(playerId, selectedDate);
+  } = useGetDailys(playerId, date);
   const {data: commentData} = useGetComments(curComment);
   const {data: dailyExistData} = useGetDailyExist(playerId);
   const {mutateAsync: writeDaily} = useWriteDaily();
@@ -133,13 +132,13 @@ const DailyScreen = ({navigation, route}) => {
   useEffect(() => {
     if (dailyExistData) {
       const marking: MarkingType = {};
-      for (const date of dailyExistData.result) {
-        marking[date] = {marked: true};
+      for (const day of dailyExistData.result) {
+        marking[day] = {marked: true};
       }
-      marking[selectedDate] = {...marking[selectedDate], selected: true};
+      marking[date] = {...marking[date], selected: true};
       setMarkedDates(marking);
     }
-  }, [dailyExistData, selectedDate]);
+  }, [dailyExistData, date]);
 
   return (
     <SafeAreaView className="flex-1">
@@ -159,7 +158,7 @@ const DailyScreen = ({navigation, route}) => {
               setIsCalendarOpen(prev => !prev);
             }}>
             <CustomText className="text-lg pb-0 mr-1 text-sla" fontWeight="500">
-              {formatMonthDay(selectedDate)}
+              {formatMonthDay(date)}
             </CustomText>
             <DownSvg width={15} height={15} />
           </Pressable>
@@ -172,7 +171,7 @@ const DailyScreen = ({navigation, route}) => {
               borderBottomColor: '#eeeeee',
             }}
             onDayPress={day => {
-              setSelectedDate(day.dateString);
+              navigation.setParams({playerId, date: day.dateString});
             }}
             maxDate={formatBarDate(new Date())}
             monthFormat={'M월 yyyy'}
@@ -217,7 +216,7 @@ const DailyScreen = ({navigation, route}) => {
           )}
           ListFooterComponent={
             dailyData?.pages[0].result.isOwner &&
-            selectedDate === formatBarDate(new Date()) ? (
+            date === formatBarDate(new Date()) ? (
               <View className="flex-row items-center my-2">
                 <Avatar uri={dailyData.pages[0].result.owner.image} size={40} />
                 <Pressable
@@ -304,7 +303,7 @@ const DailyScreen = ({navigation, route}) => {
           footerComponent={props => (
             <DailyTextInput
               dailyId={curComment}
-              isToady={selectedDate === formatBarDate(new Date())}
+              isToady={date === formatBarDate(new Date())}
               {...props}
             />
           )}

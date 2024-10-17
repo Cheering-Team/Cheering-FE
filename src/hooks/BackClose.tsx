@@ -1,7 +1,7 @@
 import React from 'react';
 import {Pressable} from 'react-native';
-import CloseButtonSvg from '../../assets/images/close-black.svg';
-import BackBtnSvg from '../../assets/images/chevron-left.svg';
+import CloseButtonSvg from '../assets/images/close-black.svg';
+import BackBtnSvg from '../assets/images/chevron-left.svg';
 
 const BackClose = navigation => {
   React.useLayoutEffect(() => {

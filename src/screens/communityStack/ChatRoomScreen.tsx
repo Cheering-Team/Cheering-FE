@@ -17,9 +17,9 @@ import {
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {reIssueToken} from '../../apis';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import ArrowSvg from '../../../assets/images/arrow_up.svg';
+import ArrowSvg from '../../assets/images/arrow_up.svg';
 import CustomText from '../../components/common/CustomText';
-import ChevronLeftSvg from '../../../assets/images/chevron-left.svg';
+import ChevronLeftSvg from '../../assets/images/chevron-left.svg';
 import {
   useDeleteChatRoom,
   useGetChatRoomById,
@@ -27,22 +27,22 @@ import {
   useGetParticipants,
 } from '../../apis/chat/useChats';
 import {BlurView} from '@react-native-community/blur';
-import OfficialSvg from '../../../assets/images/official.svg';
-import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
-import MegaphoneSvg from '../../../assets/images/megaphone.svg';
+import OfficialSvg from '../../assets/images/official.svg';
+import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
+import MegaphoneSvg from '../../assets/images/megaphone.svg';
 import {useQueryClient} from '@tanstack/react-query';
 import {chatRoomKeys} from '../../apis/chat/queries';
 import {Chat, ChatResponse} from '../../apis/chat/types';
 import Avatar from '../../components/common/Avatar';
 import {formatTime} from '../../utils/format';
 import {WINDOW_WIDTH} from '@gorhom/bottom-sheet';
-import ChevronDownSvg from '../../../assets/images/chevron-down-black-thin.svg';
-import ChevronDownGraySvg from '../../../assets/images/chevron-down-gray.svg';
-import ChevronUpGraySvg from '../../../assets/images/chevron-up-gray.svg';
-import PersonSvg from '../../../assets/images/person-gray.svg';
+import ChevronDownSvg from '../../assets/images/chevron-down-black-thin.svg';
+import ChevronDownGraySvg from '../../assets/images/chevron-down-gray.svg';
+import ChevronUpGraySvg from '../../assets/images/chevron-up-gray.svg';
+import PersonSvg from '../../assets/images/person-gray.svg';
 import {Drawer} from 'react-native-drawer-layout';
-import DrawerSvg from '../../../assets/images/drawer.svg';
-import ExitSvg from '../../../assets/images/exit-gray.svg';
+import DrawerSvg from '../../assets/images/drawer.svg';
+import ExitSvg from '../../assets/images/exit-gray.svg';
 import AlertModal from 'components/common/AlertModal/AlertModal';
 import {showBottomToast} from 'utils/toast';
 import SockJS from 'sockjs-client';

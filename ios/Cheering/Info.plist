@@ -86,7 +86,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>게시글 작성을 위해 카메라 접근권한이 필요합니다.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>게시글 작성을 위해 마이크 접근권한이 필요합니다.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -100,6 +100,15 @@
 		<string>Fonts/NotoSansKR-Medium.ttf</string>
 		<string>Fonts/NotoSansKR-Regular.ttf</string>
 		<string>Fonts/NotoSansKR-SemiBold.ttf</string>
+		<string>Pretendard-Black.otf</string>
+		<string>Pretendard-Bold.otf</string>
+		<string>Pretendard-ExtraBold.otf</string>
+		<string>Pretendard-ExtraLight.otf</string>
+		<string>Pretendard-Light.otf</string>
+		<string>Pretendard-Medium.otf</string>
+		<string>Pretendard-Regular.otf</string>
+		<string>Pretendard-SemiBold.otf</string>
+		<string>Pretendard-Thin.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

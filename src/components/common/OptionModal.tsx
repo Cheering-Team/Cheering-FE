@@ -8,13 +8,13 @@ import React, {RefObject, useCallback, useMemo} from 'react';
 import {Pressable} from 'react-native';
 import CustomText from './CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import TrashSvg from '../../../assets/images/trash-red.svg';
-import ReportSvg from '../../../assets/images/report-red.svg';
-import EditSvg from '../../../assets/images/edit.svg';
-import ExitSvg from '../../../assets/images/exit.svg';
+import TrashSvg from '../../assets/images/trash-red.svg';
+import ReportSvg from '../../assets/images/report-red.svg';
+import EditSvg from '../../assets/images/edit.svg';
+import ExitSvg from '../../assets/images/exit.svg';
 import Avatar from './Avatar';
-import EnterSvg from '../../../assets/images/enter.svg';
-import BlockSvg from '../../../assets/images/block.svg';
+import EnterSvg from '../../assets/images/enter.svg';
+import BlockSvg from '../../assets/images/block.svg';
 
 interface OptionModalProps {
   modalRef: RefObject<BottomSheetModalMethods>;

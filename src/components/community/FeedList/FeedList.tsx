@@ -8,7 +8,7 @@ import ListLoading from '../../common/ListLoading/ListLoading';
 import ListEmpty from '../../common/ListEmpty/ListEmpty';
 import NotJoin from '../NotJoin';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import PlusSvg from '../../../../assets/images/plus-gray.svg';
+import PlusSvg from '../../../assets/images/plus-gray.svg';
 import {useNavigation} from '@react-navigation/native';
 import {Post} from 'apis/post/types';
 

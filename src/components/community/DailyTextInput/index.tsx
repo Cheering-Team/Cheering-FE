@@ -5,7 +5,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import React, {useState} from 'react';
 import {Platform, Pressable, View} from 'react-native';
-import ArrowSvg from '../../../../assets/images/arrow_up.svg';
+import ArrowSvg from '../../../assets/images/arrow_up.svg';
 import {useWriteComment} from 'apis/comment/useComments';
 
 interface DailyTextInputProps extends BottomSheetFooterProps {

@@ -2,7 +2,7 @@ import React from 'react';
 import {Platform, Pressable, View} from 'react-native';
 import CustomText from '../../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
-import CloseSvg from '../../../../assets/images/close-black.svg';
+import CloseSvg from '../../../assets/images/close-black.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface WriterHeaderProps {

@@ -1,11 +1,12 @@
 import React from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
-import CheveronLeft from '../../../../assets/images/chevron-left-white.svg';
+import CheveronLeft from '../../../assets/images/chevron-left-white.svg';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Avatar from '../../common/Avatar';
-import DailySvg from '../../../../assets/images/comment-white.svg';
+import DailySvg from '../../../assets/images/comment-white.svg';
 import {Player} from 'apis/player/types';
+import {formatBarDate} from 'utils/format';
 
 interface CommunityHeaderProps {
   playerData: Player;
@@ -36,7 +37,10 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
           {playerData.owner && (
             <Pressable
               onPress={() =>
-                navigation.navigate('Daily', {playerId: playerData.id})
+                navigation.navigate('Daily', {
+                  playerId: playerData.id,
+                  date: formatBarDate(new Date()),
+                })
               }>
               <DailySvg width={20} height={20} />
             </Pressable>

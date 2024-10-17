@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {formatComma} from '../../../utils/format';
 import LinearGradient from 'react-native-linear-gradient';
-import StarOrangeSvg from '../../../../assets/images/star-orange.svg';
+import StarOrangeSvg from '../../../assets/images/star-orange.svg';
 import FastImage from 'react-native-fast-image';
 import TeamList from './TeamList';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -10,7 +10,7 @@ import CustomText from '../../common/CustomText';
 import {WINDOW_HEIGHT} from '../../../constants/dimension';
 import {ApiResponse} from 'apis/types';
 import {Player} from 'apis/player/types';
-import OfficialSvg from '../../../../assets/images/official.svg';
+import OfficialSvg from '../../../assets/images/official.svg';
 
 interface CommunityProfileProps {
   playerData: ApiResponse<Player>;

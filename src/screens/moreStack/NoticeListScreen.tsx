@@ -3,7 +3,7 @@ import React from 'react';
 import {FlatList, Pressable, SafeAreaView, View} from 'react-native';
 import {useGetNotices} from 'apis/notice/useNotices';
 import {formatBeforeDate} from 'utils/format';
-import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
+import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
 import StackHeader from 'components/common/StackHeader';
 
 const NoticeListScreen = ({navigation}) => {

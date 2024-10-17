@@ -8,8 +8,8 @@ import {
   SafeAreaView,
   View,
 } from 'react-native';
-import CloseSvg from '../../../assets/images/close-black.svg';
-import MoreSvg from '../../../assets/images/three-dots-black.svg';
+import CloseSvg from '../../assets/images/close-black.svg';
+import MoreSvg from '../../assets/images/three-dots-black.svg';
 import {FlatList} from 'react-native-gesture-handler';
 import Avatar from '../../components/common/Avatar';
 import CustomText from '../../components/common/CustomText';

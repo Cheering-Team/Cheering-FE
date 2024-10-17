@@ -4,9 +4,9 @@ import CustomText from '../../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import Avatar from '../../common/Avatar';
 import {Post} from '../../../apis/post/types';
-import CommentSvg from '../../../../assets/images/comment.svg';
-import HeartSvg from '../../../../assets/images/heart.svg';
-import HeartFillSvg from '../../../../assets/images/heart_fill.svg';
+import CommentSvg from '../../../assets/images/comment.svg';
+import HeartSvg from '../../../assets/images/heart.svg';
+import HeartFillSvg from '../../../assets/images/heart_fill.svg';
 import {useLikePost} from '../../../apis/post/usePosts';
 
 interface InteractBarProps {

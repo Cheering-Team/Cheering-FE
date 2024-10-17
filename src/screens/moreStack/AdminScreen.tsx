@@ -2,7 +2,7 @@ import CustomText from 'components/common/CustomText';
 import StackHeader from 'components/common/StackHeader';
 import React from 'react';
 import {FlatList, Pressable, SafeAreaView} from 'react-native';
-import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
+import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
 
 const ADMIN_BOARD = [{title: '선수 계정 관리'}, {title: '선수 등록 관리'}];
 

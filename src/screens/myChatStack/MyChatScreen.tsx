@@ -17,7 +17,7 @@ import ListEmpty from '../../components/common/ListEmpty/ListEmpty';
 import {useScrollToTop} from '@react-navigation/native';
 import {ChatRoom} from '../../apis/chat/types';
 import Avatar from '../../components/common/Avatar';
-import OfficialSvg from '../../../assets/images/official.svg';
+import OfficialSvg from '../../assets/images/official.svg';
 import ChatCard from 'components/common/ChatCard';
 import StackHeader from 'components/common/StackHeader';
 

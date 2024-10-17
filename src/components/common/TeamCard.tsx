@@ -2,7 +2,7 @@ import React from 'react';
 import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
 import PlayerCard, {Player} from './PlayerCard';
 import {Community} from '../screens/SearchScreen';
-import ChevronRight from '../../assets/images/chevron-right.svg';
+import ChevronRight from '../assets/images/chevron-right.svg';
 import CustomText from './CustomText';
 import {navigate} from '../navigations/RootNavigation';
 

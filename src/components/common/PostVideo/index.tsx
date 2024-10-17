@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {Pressable, View} from 'react-native';
 import Video from 'react-native-video';
-import VolumeSvg from '../../../../assets/images/volume.svg';
-import VolumeMuteSvg from '../../../../assets/images/volume-mute.svg';
+import VolumeSvg from '../../../assets/images/volume.svg';
+import VolumeMuteSvg from '../../../assets/images/volume-mute.svg';
 import {ImageSizeType} from 'apis/post/types';
 import {WINDOW_WIDTH} from 'constants/dimension';
 

@@ -9,8 +9,8 @@ import {
   View,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import CloseSvg from '../../../assets/images/close-black.svg';
-import CameraSvg from '../../../assets/images/camera-01.svg';
+import CloseSvg from '../../assets/images/close-black.svg';
+import CameraSvg from '../../assets/images/camera-01.svg';
 import CustomTextInput from 'components/common/CustomTextInput';
 import {Picker} from '@react-native-picker/picker';
 import ImagePicker from 'react-native-image-crop-picker';

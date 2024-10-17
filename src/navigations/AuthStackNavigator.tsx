@@ -6,7 +6,7 @@ import SetNickNameScreen from '../screens/auth/SetNicknameScreen';
 import PhoneVerifyScreen from '../screens/auth/PhoneVerifyScreen';
 import SocialConnectScreen from '../screens/auth/SocialConnectScreen';
 import {User} from 'apis/user/types';
-import LogoSvg from '../../assets/images/logo-text.svg';
+import LogoSvg from '../assets/images/logo-text.svg';
 import AgreeTermScreen from 'screens/auth/AgreeTermScreen';
 import PrivacyPolicyScreen from 'screens/moreStack/PrivacyPolicyScreen';
 

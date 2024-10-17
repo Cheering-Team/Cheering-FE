@@ -1,6 +1,6 @@
 import React from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
-import ChevronRightSvg from '../../../assets/images/chevron-right-gray.svg';
+import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
 import CustomText from '../../components/common/CustomText';
 import {useGetUserInfo} from 'apis/user/useUsers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';

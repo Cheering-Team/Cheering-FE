@@ -2,9 +2,9 @@ import React from 'react';
 import {Platform, Pressable, View} from 'react-native';
 import CustomText from '../CustomText';
 import {useNavigation} from '@react-navigation/native';
-import BackSvg from '../../../../assets/images/chevron-left.svg';
+import BackSvg from '../../../assets/images/chevron-left.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import CloseSvg from '../../../../assets/images/close-black.svg';
+import CloseSvg from '../../../assets/images/close-black.svg';
 
 interface StackHeaderProps {
   title?: string;

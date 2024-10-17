@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
-import BackSvg from '../../../assets/images/arrow-left.svg';
+import BackSvg from '../../assets/images/arrow-left.svg';
 import {NICKNAME_REGEX} from '../../constants/regex';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';

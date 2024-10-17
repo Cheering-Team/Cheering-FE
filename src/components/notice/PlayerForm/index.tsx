@@ -4,7 +4,7 @@ import CustomTextInput from 'components/common/CustomTextInput';
 import React, {useState} from 'react';
 import {ImageBackground, Pressable, View} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import PlusSvg from '../../../../assets/images/plus.svg';
+import PlusSvg from '../../../assets/images/plus.svg';
 import {useApply} from 'apis/notice/useNotices';
 import {showBottomToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';

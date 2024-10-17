@@ -1,8 +1,8 @@
 import React, {Dispatch, FC, RefObject, SetStateAction, useState} from 'react';
 import {Keyboard, Platform, Pressable, TextInput, View} from 'react-native';
 import CustomText from '../../common/CustomText';
-import CloseSvg from '../../../../assets/images/x_white.svg';
-import ArrowSvg from '../../../../assets/images/arrow_up.svg';
+import CloseSvg from '../../../assets/images/x_white.svg';
+import ArrowSvg from '../../../assets/images/arrow_up.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {IdName} from '../../../apis/types';
 import {

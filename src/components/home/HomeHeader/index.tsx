@@ -7,7 +7,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {View} from 'react-native';
-import LogoSvg from '../../../../assets/images/logo-text.svg';
+import LogoSvg from '../../../assets/images/logo-text.svg';
+import CustomText from 'components/common/CustomText';
 
 interface HomeHeaderProps {
   translateY: SharedValue<number>;
@@ -31,7 +32,13 @@ const HomeHeader = (props: HomeHeaderProps) => {
   });
 
   return (
-    <View style={{position: 'absolute', top: 0, zIndex: 1000, width: '100%'}}>
+    <View
+      style={{
+        position: 'absolute',
+        top: 0,
+        zIndex: 1000,
+        width: '100%',
+      }}>
       <View
         style={{height: insets.top, backgroundColor: 'white', zIndex: 1000}}
       />

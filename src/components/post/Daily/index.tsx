@@ -3,14 +3,14 @@ import CustomText from 'components/common/CustomText';
 import React, {Dispatch, RefObject, SetStateAction, useRef} from 'react';
 import {Pressable, View} from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import MoreSvg from '../../../../assets/images/three-dots-black.svg';
+import MoreSvg from '../../../assets/images/three-dots-black.svg';
 import {formatTime} from 'utils/format';
 import OptionModal from 'components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {GetDailysResponse, Post} from 'apis/post/types';
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {useGetRandomComment} from 'apis/comment/useComments';
-import RefreshSvg from '../../../../assets/images/refresh.svg';
+import RefreshSvg from '../../../assets/images/refresh.svg';
 
 const options = {
   enableVibrateFallback: true,
@@ -94,7 +94,7 @@ const Daily = ({
         />
       </Pressable>
       <Pressable
-        className="bg-white self-end my-4 py-2 px-3 rounded-[15px] w-[80%]"
+        className="bg-white self-end my-4 py-2 px-3 rounded-[15px]"
         onPress={() => {
           bottomSheetRef.current?.snapToIndex(0);
           setCurComment(post.id);
@@ -105,8 +105,9 @@ const Daily = ({
           shadowOpacity: 0.1,
           shadowRadius: 3,
           elevation: 3,
+          width: post.commentCount === 0 ? 60 : '80%',
         }}>
-        <View className="flex-row">
+        <View className="flex-row items-center">
           <CustomText className="text-[13px]">💬</CustomText>
           <CustomText className="text-gray-500 ml-1 text-[13px]">
             {post.commentCount}

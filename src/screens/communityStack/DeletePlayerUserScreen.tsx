@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {Pressable, View} from 'react-native';
-import BackSvg from '../../../assets/images/arrow-left.svg';
+import BackSvg from '../../assets/images/arrow-left.svg';
 import CustomText from '../../components/common/CustomText';
 import CheckBox from '../../components/common/CheckBox';
 import CustomButton from '../../components/common/CustomButton';
