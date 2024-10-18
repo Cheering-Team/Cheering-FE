@@ -65,7 +65,7 @@ const PostWriter = (props: PostWriterProps) => {
                 });
           }}>
           <CustomText fontWeight="500" style={styles.writerName}>
-            {feed.writer.nickname}
+            {feed.writer.name}
           </CustomText>
           <CustomText style={styles.createdAt}>
             {formatBeforeDate(feed.createdAt)}

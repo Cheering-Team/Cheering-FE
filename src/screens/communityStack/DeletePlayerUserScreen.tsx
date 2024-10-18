@@ -16,7 +16,7 @@ const DeletePlayerUserScreen = ({navigation, route}) => {
   const {mutate} = useDeletePlayerUser();
 
   const handleDeleteUser = () => {
-    mutate({playerUserId});
+    mutate({fanId: playerUserId});
   };
 
   return (

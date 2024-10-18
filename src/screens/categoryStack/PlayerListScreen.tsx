@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import {Image, Platform, Pressable, SafeAreaView, View} from 'react-native';
 import Back from '../../hooks/Back';
 import CustomText from '../../components/common/CustomText';
@@ -99,7 +99,7 @@ const PlayerListScreen = ({
       </View>
       <PlayerList
         teamName={data.result.team.name}
-        players={data.result.players}
+        players={data.result.communities}
         paddingTop={true}
       />
     </SafeAreaView>

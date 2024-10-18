@@ -75,7 +75,7 @@ const NotificationScreen = ({navigation}) => {
               style={{flex: 1, color: '#282828'}}
               numberOfLines={3}
               ellipsizeMode="tail">
-              <CustomText fontWeight="500">{item.from.nickname}</CustomText>
+              <CustomText fontWeight="500">{item.from.name}</CustomText>
               {item.count > 1
                 ? `님 외 ${item.count - 1}명이 회원님의 게시글을 좋아합니다.`
                 : '님이 회원님의 게시글을 좋아합니다.  '}
@@ -96,7 +96,7 @@ const NotificationScreen = ({navigation}) => {
               style={{flex: 1, color: '#282828'}}
               numberOfLines={3}
               ellipsizeMode="tail">
-              <CustomText fontWeight="500">{item.from.nickname}</CustomText>
+              <CustomText fontWeight="500">{item.from.name}</CustomText>
               {`님이 댓글을 남겼습니다: `}
               <CustomText fontWeight="500">{`${item.content}  `}</CustomText>
               <CustomText style={{color: '#a2a2a2'}}>
@@ -116,13 +116,13 @@ const NotificationScreen = ({navigation}) => {
               style={{flex: 1, color: '#282828'}}
               numberOfLines={3}
               ellipsizeMode="tail">
-              <CustomText fontWeight="500">{item.from.nickname}</CustomText>
+              <CustomText fontWeight="500">{item.from.name}</CustomText>
               {`님이 답글을 남겼습니다: `}
               <CustomText
                 fontWeight="500"
                 style={{
                   color: '#939393',
-                }}>{`@${item.to.nickname} `}</CustomText>
+                }}>{`@${item.to.name} `}</CustomText>
               <CustomText fontWeight="500">{`${item.content}  `}</CustomText>
               <CustomText style={{color: '#a2a2a2'}}>
                 {formatBeforeDate(item.createdAt)}

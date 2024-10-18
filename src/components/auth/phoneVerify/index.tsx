@@ -83,7 +83,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
     if (data.message === '올바르지 않은 휴대폰 번호입니다.') {
       setPhoneValid('invalid');
     }
-    if (data.message === '인증번호가 전송되었습니다.') {
+    if (data.message === '전송 완료') {
       setLimitTime(300);
       setStatus('code');
       setCode('');
@@ -96,7 +96,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
 
   const handleCheckCodeToSignUp = useCallback(async () => {
     const data = await checkCode({phone, code});
-    if (data.message === '인증번호가 일치합니다.') {
+    if (data.message === '인증 완료') {
       navigation.replace('AgreeTerm', {phone});
       return;
     }
@@ -105,7 +105,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
 
   const handleCheckCodeToSignIn = useCallback(async () => {
     const data = await signInApi({phone, code});
-    if (data.message === '로그인되었습니다.') {
+    if (data.message === '로그인 완료') {
       const {accessToken: sessionToken, refreshToken} = data.result;
       showTopToast(insets.top + 20, data.message);
       signIn?.(sessionToken, refreshToken);
@@ -123,7 +123,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
         type,
       });
 
-      if (data.message === '이미 가입된 유저입니다.' && 'id' in data.result) {
+      if (data.message === '존재하는 유저' && 'id' in data.result) {
         if (timerRef.current) {
           clearInterval(timerRef.current);
         }
@@ -133,10 +133,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
           type,
         });
       }
-      if (
-        data.message === '회원가입되었습니다.' &&
-        'accessToken' in data.result
-      ) {
+      if (data.message === '회원가입 완료' && 'accessToken' in data.result) {
         const {accessToken: sessionToken, refreshToken} = data.result;
         showTopToast(insets.top + 20, data.message);
         signIn?.(sessionToken, refreshToken);

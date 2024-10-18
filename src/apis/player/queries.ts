@@ -13,22 +13,21 @@ export const teamKeys = {
 };
 
 // 선수
-export const playerKeys = {
-  all: ['players'] as const,
-  lists: () => [...playerKeys.all, 'list'] as const,
-  list: (filter: string) => [...playerKeys.lists(), {filter}] as const,
-  listByTeam: (teamId: number) => [...playerKeys.lists(), {teamId}] as const,
-  details: () => [...playerKeys.all, 'detail'] as const,
-  detail: (playerId: number, refreshKey: number) =>
-    [...playerKeys.details(), playerId, refreshKey] as const,
+export const communityKeys = {
+  all: ['communities'] as const,
+  lists: () => [...communityKeys.all, 'list'] as const,
+  list: (filter: string) => [...communityKeys.lists(), {filter}] as const,
+  listByTeam: (teamId: number) => [...communityKeys.lists(), {teamId}] as const,
+  details: () => [...communityKeys.all, 'detail'] as const,
+  detail: (communityId: number, refreshKey: number) =>
+    [...communityKeys.details(), communityId, refreshKey] as const,
 };
 
 // 커뮤니티 유저
-export const playerUserKeys = {
-  all: ['playerusers'] as const,
-  details: () => [...playerUserKeys.all, 'detail'] as const,
-  detail: (playerUserId: number) =>
-    [...playerUserKeys.details(), playerUserId] as const,
-  blockList: (playerUserId: number) =>
-    [...playerUserKeys.all, 'list', 'blocked', {playerUserId}] as const,
+export const fanKeys = {
+  all: ['fans'] as const,
+  details: () => [...fanKeys.all, 'detail'] as const,
+  detail: (fanId: number) => [...fanKeys.details(), fanId] as const,
+  blockList: (fanId: number) =>
+    [...fanKeys.all, 'list', 'blocked', {fanId}] as const,
 };

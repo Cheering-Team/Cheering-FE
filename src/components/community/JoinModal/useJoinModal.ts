@@ -48,7 +48,7 @@ export const useJoinModal = (
       image: imageData,
     });
 
-    if (joinData.message === '가입이 완료되었습니다.') {
+    if (joinData.message === '커뮤니티 가입 완료') {
       closeModal();
       setRefreshKey((prev: number) => prev + 1);
       Toast.show({
@@ -56,7 +56,7 @@ export const useJoinModal = (
         position: 'top',
         visibilityTime: 3000,
         topOffset: insets.top + 20,
-        text1: '가입이 완료되었습니다.',
+        text1: '커뮤니티 가입 완료',
       });
     }
   };

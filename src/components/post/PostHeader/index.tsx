@@ -3,10 +3,10 @@ import {Pressable, View} from 'react-native';
 import CustomText from '../../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import ChevronLeftSvg from '../../../assets/images/chevron-left.svg';
-import {Player} from '../../../apis/player/types';
+import {Community} from '../../../apis/player/types';
 
 interface PostHeaderProps {
-  player: Player;
+  player: Community;
 }
 
 const PostHeader = (props: PostHeaderProps) => {
@@ -39,11 +39,13 @@ const PostHeader = (props: PostHeaderProps) => {
           }}>
           {player.koreanName}
         </CustomText>
-        <CustomText
-          fontWeight="400"
-          style={{fontSize: 12, paddingBottom: 0, color: '#979797'}}>
-          {player.englishName}
-        </CustomText>
+        {player.englishName && (
+          <CustomText
+            fontWeight="400"
+            style={{fontSize: 12, paddingBottom: 0, color: '#979797'}}>
+            {player.englishName}
+          </CustomText>
+        )}
       </View>
       <View style={{width: 20, height: 20}} />
     </View>

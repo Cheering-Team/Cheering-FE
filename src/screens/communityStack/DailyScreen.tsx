@@ -96,7 +96,7 @@ const DailyScreen = ({navigation, route}) => {
   const {mutateAsync: deleteDaily} = useDeleteDaily();
 
   const handleWriteDaily = async () => {
-    const data = await writeDaily({playerId, content});
+    const data = await writeDaily({communityId: playerId, content});
     setIsWriteOpen(false);
     if (data.message === '작성 완료') {
       showBottomToast(insets.bottom + 20, data.message);
@@ -218,11 +218,11 @@ const DailyScreen = ({navigation, route}) => {
               />
             )}
             ListFooterComponent={
-              dailyData.pages[0].result.isOwner &&
+              dailyData.pages[0].result.isManager &&
               date === formatBarDate(new Date()) ? (
                 <View className="flex-row items-center my-2">
                   <Avatar
-                    uri={dailyData.pages[0].result.owner.image}
+                    uri={dailyData.pages[0].result.manager.image}
                     size={40}
                   />
                   <Pressable
@@ -395,7 +395,7 @@ const DailyScreen = ({navigation, route}) => {
                 <Avatar uri={item.writer.image} size={40} />
                 <View className="ml-2 flex-1">
                   <CustomText className="text-[12px] pb-0 text-gray-700">
-                    {item.writer.nickname}
+                    {item.writer.name}
                   </CustomText>
                   <CustomText className="text-[13px] pb-0">
                     {item.content}

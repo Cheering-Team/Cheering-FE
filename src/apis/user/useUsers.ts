@@ -9,13 +9,13 @@ import {
   getUserInfo,
   kakaoSignIn,
   naverSignIn,
-  registerPlayerAccount,
+  registerManagerAccount,
   reissuePlayerAccountPassword,
   saveFCMToken,
   sendSMS,
   signIn,
   signUp,
-  updateUserNickname,
+  updateUserName,
 } from './index';
 import {userKeys} from './queries';
 import {queryClient} from '../../../App';
@@ -60,9 +60,9 @@ export const useGetUserInfo = () => {
   return useQuery({queryKey: userKeys.detail(), queryFn: getUserInfo});
 };
 
-export const useUpdateUserNickname = () => {
+export const useUpdateUserName = () => {
   return useMutation({
-    mutationFn: updateUserNickname,
+    mutationFn: updateUserName,
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: userKeys.detail()});
     },
@@ -83,9 +83,9 @@ export const useSaveFCMToken = () => {
 
 export const useRegisterPlayerAccount = () => {
   return useMutation({
-    mutationFn: registerPlayerAccount,
+    mutationFn: registerManagerAccount,
     onSuccess: (_, variables) => {
-      const {playerId} = variables;
+      const {communityId: playerId} = variables;
       queryClient.invalidateQueries({
         queryKey: userKeys.playerAccount(playerId),
       });
@@ -105,7 +105,7 @@ export const useReissuePlayerAccountPassword = () => {
   return useMutation({
     mutationFn: reissuePlayerAccountPassword,
     onSuccess: (_, variables) => {
-      const {playerId} = variables;
+      const {communityId: playerId} = variables;
       queryClient.invalidateQueries({
         queryKey: userKeys.playerAccount(playerId),
       });

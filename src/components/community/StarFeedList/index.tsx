@@ -1,4 +1,4 @@
-import {Player} from 'apis/player/types';
+import {Community} from 'apis/player/types';
 import React from 'react';
 import DailyList from '../DailyList';
 import {Tabs} from 'react-native-collapsible-tab-view';
@@ -6,7 +6,7 @@ import {View} from 'react-native';
 import CustomText from 'components/common/CustomText';
 
 interface StarFeedListProps {
-  player: Player;
+  player: Community;
 }
 
 const StarFeedList = ({player}: StarFeedListProps) => {

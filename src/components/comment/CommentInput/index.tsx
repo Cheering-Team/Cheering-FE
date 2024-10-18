@@ -71,7 +71,7 @@ const CommentInput: FC<CommentInputProps> = props => {
 
     hideToast();
 
-    if (reCommentResponse.message === '답글이 작성되었습니다.') {
+    if (reCommentResponse.message === '답글 작성 완료') {
       setComment('');
       setTo(null);
       setUnder(null);

@@ -51,9 +51,9 @@ const ChatRoomEnterScreen = ({route}) => {
             <CustomText className="text-gray-500 mr-3 text-[13px]">
               방장
             </CustomText>
-            <Avatar uri={data.result.creator?.image} size={20} />
+            <Avatar uri={data.result.manager?.image} size={20} />
             <CustomText className="ml-1">
-              {data.result.creator?.nickname}
+              {data.result.manager?.name}
             </CustomText>
           </View>
         </View>

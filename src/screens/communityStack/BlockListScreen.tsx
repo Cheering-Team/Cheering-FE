@@ -26,7 +26,7 @@ const BlockListScreen = ({route}) => {
             <View className="flex-row py-[10] px-4 items-center">
               <Avatar uri={item.image} size={43} />
               <CustomText className="flex-1 text-[15px] ml-2" fontWeight="500">
-                {item.nickname}
+                {item.name}
               </CustomText>
               <Pressable
                 className="bg-black py-[6] px-[10] rounded-lg"
@@ -51,7 +51,7 @@ const BlockListScreen = ({route}) => {
         button2Text="취소"
         button1Press={() => {
           if (selectedId) {
-            unblockUser({playerUserId: selectedId});
+            unblockUser({fanId: selectedId});
           }
         }}
       />

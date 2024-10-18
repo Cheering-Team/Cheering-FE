@@ -1,19 +1,20 @@
 import {ImageType} from '../post/types';
-import {PlayerUser} from '../user/types';
+import {Fan} from '../user/types';
 
-export interface Player {
+export interface Community {
   id: number;
+  type: 'TEAM' | 'PLAYER';
   koreanName: string;
-  englishName: string;
+  englishName?: string;
   image: string;
   backgroundImage: string;
   fanCount: number | null;
-  user: PlayerUser | null;
+  user: Fan | null;
   teams?: Team[];
   sportName: string | null;
   leagueName: string | null;
-  isOwner?: boolean;
-  owner?: PlayerUser;
+  isManager?: boolean;
+  manager?: Fan;
   officialChatRoomId?: number;
 }
 
@@ -44,33 +45,33 @@ export interface PlayerIdPayload {
 }
 
 export interface JoinCommunityPayload {
-  playerId: number;
-  nickname: string;
+  communityId: number;
+  name: string;
   image: ImageType;
 }
 
-export interface PlayerUserIdPayload {
-  playerUserId: number;
+export interface FanIdPayload {
+  fanId: number;
 }
 
-export interface UpdatedPlayerUserImagePayload extends PlayerUserIdPayload {
+export interface UpdateFanImagePayload extends FanIdPayload {
   image: ImageType | null;
 }
 
-export interface UpdatedPlayerUserNicknamePayload extends PlayerUserIdPayload {
-  nickname: string;
+export interface UpdateFanNamePayload extends FanIdPayload {
+  name: string;
 }
 
 // 응답
-export interface GetPlayerUserInfoResponse {
-  user: PlayerUser;
+export interface GetFanInfoResponse {
+  user: Fan;
   isUser: boolean;
-  player: Player;
+  community: Community;
 }
 
 export interface GetPlayersByTeamResponse {
   sportName: string;
   leagueName: string;
   team: Team;
-  players: Player[];
+  communities: Community[];
 }

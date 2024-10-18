@@ -46,7 +46,7 @@ const Comment = (props: Props) => {
         <Pressable
           onPress={() => {
             setUnder(comment.id);
-            setTo({id: comment.writer.id, name: comment.writer.nickname});
+            setTo({id: comment.writer.id, name: comment.writer.name});
             inputRef.current.focus();
           }}>
           <CustomText

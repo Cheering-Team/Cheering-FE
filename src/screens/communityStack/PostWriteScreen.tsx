@@ -89,7 +89,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
 
     if (!feed) {
       writePost({
-        playerId,
+        communityId: playerId,
         content,
         tags,
         images: imageData,

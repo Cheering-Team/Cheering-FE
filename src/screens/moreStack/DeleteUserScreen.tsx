@@ -30,7 +30,7 @@ const DeleteUserScreen = ({
   const handleDeleteUser = async () => {
     const data = await deleteUser();
 
-    if (data.message === '회원탈퇴되었습니다.') {
+    if (data.message === '회원탈퇴 완료') {
       signOut?.();
       showTopToast(insets.top + 20, data.message);
     }

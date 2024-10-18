@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Player} from 'apis/player/types';
+import {Community} from 'apis/player/types';
 import {useJoinCommunity} from 'apis/player/usePlayers';
 import CustomText from 'components/common/CustomText';
 import React, {Dispatch, SetStateAction, useState} from 'react';
@@ -8,7 +8,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {showTopToast} from 'utils/toast';
 
 interface OwnerModalProps {
-  playerData: Player;
+  playerData: Community;
   setRefreshKey: Dispatch<SetStateAction<number>>;
 }
 
@@ -23,8 +23,8 @@ const OwnerModal = (props: OwnerModalProps) => {
 
   const handleJoinCommunity = async () => {
     const data = await joinCommunity({
-      playerId: playerData.id,
-      nickname: playerData.koreanName,
+      communityId: playerData.id,
+      name: playerData.koreanName,
       image: {
         uri: '',
         name: '',
@@ -32,7 +32,7 @@ const OwnerModal = (props: OwnerModalProps) => {
       },
     });
 
-    if (data.message === '가입이 완료되었습니다.') {
+    if (data.message === '커뮤니티 가입 완료') {
       setIsModalOpen(false);
       setRefreshKey((prev: number) => prev + 1);
       showTopToast(insets.top + 20, '커뮤니티에 참여했어요.');

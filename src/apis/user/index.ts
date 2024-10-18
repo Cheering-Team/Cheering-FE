@@ -5,13 +5,13 @@ import {
   CheckCodePayload,
   CheckCodeSocialPayload,
   ConnectSocialPayload,
-  RegisterPlayerAccountPayload,
+  RegisterManagerAccountPayload,
   SaveFCMTokenPayload,
   SendSMSPayload,
   SignUpPayload,
   Token,
   TokenPayload,
-  UpdateUserNicknamePayload,
+  UpdateUserNamePayload,
   User,
 } from './types';
 import {userKeys} from './queries';
@@ -106,9 +106,9 @@ export const getUserInfo = async () => {
   return response.data;
 };
 
-export const updateUserNickname = async (data: UpdateUserNicknamePayload) => {
+export const updateUserName = async (data: UpdateUserNamePayload) => {
   const response = await axiosInstance.put<ApiResponse<null>>(
-    '/users/nickname',
+    '/users/name',
     data,
   );
   return response.data;
@@ -133,12 +133,12 @@ export const deleteFCMToken = async () => {
   return response.data;
 };
 
-export const registerPlayerAccount = async (
-  data: RegisterPlayerAccountPayload,
+export const registerManagerAccount = async (
+  data: RegisterManagerAccountPayload,
 ) => {
-  const {playerId, phone} = data;
+  const {communityId, phone} = data;
   const response = await axiosInstance.post<ApiResponse<null>>(
-    `/users/player-account/${playerId}`,
+    `/users/manager/${communityId}`,
     {phone},
   );
   return response.data;
@@ -151,17 +151,17 @@ export const getPlayerAccount = async ({
 }) => {
   const [, , playerId] = queryKey;
   const response = await axiosInstance.get<ApiResponse<SendSMSPayload | null>>(
-    `/users/player-account/${playerId}`,
+    `/users/manager/${playerId}`,
   );
   return response.data;
 };
 
 export const reissuePlayerAccountPassword = async (
-  data: RegisterPlayerAccountPayload,
+  data: RegisterManagerAccountPayload,
 ) => {
-  const {playerId, phone} = data;
+  const {communityId: playerId, phone} = data;
   const response = await axiosInstance.put<ApiResponse<null>>(
-    `/users/player-account/${playerId}`,
+    `/users/manager/${playerId}`,
     {phone},
   );
   return response.data;

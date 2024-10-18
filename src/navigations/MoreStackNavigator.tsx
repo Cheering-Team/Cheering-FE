@@ -3,7 +3,7 @@ import React from 'react';
 import MoreScreen from '../screens/moreStack/MoreScreen';
 import MyProfileScreen from '../screens/moreStack/MyProfileScreen';
 import SignOutScreen from '../screens/moreStack/SignOutScreen';
-import EditNicknameScreen from '../screens/moreStack/EditNicknameScreen';
+import EditNameScreen from '../screens/moreStack/EditNameScreen';
 import DeleteUserScreen from '../screens/moreStack/DeleteUserScreen';
 import SetNotificationScreen from '../screens/moreStack/SetNotificationScreen';
 import NoticeListScreen from 'screens/moreStack/NoticeListScreen';
@@ -43,7 +43,7 @@ const MoreStackNavigator = () => {
       />
       <MoreStack.Screen
         name="EditNickname"
-        component={EditNicknameScreen}
+        component={EditNameScreen}
         options={{headerShown: false}}
       />
       <MoreStack.Screen

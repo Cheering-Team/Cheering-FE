@@ -38,7 +38,7 @@ const ReComment = (props: Props) => {
         <CommentWriter comment={reComment} type="reComment" />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <CustomText fontWeight="500" style={{color: '#939393', fontSize: 13}}>
-            {`@${reComment.to.nickname} `}
+            {`@${reComment.to.name} `}
           </CustomText>
           <CustomText style={{color: '#282828'}}>
             {reComment.content}
@@ -48,7 +48,7 @@ const ReComment = (props: Props) => {
         <Pressable
           onPress={() => {
             setUnder(commentId);
-            setTo({id: reComment.writer.id, name: reComment.writer.nickname});
+            setTo({id: reComment.writer.id, name: reComment.writer.name});
             inputRef.current.focus();
           }}>
           <CustomText

@@ -5,7 +5,7 @@ import Close from '../../hooks/Close';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AuthStackParamList} from '../../navigations/AuthStackNavigator';
 import {RouteProp} from '@react-navigation/native';
-import {NICKNAME_REGEX} from '../../constants/regex';
+import {NAME_REGEX} from '../../constants/regex';
 import {AuthContext} from '../../navigations/AuthSwitch';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';
@@ -40,16 +40,16 @@ const SetNickNameScreen = ({
   const {mutateAsync: signUp} = useSignUp();
 
   const handleSignUp = async () => {
-    if (!NICKNAME_REGEX.test(nickname)) {
+    if (!NAME_REGEX.test(nickname)) {
       setNicknameValid(false);
       return;
     }
-    const data = await signUp({phone, nickname});
+    const data = await signUp({phone, name: nickname});
     if (data.message === '부적절한 단어가 포함되어 있습니다.') {
       showBottomToast(insets.bottom + 20, '부적절한 단어가 포함되어 있습니다.');
       return;
     }
-    if (data.message === '회원가입이 완료되었습니다.') {
+    if (data.message === '회원가입 완료') {
       const {accessToken, refreshToken} = data.result;
       showTopToast(insets.top + 20, data.message);
       signIn?.(accessToken, refreshToken);

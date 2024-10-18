@@ -63,7 +63,7 @@ const CommentWriter = (props: CommentWriterProps) => {
             playerUserId: writer.id,
           });
         }}>
-        <CustomText fontWeight="500">{comment.writer.nickname}</CustomText>
+        <CustomText fontWeight="500">{comment.writer.name}</CustomText>
         <CustomText style={{color: '#a5a5a5', marginLeft: 5}}>
           {formatBeforeDate(comment.createdAt)}
         </CustomText>

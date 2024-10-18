@@ -15,7 +15,7 @@ import CustomTextInput from 'components/common/CustomTextInput';
 import {Picker} from '@react-native-picker/picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import {useCreateChatRoom} from 'apis/chat/useChats';
-import {NICKNAME_REGEX} from 'constants/regex';
+import {NAME_REGEX} from 'constants/regex';
 import {showBottomToast, showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -72,7 +72,7 @@ const CreateChatRoomScreen = ({navigation, route}) => {
   };
 
   const handleCreateChatRoom = async () => {
-    if (!NICKNAME_REGEX.test(formData.name)) {
+    if (!NAME_REGEX.test(formData.name)) {
       setIsValid(false);
       return;
     }
@@ -81,14 +81,14 @@ const CreateChatRoomScreen = ({navigation, route}) => {
       return;
     }
 
-    const data = await createChatRoom({playerId, ...formData});
+    const data = await createChatRoom({communityId: playerId, ...formData});
 
     if (data.message === '부적절한 단어가 포함되어 있습니다.') {
       showBottomToast(insets.bottom + 20, data.message);
       return;
     }
 
-    if (data.message === '채팅방을 개설하였습니다.') {
+    if (data.message === '채팅방 생성 완료') {
       showBottomToast(insets.bottom + 20, data.message);
       navigation.replace('ChatRoom', {chatRoomId: data.result.id});
     }

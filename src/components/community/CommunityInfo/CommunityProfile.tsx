@@ -9,11 +9,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../common/CustomText';
 import {WINDOW_HEIGHT} from '../../../constants/dimension';
 import {ApiResponse} from 'apis/types';
-import {Player} from 'apis/player/types';
+import {Community} from 'apis/player/types';
 import OfficialSvg from '../../../assets/images/official.svg';
 
 interface CommunityProfileProps {
-  playerData: ApiResponse<Player>;
+  playerData: ApiResponse<Community>;
 }
 
 const CommunityProfile = (props: CommunityProfileProps) => {
@@ -31,9 +31,12 @@ const CommunityProfile = (props: CommunityProfileProps) => {
         )}
 
         <View style={{paddingLeft: 15}}>
-          <CustomText fontWeight="500" style={styles.englishName}>
-            {playerData.result.englishName}
-          </CustomText>
+          {playerData.result.englishName && (
+            <CustomText fontWeight="500" style={styles.englishName}>
+              {playerData.result.englishName}
+            </CustomText>
+          )}
+
           <View className="flex-row">
             <CustomText
               fontWeight="600"
@@ -44,7 +47,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
               }>
               {playerData.result.koreanName}
             </CustomText>
-            {playerData.result.owner && (
+            {playerData.result.manager && (
               <OfficialSvg
                 width={18}
                 height={18}

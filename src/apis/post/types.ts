@@ -1,13 +1,13 @@
 import {AxiosProgressEvent} from 'axios';
-import {Player} from '../player/types';
+import {Community} from '../player/types';
 import {Page} from '../types';
-import {PlayerUser} from '../user/types';
+import {Fan} from '../user/types';
 
 // 엔티티
 export interface Post {
   id: number;
-  playerUser: PlayerUser;
-  player: Player;
+  user: Fan;
+  community: Community;
   content: string;
   isHide: boolean;
   createdAt: string;
@@ -16,7 +16,7 @@ export interface Post {
   likeCount: number;
   commentCount: number;
   images: ImageSizeType[];
-  writer: PlayerUser;
+  writer: Fan;
 }
 
 export interface ImageType {
@@ -45,7 +45,7 @@ export interface DailyIdPayload {
 }
 
 export interface WritePostPayload {
-  playerId: number;
+  communityId: number;
   content: string;
   tags: TagType[];
   images: ImageType[];
@@ -61,7 +61,7 @@ export interface EditPostPayload {
 }
 
 export interface WriteDailyPayload {
-  playerId: number;
+  communityId: number;
   content: string;
 }
 
@@ -77,6 +77,6 @@ export interface GetPostsResponse extends Page {
 
 export interface GetDailysResponse extends Page {
   dailys: Post[];
-  isOwner: boolean;
-  owner: PlayerUser;
+  isManager: boolean;
+  manager: Fan;
 }

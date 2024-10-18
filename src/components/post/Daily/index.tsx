@@ -50,7 +50,7 @@ const Daily = ({
           moreModalRef.current?.present();
           ReactNativeHapticFeedback.trigger('impactLight', options);
         }}>
-        <Avatar uri={dailyData?.owner.image} size={40} className="mt-1" />
+        <Avatar uri={dailyData?.manager.image} size={40} className="mt-1" />
         <View
           className="bg-white p-3 ml-3 rounded-[15px] flex-row items-center max-w-[65%]"
           style={{

@@ -1,11 +1,11 @@
-import {Player} from 'apis/player/types';
+import {Community} from 'apis/player/types';
 import {useGetDailys} from 'apis/post/usePosts';
 import DailyCard from 'components/post/DailyCard';
 import React from 'react';
 import {FlatList} from 'react-native';
 
 interface DailyListProps {
-  player: Player;
+  player: Community;
 }
 
 const DailyList = ({player}: DailyListProps) => {

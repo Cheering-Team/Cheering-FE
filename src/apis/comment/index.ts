@@ -26,7 +26,7 @@ export const writeComment = async (data: WriteCommentPayload) => {
   return response.data;
 };
 
-// 댓글 불러오기 (무한 스크롤)
+// 댓글 목록 조회 (무한 스크롤)
 export const getComments = async ({
   queryKey,
   pageParam = 0,
@@ -55,6 +55,19 @@ export const reportComment = async (data: CommentIdPayload) => {
   const {commentId} = data;
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/comments/${commentId}/reports`,
+  );
+  return response.data;
+};
+
+// 랜덤 댓글 불러오기
+export const getRandomComment = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof commentKeys.random>;
+}) => {
+  const [, , {postId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<Comment | null>>(
+    `/posts/${postId}/random-comments`,
   );
   return response.data;
 };
@@ -101,19 +114,6 @@ export const reportReComment = async (data: ReCommentIdPayload) => {
   const {reCommentId} = data;
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/reComments/${reCommentId}/reports`,
-  );
-  return response.data;
-};
-
-// 랜덤 댓글 불러오기
-export const getRandomComment = async ({
-  queryKey,
-}: {
-  queryKey: ReturnType<typeof commentKeys.random>;
-}) => {
-  const [, , {postId}] = queryKey;
-  const response = await axiosInstance.get<ApiResponse<Comment | null>>(
-    `/posts/${postId}/random-comments`,
   );
   return response.data;
 };

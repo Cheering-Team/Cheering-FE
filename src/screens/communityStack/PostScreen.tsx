@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -31,7 +31,7 @@ const PostScreen = ({route}) => {
   const [under, setUnder] = useState<number | null>(null);
   const [to, setTo] = useState<IdName | null>(null);
 
-  const {data: postData, isLoading: postIsLoading} = useGetPostById(postId);
+  const {data: postData, isFetching: postIsFetching} = useGetPostById(postId);
 
   const {data, isLoading, hasNextPage, fetchNextPage} = useGetComments(postId);
 
@@ -41,7 +41,7 @@ const PostScreen = ({route}) => {
     }
   };
 
-  if (postIsLoading || !postData) {
+  if (postIsFetching || !postData) {
     return null;
   }
 
@@ -51,7 +51,7 @@ const PostScreen = ({route}) => {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={-insets.bottom}>
-        <PostHeader player={postData.result.player} />
+        <PostHeader player={postData.result.community} />
         <FlatList
           data={
             isLoading ? [] : data?.pages.flatMap(page => page.result.comments)
@@ -91,8 +91,8 @@ const PostScreen = ({route}) => {
                       {tag === 'photo'
                         ? '📸 직찍사'
                         : tag === 'viewing'
-                        ? '👀 직관인증'
-                        : '🔎 정보'}
+                          ? '👀 직관인증'
+                          : '🔎 정보'}
                     </CustomText>
                   </View>
                 ))}
@@ -121,7 +121,7 @@ const PostScreen = ({route}) => {
                 <PostWriter
                   feed={postData.result}
                   isWriter={
-                    postData.result.playerUser.id === postData.result.writer.id
+                    postData.result.user.id === postData.result.writer.id
                   }
                   type="post"
                 />

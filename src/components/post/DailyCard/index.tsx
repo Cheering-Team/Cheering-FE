@@ -20,7 +20,7 @@ const DailyCard = ({daily}: DailyCardProps) => {
       className="bg-neutral-50 rounded-2xl pt-6 pb-3 px-5 mx-3"
       onPress={() =>
         navigation.navigate('Daily', {
-          playerId: daily.player.id,
+          playerId: daily.community.id,
           date: formatBarDate(new Date(daily.createdAt)),
         })
       }
@@ -42,9 +42,9 @@ const DailyCard = ({daily}: DailyCardProps) => {
       />
       <View className="flex-row items-center">
         <CustomText fontWeight="600" className="text-base mr-[2]">
-          {daily.writer.nickname}
+          {daily.writer.name}
         </CustomText>
-        {daily.writer.isOwner && <OfficialSvg width={14} height={14} />}
+        {daily.writer.isManager && <OfficialSvg width={14} height={14} />}
       </View>
 
       <CustomText

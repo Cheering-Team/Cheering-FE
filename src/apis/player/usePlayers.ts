@@ -1,20 +1,20 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {
-  blockUser,
-  deletePlayerUser,
-  getBlockedUsers,
+  blockFan,
+  deleteFan,
+  getBlockedFans,
   getLeagues,
-  getMyPlayers,
-  getPlayers,
-  getPlayersByTeam,
-  getPlayersInfo,
-  getPlayerUserInfo,
+  getMyCommunities,
+  getCommunities,
+  getCommunitiesByTeam,
+  getCommunityInfo,
+  getFanInfo,
   getSports,
   getTeams,
   joinCommunity,
-  unblockUser,
-  updatePlayerUserImage,
-  updatePlayerUserNickname,
+  unblockFan,
+  updateFanImage,
+  updateFanName,
 } from './index';
 import {queryClient} from '../../../App';
 import {showBottomToast} from '../../utils/toast';
@@ -22,7 +22,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {postKeys} from '../post/queries';
 import {chatRoomKeys} from '../chat/queries';
-import {leagueKeys, playerKeys, playerUserKeys, teamKeys} from './queries';
+import {leagueKeys, communityKeys, fanKeys, teamKeys} from './queries';
 import {commentKeys, reCommentKeys} from 'apis/comment/queries';
 import {notificationKeys} from 'apis/notification/queries';
 
@@ -55,8 +55,8 @@ export const useGetTeams = (leagueId: number | null) => {
 // 선수 검색
 export const useGetPlayers = (name: string, enabled: boolean) => {
   return useQuery({
-    queryKey: playerKeys.lists(),
-    queryFn: () => getPlayers(name),
+    queryKey: communityKeys.lists(),
+    queryFn: () => getCommunities(name),
     enabled: enabled,
   });
 };
@@ -64,16 +64,16 @@ export const useGetPlayers = (name: string, enabled: boolean) => {
 // 특정 팀 선수 불러오기
 export const useGetPlayersByTeam = (teamId: number) => {
   return useQuery({
-    queryKey: playerKeys.listByTeam(teamId),
-    queryFn: getPlayersByTeam,
+    queryKey: communityKeys.listByTeam(teamId),
+    queryFn: getCommunitiesByTeam,
   });
 };
 
 // 선수 정보 불러오기
 export const useGetPlayersInfo = (playerId: number, refreshKey: number) => {
   return useQuery({
-    queryKey: playerKeys.detail(playerId, refreshKey),
-    queryFn: getPlayersInfo,
+    queryKey: communityKeys.detail(playerId, refreshKey),
+    queryFn: getCommunityInfo,
   });
 };
 
@@ -82,24 +82,24 @@ export const useJoinCommunity = () => {
   return useMutation({
     mutationFn: joinCommunity,
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: playerKeys.list('my')});
+      queryClient.invalidateQueries({queryKey: communityKeys.list('my')});
     },
   });
 };
 
 // 내 선수 불러오기
-export const useGetMyPlayers = () => {
+export const useGetMyCommunities = () => {
   return useQuery({
-    queryKey: playerKeys.list('my'),
-    queryFn: getMyPlayers,
+    queryKey: communityKeys.list('my'),
+    queryFn: getMyCommunities,
   });
 };
 
 // 커뮤니티 유저 정보 불러오기
 export const useGetPlayerUserInfo = (playerUserId: number) => {
   return useQuery({
-    queryKey: playerUserKeys.detail(playerUserId),
-    queryFn: getPlayerUserInfo,
+    queryKey: fanKeys.detail(playerUserId),
+    queryFn: getFanInfo,
   });
 };
 
@@ -107,11 +107,11 @@ export const useGetPlayerUserInfo = (playerUserId: number) => {
 export const useUpdatePlayerUserImage = () => {
   const insets = useSafeAreaInsets();
   return useMutation({
-    mutationFn: updatePlayerUserImage,
+    mutationFn: updateFanImage,
     onSuccess: (_, variable) => {
-      const {playerUserId, image} = variable;
+      const {fanId: playerUserId, image} = variable;
       queryClient.invalidateQueries({
-        queryKey: playerUserKeys.detail(playerUserId),
+        queryKey: fanKeys.detail(playerUserId),
       });
       image
         ? showBottomToast(insets.bottom + 20, '수정이 완료되었습니다.')
@@ -123,11 +123,11 @@ export const useUpdatePlayerUserImage = () => {
 // 커뮤니티 유저 닉네임 바꾸기
 export const useUpdatePlayerUserNickname = () => {
   return useMutation({
-    mutationFn: updatePlayerUserNickname,
+    mutationFn: updateFanName,
     onSuccess: (_, variable) => {
-      const {playerUserId} = variable;
+      const {fanId: playerUserId} = variable;
       queryClient.invalidateQueries({
-        queryKey: playerUserKeys.detail(playerUserId),
+        queryKey: fanKeys.detail(playerUserId),
       });
     },
   });
@@ -138,7 +138,7 @@ export const useDeletePlayerUser = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   return useMutation({
-    mutationFn: deletePlayerUser,
+    mutationFn: deleteFan,
     onSuccess: () => {
       showBottomToast(insets.bottom + 20, '커뮤니티에서 탈퇴했습니다.');
       navigation.reset({
@@ -146,7 +146,7 @@ export const useDeletePlayerUser = () => {
         routes: [{name: 'HomeStack'}],
       });
       queryClient.removeQueries({
-        queryKey: playerKeys.details(),
+        queryKey: communityKeys.details(),
       });
       queryClient.removeQueries({
         queryKey: postKeys.lists(),
@@ -163,7 +163,7 @@ export const useBlockUser = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   return useMutation({
-    mutationFn: blockUser,
+    mutationFn: blockFan,
     onSuccess: data => {
       showBottomToast(insets.bottom + 20, data.message);
       navigation.goBack();
@@ -179,8 +179,8 @@ export const useBlockUser = () => {
 // 차단한 유저 목록 불러오기
 export const useGetBlockedUsers = (playerUserId: number) => {
   return useQuery({
-    queryKey: playerUserKeys.blockList(playerUserId),
-    queryFn: getBlockedUsers,
+    queryKey: fanKeys.blockList(playerUserId),
+    queryFn: getBlockedFans,
   });
 };
 
@@ -188,11 +188,11 @@ export const useGetBlockedUsers = (playerUserId: number) => {
 export const useUnblockUser = (playerUserId: number) => {
   const insets = useSafeAreaInsets();
   return useMutation({
-    mutationFn: unblockUser,
+    mutationFn: unblockFan,
     onSuccess: data => {
       showBottomToast(insets.bottom + 20, data.message);
       queryClient.invalidateQueries({
-        queryKey: playerUserKeys.blockList(playerUserId),
+        queryKey: fanKeys.blockList(playerUserId),
       });
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
       queryClient.invalidateQueries({queryKey: commentKeys.lists()});

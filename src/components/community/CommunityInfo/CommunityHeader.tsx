@@ -5,11 +5,11 @@ import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Avatar from '../../common/Avatar';
 import DailySvg from '../../../assets/images/comment-white.svg';
-import {Player} from 'apis/player/types';
+import {Community} from 'apis/player/types';
 import {formatBarDate} from 'utils/format';
 
 interface CommunityHeaderProps {
-  playerData: Player;
+  playerData: Community;
 }
 
 const CommunityHeader = (props: CommunityHeaderProps) => {
@@ -34,7 +34,7 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 
       {playerData.user && (
         <View className="flex-row items-center">
-          {playerData.owner && (
+          {playerData.manager && (
             <Pressable
               onPress={() =>
                 navigation.navigate('Daily', {

@@ -91,7 +91,7 @@ const InteractBar = (props: InteractBarProps) => {
           onPress={() =>
             navigation.navigate('CommunityStack', {
               screen: 'Community',
-              params: {playerId: post.player.id},
+              params: {playerId: post.community.id},
             })
           }
           style={{
@@ -101,12 +101,12 @@ const InteractBar = (props: InteractBarProps) => {
             marginBottom: 13,
           }}>
           <Avatar
-            uri={post.player.image}
+            uri={post.community.image}
             size={21}
             style={{borderWidth: 1, borderColor: '#e2e2e2'}}
           />
           <CustomText style={{fontSize: 15, marginLeft: 7}}>
-            {post.player.koreanName}
+            {post.community.koreanName}
           </CustomText>
         </Pressable>
       )}

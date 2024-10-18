@@ -81,17 +81,18 @@ const ProfileScreen = ({navigation, route}) => {
             style={{
               fontSize: 17,
             }}>
-            {data.result.player.koreanName}
+            {data.result.community.koreanName}
           </CustomText>
-          {data.result.player.englishName.length < 20 && (
-            <CustomText
-              fontWeight="500"
-              style={{
-                fontSize: 17,
-              }}>
-              {` / ${data.result.player.englishName}`}
-            </CustomText>
-          )}
+          {data.result.community.englishName &&
+            data.result.community.englishName.length < 20 && (
+              <CustomText
+                fontWeight="500"
+                style={{
+                  fontSize: 17,
+                }}>
+                {` / ${data.result.community.englishName}`}
+              </CustomText>
+            )}
         </View>
         {data.result.isUser ? (
           <Pressable onPress={() => bottomSheetModalRef.current?.present()}>
@@ -115,7 +116,7 @@ const ProfileScreen = ({navigation, route}) => {
               <Avatar uri={data.result.user.image} size={68} />
               <View style={{marginLeft: 15, marginTop: 3}}>
                 <CustomText fontWeight="500" style={{fontSize: 22}}>
-                  {data.result.user.nickname}
+                  {data.result.user.name}
                 </CustomText>
               </View>
             </View>
@@ -171,7 +172,7 @@ const ProfileScreen = ({navigation, route}) => {
             onPress={() => {
               navigation.navigate('Post', {
                 postId: item.id,
-                playerUser: item.playerUser,
+                playerUser: item.user,
               });
             }}>
             <FeedPost feed={item} type="community" />
@@ -251,7 +252,7 @@ const ProfileScreen = ({navigation, route}) => {
           button1Color="#ff2626"
           button2Text="취소"
           button1Press={() => {
-            blockUser({playerUserId});
+            blockUser({fanId: playerUserId});
           }}
         />
       )}

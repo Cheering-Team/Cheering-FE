@@ -50,7 +50,7 @@ const SignInScreen = ({
       accessToken: token.accessToken,
     });
 
-    if (data.message === '카카오 회원가입이 필요합니다.') {
+    if (data.message === '회원가입 필요') {
       setStatus('phone');
       setPhone('');
       if (timerRef.current) {
@@ -62,7 +62,7 @@ const SignInScreen = ({
       });
       return;
     }
-    if (data.message === '로그인되었습니다.' && data.result) {
+    if (data.message === '로그인 완료' && data.result) {
       const {accessToken, refreshToken} = data.result;
       showTopToast(insets.bottom + 20, data.message);
       signIn?.(accessToken, refreshToken);
@@ -77,7 +77,7 @@ const SignInScreen = ({
       const data = await naverSignIn({
         accessToken: token.successResponse.accessToken,
       });
-      if (data.message === '네이버 회원가입이 필요합니다.') {
+      if (data.message === '회원가입 필요') {
         setStatus('phone');
         setPhone('');
         if (timerRef.current) {
@@ -89,7 +89,7 @@ const SignInScreen = ({
         });
         return;
       }
-      if (data.message === '로그인되었습니다.' && data.result) {
+      if (data.message === '로그인 완료' && data.result) {
         const {accessToken, refreshToken} = data.result;
         showTopToast(insets.bottom + 20, data.message);
         signIn?.(accessToken, refreshToken);
@@ -109,7 +109,7 @@ const SignInScreen = ({
         accessToken: appleAuthRequestResponse.identityToken,
         name: `${appleAuthRequestResponse.fullName?.familyName}${appleAuthRequestResponse.fullName?.givenName}`,
       });
-      if (data.message === '애플 회원가입이 필요합니다.') {
+      if (data.message === '회원가입 필요') {
         setStatus('phone');
         setPhone('');
         if (timerRef.current) {
@@ -121,7 +121,7 @@ const SignInScreen = ({
         });
         return;
       }
-      if (data.message === '로그인되었습니다.' && data.result) {
+      if (data.message === '로그인 완료' && data.result) {
         const {accessToken, refreshToken} = data.result;
         showTopToast(insets.bottom + 20, data.message);
         signIn?.(accessToken, refreshToken);

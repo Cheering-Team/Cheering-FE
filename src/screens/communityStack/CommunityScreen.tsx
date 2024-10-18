@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import CommunityHeader from '../../components/community/CommunityInfo/CommunityHeader';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -61,12 +61,12 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
             handlePresentModalPress={handlePresentModalPress}
           />
         </Tabs.Tab>
-        {playerData.result.owner != null && (
+        {playerData.result.manager != null && (
           <Tabs.Tab name="스타">
             <StarFeedList player={playerData.result} />
           </Tabs.Tab>
         )}
-        {playerData.result.owner != null && (
+        {playerData.result.manager != null && (
           <Tabs.Tab name="라이브">
             <LiveList />
           </Tabs.Tab>
@@ -85,7 +85,7 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
         setIsModalOpen={setIsModalOpen}
         bottomSheetModalRef={bottomSheetModalRef}
       />
-      {playerData.result.isOwner && playerData.result.user === null && (
+      {playerData.result.isManager && playerData.result.user === null && (
         <OwnerModal
           playerData={playerData.result}
           setRefreshKey={setRefreshKey}

@@ -43,7 +43,7 @@ const SocialConnectScreen = ({
       type,
       userId: user.id,
     });
-    if (data.message === '계정이 연결되었습니다.') {
+    if (data.message === '계정 연결 완료') {
       const {accessToken: sessionToken, refreshToken} = data.result;
       showTopToast(insets.top + 20, data.message);
       signIn?.(sessionToken, refreshToken);
@@ -72,7 +72,7 @@ const SocialConnectScreen = ({
         </CustomText>
         <View className="mt-[50] border border-gray-300 rounded p-4">
           <CustomText fontWeight="500" className="text-lg">
-            {user.nickname}
+            {user.name}
           </CustomText>
           <CustomText className="text-base">{user.phone}</CustomText>
           <CustomText fontWeight="500" className="text-zinc-400">

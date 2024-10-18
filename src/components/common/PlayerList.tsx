@@ -6,12 +6,12 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Avatar from './Avatar';
 import {CategoryStackParamList} from '../../navigations/CategoryStackNavigator';
 import {formatComma} from '../../utils/format';
-import {Player} from 'apis/player/types';
+import {Community} from 'apis/player/types';
 import OfficialSvg from '../../assets/images/official.svg';
 
 interface PlayerListProps {
   teamName?: string;
-  players: Player[];
+  players: Community[];
   paddingTop?: boolean;
 }
 
@@ -70,7 +70,7 @@ const PlayerList = (props: PlayerListProps) => {
                 <CustomText fontWeight="500" style={{fontSize: 16}}>
                   {item.koreanName}
                 </CustomText>
-                {item.owner && (
+                {item.manager && (
                   <OfficialSvg
                     width={12}
                     height={12}

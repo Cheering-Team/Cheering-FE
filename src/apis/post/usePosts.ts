@@ -7,7 +7,7 @@ import {
   editPost,
   getDailyExist,
   getDailys,
-  getPlayerUserPosts,
+  getFanPosts,
   getPostById,
   getPosts,
   likePost,
@@ -71,7 +71,7 @@ export const useGetPosts = (
 export const useGetPlayerUserPosts = (playerUserId: number) => {
   return useInfiniteQuery({
     queryKey: postKeys.list(0, 'all', playerUserId),
-    queryFn: getPlayerUserPosts,
+    queryFn: getFanPosts,
     initialPageParam: 0,
     getNextPageParam: (lastpage, pages) => {
       if (lastpage.result.last) {

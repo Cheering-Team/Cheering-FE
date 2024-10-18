@@ -11,17 +11,17 @@ import Avatar from '../../../common/Avatar';
 import CustomButton from '../../../common/CustomButton';
 import CameraSvg from '../../../../assets/images/camera-01.svg';
 import {ImageType} from '../JoinModal';
-import {NICKNAME_REGEX} from '../../../../constants/regex';
+import {NAME_REGEX} from '../../../../constants/regex';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ImagePicker from 'react-native-image-crop-picker';
 import CustomBottomSheetTextInput from '../../../common/CustomBottomSheetTextInput';
 import {useJoinCommunity} from 'apis/player/usePlayers';
 import {showTopToast} from 'utils/toast';
-import {Player} from 'apis/player/types';
+import {Community} from 'apis/player/types';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
 interface Props {
-  playerData: Player;
+  playerData: Community;
   setRefreshKey: Dispatch<SetStateAction<number>>;
   bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
 }
@@ -67,7 +67,7 @@ const JoinProfile = (props: Props) => {
   };
 
   const handleJoinCommunity = async () => {
-    if (!NICKNAME_REGEX.test(nickname)) {
+    if (!NAME_REGEX.test(nickname)) {
       setIsValid(false);
       setNicknameInvalidMessage(
         '2자~20자, 한글 영어 숫자 . _ 만 사용 가능합니다.',
@@ -76,8 +76,8 @@ const JoinProfile = (props: Props) => {
     }
 
     const joinData = await joinCommunity({
-      playerId: playerData.id,
-      nickname,
+      communityId: playerData.id,
+      name: nickname,
       image: imageData,
     });
 
@@ -87,13 +87,13 @@ const JoinProfile = (props: Props) => {
       return;
     }
 
-    if (joinData?.message === '이미 존재하는 닉네임입니다.') {
+    if (joinData?.message === '중복된 이름') {
       setIsValid(false);
-      setNicknameInvalidMessage(joinData?.message);
+      setNicknameInvalidMessage('이미 사용중인 이름입니다.');
       return;
     }
 
-    if (joinData.message === '가입이 완료되었습니다.') {
+    if (joinData.message === '커뮤니티 가입 완료') {
       bottomSheetModalRef.current?.dismiss();
       setRefreshKey((prev: number) => prev + 1);
       showTopToast(insets.top + 20, joinData.message);

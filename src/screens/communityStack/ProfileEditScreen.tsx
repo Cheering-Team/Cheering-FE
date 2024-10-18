@@ -32,7 +32,7 @@ const ProfileEditScreen = ({navigation, route}) => {
         cropperToolbarTitle: '사진 선택',
       });
       mutate({
-        playerUserId: playerUserId,
+        fanId: playerUserId,
         image: {uri: image.path, name: image.filename || '', type: image.mime},
       });
     } catch (error: any) {
@@ -44,7 +44,7 @@ const ProfileEditScreen = ({navigation, route}) => {
 
   const imageDelete = async () => {
     mutate({
-      playerUserId: playerUserId,
+      fanId: playerUserId,
       image: null,
     });
   };
@@ -93,7 +93,7 @@ const ProfileEditScreen = ({navigation, route}) => {
           }}
           onPress={() =>
             navigation.navigate('EditNickname', {
-              nickname: data.result.user.nickname,
+              nickname: data.result.user.name,
               playerUserId: data.result.user.id,
             })
           }>
@@ -108,7 +108,7 @@ const ProfileEditScreen = ({navigation, route}) => {
                 fontSize: 17,
                 marginRight: 3,
               }}>
-              {data.result.user.nickname}
+              {data.result.user.name}
             </CustomText>
             <ChevronRightSvg width={13} height={13} />
           </View>

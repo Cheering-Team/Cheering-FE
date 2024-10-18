@@ -13,7 +13,7 @@ import {
 import {StyleSheet} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import JoinProfile from './JoinProfile/JoinProfile';
-import {Player} from 'apis/player/types';
+import {Community} from 'apis/player/types';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
 export interface ImageType {
@@ -23,7 +23,7 @@ export interface ImageType {
 }
 
 interface Props {
-  playerData: Player;
+  playerData: Community;
   isModalOpen: boolean;
   setRefreshKey: Dispatch<SetStateAction<number>>;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;

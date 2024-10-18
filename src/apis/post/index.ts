@@ -15,7 +15,7 @@ import {
 
 // 게시글 작성
 export const writePost = async (data: WritePostPayload) => {
-  const {playerId, content, tags, images, handleProgress} = data;
+  const {communityId, content, tags, images, handleProgress} = data;
 
   const formData = new FormData();
   formData.append('content', content);
@@ -23,7 +23,7 @@ export const writePost = async (data: WritePostPayload) => {
   images.forEach(image => formData.append('images', image));
 
   const response = await axiosInstance.post<ApiResponse<Id>>(
-    `/players/${playerId}/posts`,
+    `/communities/${communityId}/posts`,
     formData,
     {
       headers: {
@@ -37,7 +37,7 @@ export const writePost = async (data: WritePostPayload) => {
   return response.data;
 };
 
-// 게시글 목록 불러오기 (무한 스크롤)
+// 커뮤니티 게시글 불러오기 (무한 스크롤) (id = 0 -> 내가 모든 커뮤니티 게시글)
 export const getPosts = async ({
   queryKey,
   pageParam = 0,
@@ -45,31 +45,31 @@ export const getPosts = async ({
   queryKey: ReturnType<typeof postKeys.list>;
   pageParam: number;
 }) => {
-  const [, , {playerId, filter}] = queryKey;
+  const [, , {communityId, filter}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<GetPostsResponse>>(
-    `/players/${playerId}/posts?tag=${
+    `/communities/${communityId}/posts?tag=${
       filter === 'all' ? '' : filter
-    }&page=${pageParam}&size=10`,
+    }&page=${pageParam}&size=1`,
   );
   return response.data;
 };
 
-// 유저 게시글 불러오기 (무한 스크롤)
-export const getPlayerUserPosts = async ({
+// 팬 게시글 조회 (무한 스크롤)
+export const getFanPosts = async ({
   queryKey,
   pageParam = 0,
 }: {
   queryKey: ReturnType<typeof postKeys.list>;
   pageParam: number;
 }) => {
-  const [, , {playerUserId}] = queryKey;
+  const [, , {fanId}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<GetPostsResponse>>(
-    `/playerusers/${playerUserId}/posts?page=${pageParam}&size=10`,
+    `/fans/${fanId}/posts?page=${pageParam}&size=10`,
   );
   return response.data;
 };
 
-// 게시글 불러오기
+// 특정 게시글 조회
 export const getPostById = async ({
   queryKey,
 }: {
@@ -115,15 +115,6 @@ export const editPost = async (data: EditPostPayload) => {
   return response.data;
 };
 
-// 게시글 신고
-export const reportPost = async (data: PostIdPayload) => {
-  const {postId} = data;
-  const response = await axiosInstance.post<ApiResponse<null>>(
-    `/posts/${postId}/reports`,
-  );
-  return response.data;
-};
-
 // 게시글 삭제
 export const deletePost = async (data: PostIdPayload) => {
   const {postId} = data;
@@ -133,17 +124,26 @@ export const deletePost = async (data: PostIdPayload) => {
   return response.data;
 };
 
+// 게시글 신고
+export const reportPost = async (data: PostIdPayload) => {
+  const {postId} = data;
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/posts/${postId}/reports`,
+  );
+  return response.data;
+};
+
 // 데일리 작성
 export const writeDaily = async (data: WriteDailyPayload) => {
-  const {playerId, content} = data;
+  const {communityId, content} = data;
   const response = await axiosInstance.post<ApiResponse<null>>(
-    `/players/${playerId}/dailys`,
+    `/communities/${communityId}/dailys`,
     {content},
   );
   return response.data;
 };
 
-// 데일리 불러오기
+// 특정 날짜 데일리 조회
 export const getDailys = async ({
   queryKey,
   pageParam = 0,
@@ -151,14 +151,14 @@ export const getDailys = async ({
   queryKey: ReturnType<typeof dailyKeys.list>;
   pageParam: number;
 }) => {
-  const [, , {playerId, date}] = queryKey;
+  const [, , {communityId, date}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<GetDailysResponse>>(
-    `/players/${playerId}/dailys?date=${date}&page=${pageParam}&size=10`,
+    `/communities/${communityId}/dailys?date=${date}&page=${pageParam}&size=10`,
   );
   return response.data;
 };
 
-// 데일리 수정하기
+// 데일리 수정
 export const editDaily = async (data: EditDailyPayload) => {
   const {dailyId, content} = data;
   const response = await axiosInstance.put<ApiResponse<null>>(
@@ -168,7 +168,7 @@ export const editDaily = async (data: EditDailyPayload) => {
   return response.data;
 };
 
-// 데일리 삭제하기
+// 데일리 삭제
 export const deleteDaily = async (data: DailyIdPayload) => {
   const {dailyId} = data;
   const response = await axiosInstance.delete<ApiResponse<null>>(
@@ -183,9 +183,9 @@ export const getDailyExist = async ({
 }: {
   queryKey: ReturnType<typeof dailyKeys.exist>;
 }) => {
-  const [, , {playerId}] = queryKey;
+  const [, , {communityId}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<string[]>>(
-    `/players/${playerId}/dailys/exist`,
+    `/communities/${communityId}/dailys/exist`,
   );
 
   return response.data;

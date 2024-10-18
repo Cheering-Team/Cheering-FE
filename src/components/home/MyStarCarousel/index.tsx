@@ -9,26 +9,28 @@ import {useSharedValue} from 'react-native-reanimated';
 import Carousel, {Pagination} from 'react-native-reanimated-carousel';
 import {useNavigation} from '@react-navigation/native';
 import MoreSvg from '../../../assets/images/three-dots-vertical-white.svg';
-import {Player} from 'apis/player/types';
+import {Community} from 'apis/player/types';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from 'components/common/OptionModal';
 import {useGetNotices} from 'apis/notice/useNotices';
 import OfficialSvg from '../../../assets/images/official.svg';
-import Avatar from 'components/common/Avatar';
-import {formatBarDate} from 'utils/format';
+import {ApiResponse} from 'apis/types';
+import {Notice} from 'apis/notice/types';
 
-const MyStarCarousel = () => {
+interface MyStarCarouselProps {
+  communityData: ApiResponse<Community[]>;
+  noticeData: ApiResponse<Notice[]>;
+}
+
+const MyStarCarousel = ({communityData, noticeData}: MyStarCarouselProps) => {
   const navigation = useNavigation();
   const progress = useSharedValue<number>(0);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {data: playerData} = useGetMyPlayers();
-  const {data: noticeData} = useGetNotices();
-
-  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+  const [selectedPlayer, setSelectedPlayer] = useState<Community | null>(null);
 
   const renderItem = ({item, index}) => {
-    if (playerData && index >= playerData?.result.length) {
+    if (communityData && index >= communityData?.result.length) {
       return (
         <Pressable
           className="w-full h-[220]"
@@ -66,23 +68,22 @@ const MyStarCarousel = () => {
         <View className="absolute z-10 w-full h-full p-5 justify-between">
           <View className="flex-row justify-between">
             <View>
-              <CustomText
-                className="text-white text-[15px] ml-[2] pb-0"
-                fontWeight="500">
-                {item.englishName}
-              </CustomText>
-              <View className="flex-row">
+              {item.englishName && (
                 <CustomText
-                  className="text-white text-[26px] leading-[35px]"
+                  className="text-white text-[15px] ml-[2] pb-0"
+                  fontWeight="500">
+                  {item.englishName}
+                </CustomText>
+              )}
+
+              <View className="flex-row items-center">
+                <CustomText
+                  className="text-white text-[26px] leading-[33px]"
                   fontWeight="500">
                   {item.koreanName}
                 </CustomText>
-                {item.owner && (
-                  <OfficialSvg
-                    width={18}
-                    height={18}
-                    style={{marginLeft: 3, marginTop: 5}}
-                  />
+                {item.manager && (
+                  <OfficialSvg width={18} height={18} style={{marginLeft: 3}} />
                 )}
               </View>
             </View>
@@ -94,8 +95,8 @@ const MyStarCarousel = () => {
               <MoreSvg width={22} height={22} />
             </Pressable>
           </View>
-
-          {item.isOwner ? (
+          {/* 
+          {item.isManager ? (
             <Pressable
               className="flex-row items-center"
               onPress={() =>
@@ -114,54 +115,54 @@ const MyStarCarousel = () => {
                 <View className="bg-[#efefef] absolute top-[5] left-[-1] rounded-[2px] w-5 h-5 rotate-45" />
               </View>
             </Pressable>
-          ) : (
-            <View className="flex-row">
-              <Pressable
-                className="flex-1"
-                onPress={() =>
-                  navigation.navigate('CommunityStack', {
-                    screen: 'PostWrite',
-                    params: {playerId: item.id},
-                  })
-                }>
-                <CustomText
-                  className="text-white text-center text-base"
-                  fontWeight="500">
-                  글 작성
-                </CustomText>
-              </Pressable>
+          ) : ( */}
+          <View className="flex-row">
+            <Pressable
+              className="flex-1"
+              onPress={() =>
+                navigation.navigate('CommunityStack', {
+                  screen: 'PostWrite',
+                  params: {playerId: item.id},
+                })
+              }>
+              <CustomText
+                className="text-white text-center text-base"
+                fontWeight="500">
+                글 작성
+              </CustomText>
+            </Pressable>
 
-              <Pressable
-                className="flex-1 border-x-[1px] border-white"
-                onPress={() =>
-                  navigation.navigate('CommunityStack', {
-                    screen: 'ChatRoom',
-                    params: {chatRoomId: item.officialChatRoomId},
-                  })
-                }>
-                <CustomText
-                  className="text-white text-center text-base"
-                  fontWeight="500">
-                  대표 채팅
-                </CustomText>
-              </Pressable>
+            <Pressable
+              className="flex-1 border-x-[1px] border-white"
+              onPress={() =>
+                navigation.navigate('CommunityStack', {
+                  screen: 'ChatRoom',
+                  params: {chatRoomId: item.officialChatRoomId},
+                })
+              }>
+              <CustomText
+                className="text-white text-center text-base"
+                fontWeight="500">
+                대표 채팅
+              </CustomText>
+            </Pressable>
 
-              <Pressable
-                className="flex-1"
-                onPress={() =>
-                  navigation.navigate('CommunityStack', {
-                    screen: 'Profile',
-                    params: {playerUserId: item.user.id},
-                  })
-                }>
-                <CustomText
-                  className="text-white text-center text-base"
-                  fontWeight="500">
-                  내 프로필
-                </CustomText>
-              </Pressable>
-            </View>
-          )}
+            <Pressable
+              className="flex-1"
+              onPress={() =>
+                navigation.navigate('CommunityStack', {
+                  screen: 'Profile',
+                  params: {playerUserId: item.user.id},
+                })
+              }>
+              <CustomText
+                className="text-white text-center text-base"
+                fontWeight="500">
+                내 프로필
+              </CustomText>
+            </Pressable>
+          </View>
+          {/* )} */}
         </View>
         <FastImage
           source={{uri: item.backgroundImage}}
@@ -179,12 +180,15 @@ const MyStarCarousel = () => {
     );
   };
 
-  if (playerData && noticeData) {
+  if (communityData && noticeData) {
     return (
       <>
         <Carousel
           loop={false}
-          data={[...(playerData?.result || []), ...(noticeData?.result || [])]}
+          data={[
+            ...(communityData?.result || []),
+            ...(noticeData?.result || []),
+          ]}
           mode="parallax"
           width={WINDOW_WIDTH}
           height={220}
@@ -197,11 +201,14 @@ const MyStarCarousel = () => {
         />
         <Pagination.Basic
           progress={progress}
-          data={[...(playerData?.result || []), ...(noticeData?.result || [])]}
+          data={[
+            ...(communityData?.result || []),
+            ...(noticeData?.result || []),
+          ]}
           dotStyle={{
             width: Math.floor(
               (WINDOW_WIDTH * 0.4) /
-                (playerData.result.length + noticeData?.result.length),
+                (communityData.result.length + noticeData?.result.length),
             ),
             height: 4,
             backgroundColor: '#ebebeb',
@@ -217,7 +224,7 @@ const MyStarCarousel = () => {
 
         <OptionModal
           modalRef={bottomSheetModalRef}
-          firstText={selectedPlayer?.user?.nickname}
+          firstText={selectedPlayer?.user?.name}
           firstAvatar={selectedPlayer?.user?.image}
           firstOnPress={() => {
             navigation.navigate('CommunityStack', {

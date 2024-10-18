@@ -83,7 +83,7 @@ const ChatRoomScreen = ({route}) => {
     const accessToken = await EncryptedStorage.getItem('accessToken');
 
     if (accessToken) {
-      const socket = new SockJS('http://localhost:8080/ws');
+      const socket = new SockJS('http://192.168.0.6:8080/ws');
       client.current = new StompJs.Client({
         webSocketFactory: () => socket,
         reconnectDelay: 5000, // 자동 재연결
@@ -202,7 +202,7 @@ const ChatRoomScreen = ({route}) => {
   };
 
   const renderChatMessage: ListRenderItem<Chat> = ({item}) => {
-    if (item.sender.id === data?.result.playerUser?.id) {
+    if (item.sender.id === data?.result.user?.id) {
       return (
         <View
           style={{
@@ -244,7 +244,7 @@ const ChatRoomScreen = ({route}) => {
           <Avatar uri={item.sender.image} size={30} style={{marginTop: 3}} />
           <View style={{marginLeft: 7}}>
             <CustomText style={{color: '#464646', marginBottom: 5}}>
-              {item.sender.nickname}
+              {item.sender.name}
             </CustomText>
             {item.messages.map((message, index) => (
               <View
@@ -286,7 +286,7 @@ const ChatRoomScreen = ({route}) => {
 
   const handleDeleteChatRoom = async () => {
     const data = await deleteChatRoom({chatRoomId});
-    if (data.message === '채팅방을 삭제하였습니다.') {
+    if (data.message === '채팅방 삭제 완료') {
       client.current?.deactivate();
       queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
       showBottomToast(insets.bottom + 20, data.message);
@@ -348,10 +348,10 @@ const ChatRoomScreen = ({route}) => {
                     className="flex-row items-center py-[7]"
                     onPress={() =>
                       navigation.navigate('Profile', {
-                        playerUserId: data.result.creator.id,
+                        playerUserId: data.result.manager.id,
                       })
                     }>
-                    <Avatar uri={data.result.creator?.image} size={32} />
+                    <Avatar uri={data.result.manager?.image} size={32} />
                     <View className="bg-gray-800 rounded-xl px-1 py-[1] mx-[5]">
                       <CustomText
                         fontWeight="600"
@@ -359,7 +359,7 @@ const ChatRoomScreen = ({route}) => {
                         방장
                       </CustomText>
                     </View>
-                    <CustomText>{data.result.creator?.nickname}</CustomText>
+                    <CustomText>{data.result.manager?.name}</CustomText>
                   </Pressable>
                 </>
               }
@@ -372,7 +372,7 @@ const ChatRoomScreen = ({route}) => {
                     })
                   }>
                   <Avatar uri={item.image} size={32} />
-                  <CustomText className="ml-2">{item.nickname}</CustomText>
+                  <CustomText className="ml-2">{item.name}</CustomText>
                 </Pressable>
               )}
               className="flex-1"
@@ -382,18 +382,18 @@ const ChatRoomScreen = ({route}) => {
           <Pressable
             className="h-[48] border-t border-t-[#eeeeee] items-center px-4 flex-row-reverse"
             onPress={() =>
-              data.result.creator?.id === data.result.playerUser?.id
+              data.result.manager?.id === data.result.user?.id
                 ? setIsDeleteAlertOpen(true)
                 : setIsExitAlertOpen(true)
             }>
             <ExitSvg width={24} height={24} />
             <CustomText className="mr-3 text-[#555555] text-[15px]">
-              {data.result.creator?.id === data.result.playerUser?.id
+              {data.result.manager?.id === data.result.user?.id
                 ? '채팅방 삭제'
                 : '채팅방 나가기'}
             </CustomText>
           </Pressable>
-          {data.result.creator?.id === data.result.playerUser?.id ? (
+          {data.result.manager?.id === data.result.user?.id ? (
             <AlertModal
               isModalOpen={isDeleteAlertOpen}
               setIsModalOpen={setIsDeleteAlertOpen}

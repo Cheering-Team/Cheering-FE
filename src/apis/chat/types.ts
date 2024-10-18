@@ -1,6 +1,6 @@
 import {ImageType} from 'apis/post/types';
-import {PlayerUser} from '../user/types';
-import {Player} from 'apis/player/types';
+import {Fan} from '../user/types';
+import {Community} from 'apis/player/types';
 import {Page} from 'apis/types';
 
 // 엔티티
@@ -12,21 +12,21 @@ export interface ChatRoom {
   max: number;
   type: 'OFFICIAL' | 'PUBLIC';
   count: number;
-  playerUser?: PlayerUser;
-  player: Player;
-  creator: PlayerUser | null;
+  user?: Fan;
+  community: Community;
+  manager: Fan | null;
   isParticipating: boolean | null;
 }
 
 export interface Chat {
   createdAt: string;
-  sender: PlayerUser;
+  sender: Fan;
   messages: string[];
 }
 
 export interface ChatResponse {
   createdAt: string;
-  sender: PlayerUser;
+  sender: Fan;
   message: string;
 }
 
@@ -36,7 +36,7 @@ export interface ChatRoomIdPayload {
 }
 
 export interface CreateChatRoomPayload {
-  playerId: number;
+  communityId: number;
   name: string;
   description: string;
   max: number;

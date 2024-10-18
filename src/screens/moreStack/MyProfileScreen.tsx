@@ -31,7 +31,7 @@ const MyProfileScreen = ({
           className="border border-slate-200 p-[18] flex-row items-center justify-between rounded-lg"
           onPress={() =>
             navigation.navigate('EditNickname', {
-              nickname: data.result.nickname,
+              nickname: data.result.name,
               playerUserId: null,
             })
           }>
@@ -42,7 +42,7 @@ const MyProfileScreen = ({
             <CustomText
               fontWeight="500"
               className="text-gray-400 text-[17px] mr-1">
-              {data.result.nickname}
+              {data.result.name}
             </CustomText>
             <ChevronRightSvg width={13} height={13} />
           </View>

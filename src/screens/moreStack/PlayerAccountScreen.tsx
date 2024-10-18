@@ -49,9 +49,9 @@ const PlayerAccountScreen = ({navigation}) => {
     useReissuePlayerAccountPassword();
 
   const handleRegisterPlayerAccount = async () => {
-    const data = await registerPlayerAccount({playerId, phone});
+    const data = await registerPlayerAccount({communityId: playerId, phone});
 
-    if (data.message === '선수 계정을 등록하였습니다.') {
+    if (data.message === '매니저 계정 등록 완료') {
       bottomSheetModalRef.current?.close();
       showBottomToast(insets.bottom + 20, data.message);
     }
@@ -60,9 +60,12 @@ const PlayerAccountScreen = ({navigation}) => {
   };
 
   const handleReissuePlayerAccountPassword = async () => {
-    const data = await reissuePlayerAccountPassword({playerId, phone});
+    const data = await reissuePlayerAccountPassword({
+      communityId: playerId,
+      phone,
+    });
 
-    if (data.message === '비밀번호를 재발급하였습니다.') {
+    if (data.message === '비밀번호 재발급 완료') {
       bottomSheetModalRef.current?.close();
       showBottomToast(insets.bottom + 20, data.message);
     }
@@ -114,8 +117,7 @@ const PlayerAccountScreen = ({navigation}) => {
         android_keyboardInputMode="adjustResize">
         <BottomSheetView className="flex-1">
           <View className="p-3">
-            {playerAccountData?.message ===
-            '선수 계정이 등록되어있지않습니다.' ? (
+            {playerAccountData?.message === '존재하지 않는 매니저 계정' ? (
               <>
                 <CustomBottomSheetTextInput
                   label="휴대폰 번호"

@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
 import BackSvg from '../../assets/images/arrow-left.svg';
-import {NICKNAME_REGEX} from '../../constants/regex';
+import {NAME_REGEX} from '../../constants/regex';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import CustomButton from '../../components/common/CustomButton';
 import {useUpdatePlayerUserNickname} from '../../apis/player/usePlayers';
 import {showBottomToast} from '../../utils/toast';
-import {useUpdateUserNickname} from 'apis/user/useUsers';
+import {useUpdateUserName} from 'apis/user/useUsers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
@@ -16,15 +16,15 @@ import StackHeader from 'components/common/StackHeader';
 
 type EditNicknameScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
-  'EditNickname'
+  'EditName'
 >;
 
 type EditNicknameScreenRouteProp = RouteProp<
   CommunityStackParamList,
-  'EditNickname'
+  'EditName'
 >;
 
-const EditNicknameScreen = ({
+const EditNameScreen = ({
   navigation,
   route,
 }: {
@@ -33,34 +33,34 @@ const EditNicknameScreen = ({
 }) => {
   const {playerUserId} = route.params;
   const insets = useSafeAreaInsets();
-  const [nickname, setNickname] = useState(route.params.nickname);
-  const [isNicknameValid, setIsNicknameValid] = useState(true);
-  const [nicknameInvalidMessage, setNicknameInvalidMessage] = useState('');
+  const [name, setName] = useState(route.params.name);
+  const [isNameValid, setIsNameValid] = useState(true);
+  const [nameInvalidMessage, setNameInvalidMessage] = useState('');
 
   const {mutateAsync: updatePlayerUserNickname} = useUpdatePlayerUserNickname();
-  const {mutateAsync: updateUserNickname} = useUpdateUserNickname();
+  const {mutateAsync: updateUserName} = useUpdateUserName();
 
   const handlePlayerUserNickname = async () => {
     const data = playerUserId
-      ? await updatePlayerUserNickname({playerUserId, nickname})
-      : await updateUserNickname({nickname});
+      ? await updatePlayerUserNickname({fanId: playerUserId, name: name})
+      : await updateUserName({name: name});
     if (data.message === '부적절한 단어가 포함되어 있습니다.') {
-      setIsNicknameValid(false);
-      setNicknameInvalidMessage('부적절한 닉네임입니다.');
+      setIsNameValid(false);
+      setNameInvalidMessage('부적절한 이름입니다.');
     }
-    if (data.message === '이미 존재하는 닉네임입니다.') {
-      setIsNicknameValid(false);
-      setNicknameInvalidMessage(data.message);
+    if (data.message === '중복된 이름') {
+      setIsNameValid(false);
+      setNameInvalidMessage('이미 사용중인 이름입니다.');
     }
-    if (data.message === '닉네임을 변경하였습니다.') {
+    if (data.message === '이름변경 완료') {
       showBottomToast(insets.bottom + 20, data.message);
       navigation.pop();
     }
   };
 
   useEffect(() => {
-    setIsNicknameValid(NICKNAME_REGEX.test(nickname) ? true : false);
-  }, [nickname]);
+    setIsNameValid(NAME_REGEX.test(name) ? true : false);
+  }, [name]);
 
   return (
     <SafeAreaView className="flex-1">
@@ -71,20 +71,20 @@ const EditNicknameScreen = ({
         </CustomText>
         <CustomTextInput
           label="닉네임"
-          value={nickname}
-          onChangeText={setNickname}
+          value={name}
+          onChangeText={setName}
           maxLength={20}
-          curLength={nickname.length}
+          curLength={name.length}
           length
-          isValid={isNicknameValid}
-          inValidMessage={nicknameInvalidMessage}
+          isValid={isNameValid}
+          inValidMessage={nameInvalidMessage}
         />
       </View>
       <View className="p-4">
         <CustomButton
           type="normal"
           text="변경 완료"
-          disabled={!isNicknameValid || nickname === route.params.nickname}
+          disabled={!isNameValid || name === route.params.name}
           onPress={handlePlayerUserNickname}
         />
       </View>
@@ -92,4 +92,4 @@ const EditNicknameScreen = ({
   );
 };
 
-export default EditNicknameScreen;
+export default EditNameScreen;

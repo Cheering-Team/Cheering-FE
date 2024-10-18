@@ -1,19 +1,20 @@
-import {Player} from 'apis/player/types';
+import {Community} from 'apis/player/types';
 
 export interface User {
   id: number;
   phone: string;
-  nickname: string;
+  name: string;
   createdAt?: string;
   role?: string;
-  player?: Player;
+  community?: Community;
 }
 
-export interface PlayerUser {
+export interface Fan {
   id: number;
-  nickname: string;
+  type: 'FAN' | 'MANAGER';
+  name: string;
   image: string;
-  isOwner?: boolean;
+  isManager?: boolean;
 }
 
 export interface Token {
@@ -31,6 +32,11 @@ export interface CheckCodePayload {
   code: string;
 }
 
+export interface SignUpPayload {
+  phone: string;
+  name: string;
+}
+
 export interface CheckCodeSocialPayload {
   accessToken: string;
   phone: string;
@@ -43,26 +49,21 @@ export interface TokenPayload {
   name?: string;
 }
 
-export interface SignUpPayload {
-  phone: string;
-  nickname: string;
-}
-
 export interface ConnectSocialPayload {
   accessToken: string;
   type: 'kakao' | 'naver' | 'apple';
   userId: number;
 }
 
-export interface UpdateUserNicknamePayload {
-  nickname: string;
+export interface UpdateUserNamePayload {
+  name: string;
 }
 
 export interface SaveFCMTokenPayload {
   token: string;
 }
 
-export interface RegisterPlayerAccountPayload {
-  playerId: number;
+export interface RegisterManagerAccountPayload {
+  communityId: number;
   phone: string;
 }

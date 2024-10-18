@@ -156,7 +156,7 @@ const FeedPost = (props: FeedPostProps) => {
           <View style={{marginLeft: 10, flex: 1}}>
             <PostWriter
               feed={feed}
-              isWriter={feed.playerUser.id === feed.writer.id}
+              isWriter={feed.user.id === feed.writer.id}
               type="feed"
               location={type}
             />

@@ -59,7 +59,7 @@ const PlayerForm = () => {
       image: formData.image,
     });
 
-    if (data.message === '신청을 완료하였습니다.') {
+    if (data.message === '신청 완료') {
       showBottomToast(insets.bottom + 20, data.message);
       setFormData({
         name: '',
