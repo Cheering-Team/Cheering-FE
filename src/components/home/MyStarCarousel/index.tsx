@@ -15,6 +15,7 @@ import OptionModal from 'components/common/OptionModal';
 import {useGetNotices} from 'apis/notice/useNotices';
 import OfficialSvg from '../../../assets/images/official.svg';
 import Avatar from 'components/common/Avatar';
+import {formatBarDate} from 'utils/format';
 
 const MyStarCarousel = () => {
   const navigation = useNavigation();
@@ -100,7 +101,7 @@ const MyStarCarousel = () => {
               onPress={() =>
                 navigation.navigate('CommunityStack', {
                   screen: 'Daily',
-                  params: {playerId: item.id},
+                  params: {playerId: item.id, date: formatBarDate(new Date())},
                 })
               }>
               <Avatar uri={item.user.image} size={40} />

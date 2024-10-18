@@ -28,6 +28,7 @@ import {
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import MyStarCarousel from 'components/home/MyStarCarousel';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,

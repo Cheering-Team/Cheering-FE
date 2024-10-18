@@ -11,6 +11,7 @@ interface DailyListProps {
 const DailyList = ({player}: DailyListProps) => {
   const {
     data: dailyData,
+    isLoading,
     hasNextPage,
     fetchNextPage,
   } = useGetDailys(player.id, '');

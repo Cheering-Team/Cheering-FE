@@ -187,5 +187,6 @@ export const getDailyExist = async ({
   const response = await axiosInstance.get<ApiResponse<string[]>>(
     `/players/${playerId}/dailys/exist`,
   );
+
   return response.data;
 };
