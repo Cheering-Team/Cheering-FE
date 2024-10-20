@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, ScrollView, StyleSheet, View} from 'react-native';
+import {Platform, Pressable, ScrollView, StyleSheet, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useState} from 'react';
 import ChevronTopSvg from '../../assets/images/chevron-top-black.svg';
@@ -52,6 +52,7 @@ const FeedFilter = (props: FeedFilterProps) => {
               style={[
                 styles.filterName,
                 item.filter === selectedFilter && styles.selectedFilterNmae,
+                Platform.OS === 'android' && {lineHeight: 22},
               ]}>
               {item.name}
             </CustomText>
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 12,
     marginRight: 6,
+    justifyContent: 'center',
   },
   openedFilterItem: {marginBottom: 10},
   selectedFilterItem: {backgroundColor: '#3a3a3a', borderColor: '#3a3a3a'},

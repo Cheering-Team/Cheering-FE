@@ -8,6 +8,7 @@ import {
 import Avatar from 'components/common/Avatar';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
+  Dimensions,
   FlatList,
   LayoutAnimation,
   Modal,
@@ -26,7 +27,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
-  BottomSheetFlashList,
+  BottomSheetFlatList,
 } from '@gorhom/bottom-sheet';
 
 import AlertModal from 'components/common/AlertModal/AlertModal';
@@ -37,8 +38,9 @@ import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import DownSvg from '../../assets/images/tri-down-gray.svg';
 import {Calendar} from 'react-native-calendars';
 import {formatBarDate, formatMonthDay, formatXDate} from 'utils/format';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import {SCREEN_WIDTH} from 'constants/dimension';
+import DailySkeleton from 'components/skeleton/DailySkeleton';
+import DailyComment from 'components/comment/DailyComment';
+import CommentSkeleton from 'components/skeleton/CommentSkeleton';
 
 if (Platform.OS === 'android') {
   UIManager.setLayoutAnimationEnabledExperimental &&
@@ -53,7 +55,7 @@ type MarkingType = {
 };
 
 const DailyScreen = ({navigation, route}) => {
-  const {playerId, date} = route.params;
+  const {playerId, date, write} = route.params;
   const insets = useSafeAreaInsets();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -85,10 +87,9 @@ const DailyScreen = ({navigation, route}) => {
 
   const {
     data: dailyData,
-    isLoading,
     hasNextPage,
     fetchNextPage,
-  } = useGetDailys(playerId, date);
+  } = useGetDailys(playerId, date, true);
   const {data: commentData} = useGetComments(curComment);
   const {data: dailyExistData} = useGetDailyExist(playerId);
   const {mutateAsync: writeDaily} = useWriteDaily();
@@ -142,6 +143,12 @@ const DailyScreen = ({navigation, route}) => {
     }
   }, [dailyExistData, date]);
 
+  useEffect(() => {
+    if (write) {
+      setIsWriteOpen(true);
+    }
+  }, [write]);
+
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-1">
@@ -159,7 +166,9 @@ const DailyScreen = ({navigation, route}) => {
               );
               setIsCalendarOpen(prev => !prev);
             }}>
-            <CustomText className="text-lg pb-0 mr-1 text-sla" fontWeight="500">
+            <CustomText
+              className="text-[20px] pb-0 mr-1 text-sla"
+              fontWeight="500">
               {formatMonthDay(date)}
             </CustomText>
             <DownSvg width={15} height={15} />
@@ -194,125 +203,84 @@ const DailyScreen = ({navigation, route}) => {
             markedDates={markedDates}
           />
         )}
-        {dailyData ? (
-          <FlatList
-            data={dailyData.pages.flatMap(page => page.result.dailys)}
-            className="bg-white"
-            contentContainerStyle={{
-              paddingHorizontal: 15,
-              paddingTop: 10,
-              paddingBottom: 100,
-            }}
-            onEndReached={loadDaily}
-            onEndReachedThreshold={1}
-            renderItem={({item}) => (
-              <Daily
-                dailyData={dailyData.pages[0].result}
-                post={item}
-                setIsWriteOpen={setIsWriteOpen}
-                setContent={setContent}
-                setCurId={setCurId}
-                setIsDeleteOpen={setIsDeleteOpen}
-                bottomSheetRef={bottomSheetRef}
-                setCurComment={setCurComment}
-              />
-            )}
-            ListFooterComponent={
-              dailyData.pages[0].result.isManager &&
-              date === formatBarDate(new Date()) ? (
-                <View className="flex-row items-center my-2">
-                  <Avatar
-                    uri={dailyData.pages[0].result.manager.image}
-                    size={40}
-                  />
-                  <Pressable
-                    className="bg-white p-3 ml-3 rounded-[15px] flex-row items-center"
-                    onPress={() => {
-                      setIsWriteOpen(true);
-                      setCurId(null);
-                    }}
-                    style={{
-                      shadowColor: '#000000',
-                      shadowOffset: {width: 1, height: 1},
-                      shadowOpacity: 0.1,
-                      shadowRadius: 3,
-                      elevation: 3,
-                    }}>
-                    <CustomText className="text-gray-400">
-                      한마디 남기기..
-                    </CustomText>
-                  </Pressable>
-                </View>
-              ) : null
-            }
-          />
-        ) : (
-          <FlatList
-            data={[1, 1, 1, 1, 1, 1, 1]}
-            contentContainerStyle={{marginTop: 10, marginHorizontal: 15}}
-            renderItem={() => (
-              <SkeletonPlaceholder
-                backgroundColor="#f4f4f4"
-                highlightColor="#ffffff">
-                <View>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <View
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 999,
-                        marginTop: 4,
-                      }}
-                    />
-                    <View
-                      style={{
-                        width: '65%',
-                        marginLeft: 12,
-                      }}>
-                      <View
-                        style={{
-                          width: '100%',
-                          height: 15,
-                          borderRadius: 5,
-                          marginVertical: 3,
-                        }}
-                      />
-                      <View
-                        style={{
-                          width: '60%',
-                          height: 15,
-                          borderRadius: 5,
-                          marginVertical: 3,
-                        }}
-                      />
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      alignSelf: 'flex-end',
-                      width: '70%',
-                      marginVertical: 30,
-                    }}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <View
-                        style={{width: 25, height: 25, borderRadius: 999}}
-                      />
-                      <View
-                        style={{
-                          height: 15,
-                          flex: 1,
-                          marginLeft: 12,
-                          borderRadius: 5,
-                        }}
-                      />
-                    </View>
-                  </View>
-                </View>
-              </SkeletonPlaceholder>
-            )}
-          />
-        )}
 
+        <FlatList
+          data={
+            dailyData ? dailyData.pages.flatMap(page => page.result.dailys) : []
+          }
+          className="bg-white"
+          contentContainerStyle={{
+            paddingHorizontal: 15,
+            paddingTop: 10,
+            paddingBottom: 100,
+          }}
+          onEndReached={loadDaily}
+          onEndReachedThreshold={1}
+          renderItem={({item}) => (
+            <Daily
+              dailyData={dailyData?.pages[0].result}
+              post={item}
+              setIsWriteOpen={setIsWriteOpen}
+              setContent={setContent}
+              setCurId={setCurId}
+              setIsDeleteOpen={setIsDeleteOpen}
+              bottomSheetRef={bottomSheetRef}
+              setCurComment={setCurComment}
+            />
+          )}
+          ListFooterComponent={
+            dailyData?.pages[0].result.isManager &&
+            date === formatBarDate(new Date()) ? (
+              <View className="flex-row items-center my-2">
+                <Avatar
+                  uri={dailyData.pages[0].result.manager.image}
+                  size={40}
+                />
+                <Pressable
+                  className="bg-white p-3 ml-3 rounded-[15px] flex-row items-center"
+                  onPress={() => {
+                    setIsWriteOpen(true);
+                    setCurId(null);
+                  }}
+                  style={{
+                    shadowColor: '#000000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 0,
+                    },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 2,
+                    elevation: 1,
+                  }}>
+                  <CustomText className="text-[#5d626a] text-base">
+                    한마디 남기기..
+                  </CustomText>
+                </Pressable>
+              </View>
+            ) : null
+          }
+          ListEmptyComponent={
+            dailyData ? (
+              formatBarDate(new Date()) === date ? null : (
+                <View
+                  style={{
+                    height: Dimensions.get('window').height * 0.3 + 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <CustomText
+                    fontWeight="600"
+                    className="text-base mb-[5] text-gray-800"
+                    style={{fontSize: 16, marginBottom: 5}}>
+                    오늘은 말이 없으시네요..
+                  </CustomText>
+                </View>
+              )
+            ) : (
+              <DailySkeleton />
+            )
+          }
+        />
         <Modal animationType="fade" visible={isWriteOpen}>
           <SafeAreaView className="w-full h-full bg-white">
             <View className="h-[48] pl-[5] pr-4 flex-row justify-between items-center">
@@ -345,8 +313,8 @@ const DailyScreen = ({navigation, route}) => {
                   onChangeText={setContent}
                   multiline
                   placeholder="한마디 남기기..."
-                  placeholderTextColor="#9ca3af"
-                  className="p-0 m-0"
+                  placeholderTextColor="#5d626a"
+                  className="p-0 m-0 text-base"
                   style={{
                     fontFamily: 'NotoSansKR-Regular',
                     includeFontPadding: false,
@@ -383,26 +351,15 @@ const DailyScreen = ({navigation, route}) => {
           keyboardBlurBehavior="restore"
           keyboardBehavior="fillParent"
           android_keyboardInputMode="adjustResize">
-          <BottomSheetFlashList
+          <BottomSheetFlatList
             showsVerticalScrollIndicator={false}
-            estimatedItemSize={40}
             contentContainerStyle={{paddingBottom: 100, paddingHorizontal: 10}}
             viewabilityConfig={viewabilityConfig}
-            ListEmptyComponent={<ListEmpty type="comment" />}
+            ListEmptyComponent={
+              commentData ? <ListEmpty type="comment" /> : <CommentSkeleton />
+            }
             data={commentData?.pages.flatMap(page => page.result.comments)}
-            renderItem={({item}) => (
-              <View className="flex-row my-[6]">
-                <Avatar uri={item.writer.image} size={40} />
-                <View className="ml-2 flex-1">
-                  <CustomText className="text-[12px] pb-0 text-gray-700">
-                    {item.writer.name}
-                  </CustomText>
-                  <CustomText className="text-[13px] pb-0">
-                    {item.content}
-                  </CustomText>
-                </View>
-              </View>
-            )}
+            renderItem={({item}) => <DailyComment comment={item} />}
           />
         </BottomSheet>
       </View>

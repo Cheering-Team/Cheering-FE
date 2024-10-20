@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  ActivityIndicator,
   Platform,
   Pressable,
   SafeAreaView,
@@ -32,13 +31,7 @@ const SearchScreen = ({
 
   const [content, setContent] = useState('');
 
-  const {data, isLoading, refetch} = useGetPlayers(content, false);
-
-  const searchPlayer = () => {
-    if (content.length > 0) {
-      refetch();
-    }
-  };
+  const {data} = useGetPlayers(content, content.length !== 0);
 
   return (
     <SafeAreaView className="flex-1">
@@ -62,22 +55,10 @@ const SearchScreen = ({
             returnKeyType="search"
             value={content}
             onChangeText={setContent}
-            onSubmitEditing={searchPlayer}
           />
-          <Pressable onPress={searchPlayer}>
-            <SearchSvg />
-          </Pressable>
         </View>
       </View>
-      {isLoading ? (
-        <View className="mt-[50]">
-          <ActivityIndicator size={'large'} />
-        </View>
-      ) : data ? (
-        <PlayerList players={data?.result} />
-      ) : (
-        <></>
-      )}
+      {data ? <PlayerList type="Search" communityData={data} /> : <></>}
     </SafeAreaView>
   );
 };

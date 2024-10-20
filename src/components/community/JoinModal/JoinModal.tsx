@@ -24,9 +24,7 @@ export interface ImageType {
 
 interface Props {
   playerData: Community;
-  isModalOpen: boolean;
   setRefreshKey: Dispatch<SetStateAction<number>>;
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
 }
 

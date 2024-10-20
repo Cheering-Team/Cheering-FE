@@ -4,24 +4,26 @@ import FeedFilter from '../FeedFilter';
 import {useFeedList} from './useFeedList';
 import {ListRenderItem, Pressable, RefreshControl} from 'react-native';
 import FeedPost from '../FeedPost';
-import ListLoading from '../../common/ListLoading/ListLoading';
 import ListEmpty from '../../common/ListEmpty/ListEmpty';
-import NotJoin from '../NotJoin';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PlusSvg from '../../../assets/images/plus-gray.svg';
 import {useNavigation} from '@react-navigation/native';
 import {Post} from 'apis/post/types';
+import {Community} from 'apis/player/types';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 
 interface Props {
-  playerData: any;
-  handlePresentModalPress: any;
+  playerData: Community;
 }
 
 const FeedList = (props: Props) => {
-  const {playerData, handlePresentModalPress} = props;
+  const {playerData} = props;
 
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -48,6 +50,10 @@ const FeedList = (props: Props) => {
     }, 1000);
   };
 
+  if (playerData.user == null) {
+    return null;
+  }
+
   return (
     <>
       <Tabs.FlatList
@@ -63,20 +69,18 @@ const FeedList = (props: Props) => {
             />
           ) : null
         }
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 70}}
         onEndReached={playerData.user && loadFeed}
         onEndReachedThreshold={playerData.user && 1}
         ListFooterComponent={
-          isFetchingNextPage && playerData.user ? <ListLoading /> : null
+          isFetchingNextPage && playerData.user ? (
+            <FeedSkeleton type="Community" />
+          ) : null
         }
         ListEmptyComponent={
-          !playerData.user ? (
-            <NotJoin
-              playerData={playerData}
-              setIsModalOpen={handlePresentModalPress}
-            />
-          ) : isLoading ? (
-            <ListLoading />
+          isLoading ? (
+            <FeedSkeleton type="Community" />
           ) : (
             <ListEmpty type="feed" />
           )

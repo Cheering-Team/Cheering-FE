@@ -1,25 +1,29 @@
-import React from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import React, {RefObject} from 'react';
+import {StyleSheet, View} from 'react-native';
 import StarWhiteSvg from '../../assets/images/star-white.svg';
 import CustomText from '../common/CustomText';
 import Avatar from '../common/Avatar';
+import {Community} from 'apis/player/types';
+import {WINDOW_HEIGHT} from 'constants/dimension';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
 interface NotJoinProps {
-  playerData: any;
-  setIsModalOpen: any;
+  community: Community;
+  bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
 }
 
-const NotJoin = (props: NotJoinProps) => {
-  const {playerData, setIsModalOpen} = props;
-
-  const openModal = () => {
-    setIsModalOpen();
-  };
+const NotJoin = ({community, bottomSheetModalRef}: NotJoinProps) => {
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {height: WINDOW_HEIGHT / 2 - (insets.bottom + 110)},
+      ]}>
       <View style={styles.imageContainer}>
-        <Avatar uri={playerData.image} size={85} style={styles.playerImage} />
+        <Avatar uri={community.image} size={85} style={styles.playerImage} />
         <View style={styles.starImage}>
           <StarWhiteSvg width={45} height={45} />
         </View>
@@ -27,7 +31,7 @@ const NotJoin = (props: NotJoinProps) => {
 
       <View style={styles.imageContainer}>
         <CustomText fontWeight="500" style={styles.title}>
-          {`${playerData.koreanName} `}
+          {`${community.koreanName} `}
         </CustomText>
         <CustomText fontWeight="500" style={styles.title}>
           커뮤니티
@@ -39,7 +43,7 @@ const NotJoin = (props: NotJoinProps) => {
       </CustomText>
 
       <CustomText
-        onPress={openModal}
+        onPress={() => bottomSheetModalRef.current?.present()}
         fontWeight="600"
         style={styles.joinButton}>
         프로필 등록
@@ -52,7 +56,9 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 30,
+    position: 'absolute',
+    width: '100%',
+    top: WINDOW_HEIGHT / 2 + 45,
   },
   imageContainer: {
     flexDirection: 'row',

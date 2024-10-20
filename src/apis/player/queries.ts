@@ -10,6 +10,8 @@ export const teamKeys = {
   all: ['teams'] as const,
   lists: () => [...teamKeys.all, 'list'] as const,
   list: (leagueId: number | null) => [...teamKeys.lists(), {leagueId}] as const,
+  details: () => [...teamKeys.all, 'detail'] as const,
+  detail: (teamId: number) => [...teamKeys.details(), teamId] as const,
 };
 
 // 선수

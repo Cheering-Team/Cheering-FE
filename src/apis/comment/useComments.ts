@@ -1,9 +1,4 @@
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import {
   deleteComment,
   deleteReComment,
@@ -20,16 +15,20 @@ import {postKeys} from '../post/queries';
 import {showBottomToast} from '../../utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryClient} from '../../../App';
+import {LayoutAnimation} from 'react-native';
 
 // 댓글 작성
 export const useWriteComment = () => {
   return useMutation({
+    mutationKey: ['writeComment'],
     mutationFn: writeComment,
     onSuccess: (_, variables) => {
       const {postId} = variables;
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
       queryClient.invalidateQueries({queryKey: postKeys.detail(postId)});
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
+      queryClient.invalidateQueries({queryKey: commentKeys.random(postId)});
     },
   });
 };
@@ -55,6 +54,7 @@ export const useDeleteComment = () => {
   return useMutation({
     mutationFn: deleteComment,
     onSuccess: () => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       queryClient.invalidateQueries({queryKey: commentKeys.lists()});
       queryClient.invalidateQueries({queryKey: postKeys.details()});
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
@@ -77,11 +77,11 @@ export const useReportComment = () => {
 
 // 답글 작성
 export const useWriteReComment = (postId: number) => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: writeReComment,
     onSuccess: (_, variables) => {
       const {commentId} = variables;
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       queryClient.invalidateQueries({queryKey: postKeys.detail(postId)});
       queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
       queryClient.invalidateQueries({queryKey: reCommentKeys.list(commentId)});
@@ -104,10 +104,10 @@ export const useGetRecomments = (
 
 // 답글 삭제
 export const useDeleteReComment = () => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteReComment,
     onSuccess: () => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       queryClient.invalidateQueries({queryKey: commentKeys.lists()});
       queryClient.invalidateQueries({queryKey: reCommentKeys.lists()});
       queryClient.invalidateQueries({queryKey: postKeys.details()});

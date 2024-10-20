@@ -15,12 +15,14 @@ import {
   writeDaily,
   writePost,
 } from './index';
-import {FilterType} from './types';
+import {FilterType, Post} from './types';
 import {useNavigation} from '@react-navigation/native';
 import {PostWriteScreenNavigationProp} from '../../screens/communityStack/PostWriteScreen';
 import {hideToast, showBottomToast} from '../../utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryClient} from '../../../App';
+import {ApiResponse} from 'apis/types.ts';
+import {LayoutAnimation} from 'react-native';
 
 // 게시글 작성
 export const useWritePost = () => {
@@ -50,11 +52,12 @@ export const useWritePost = () => {
 // 게시글 목록 불러오기 (무한 스크롤)
 export const useGetPosts = (
   playerId: number,
+  type: string,
   filter: FilterType,
   enabled: boolean,
 ) => {
   return useInfiniteQuery({
-    queryKey: postKeys.list(playerId, filter),
+    queryKey: postKeys.list(playerId, filter, type),
     queryFn: getPosts,
     initialPageParam: 0,
     getNextPageParam: (lastpage, pages) => {
@@ -70,7 +73,7 @@ export const useGetPosts = (
 // 유저 게시글 불러오기 (무한 스크롤)
 export const useGetPlayerUserPosts = (playerUserId: number) => {
   return useInfiniteQuery({
-    queryKey: postKeys.list(0, 'all', playerUserId),
+    queryKey: postKeys.listByFan(playerUserId),
     queryFn: getFanPosts,
     initialPageParam: 0,
     getNextPageParam: (lastpage, pages) => {
@@ -84,7 +87,10 @@ export const useGetPlayerUserPosts = (playerUserId: number) => {
 
 // 게시글 불러오기
 export const useGetPostById = (postId: number) => {
-  return useQuery({queryKey: postKeys.detail(postId), queryFn: getPostById});
+  return useQuery({
+    queryKey: postKeys.detail(postId),
+    queryFn: getPostById,
+  });
 };
 
 // 게시글 좋아요 토글
@@ -140,6 +146,7 @@ export const useDeletePost = () => {
   return useMutation({
     mutationFn: deletePost,
     onSuccess: () => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
       showBottomToast(insets.bottom + 20, '삭제되었습니다.');
     },
@@ -157,7 +164,11 @@ export const useWriteDaily = () => {
 };
 
 // 데일리 목록 불러오기
-export const useGetDailys = (playerId: number, date: string) => {
+export const useGetDailys = (
+  playerId: number,
+  date: string,
+  enabled: boolean,
+) => {
   return useInfiniteQuery({
     queryKey: dailyKeys.list(playerId, date),
     queryFn: getDailys,
@@ -168,6 +179,7 @@ export const useGetDailys = (playerId: number, date: string) => {
       }
       return pages.length;
     },
+    enabled: enabled,
   });
 };
 

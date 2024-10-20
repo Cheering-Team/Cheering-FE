@@ -12,10 +12,15 @@ import {
 } from '../../apis/player/usePlayers';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import StackHeader from 'components/common/StackHeader';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 
-const ProfileEditScreen = ({navigation, route}) => {
+const ProfileEditScreen = ({route}) => {
   const {playerUserId} = route.params;
 
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const {data} = useGetPlayerUserInfo(playerUserId);
@@ -92,8 +97,8 @@ const ProfileEditScreen = ({navigation, route}) => {
             borderRadius: 10,
           }}
           onPress={() =>
-            navigation.navigate('EditNickname', {
-              nickname: data.result.user.name,
+            navigation.navigate('EditName', {
+              name: data.result.user.name,
               playerUserId: data.result.user.id,
             })
           }>

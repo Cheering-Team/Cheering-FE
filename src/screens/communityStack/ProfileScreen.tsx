@@ -20,9 +20,17 @@ import {useBlockUser, useGetPlayerUserInfo} from '../../apis/player/usePlayers';
 import {useGetPlayerUserPosts} from '../../apis/post/usePosts';
 import AlertModal from 'components/common/AlertModal/AlertModal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import FeedSkeleton from 'components/skeleton/FeedSkeleton';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 
-const ProfileScreen = ({navigation, route}) => {
-  const {playerUserId} = route.params;
+const ProfileScreen = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
+  const {playerUserId} =
+    useRoute<RouteProp<CommunityStackParamList, 'Profile'>>().params;
+
   const insets = useSafeAreaInsets();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -172,7 +180,6 @@ const ProfileScreen = ({navigation, route}) => {
             onPress={() => {
               navigation.navigate('Post', {
                 postId: item.id,
-                playerUser: item.user,
               });
             }}>
             <FeedPost feed={item} type="community" />
@@ -182,18 +189,13 @@ const ProfileScreen = ({navigation, route}) => {
         onEndReachedThreshold={1}
         ListFooterComponent={
           feedIsLoading || isFetchingNextPage ? (
-            <View
-              style={{
-                height: Dimensions.get('window').height * 0.3 + 20,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <ActivityIndicator size={'large'} />
-            </View>
+            <FeedSkeleton type="Community" />
           ) : null
         }
         ListEmptyComponent={
-          !feedIsLoading ? (
+          !feedData ? (
+            <FeedSkeleton type="Community" />
+          ) : (
             <View
               style={{
                 height: Dimensions.get('window').height * 0.3 + 20,
@@ -202,15 +204,11 @@ const ProfileScreen = ({navigation, route}) => {
               }}>
               <CustomText
                 fontWeight="600"
-                style={{fontSize: 23, marginBottom: 5}}>
-                아직 게시글이 없어요
-              </CustomText>
-              <CustomText style={{color: '#5b5b5b'}}>
-                가장 먼저 게시글을 작성해보세요
+                className="text-base mb-[5] text-gray-800"
+                style={{fontSize: 16, marginBottom: 5}}>
+                작성한 게시글이 없어요
               </CustomText>
             </View>
-          ) : (
-            <></>
           )
         }
         refreshControl={

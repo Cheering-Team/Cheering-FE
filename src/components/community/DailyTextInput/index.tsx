@@ -7,6 +7,8 @@ import React, {useState} from 'react';
 import {Platform, Pressable, View} from 'react-native';
 import ArrowSvg from '../../../assets/images/arrow_up.svg';
 import {useWriteComment} from 'apis/comment/useComments';
+import {hideToast, showTopToast} from 'utils/toast';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface DailyTextInputProps extends BottomSheetFooterProps {
   dailyId: number | null;
@@ -18,16 +20,23 @@ const DailyTextInput = ({
   isToady,
   animatedFooterPosition,
 }: DailyTextInputProps) => {
+  const insets = useSafeAreaInsets();
+
   const [content, setContent] = useState('');
 
   const {mutateAsync: writeComment} = useWriteComment();
 
   const handleWriteComment = async () => {
     if (dailyId) {
+      setContent('');
+      showTopToast(insets.top + 20, '작성중..', false);
+
       const data = await writeComment({postId: dailyId, content});
 
+      hideToast();
+
       if (data.message === '작성 완료') {
-        setContent('');
+        return;
       }
     }
   };

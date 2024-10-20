@@ -3,8 +3,9 @@ import {FilterType} from './types';
 export const postKeys = {
   all: ['posts'] as const,
   lists: () => [...postKeys.all, 'list'] as const,
-  list: (communityId: number, filter: FilterType, fanId: number = 0) =>
-    [...postKeys.lists(), {communityId, filter, fanId}] as const,
+  list: (communityId: number, filter: FilterType, type: string) =>
+    [...postKeys.lists(), {communityId, filter, type}] as const,
+  listByFan: (fanId: number) => [...postKeys.lists(), {fanId}] as const,
   details: () => [...postKeys.all, 'detail'] as const,
   detail: (postId: number) => [...postKeys.details(), postId] as const,
 };

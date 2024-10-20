@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -14,25 +14,40 @@ import Avatar from '../../components/common/Avatar';
 import Comment from '../../components/post/Comment';
 import CommentInput from '../../components/comment/CommentInput';
 import {IdName} from '../../apis/types';
-import {useGetPostById} from '../../apis/post/usePosts';
 import PostHeader from '../../components/post/PostHeader';
 import InteractBar from '../../components/post/InteractBar';
 import PostImage from '../../components/post/PostImage';
 import {useGetComments} from '../../apis/comment/useComments';
-import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import ListEmpty from 'components/common/ListEmpty/ListEmpty';
+import {useGetPostById} from 'apis/post/usePosts';
+import CommentSkeleton from 'components/skeleton/CommentSkeleton';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 
-const PostScreen = ({route}) => {
+type PostScreenNavigationProp = StackNavigationProp<
+  CommunityStackParamList,
+  'Post'
+>;
+type PostScreenRouteProp = RouteProp<CommunityStackParamList, 'Post'>;
+
+interface PostScreenProps {
+  navigation: PostScreenNavigationProp;
+  route: PostScreenRouteProp;
+}
+
+const PostScreen = ({navigation, route}: PostScreenProps) => {
   const {postId} = route.params;
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
 
   const commentInputRef = useRef<TextInput>(null);
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const [under, setUnder] = useState<number | null>(null);
   const [to, setTo] = useState<IdName | null>(null);
 
-  const {data: postData, isFetching: postIsFetching} = useGetPostById(postId);
-
+  const {data: postData} = useGetPostById(postId);
   const {data, isLoading, hasNextPage, fetchNextPage} = useGetComments(postId);
 
   const loadComment = () => {
@@ -41,7 +56,7 @@ const PostScreen = ({route}) => {
     }
   };
 
-  if (postIsFetching || !postData) {
+  if (!postData) {
     return null;
   }
 
@@ -119,6 +134,7 @@ const PostScreen = ({route}) => {
                 </Pressable>
 
                 <PostWriter
+                  bottomSheetModalRef={bottomSheetModalRef}
                   feed={postData.result}
                   isWriter={
                     postData.result.user.id === postData.result.writer.id
@@ -133,7 +149,7 @@ const PostScreen = ({route}) => {
                   color: '#282828',
                   marginRight: 25,
                   lineHeight: 24,
-                  fontSize: 15,
+                  fontSize: 16,
                   paddingHorizontal: 15,
                   marginBottom: 10,
                 }}>
@@ -154,6 +170,9 @@ const PostScreen = ({route}) => {
                 댓글
               </CustomText>
             </>
+          }
+          ListEmptyComponent={
+            data ? <ListEmpty type="comment" /> : <CommentSkeleton />
           }
         />
         <CommentInput

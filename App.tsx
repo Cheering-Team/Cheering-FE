@@ -14,6 +14,7 @@ import SplashScreen from 'react-native-splash-screen';
 import messaging from '@react-native-firebase/messaging';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {deleteFCMToken, saveFCMToken} from 'apis/user';
+import {DevToolsBubble} from 'react-native-react-query-devtools';
 
 export const toastConfig = {
   default: props => (
@@ -108,6 +109,7 @@ function App(): React.JSX.Element {
             <Toast config={toastConfig} />
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
+        {/* <DevToolsBubble /> */}
       </QueryClientProvider>
     </SafeAreaProvider>
   );

@@ -83,7 +83,7 @@ const ChatRoomScreen = ({route}) => {
     const accessToken = await EncryptedStorage.getItem('accessToken');
 
     if (accessToken) {
-      const socket = new SockJS('http://192.168.0.6:8080/ws');
+      const socket = new SockJS('http://192.168.0.34:8080/ws');
       client.current = new StompJs.Client({
         webSocketFactory: () => socket,
         reconnectDelay: 5000, // 자동 재연결
@@ -223,8 +223,8 @@ const ChatRoomScreen = ({route}) => {
               <View
                 style={{
                   backgroundColor: '#f1f1f1',
-                  paddingVertical: 5,
-                  paddingHorizontal: 13,
+                  paddingVertical: 7,
+                  paddingHorizontal: 12,
                   borderRadius: 15,
                   marginBottom: 5,
                 }}>
@@ -243,7 +243,8 @@ const ChatRoomScreen = ({route}) => {
         <View style={{flexDirection: 'row', maxWidth: WINDOW_WIDTH / 1.8}}>
           <Avatar uri={item.sender.image} size={30} style={{marginTop: 3}} />
           <View style={{marginLeft: 7}}>
-            <CustomText style={{color: '#464646', marginBottom: 5}}>
+            <CustomText
+              style={{color: '#464646', marginBottom: 5, marginLeft: 2}}>
               {item.sender.name}
             </CustomText>
             {item.messages.map((message, index) => (
@@ -253,8 +254,8 @@ const ChatRoomScreen = ({route}) => {
                 <View
                   style={{
                     backgroundColor: '#f1f1f1',
-                    paddingVertical: 5,
-                    paddingHorizontal: 13,
+                    paddingVertical: 7,
+                    paddingHorizontal: 12,
                     borderRadius: 15,
                     marginBottom: 5,
                   }}>

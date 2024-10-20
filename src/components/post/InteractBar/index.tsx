@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Pressable, View} from 'react-native';
+import {Pressable, TouchableOpacity, View} from 'react-native';
 import CustomText from '../../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import Avatar from '../../common/Avatar';
@@ -50,7 +50,8 @@ const InteractBar = (props: InteractBarProps) => {
         marginLeft: type === 'post' ? undefined : 53,
       }}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Pressable
+        <TouchableOpacity
+          activeOpacity={0.5}
           onPress={handleLikePost}
           style={{
             flexDirection: 'row',
@@ -70,7 +71,7 @@ const InteractBar = (props: InteractBarProps) => {
               color: '#6a6a6a',
               marginLeft: 6,
             }}>{`${likeCount}`}</CustomText>
-        </Pressable>
+        </TouchableOpacity>
         <View
           style={{
             flexDirection: 'row',
@@ -105,7 +106,7 @@ const InteractBar = (props: InteractBarProps) => {
             size={21}
             style={{borderWidth: 1, borderColor: '#e2e2e2'}}
           />
-          <CustomText style={{fontSize: 15, marginLeft: 7}}>
+          <CustomText style={{fontSize: 16, marginLeft: 7}}>
             {post.community.koreanName}
           </CustomText>
         </Pressable>

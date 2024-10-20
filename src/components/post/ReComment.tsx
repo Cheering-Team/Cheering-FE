@@ -1,29 +1,37 @@
-import React from 'react';
-import {Pressable, View} from 'react-native';
+import React, {Dispatch, RefObject, SetStateAction, useRef} from 'react';
+import {Pressable, TextInput, TouchableOpacity, View} from 'react-native';
 import Avatar from '../common/Avatar';
 import CustomText from '../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import CommentWriter from '../comment/CommentWriter';
 import {ReComment as ReCommentType} from '../../apis/comment/types';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {IdName} from 'apis/types';
 
 interface Props {
   commentId: number;
   reComment: ReCommentType;
-  setUnder: any;
-  setTo: any;
-  inputRef: any;
+  setUnder: Dispatch<SetStateAction<number | null>>;
+  setTo: Dispatch<SetStateAction<IdName | null>>;
+  inputRef: RefObject<TextInput>;
 }
 
 const ReComment = (props: Props) => {
   const {commentId, reComment, setUnder, setTo, inputRef} = props;
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   return (
-    <View
+    <Pressable
       style={{
         paddingTop: 10,
         flexDirection: 'row',
-      }}>
+      }}
+      onLongPress={() => bottomSheetModalRef.current?.present()}>
       <Pressable
         style={{height: 33}}
         onPress={() => {
@@ -35,30 +43,35 @@ const ReComment = (props: Props) => {
       </Pressable>
 
       <View style={{marginLeft: 10, flex: 1}}>
-        <CommentWriter comment={reComment} type="reComment" />
+        <CommentWriter
+          bottomSheetModalRef={bottomSheetModalRef}
+          comment={reComment}
+          type="reComment"
+        />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <CustomText fontWeight="500" style={{color: '#939393', fontSize: 13}}>
+          <CustomText fontWeight="500" style={{color: '#939393', fontSize: 15}}>
             {`@${reComment.to.name} `}
           </CustomText>
-          <CustomText style={{color: '#282828'}}>
+          <CustomText style={{color: '#282828', fontSize: 16}}>
             {reComment.content}
           </CustomText>
         </View>
 
-        <Pressable
+        <TouchableOpacity
+          activeOpacity={0.5}
           onPress={() => {
             setUnder(commentId);
             setTo({id: reComment.writer.id, name: reComment.writer.name});
-            inputRef.current.focus();
+            inputRef.current?.focus();
           }}>
           <CustomText
             fontWeight="500"
-            style={{marginTop: 4, fontSize: 12, color: '#888888'}}>
+            style={{marginTop: 8, fontSize: 14, color: '#888888'}}>
             답글 달기
           </CustomText>
-        </Pressable>
+        </TouchableOpacity>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

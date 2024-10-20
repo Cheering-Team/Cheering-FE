@@ -1,5 +1,11 @@
 import React, {Dispatch, FC, RefObject, SetStateAction, useState} from 'react';
-import {Keyboard, Platform, Pressable, TextInput, View} from 'react-native';
+import {
+  Platform,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import CustomText from '../../common/CustomText';
 import CloseSvg from '../../../assets/images/x_white.svg';
 import ArrowSvg from '../../../assets/images/arrow_up.svg';
@@ -9,7 +15,7 @@ import {
   useWriteComment,
   useWriteReComment,
 } from '../../../apis/comment/useComments';
-import {hideToast, showBottomToast} from '../../../utils/toast';
+import {hideToast, showBottomToast, showTopToast} from '../../../utils/toast';
 
 interface CommentInputProps {
   postId: number;
@@ -35,7 +41,8 @@ const CommentInput: FC<CommentInputProps> = props => {
       return;
     }
 
-    showBottomToast(insets.bottom + 20, '작성중입니다...', false);
+    setComment('');
+    showTopToast(insets.top + 20, '작성중..', false);
 
     const commentResponse = await writeComment({
       postId,
@@ -45,8 +52,7 @@ const CommentInput: FC<CommentInputProps> = props => {
     hideToast();
 
     if (commentResponse.message === '작성 완료') {
-      setComment('');
-      Keyboard.dismiss();
+      return;
     } else {
       showBottomToast(insets.bottom + 20, '잠시 후 다시시도 해주세요.');
     }
@@ -61,7 +67,8 @@ const CommentInput: FC<CommentInputProps> = props => {
       return;
     }
 
-    showBottomToast(insets.bottom + 20, '작성중입니다..', false);
+    setComment('');
+    showTopToast(insets.top + 20, '작성중..', false);
 
     const reCommentResponse = await writeReComment({
       commentId: under,
@@ -72,11 +79,8 @@ const CommentInput: FC<CommentInputProps> = props => {
     hideToast();
 
     if (reCommentResponse.message === '답글 작성 완료') {
-      setComment('');
       setTo(null);
       setUnder(null);
-      Keyboard.dismiss();
-      showBottomToast(insets.bottom + 20, '작성이 완료되었습니다.');
     } else {
       showBottomToast(insets.bottom + 20, '잠시 후 다시시도 해주세요.');
     }
@@ -89,32 +93,22 @@ const CommentInput: FC<CommentInputProps> = props => {
   return (
     <>
       {to && (
-        <View
-          style={{
-            backgroundColor: 'black',
-            paddingVertical: 3,
-            paddingLeft: 20,
-            paddingRight: 15,
-            borderTopLeftRadius: 15,
-            borderTopRightRadius: 15,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+        <Pressable
+          className="bg-gray-800 py-1 pl-5 pr-4 rounded-t-[15px] flex-row justify-between items-center"
+          onPress={() => {
+            setTo(null);
+            setUnder(null);
           }}>
           <CustomText
+            fontWeight="500"
             style={{
               color: 'white',
               fontSize: 13,
             }}>{`${to.name}님에게 답글 남기기`}</CustomText>
-          <Pressable
-            style={{padding: 5}}
-            onPress={() => {
-              setTo(null);
-              setUnder(null);
-            }}>
+          <View style={{padding: 5}}>
             <CloseSvg width={10} height={10} />
-          </Pressable>
-        </View>
+          </View>
+        </Pressable>
       )}
       <View
         style={{
@@ -134,7 +128,7 @@ const CommentInput: FC<CommentInputProps> = props => {
             value={comment}
             onChangeText={setComment}
             maxLength={999}
-            className="text-sm flex-1 p-0 m-0"
+            className="text-sm flex-1 p-0 m-0 mr-[50]"
             style={{
               fontFamily: 'NotoSansKR-Regular',
               includeFontPadding: false,
@@ -142,7 +136,9 @@ const CommentInput: FC<CommentInputProps> = props => {
             allowFontScaling={false}
             placeholderTextColor={'#929292'}
           />
-          <Pressable
+          <TouchableOpacity
+            activeOpacity={0.5}
+            disabled={comment.trim().length === 0}
             style={[
               {
                 position: 'absolute',
@@ -157,7 +153,7 @@ const CommentInput: FC<CommentInputProps> = props => {
             ]}
             onPress={under ? handleWriteReComment : handleWriteComment}>
             <ArrowSvg width={15} height={15} />
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </>

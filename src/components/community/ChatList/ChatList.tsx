@@ -1,6 +1,5 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Tabs} from 'react-native-collapsible-tab-view';
-import NotJoin from '../NotJoin';
 import {useGetChatRooms} from '../../../apis/chat/useChats';
 import {useNavigation} from '@react-navigation/native';
 import ChatCard from 'components/common/ChatCard';
@@ -8,23 +7,24 @@ import {Pressable, View} from 'react-native';
 import PlusSvg from '../../../assets/images/plus-gray.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CommunityScreenNavigationProp} from 'screens/communityStack/CommunityScreen';
+import {Community} from 'apis/player/types';
+import ChatRoomSkeleton from 'components/skeleton/ChatRoomSkeleton';
 
 interface Props {
-  playerData: any;
-  handlePresentModalPress: any;
+  community: Community;
 }
 
 const ChatList = (props: Props) => {
-  const {playerData, handlePresentModalPress} = props;
+  const {community} = props;
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<CommunityScreenNavigationProp>();
 
   const {data, isLoading} = useGetChatRooms(
-    playerData.id,
-    playerData.user !== null,
+    community.id,
+    community.user !== null,
   );
 
-  if (isLoading) {
+  if (community.user == null) {
     return null;
   }
 
@@ -50,16 +50,9 @@ const ChatList = (props: Props) => {
             return null;
           }
         }}
-        ListEmptyComponent={
-          !playerData.user ? (
-            <NotJoin
-              playerData={playerData}
-              setIsModalOpen={handlePresentModalPress}
-            />
-          ) : null
-        }
+        ListEmptyComponent={data ? null : <ChatRoomSkeleton />}
       />
-      {playerData.user && (
+      {community.user && (
         <Pressable
           className="items-center absolute right-[17] w-[42] h-[42] justify-center bg-[#ffffff] rounded-full"
           style={{
@@ -74,7 +67,7 @@ const ChatList = (props: Props) => {
             elevation: 3,
           }}
           onPress={() => {
-            navigation.navigate('CreateChatRoom', {playerId: playerData.id});
+            navigation.navigate('CreateChatRoom', {playerId: community.id});
           }}>
           <PlusSvg width={20} height={20} />
         </Pressable>

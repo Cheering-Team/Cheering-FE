@@ -1,6 +1,9 @@
 import React from 'react';
 import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
 import CustomText from '../../common/CustomText';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 
 interface TeamListProps {
   playerData: any;
@@ -8,6 +11,8 @@ interface TeamListProps {
 
 const TeamList = (props: TeamListProps) => {
   const {playerData} = props;
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
 
   return (
     <View style={styles.container}>
@@ -16,7 +21,12 @@ const TeamList = (props: TeamListProps) => {
         data={playerData.result.teams}
         showsHorizontalScrollIndicator={false}
         renderItem={({item}) => (
-          <Pressable style={styles.teamContainer} key={item.teamName}>
+          <Pressable
+            style={styles.teamContainer}
+            key={item.teamName}
+            onPress={() =>
+              navigation.push('Community', {playerId: item.communityId})
+            }>
             <Image
               source={{
                 uri: item.image,

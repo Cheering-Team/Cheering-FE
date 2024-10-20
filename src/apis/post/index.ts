@@ -45,26 +45,26 @@ export const getPosts = async ({
   queryKey: ReturnType<typeof postKeys.list>;
   pageParam: number;
 }) => {
-  const [, , {communityId, filter}] = queryKey;
+  const [, , {communityId, filter, type}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<GetPostsResponse>>(
-    `/communities/${communityId}/posts?tag=${
+    `/communities/${communityId}/posts?type=${type}&tag=${
       filter === 'all' ? '' : filter
-    }&page=${pageParam}&size=1`,
+    }&page=${pageParam}&size=20`,
   );
   return response.data;
 };
 
-// 팬 게시글 조회 (무한 스크롤)
+// 게시글 조회 (무한 스크롤)
 export const getFanPosts = async ({
   queryKey,
   pageParam = 0,
 }: {
-  queryKey: ReturnType<typeof postKeys.list>;
+  queryKey: ReturnType<typeof postKeys.listByFan>;
   pageParam: number;
 }) => {
   const [, , {fanId}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<GetPostsResponse>>(
-    `/fans/${fanId}/posts?page=${pageParam}&size=10`,
+    `/fans/${fanId}/posts?&page=${pageParam}&size=10`,
   );
   return response.data;
 };

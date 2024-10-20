@@ -1,27 +1,35 @@
-import React, {useRef, useState} from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
-import {formatBeforeDate, formatDate} from '../../utils/format';
+import React, {RefObject, useState} from 'react';
+import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {formatBeforeDate} from '../../utils/format';
 import CustomText from '../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import MoreSvg from '../../assets/images/three-dots.svg';
 import OptionModal from '../common/OptionModal';
 import AlertModal from '../common/AlertModal/AlertModal';
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useDeletePost, useReportPost} from '../../apis/post/usePosts';
+import {showBottomToast} from 'utils/toast';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
+import OfficialSvg from 'assets/images/official.svg';
+import {Post} from 'apis/post/types';
 
 interface PostWriterProps {
-  feed: any;
+  bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
+  feed: Post;
   isWriter: boolean;
   type: 'post' | 'feed';
   location?: 'community' | 'home';
 }
 
-const PostWriter = (props: PostWriterProps) => {
-  const {feed, isWriter, type, location = 'community'} = props;
-
+const PostWriter = ({
+  bottomSheetModalRef,
+  feed,
+  isWriter,
+  type,
+  location = 'community',
+}: PostWriterProps) => {
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
-
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
@@ -30,11 +38,10 @@ const PostWriter = (props: PostWriterProps) => {
   const {mutateAsync: reportPost} = useReportPost();
 
   const handleDeletePost = async () => {
-    const data = await deletePost({postId: feed.id});
-
-    if (data.code === 200 && type === 'post') {
-      navigation.goBack();
-    }
+    type === 'feed'
+      ? showBottomToast(insets.bottom + 20, '삭제중..', false)
+      : navigation.goBack();
+    await deletePost({postId: feed.id});
   };
 
   const handleReportPost = async () => {
@@ -55,7 +62,7 @@ const PostWriter = (props: PostWriterProps) => {
           justifyContent: 'space-between',
         }}>
         <Pressable
-          style={{flexDirection: 'row'}}
+          style={{flexDirection: 'row', alignItems: 'center'}}
           onPress={() => {
             location === 'community'
               ? navigation.navigate('Profile', {playerUserId: feed.writer.id})
@@ -64,18 +71,22 @@ const PostWriter = (props: PostWriterProps) => {
                   params: {playerUserId: feed.writer.id},
                 });
           }}>
-          <CustomText fontWeight="500" style={styles.writerName}>
+          <CustomText fontWeight="500" className="text-base">
             {feed.writer.name}
           </CustomText>
+          {feed.writer.type === 'MANAGER' && (
+            <OfficialSvg width={14} height={14} className="ml-[2]" />
+          )}
           <CustomText style={styles.createdAt}>
-            {formatBeforeDate(feed.createdAt)}
+            {formatBeforeDate(new Date(feed.createdAt))}
           </CustomText>
         </Pressable>
-        <Pressable
+        <TouchableOpacity
+          activeOpacity={0.5}
           style={{padding: 2}}
           onPress={() => bottomSheetModalRef.current?.present()}>
           <MoreSvg width={18} height={18} />
-        </Pressable>
+        </TouchableOpacity>
       </View>
       {isWriter ? (
         <OptionModal
@@ -136,7 +147,6 @@ const PostWriter = (props: PostWriterProps) => {
 
 const styles = StyleSheet.create({
   createdAt: {fontSize: 14, color: '#a5a5a5', marginLeft: 5},
-  writerName: {fontSize: 14},
   writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
 });
 

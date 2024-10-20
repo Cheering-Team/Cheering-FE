@@ -1,64 +1,64 @@
 import {Post} from 'apis/post/types';
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
-import {WINDOW_WIDTH} from 'constants/dimension';
 import React from 'react';
 import {Pressable} from 'react-native';
 import OfficialSvg from 'assets/images/official.svg';
 import {View} from 'react-native';
 import {formatBarDate, formatMonthDay} from 'utils/format';
 import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 
 interface DailyCardProps {
   daily: Post;
 }
 
 const DailyCard = ({daily}: DailyCardProps) => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   return (
     <Pressable
-      className="bg-neutral-50 rounded-2xl pt-6 pb-3 px-5 mx-3"
+      className="bg-white px-4 py-3 h-[110] justify-between  rounded-xl mt-[10] border border-gray-200"
       onPress={() =>
         navigation.navigate('Daily', {
           playerId: daily.community.id,
           date: formatBarDate(new Date(daily.createdAt)),
+          write: false,
         })
       }
       style={{
-        width: WINDOW_WIDTH * 0.7,
-        shadowColor: '#8b8b8b',
+        shadowColor: '#000000',
         shadowOffset: {
           width: 0,
-          height: 1,
+          height: 0,
         },
-        shadowOpacity: 0.22,
-        shadowRadius: 8,
-        elevation: 7,
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 1,
       }}>
-      <Avatar
-        uri={daily.writer.image}
-        size={45}
-        className="absolute left-5 top-[-25]"
-      />
       <View className="flex-row items-center">
-        <CustomText fontWeight="600" className="text-base mr-[2]">
+        <Avatar uri={daily.writer.image} size={25} />
+        <CustomText fontWeight="600" className="text-lg ml-2 mr-[3]">
           {daily.writer.name}
         </CustomText>
-        {daily.writer.isManager && <OfficialSvg width={14} height={14} />}
+        {daily.writer.type === 'MANAGER' && (
+          <OfficialSvg width={16} height={16} />
+        )}
       </View>
 
       <CustomText
-        numberOfLines={2}
+        numberOfLines={1}
         fontWeight="400"
-        className="text-[#111111] text-[15px] mt-1 flex-1">
+        className="text-[#111111] text-lg">
         {daily.content}
       </CustomText>
       <View className="flex-row items-center justify-between">
-        <CustomText className="text-gray-500 text-[13px]" fontWeight="500">
+        <CustomText className="text-gray-500 text-[15px]" fontWeight="500">
           {formatMonthDay(daily.createdAt)}
         </CustomText>
 
-        <CustomText className="text-gray-800 ml-1 text-[13px]">
+        <CustomText className="text-gray-800 ml-1 text-[15px]">
           {`답글 ${daily.commentCount}개`}
         </CustomText>
       </View>

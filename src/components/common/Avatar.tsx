@@ -22,6 +22,7 @@ const Avatar = (props: AvatarProps) => {
       }}
       style={[
         {
+          backgroundColor: 'white',
           width: size,
           height: size,
           borderRadius: size,

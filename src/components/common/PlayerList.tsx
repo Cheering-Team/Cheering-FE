@@ -8,15 +8,22 @@ import {CategoryStackParamList} from '../../navigations/CategoryStackNavigator';
 import {formatComma} from '../../utils/format';
 import {Community} from 'apis/player/types';
 import OfficialSvg from '../../assets/images/official.svg';
+import {ApiResponse} from 'apis/types';
+import CommunitySkeleton from 'components/skeleton/CommunitySkeleton';
 
 interface PlayerListProps {
+  type: 'Team' | 'Search';
   teamName?: string;
-  players: Community[];
+  communityData?: ApiResponse<Community[]>;
   paddingTop?: boolean;
 }
 
-const PlayerList = (props: PlayerListProps) => {
-  const {teamName, players, paddingTop = false} = props;
+const PlayerList = ({
+  type,
+  teamName,
+  communityData,
+  paddingTop = false,
+}: PlayerListProps) => {
   const navigation = useNavigation<NavigationProp<CategoryStackParamList>>();
 
   return (
@@ -26,7 +33,7 @@ const PlayerList = (props: PlayerListProps) => {
         paddingTop && {paddingTop: 80},
         {paddingBottom: 50},
       ]}
-      data={players}
+      data={communityData ? communityData.result : []}
       renderItem={({item}) => (
         <Pressable
           style={{
@@ -101,12 +108,14 @@ const PlayerList = (props: PlayerListProps) => {
           </View>
           {item.user && (
             <Pressable
-              onPress={() =>
-                navigation.navigate('CommunityStack', {
-                  screen: 'Profile',
-                  params: {playerUserId: item.user.id},
-                })
-              }>
+              onPress={() => {
+                if (item.user !== null) {
+                  navigation.navigate('CommunityStack', {
+                    screen: 'Profile',
+                    params: {playerUserId: item.user.id},
+                  });
+                }
+              }}>
               <Avatar
                 uri={item.user.image}
                 size={30}
@@ -123,16 +132,24 @@ const PlayerList = (props: PlayerListProps) => {
         </Pressable>
       )}
       ListEmptyComponent={
-        <View
-          style={{
-            height: Dimensions.get('window').height * 0.3 + 20,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <CustomText fontWeight="600" style={{fontSize: 23, marginBottom: 5}}>
-            등록된 선수 또는 팀이 없어요
-          </CustomText>
-        </View>
+        !communityData ? (
+          <CommunitySkeleton />
+        ) : type === 'Team' ? (
+          <View
+            style={{
+              height: Dimensions.get('window').height * 0.3 + 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <CustomText
+              fontWeight="600"
+              className="text-base mb-[5] text-gray-800">
+              등록된 선수가 없어요
+            </CustomText>
+          </View>
+        ) : (
+          <></>
+        )
       }
     />
   );

@@ -3,13 +3,16 @@ import CategoryScreen from '../screens/categoryStack/CategoryScreen';
 import React from 'react';
 import PlayerListScreen from '../screens/categoryStack/PlayerListScreen';
 import SearchScreen from '../screens/categoryStack/SearchScreen';
-import CommunityStackNavigator from './CommunityStackNavigator';
+import CommunityStackNavigator, {
+  CommunityStackParamList,
+} from './CommunityStackNavigator';
+import {NavigationPropType} from './types';
 
 export type CategoryStackParamList = {
   Category: {teamId: number};
   Search: undefined;
-  PlayerList: {teamId: number};
-  CommunityStack: undefined;
+  PlayerList: {teamId: number; sportName: string; leagueName: string};
+  CommunityStack: NavigationPropType<CommunityStackParamList>;
 };
 
 const CategoryStackNavigator = () => {

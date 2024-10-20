@@ -20,6 +20,7 @@
 		A680B9BBDB884BB8901D505F /* Pretendard-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = EA19D707C3E3487994956625 /* Pretendard-ExtraLight.otf */; };
 		AE0D3534CFF44BB69709A459 /* Pretendard-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF156FC4C4BF4A328F7BBBCA /* Pretendard-Light.otf */; };
 		C52E01CB17FB48F3A1036BC0 /* Pretendard-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = FEA8449DC340481DB610A216 /* Pretendard-SemiBold.otf */; };
+		CFAD95CB66ECBAC21269C6A6 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 608726DF3CE6ABC0A5016AC9 /* PrivacyInfo.xcprivacy */; };
 		D6DA000BB57C42528162FC36 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = E44D4A3E0FDD4F54B714AE07 /* Pretendard-Medium.otf */; };
 		F70E37392C7104C700900D88 /* SwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F70E37382C7104C700900D88 /* SwiftBridge.swift */; };
 		F78DA8652B625C640085C6E4 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = F78DA8642B625C640085C6E4 /* Fonts */; };
@@ -51,6 +52,7 @@
 		24006CC1C9376D0C92D3C3BE /* Pods_Cheering.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cheering.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		293C3F1FBC4E4E44845E5FB1 /* Pretendard-ExtraBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-ExtraBold.otf"; path = "../src/assets/fonts/Pretendard-ExtraBold.otf"; sourceTree = "<group>"; };
 		5D1FB1A1BE2D4C7D8249F089 /* Pretendard-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Thin.otf"; path = "../src/assets/fonts/Pretendard-Thin.otf"; sourceTree = "<group>"; };
+		608726DF3CE6ABC0A5016AC9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Cheering/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		773F754A7DB84AA2961CEBA1 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Regular.otf"; path = "../src/assets/fonts/Pretendard-Regular.otf"; sourceTree = "<group>"; };
 		7FB5F3F57CD7AEC74A795DCD /* Pods_Cheering_CheeringTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Cheering_CheeringTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		91ABDDED432AC09611B5C83D /* Pods-Cheering-CheeringTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cheering-CheeringTests.release.xcconfig"; path = "Target Support Files/Pods-Cheering-CheeringTests/Pods-Cheering-CheeringTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				608726DF3CE6ABC0A5016AC9 /* PrivacyInfo.xcprivacy */,
 			);
 			name = Cheering;
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 				601DDB03ADC24031907DF58A /* Pretendard-Regular.otf in Resources */,
 				C52E01CB17FB48F3A1036BC0 /* Pretendard-SemiBold.otf in Resources */,
 				971797F4872F4AA18A29FCA0 /* Pretendard-Thin.otf in Resources */,
+				CFAD95CB66ECBAC21269C6A6 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -620,6 +624,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CC = "";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -647,6 +652,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CXX = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -678,6 +684,8 @@
 					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD = "";
+				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -692,11 +700,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-Wl",
-					"-ld_classic",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -707,6 +711,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CC = "";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -734,6 +739,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				CXX = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -758,6 +764,8 @@
 					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD = "";
+				LDPLUSPLUS = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -771,11 +779,7 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-Wl",
-					"-ld_classic",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

@@ -28,13 +28,12 @@ import {
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import MyStarCarousel from 'components/home/MyStarCarousel';
-import {useGetMyCommunities} from 'apis/player/usePlayers';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import {useGetNotices} from 'apis/notice/useNotices';
 import {queryClient} from '../../../App';
 import {postKeys} from 'apis/post/queries';
+import {Post} from 'apis/post/types';
+import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 
-type HomeScreenNavigationProp = NativeStackNavigationProp<
+export type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
   'Home'
 >;
@@ -50,17 +49,19 @@ const HomeScreen = () => {
 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const {data: communityData} = useGetMyCommunities();
-  const {data: noticeData} = useGetNotices();
   const {data, refetch, hasNextPage, fetchNextPage, isFetchingNextPage} =
-    useGetPosts(0, 'all', true);
+    useGetPosts(0, 'FAN_POST', 'all', true);
   const {refetch: refetchUnRead} = useGetIsUnread();
   const {mutate} = useReadNotification();
 
   useEffect(() => {
     if (data) {
       data.pages[data.pages.length - 1].result.posts.forEach(post => {
-        queryClient.setQueryData(postKeys.detail(post.id), post);
+        queryClient.setQueryData(postKeys.detail(post.id), {
+          code: 200,
+          messag: '게시글 조회 완료',
+          result: post,
+        });
       });
     }
   });
@@ -74,7 +75,7 @@ const HomeScreen = () => {
     }),
   );
 
-  const renderFeed: ListRenderItem<PostInfoResponse> = ({item}) => (
+  const renderFeed: ListRenderItem<Post> = ({item}) => (
     <FeedPost feed={item} type="home" />
   );
 
@@ -191,12 +192,9 @@ const HomeScreen = () => {
       if (remoteMessage && remoteMessage.data) {
         const {postId, notificationId} = remoteMessage.data;
 
-        navigation.navigate('HomeStack', {
-          screen: 'CommunityStack',
-          params: {
-            screen: 'Post',
-            params: {postId},
-          },
+        navigation.navigate('CommunityStack', {
+          screen: 'Post',
+          params: {postId: Number(postId)},
         });
         mutate({notificationId: Number(notificationId)});
       }
@@ -208,12 +206,9 @@ const HomeScreen = () => {
         if (remoteMessage && remoteMessage.data) {
           const {postId, notificationId} = remoteMessage.data;
 
-          navigation.navigate('HomeStack', {
-            screen: 'CommunityStack',
-            params: {
-              screen: 'Post',
-              params: {postId},
-            },
+          navigation.navigate('CommunityStack', {
+            screen: 'Post',
+            params: {postId: Number(postId)},
           });
           mutate({notificationId: Number(notificationId)});
         }
@@ -229,30 +224,10 @@ const HomeScreen = () => {
           className="pt-[52]"
           style={{marginTop: insets.top}}
           data={data ? data?.pages.flatMap(page => page.result.posts) : []}
-          // data={[]}
           renderItem={renderFeed}
           ListHeaderComponent={
             <>
-              {communityData && noticeData ? (
-                <MyStarCarousel
-                  communityData={communityData}
-                  noticeData={noticeData}
-                />
-              ) : (
-                <SkeletonPlaceholder
-                  backgroundColor="#f4f4f4"
-                  highlightColor="#ffffff">
-                  <View
-                    style={{
-                      height: 195,
-                      marginBottom: 20,
-                      marginHorizontal: 25,
-                      marginTop: 15,
-                      borderRadius: 20,
-                    }}
-                  />
-                </SkeletonPlaceholder>
-              )}
+              <MyStarCarousel />
               {data ? (
                 <View className="flex-row items-center justify-between pl-[13] pr-[15] py-[7] bg-white border-b border-[#e7e7e7]">
                   <CustomText
@@ -271,59 +246,7 @@ const HomeScreen = () => {
           onEndReachedThreshold={1}
           ListFooterComponent={isFetchingNextPage ? <ListLoading /> : null}
           ListEmptyComponent={
-            data ? (
-              <ListEmpty type="feed" />
-            ) : (
-              <SkeletonPlaceholder
-                backgroundColor="#f4f4f4"
-                highlightColor="#ffffff">
-                <View style={{marginTop: 50}}>
-                  {[1, 1, 1, 1, 1].map(_ => (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        marginHorizontal: 10,
-                        marginVertical: 10,
-                      }}>
-                      <View
-                        style={{
-                          width: 33,
-                          height: 33,
-                          borderRadius: 999,
-                          marginRight: 15,
-                        }}
-                      />
-                      <View style={{width: '100%'}}>
-                        <View
-                          style={{
-                            width: '30%',
-                            height: 14,
-                            marginVertical: 4,
-                            borderRadius: 3,
-                          }}
-                        />
-                        <View
-                          style={{
-                            width: '70%',
-                            height: 14,
-                            marginVertical: 4,
-                            borderRadius: 5,
-                          }}
-                        />
-                        <View
-                          style={{
-                            width: '50%',
-                            height: 14,
-                            marginVertical: 4,
-                            borderRadius: 4,
-                          }}
-                        />
-                      </View>
-                    </View>
-                  ))}
-                </View>
-              </SkeletonPlaceholder>
-            )
+            data ? <ListEmpty type="feed" /> : <FeedSkeleton type="Home" />
           }
           refreshControl={
             <RefreshControl

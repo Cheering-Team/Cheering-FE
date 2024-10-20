@@ -190,7 +190,7 @@ const NotificationScreen = ({navigation}) => {
           }
         />
       ) : (
-        <ActivityIndicator style={{marginTop: insets.top}} />
+        <ActivityIndicator style={{marginTop: insets.top + 50}} />
       )}
     </SafeAreaView>
   );

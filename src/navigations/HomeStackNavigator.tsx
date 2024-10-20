@@ -1,12 +1,15 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../screens/homeStack/HomeScreen';
-import CommunityStackNavigator from './CommunityStackNavigator';
+import CommunityStackNavigator, {
+  CommunityStackParamList,
+} from './CommunityStackNavigator';
 import NoticeScreen from 'screens/moreStack/NoticeScreen';
+import {NavigationPropType} from './types';
 
 export type HomeStackParamList = {
   Home: undefined;
-  CommunityStack: undefined;
+  CommunityStack: NavigationPropType<CommunityStackParamList>;
   Notice: {noticeId: number};
 };
 

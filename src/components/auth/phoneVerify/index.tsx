@@ -20,7 +20,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {Pressable, TextInput, View} from 'react-native';
+import {LayoutAnimation, Pressable, TextInput, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {SignInScreenNavigationProp} from 'screens/auth/SignInScreen';
 import {showTopToast} from 'utils/toast';
@@ -84,6 +84,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
       setPhoneValid('invalid');
     }
     if (data.message === '전송 완료') {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setLimitTime(300);
       setStatus('code');
       setCode('');

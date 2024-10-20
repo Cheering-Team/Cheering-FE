@@ -60,7 +60,7 @@ const Daily = ({
             shadowRadius: 3,
             elevation: 3,
           }}>
-          <CustomText className="text-[15px]">{post.content}</CustomText>
+          <CustomText className="text-base">{post.content}</CustomText>
         </View>
         <View
           className="justify-between
@@ -101,22 +101,25 @@ const Daily = ({
         }}
         style={{
           shadowColor: '#000000',
-          shadowOffset: {width: 1, height: 1},
+          shadowOffset: {
+            width: 0,
+            height: 0,
+          },
           shadowOpacity: 0.1,
-          shadowRadius: 3,
-          elevation: 3,
+          shadowRadius: 2,
+          elevation: 1,
           width: post.commentCount === 0 ? 60 : '80%',
         }}>
         <View className="flex-row items-center">
           <CustomText className="text-[13px]">💬</CustomText>
-          <CustomText className="text-gray-500 ml-1 text-[13px]">
+          <CustomText className="text-gray-500 ml-1 text-base">
             {post.commentCount}
           </CustomText>
         </View>
         {post.commentCount !== 0 && (
           <View className="flex-row items-center mt-2 h-10">
             <Avatar uri={data?.result?.writer.image} size={25} />
-            <CustomText className="mx-3 text-[13px] flex-1" numberOfLines={2}>
+            <CustomText className="mx-3 text-[15px] flex-1" numberOfLines={2}>
               {data?.result?.content}
             </CustomText>
             <Pressable

@@ -15,7 +15,7 @@ export interface Community {
   leagueName: string | null;
   isManager?: boolean;
   manager?: Fan;
-  officialChatRoomId?: number;
+  officialChatRoomId: number;
 }
 
 export interface Sport {
@@ -37,6 +37,8 @@ export interface TeamName {
   firstName: string;
   secondName: string;
   image: string;
+  fanCount: number;
+  communityId: number;
 }
 
 // 요청
@@ -74,4 +76,26 @@ export interface GetPlayersByTeamResponse {
   leagueName: string;
   team: Team;
   communities: Community[];
+}
+
+// 타입가드
+export function isCommunity(item: any): item is Community {
+  return (
+    typeof item === 'object' &&
+    item !== null &&
+    typeof item.id === 'number' &&
+    (item.type === 'TEAM' || item.type === 'PLAYER') &&
+    typeof item.koreanName === 'string' &&
+    (typeof item.englishName === 'string' || item.englishName === undefined) &&
+    typeof item.image === 'string' &&
+    typeof item.backgroundImage === 'string' &&
+    (typeof item.fanCount === 'number' || item.fanCount === null) &&
+    (item.user === null || typeof item.user === 'object') &&
+    (Array.isArray(item.teams) || item.teams === undefined) &&
+    (typeof item.sportName === 'string' || item.sportName === null) &&
+    (typeof item.leagueName === 'string' || item.leagueName === null) &&
+    (typeof item.isManager === 'boolean' || item.isManager === undefined) &&
+    (item.manager === null || typeof item.manager === 'object') &&
+    typeof item.officialChatRoomId === 'number'
+  );
 }

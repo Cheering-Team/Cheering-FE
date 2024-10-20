@@ -46,10 +46,28 @@ export const getTeams = async ({
   return response.data;
 };
 
+// 팀 조회
+export const getTeamById = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof teamKeys.detail>;
+}) => {
+  const [, , teamId] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<TeamName>>(
+    `/teams/${teamId}`,
+  );
+  return response.data;
+};
+
 // 커뮤니티 검색
-export const getCommunities = async (name: string) => {
+export const getCommunities = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof communityKeys.list>;
+}) => {
+  const [, , {filter}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<Community[]>>(
-    `/communities?name=${name}`,
+    `/communities?name=${filter}`,
   );
   return response.data;
 };
@@ -61,9 +79,9 @@ export const getCommunitiesByTeam = async ({
   queryKey: ReturnType<typeof communityKeys.listByTeam>;
 }) => {
   const [, , {teamId}] = queryKey;
-  const response = await axiosInstance.get<
-    ApiResponse<GetPlayersByTeamResponse>
-  >(`/teams/${teamId}/communities`);
+  const response = await axiosInstance.get<ApiResponse<Community[]>>(
+    `/teams/${teamId}/communities`,
+  );
   return response.data;
 };
 

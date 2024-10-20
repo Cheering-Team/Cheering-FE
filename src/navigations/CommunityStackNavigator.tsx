@@ -12,12 +12,13 @@ import CreateChatRoomScreen from 'screens/communityStack/CreateChatRoomScreen';
 import ChatRoomEnterScreen from 'screens/communityStack/ChatRoomEnterScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
 import DailyScreen from 'screens/communityStack/DailyScreen';
+import {Post} from 'apis/post/types';
 
 export type CommunityStackParamList = {
   Community: {playerId: number};
-  PostWrite: {playerId: number; feed?: any};
+  PostWrite: {playerId: number; feed?: Post};
   Post: {postId: number};
-  Daily: {playerId: number; date: string};
+  Daily: {playerId: number; date: string; write: boolean};
   ChatRoom: {chatRoomId: number};
   CreateChatRoom: {playerId: number};
   ChatRoomEnter: {chatRoomId: number};

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   ListRenderItem,
@@ -10,27 +10,26 @@ import {useNavigation} from '@react-navigation/native';
 import CustomText from '../common/CustomText';
 import Avatar from '../common/Avatar';
 import {WINDOW_WIDTH} from '../../constants/dimension';
-import ImageView from 'react-native-image-viewing';
 import PostWriter from '../post/PostWriter';
 import InteractBar from '../post/InteractBar';
 import FastImage from 'react-native-fast-image';
-import {ImageSizeType} from 'apis/post/types';
+import {ImageSizeType, Post} from 'apis/post/types';
 import PostVideo from 'components/common/PostVideo';
 import ImageVideoViewer from 'components/post/ImageVideoViewer';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 
 interface FeedPostProps {
-  feed: any;
+  feed: Post;
   type: 'community' | 'home';
 }
 
-const FeedPost = (props: FeedPostProps) => {
+const FeedPost = ({feed, type}: FeedPostProps) => {
   const navigation = useNavigation();
 
-  const {feed, type} = props;
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-
   const [isViewer, setIsViewer] = useState(false);
   const [curImage, setCurImage] = useState(0);
 
@@ -108,17 +107,18 @@ const FeedPost = (props: FeedPostProps) => {
           if (type === 'community') {
             navigation.navigate('Post', {
               postId: feed.id,
-              playerUser: feed.playerUser,
             });
           } else {
             navigation.navigate('CommunityStack', {
               screen: 'Post',
               params: {
                 postId: feed.id,
-                playerUser: feed.playerUser,
               },
             });
           }
+        }}
+        onLongPress={() => {
+          bottomSheetModalRef.current?.present();
         }}>
         {/* 숨겨진 글 */}
         {feed.isHide && (
@@ -155,6 +155,7 @@ const FeedPost = (props: FeedPostProps) => {
 
           <View style={{marginLeft: 10, flex: 1}}>
             <PostWriter
+              bottomSheetModalRef={bottomSheetModalRef}
               feed={feed}
               isWriter={feed.user.id === feed.writer.id}
               type="feed"
@@ -165,7 +166,7 @@ const FeedPost = (props: FeedPostProps) => {
                 color: '#282828',
                 marginRight: 25,
                 lineHeight: 24,
-                fontSize: 15,
+                fontSize: 16,
               }}>
               {feed.content}
             </CustomText>

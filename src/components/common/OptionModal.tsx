@@ -5,7 +5,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import React, {RefObject, useCallback, useMemo} from 'react';
-import {Pressable} from 'react-native';
+import {Pressable, TouchableOpacity} from 'react-native';
 import CustomText from './CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import TrashSvg from '../../assets/images/trash-red.svg';
@@ -88,7 +88,8 @@ const OptionModal = (props: OptionModalProps) => {
           alignItems: 'center',
           paddingTop: 10,
         }}>
-        <Pressable
+        <TouchableOpacity
+          activeOpacity={0.5}
           style={{
             backgroundColor: 'white',
             width: '90%',
@@ -108,7 +109,7 @@ const OptionModal = (props: OptionModalProps) => {
             fontWeight="500"
             style={{
               color: firstColor,
-              fontSize: 15,
+              fontSize: 16,
               marginLeft: firstAvatar ? 10 : undefined,
             }}>
             {firstText}
@@ -118,9 +119,10 @@ const OptionModal = (props: OptionModalProps) => {
           {firstSvg === 'edit' && <EditSvg width={16} height={16} />}
           {firstSvg === 'exit' && <ExitSvg width={16} height={16} />}
           {firstSvg === 'block' && <BlockSvg width={22} height={22} />}
-        </Pressable>
+        </TouchableOpacity>
         {secondText && (
-          <Pressable
+          <TouchableOpacity
+            activeOpacity={0.5}
             style={{
               backgroundColor: 'white',
               width: '90%',
@@ -138,7 +140,7 @@ const OptionModal = (props: OptionModalProps) => {
             }}>
             <CustomText
               fontWeight="500"
-              style={{color: secondColor, fontSize: 15}}>
+              style={{color: secondColor, fontSize: 16}}>
               {secondText}
             </CustomText>
             {secondSvg === 'trash' && <TrashSvg width={20} height={20} />}
@@ -146,10 +148,11 @@ const OptionModal = (props: OptionModalProps) => {
             {secondSvg === 'edit' && <EditSvg width={16} height={16} />}
             {secondSvg === 'exit' && <ExitSvg width={16} height={16} />}
             {secondSvg === 'enter' && <EnterSvg width={16} height={16} />}
-          </Pressable>
+          </TouchableOpacity>
         )}
         {thirdText && (
-          <Pressable
+          <TouchableOpacity
+            activeOpacity={0.5}
             style={{
               backgroundColor: 'white',
               width: '90%',
@@ -167,14 +170,14 @@ const OptionModal = (props: OptionModalProps) => {
             }}>
             <CustomText
               fontWeight="500"
-              style={{color: thirdColor, fontSize: 15}}>
+              style={{color: thirdColor, fontSize: 16}}>
               {thirdText}
             </CustomText>
             {thirdSvg === 'trash' && <TrashSvg width={20} height={20} />}
             {thirdSvg === 'report' && <ReportSvg width={20} height={20} />}
             {thirdSvg === 'edit' && <EditSvg width={16} height={16} />}
             {thirdSvg === 'exit' && <ExitSvg width={16} height={16} />}
-          </Pressable>
+          </TouchableOpacity>
         )}
       </BottomSheetView>
     </BottomSheetModal>

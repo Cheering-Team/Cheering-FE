@@ -17,11 +17,11 @@ const ChatCard = (props: ChatCardProps) => {
       className="flex-row px-[15] py-[7]"
       onPress={onPress}>
       <Avatar uri={chatRoom.image} size={59} className="rounded-2xl mt-[3]" />
-      <View className="ml-3 flex-1">
+      <View className="ml-3 flex-1 justify-between">
         <View className="flex-row items-center">
           <CustomText
             fontWeight="500"
-            className="text-base mr-[2] pb-0"
+            className="text-base pb-0"
             numberOfLines={1}
             ellipsizeMode="tail">
             {chatRoom.name}
@@ -33,12 +33,12 @@ const ChatCard = (props: ChatCardProps) => {
           ellipsizeMode="tail">
           {chatRoom.description}
         </CustomText>
-        <View className="flex-row items-center">
+        <View className="flex-row items-center mt-[3]">
           {chatRoom.type === 'OFFICIAL' ? (
             <>
               <CustomText
                 fontWeight="700"
-                className="color-[#767676] text-xs pb-0 ml-[3]">
+                className="color-[#767676] text-xs pb-0">
                 {`${chatRoom.count}`}
               </CustomText>
               <CustomText
@@ -51,7 +51,7 @@ const ChatCard = (props: ChatCardProps) => {
             <>
               <CustomText
                 fontWeight="700"
-                className="color-[#767676] text-xs pb-0 ml-[3]">
+                className="color-[#767676] text-xs pb-0">
                 {`${chatRoom.count}`}
               </CustomText>
               <CustomText

@@ -7,6 +7,8 @@ import Avatar from '../../common/Avatar';
 import DailySvg from '../../../assets/images/comment-white.svg';
 import {Community} from 'apis/player/types';
 import {formatBarDate} from 'utils/format';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 
 interface CommunityHeaderProps {
   playerData: Community;
@@ -15,8 +17,8 @@ interface CommunityHeaderProps {
 const CommunityHeader = (props: CommunityHeaderProps) => {
   const {playerData} = props;
   const insets = useSafeAreaInsets();
-
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
 
   return (
     <Animated.View
@@ -40,6 +42,7 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
                 navigation.navigate('Daily', {
                   playerId: playerData.id,
                   date: formatBarDate(new Date()),
+                  write: false,
                 })
               }>
               <DailySvg width={20} height={20} />
@@ -48,11 +51,13 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 
           <Pressable
             className="ml-5"
-            onPress={() =>
-              navigation.navigate('Profile', {
-                playerUserId: playerData.user.id,
-              })
-            }>
+            onPress={() => {
+              if (playerData.user) {
+                navigation.navigate('Profile', {
+                  playerUserId: playerData.user.id,
+                });
+              }
+            }}>
             <Avatar
               uri={playerData.user.image}
               size={25}

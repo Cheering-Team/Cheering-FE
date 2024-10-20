@@ -1,9 +1,8 @@
-import React, {useEffect, useLayoutEffect} from 'react';
-import {Image, Platform, Pressable, SafeAreaView, View} from 'react-native';
-import Back from '../../hooks/Back';
+import React, {useEffect} from 'react';
+import {Image, Pressable, SafeAreaView, View} from 'react-native';
 import CustomText from '../../components/common/CustomText';
 import PlayerList from '../../components/common/PlayerList';
-import {useGetPlayersByTeam} from 'apis/player/usePlayers';
+import {useGetPlayersByTeam, useGetTeamById} from 'apis/player/usePlayers';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
@@ -12,6 +11,8 @@ import StarOrangeSvg from '../../assets/images/star-orange.svg';
 import {formatComma} from 'utils/format';
 import StackHeader from 'components/common/StackHeader';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {queryClient} from '../../../App';
+import {communityKeys} from 'apis/player/queries';
 
 type PlayerListScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -31,26 +32,36 @@ const PlayerListScreen = ({
   route: PlayerListScreenRouteProp;
 }) => {
   const insets = useSafeAreaInsets();
-  const teamId = route.params.teamId;
+  const {teamId, sportName, leagueName} = route.params;
 
-  const {data, isLoading} = useGetPlayersByTeam(teamId);
+  const {data: teamData} = useGetTeamById(teamId);
+  const {data: communityData} = useGetPlayersByTeam(teamId);
 
-  if (isLoading || !data) {
-    return <></>;
+  useEffect(() => {
+    if (communityData) {
+      communityData.result.forEach(community => {
+        queryClient.setQueryData(communityKeys.detail(community.id, 0), {
+          status: 200,
+          message: '커뮤니티 정보 조회 완료',
+          result: community,
+        });
+      });
+    }
+  }, [communityData]);
+
+  if (!teamData) {
+    return null;
   }
 
   return (
     <SafeAreaView className="flex-1">
-      <StackHeader
-        title={`${data.result.sportName}/${data.result.leagueName}`}
-        type="back"
-      />
+      <StackHeader title={`${sportName}/${leagueName}`} type="back" />
       <View
         className="absolute z-10 bg-white w-full h-20 flex-row items-center px-[15] border-t border-t-[#efefef] rounded-b-2xl"
         style={{top: insets.top + 48}}>
         <Image
           source={{
-            uri: data.result.team.image,
+            uri: teamData.result.image,
           }}
           className="h-[75] w-[75]"
         />
@@ -59,7 +70,7 @@ const PlayerListScreen = ({
             <CustomText
               fontWeight="600"
               className="text-lg pb-0 text-[#2b2b2b]">
-              {data.result.team.name}
+              {`${teamData.result.firstName} ${teamData.result.secondName}`}
             </CustomText>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <StarOrangeSvg width={11} height={11} />
@@ -71,7 +82,7 @@ const PlayerListScreen = ({
                   marginLeft: 3,
                   paddingBottom: 2,
                 }}>
-                {formatComma(data.result.team.fanCount)}
+                {formatComma(teamData.result.fanCount)}
               </CustomText>
             </View>
           </View>
@@ -81,7 +92,7 @@ const PlayerListScreen = ({
             onPress={() =>
               navigation.navigate('CommunityStack', {
                 screen: 'Community',
-                params: {playerId: data.result.team.communityId},
+                params: {playerId: teamData.result.communityId},
               })
             }>
             <CustomText
@@ -98,8 +109,9 @@ const PlayerListScreen = ({
         </View>
       </View>
       <PlayerList
-        teamName={data.result.team.name}
-        players={data.result.communities}
+        type="Team"
+        teamName={`${teamData.result.firstName} ${teamData.result.secondName}`}
+        communityData={communityData}
         paddingTop={true}
       />
     </SafeAreaView>

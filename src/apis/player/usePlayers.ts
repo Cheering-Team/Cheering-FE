@@ -15,6 +15,7 @@ import {
   unblockFan,
   updateFanImage,
   updateFanName,
+  getTeamById,
 } from './index';
 import {queryClient} from '../../../App';
 import {showBottomToast} from '../../utils/toast';
@@ -52,12 +53,20 @@ export const useGetTeams = (leagueId: number | null) => {
   });
 };
 
+// 팀 조회
+export const useGetTeamById = (teamId: number) => {
+  return useQuery({
+    queryKey: teamKeys.detail(teamId),
+    queryFn: getTeamById,
+  });
+};
+
 // 선수 검색
 export const useGetPlayers = (name: string, enabled: boolean) => {
   return useQuery({
-    queryKey: communityKeys.lists(),
-    queryFn: () => getCommunities(name),
-    enabled: enabled,
+    queryKey: communityKeys.list(name),
+    queryFn: getCommunities,
+    enabled,
   });
 };
 

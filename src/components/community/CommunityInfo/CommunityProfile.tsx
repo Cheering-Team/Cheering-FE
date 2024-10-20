@@ -23,9 +23,9 @@ const CommunityProfile = (props: CommunityProfileProps) => {
 
   return (
     <View style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2}]}>
-      <View style={[styles.infoContainer, {top: insets.top + 65}]}>
+      <View style={[styles.infoContainer, {top: insets.top + 55}]}>
         {playerData.result.sportName ? (
-          <CustomText className="ml-4 text-white text-[13px]">{`${playerData.result.sportName} / ${playerData.result.leagueName}`}</CustomText>
+          <CustomText className="ml-5 text-white text-[13px]">{`${playerData.result.sportName} / ${playerData.result.leagueName}`}</CustomText>
         ) : (
           <TeamList playerData={playerData} />
         )}
@@ -67,9 +67,10 @@ const CommunityProfile = (props: CommunityProfileProps) => {
 
       <FastImage
         source={{
-          uri: playerData.result.backgroundImage,
+          uri: playerData.result.backgroundImage || playerData.result.image,
           priority: FastImage.priority.high,
         }}
+        resizeMode="cover"
         style={styles.backgroundImage}
       />
       <LinearGradient

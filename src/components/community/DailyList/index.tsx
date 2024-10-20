@@ -1,41 +1,62 @@
 import {Community} from 'apis/player/types';
 import {useGetDailys} from 'apis/post/usePosts';
 import DailyCard from 'components/post/DailyCard';
-import React from 'react';
-import {FlatList} from 'react-native';
+import {WINDOW_WIDTH} from 'constants/dimension';
+import React, {useCallback} from 'react';
+import {View} from 'react-native';
+import Carousel from 'react-native-reanimated-carousel';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 interface DailyListProps {
-  player: Community;
+  community: Community;
 }
 
-const DailyList = ({player}: DailyListProps) => {
+const DailyList = ({community}: DailyListProps) => {
   const {
     data: dailyData,
-    isLoading,
     hasNextPage,
     fetchNextPage,
-  } = useGetDailys(player.id, '');
+  } = useGetDailys(community.id, '', true);
 
-  const loadDaily = () => {
-    if (hasNextPage) {
-      fetchNextPage();
-    }
-  };
+  const loadDaily = useCallback(
+    (_: number, absoluteProgress: number) => {
+      if (
+        dailyData &&
+        hasNextPage &&
+        absoluteProgress >=
+          dailyData.pages.flatMap(page => page.result.dailys).length - 5
+      ) {
+        fetchNextPage();
+      }
+    },
+    [dailyData, fetchNextPage, hasNextPage],
+  );
+
+  if (!dailyData) {
+    return (
+      <SkeletonPlaceholder backgroundColor="#f4f4f4" highlightColor="#ffffff">
+        <View style={{height: 90, margin: 20, borderRadius: 10}} />
+      </SkeletonPlaceholder>
+    );
+  }
+
+  if (dailyData.pages.flatMap(page => page.result.dailys).length === 0) {
+    return null;
+  }
 
   return (
-    <FlatList
-      style={{height: 185}}
-      showsHorizontalScrollIndicator={false}
-      horizontal
-      onEndReached={loadDaily}
-      onEndReachedThreshold={1}
+    <Carousel
       data={dailyData?.pages.flatMap(page => page.result.dailys)}
       renderItem={({item}) => <DailyCard daily={item} />}
-      contentContainerStyle={{
-        paddingTop: 40,
-        paddingLeft: 10,
-        paddingBottom: 20,
+      width={WINDOW_WIDTH}
+      height={130}
+      loop={false}
+      mode="parallax"
+      modeConfig={{
+        parallaxScrollingScale: 0.88,
+        parallaxScrollingOffset: WINDOW_WIDTH / 6.7,
       }}
+      onProgressChange={loadDaily}
     />
   );
 };
