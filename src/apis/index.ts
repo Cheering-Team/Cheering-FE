@@ -11,7 +11,7 @@ import {Platform} from 'react-native';
 export const axiosInstance = axios.create({
   baseURL:
     Platform.OS === 'ios'
-      ? 'http://192.168.0.34:8080/api'
+      ? 'http://192.168.0.5:8080/api'
       : 'http://10.0.2.2:8080/api',
 });
 
