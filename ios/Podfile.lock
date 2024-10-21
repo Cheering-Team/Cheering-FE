@@ -1072,27 +1072,6 @@ PODS:
     - Yoga
   - react-native-encrypted-storage (4.0.3):
     - React-Core
-  - react-native-image-picker (7.1.2):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.01.01.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
   - react-native-multiple-image-picker (1.1.9):
     - CropViewController (= 2.6.1)
     - React-Core
@@ -1662,7 +1641,6 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-encrypted-storage (from `../node_modules/react-native-encrypted-storage`)
-  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-multiple-image-picker (from `../node_modules/@baronha/react-native-multiple-image-picker`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-pinchable (from `../node_modules/react-native-pinchable`)
@@ -1802,8 +1780,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/blur"
   react-native-encrypted-storage:
     :path: "../node_modules/react-native-encrypted-storage"
-  react-native-image-picker:
-    :path: "../node_modules/react-native-image-picker"
   react-native-multiple-image-picker:
     :path: "../node_modules/@baronha/react-native-multiple-image-picker"
   react-native-pager-view:
@@ -1945,7 +1921,6 @@ SPEC CHECKSUMS:
   React-Mapbuffer: d8adf69e5f42c7419d6594384f8a56e641141c8e
   react-native-blur: 68eda7d27e86b53ec96445fc59fe9e84f0921fea
   react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
-  react-native-image-picker: 8b791a2bec6da84ca7d8cbcad30da159d6dd6da4
   react-native-multiple-image-picker: bfbdaa54e18ba98ca205f5fa7f141976d89247a9
   react-native-pager-view: ec794201907d9b62825bcf2a3a6ed3ff493c2ab8
   react-native-pinchable: b4381b0807d15c12b14bfacd927128f52d96f0f1

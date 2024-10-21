@@ -4516,8 +4516,6 @@ __metadata:
     react-native-fast-image: "npm:^8.6.3"
     react-native-gesture-handler: "npm:^2.18.1"
     react-native-haptic-feedback: "npm:^2.3.3"
-    react-native-image-picker: "npm:^7.1.2"
-    react-native-image-viewing: "npm:^0.2.2"
     react-native-keyboard-aware-scroll-view: "npm:^0.9.5"
     react-native-linear-gradient: "npm:^2.8.3"
     react-native-pager-view: "npm:^6.4.1"
@@ -11295,26 +11293,6 @@ __metadata:
   peerDependencies:
     react-native: ">=0.60.0"
   checksum: 10c0/de65b6a0088cf8c14b6248eddb1275233c400a52f818eda640d1475ecaa38dc059b3c37fce7f0a0bd0c33c4e1fb7537bc31fed60e94d026638993dd5d916b35e
-  languageName: node
-  linkType: hard
-
-"react-native-image-picker@npm:^7.1.2":
-  version: 7.1.2
-  resolution: "react-native-image-picker@npm:7.1.2"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 10c0/3621e2462b4026ba2d3e0d71179161a09bf744b09ed53cf62944356971fc6204e06845298d99e69437517a51b5b7b434318e16018e62e14a3031976b67e801a3
-  languageName: node
-  linkType: hard
-
-"react-native-image-viewing@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "react-native-image-viewing@npm:0.2.2"
-  peerDependencies:
-    react: ">=16.11.0"
-    react-native: ">=0.61.3"
-  checksum: 10c0/b2a089b17e99008fa7f14a3a3a6776c343437742f1e48bc7a2639c429112e85448f288f81bb926c0d68c0ac1789faad89c2338be89f2dbb0b39d8192fb790eb2
   languageName: node
   linkType: hard
 
