@@ -1,6 +1,5 @@
 import React, {useRef, useState} from 'react';
 import {
-  ActivityIndicator,
   Dimensions,
   Platform,
   Pressable,
@@ -24,6 +23,7 @@ import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import Viewer from 'components/post/Viewer';
 
 const ProfileScreen = () => {
   const navigation =
@@ -36,6 +36,7 @@ const ProfileScreen = () => {
 
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
 
   const {data} = useGetPlayerUserInfo(playerUserId);
   const {mutate: blockUser} = useBlockUser();
@@ -121,7 +122,9 @@ const ProfileScreen = () => {
             }}>
             <View
               style={{flexDirection: 'row', padding: 22, alignItems: 'center'}}>
-              <Avatar uri={data.result.user.image} size={68} />
+              <Pressable onPress={() => setIsViewerOpen(true)}>
+                <Avatar uri={data.result.user.image} size={68} />
+              </Pressable>
               <View style={{marginLeft: 15, marginTop: 3}}>
                 <CustomText fontWeight="500" style={{fontSize: 22}}>
                   {data.result.user.name}
@@ -254,6 +257,12 @@ const ProfileScreen = () => {
           }}
         />
       )}
+      <Viewer
+        images={[{path: data.result.user.image, type: 'IMAGE'}]}
+        isViewerOpen={isViewerOpen}
+        setIsViewerOpen={setIsViewerOpen}
+        viewIndex={0}
+      />
     </SafeAreaView>
   );
 };

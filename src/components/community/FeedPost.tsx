@@ -15,8 +15,8 @@ import InteractBar from '../post/InteractBar';
 import FastImage from 'react-native-fast-image';
 import {ImageType, Post} from 'apis/post/types';
 import PostVideo from 'components/common/PostVideo';
-import ImageVideoViewer from 'components/post/ImageVideoViewer';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import Viewer from 'components/post/Viewer';
 
 interface FeedPostProps {
   feed: Post;
@@ -30,15 +30,15 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
 
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-  const [isViewer, setIsViewer] = useState(false);
-  const [curImage, setCurImage] = useState(0);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [viewIndex, setViewIndex] = useState(0);
 
   const renderItem: ListRenderItem<ImageType> = ({item, index}) => {
     return (
       <Pressable
         onPress={() => {
-          setCurImage(index);
-          setIsViewer(true);
+          setViewIndex(index);
+          setIsViewerOpen(true);
         }}>
         {item.path.endsWith('mov') || item.path.endsWith('mp4') ? (
           <PostVideo
@@ -182,11 +182,11 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
         {/* 상호작용 */}
         <InteractBar post={feed} type={type} />
       </Pressable>
-      <ImageVideoViewer
-        isViewer={isViewer}
-        setIsViewer={setIsViewer}
+      <Viewer
         images={feed.images}
-        curImage={curImage}
+        isViewerOpen={isViewerOpen}
+        setIsViewerOpen={setIsViewerOpen}
+        viewIndex={viewIndex}
       />
     </>
   );

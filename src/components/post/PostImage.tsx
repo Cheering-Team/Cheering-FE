@@ -4,8 +4,8 @@ import {ImageType} from '../../apis/post/types';
 import {WINDOW_WIDTH} from '../../constants/dimension';
 import FastImage from 'react-native-fast-image';
 import PostVideo from 'components/common/PostVideo';
-import ImageVideoViewer from './ImageVideoViewer';
 import CloseSvg from 'assets/images/x_white.svg';
+import Viewer from './Viewer';
 
 interface PostImageProps {
   images: ImageType[];
@@ -20,9 +20,8 @@ const PostImage = (props: PostImageProps) => {
 
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
-
-  const [isViewer, setIsViewer] = useState(false);
-  const [curImage, setCurImage] = useState(0);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [viewIndex, setViewIndex] = useState(0);
 
   useEffect(() => {
     if (images.length) {
@@ -53,8 +52,8 @@ const PostImage = (props: PostImageProps) => {
         renderItem={({item, index}) => (
           <Pressable
             onPress={() => {
-              setCurImage(index);
-              setIsViewer(true);
+              setIsViewerOpen(true);
+              setViewIndex(index);
             }}>
             {item.path.endsWith('MOV') ||
             item.path.endsWith('MP4') ||
@@ -105,11 +104,11 @@ const PostImage = (props: PostImageProps) => {
           </Pressable>
         )}
       />
-      <ImageVideoViewer
-        isViewer={isViewer}
-        setIsViewer={setIsViewer}
+      <Viewer
         images={images}
-        curImage={curImage}
+        isViewerOpen={isViewerOpen}
+        setIsViewerOpen={setIsViewerOpen}
+        viewIndex={viewIndex}
       />
     </>
   );
