@@ -1,23 +1,16 @@
-import {useNavigation} from '@react-navigation/native';
 import CustomText from 'components/common/CustomText';
 import React, {useState} from 'react';
-import {
-  ImageBackground,
-  Keyboard,
-  Pressable,
-  SafeAreaView,
-  View,
-} from 'react-native';
+import {ImageBackground, Pressable, SafeAreaView, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseSvg from '../../assets/images/close-black.svg';
 import CameraSvg from '../../assets/images/camera-01.svg';
 import CustomTextInput from 'components/common/CustomTextInput';
 import {Picker} from '@react-native-picker/picker';
-import ImagePicker from 'react-native-image-crop-picker';
 import {useCreateChatRoom} from 'apis/chat/useChats';
 import {NAME_REGEX} from 'constants/regex';
 import {showBottomToast, showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {openPicker} from '@baronha/react-native-multiple-image-picker';
 
 const CreateChatRoomScreen = ({navigation, route}) => {
   const {playerId} = route.params;
@@ -50,24 +43,26 @@ const CreateChatRoomScreen = ({navigation, route}) => {
 
   const imageUpload = async () => {
     try {
-      Keyboard.dismiss();
-      const image = await ImagePicker.openPicker({
-        cropperCircleOverlay: true,
-        cropping: true,
-        cropperChooseText: '확인',
-        cropperCancelText: '취소',
-        cropperToolbarTitle: '사진 선택',
+      const response = await openPicker({
+        usedCameraButton: true,
+        mediaType: 'image',
+        singleSelectedMode: true,
+        isCrop: true,
+        isCropCircle: true,
+        doneTitle: '추가',
+        cancelTitle: '취소',
+        emptyMessage: '사진이 하나도 없네요',
+        tapHereToChange: '앨범',
+        selectedColor: '#0988ff',
       });
 
       handleChange('image', {
-        uri: image.path,
-        name: image.filename || '',
-        type: image.mime,
+        uri: response.crop.path,
+        name: response.fileName || '',
+        type: response.mime,
       });
-    } catch (error: any) {
-      if (error.code === 'E_PICKER_CANCELLED') {
-        return;
-      }
+    } catch (e) {
+      //
     }
   };
 

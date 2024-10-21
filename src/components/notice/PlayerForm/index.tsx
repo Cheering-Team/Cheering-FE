@@ -3,11 +3,11 @@ import CustomText from 'components/common/CustomText';
 import CustomTextInput from 'components/common/CustomTextInput';
 import React, {useState} from 'react';
 import {ImageBackground, Pressable, View} from 'react-native';
-import ImagePicker from 'react-native-image-crop-picker';
 import PlusSvg from '../../../assets/images/plus.svg';
 import {useApply} from 'apis/notice/useNotices';
 import {showBottomToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {openPicker} from '@baronha/react-native-multiple-image-picker';
 
 const PlayerForm = () => {
   const insets = useSafeAreaInsets();
@@ -24,22 +24,25 @@ const PlayerForm = () => {
 
   const handleImageUpload = async () => {
     try {
-      const image = await ImagePicker.openPicker({
-        mediaType: 'photo',
-        forceJpg: true,
+      const response = await openPicker({
+        usedCameraButton: true,
+        mediaType: 'image',
+        singleSelectedMode: true,
+        doneTitle: '추가',
+        cancelTitle: '취소',
+        emptyMessage: '사진이 하나도 없네요',
+        tapHereToChange: '앨범',
+        selectedColor: '#0988ff',
       });
 
       const imageObj = {
-        uri: image.path,
-        name: image.filename,
-        type: image.mime,
+        uri: response.path,
+        name: response.fileName,
+        type: response.mime,
       };
-
       handleChange('image', imageObj);
-    } catch (error: any) {
-      if (error.code === 'E_PICKER_CANCELLED') {
-        return;
-      }
+    } catch (e) {
+      //
     }
   };
 

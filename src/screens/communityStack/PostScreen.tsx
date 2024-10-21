@@ -156,7 +156,7 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                 {postData.result.content}
               </CustomText>
               {/* 이미지 */}
-              <PostImage images={postData.result.images} />
+              <PostImage images={postData.result.images} type="POST" />
               <InteractBar post={postData.result} type="post" />
               {/* 댓글 */}
               <CustomText

@@ -13,7 +13,7 @@ import {WINDOW_WIDTH} from '../../constants/dimension';
 import PostWriter from '../post/PostWriter';
 import InteractBar from '../post/InteractBar';
 import FastImage from 'react-native-fast-image';
-import {ImageSizeType, Post} from 'apis/post/types';
+import {ImageType, Post} from 'apis/post/types';
 import PostVideo from 'components/common/PostVideo';
 import ImageVideoViewer from 'components/post/ImageVideoViewer';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
@@ -33,14 +33,14 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
   const [isViewer, setIsViewer] = useState(false);
   const [curImage, setCurImage] = useState(0);
 
-  const renderItem: ListRenderItem<ImageSizeType> = ({item, index}) => {
+  const renderItem: ListRenderItem<ImageType> = ({item, index}) => {
     return (
       <Pressable
         onPress={() => {
           setCurImage(index);
           setIsViewer(true);
         }}>
-        {item.url.endsWith('MOV') || item.url.endsWith('MP4') ? (
+        {item.path.endsWith('mov') || item.path.endsWith('mp4') ? (
           <PostVideo
             video={item}
             index={index}
@@ -51,7 +51,7 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
           />
         ) : (
           <FastImage
-            source={{uri: item.url}}
+            source={{uri: item.path}}
             resizeMode="cover"
             style={[
               {

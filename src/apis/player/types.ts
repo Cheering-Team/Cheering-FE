@@ -57,7 +57,7 @@ export interface FanIdPayload {
 }
 
 export interface UpdateFanImagePayload extends FanIdPayload {
-  image: ImageType | null;
+  image: {uri: string; name: string; type: string} | null;
 }
 
 export interface UpdateFanNamePayload extends FanIdPayload {

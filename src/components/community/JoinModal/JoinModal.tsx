@@ -16,12 +16,6 @@ import JoinProfile from './JoinProfile/JoinProfile';
 import {Community} from 'apis/player/types';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
-export interface ImageType {
-  uri: string;
-  name: string;
-  type: string;
-}
-
 interface Props {
   playerData: Community;
   setRefreshKey: Dispatch<SetStateAction<number>>;

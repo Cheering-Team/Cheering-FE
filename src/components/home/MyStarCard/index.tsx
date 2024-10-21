@@ -86,7 +86,8 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 
         <View>
           {community.type === 'PLAYER' &&
-            dailyData?.pages[0].result.dailys.length !== 0 && (
+            dailyData &&
+            dailyData.pages[0].result.dailys.length !== 0 && (
               <TouchableOpacity
                 activeOpacity={1}
                 className="mb-4 flex-row items-center"
@@ -149,6 +150,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 
           <View className="flex-row justify-evenly items-center">
             <TouchableOpacity
+              className="p-1"
               activeOpacity={0.5}
               onPress={() =>
                 navigation.navigate('CommunityStack', {
@@ -164,6 +166,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
             </TouchableOpacity>
             <View className="h-5 bg-white w-[2]" />
             <TouchableOpacity
+              className="p-1"
               activeOpacity={0.5}
               onPress={() =>
                 navigation.navigate('CommunityStack', {
@@ -180,6 +183,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
             <View className="h-5 bg-white w-[2]" />
 
             <TouchableOpacity
+              className="p-1"
               activeOpacity={0.5}
               onPress={() => {
                 if (community.user) {

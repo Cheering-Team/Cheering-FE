@@ -1,24 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Animated as RNAnimated,
   KeyboardAvoidingView,
   Platform,
   Pressable,
   SafeAreaView,
   View,
+  ScrollView,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../../constants/dimension';
 import WriteHeader from '../../components/post/write/WriteHeader';
 import TagList from '../../components/post/write/TagList';
-import ImageEditInfo from '../../components/post/write/ImageEditInfo';
 import WriteFooter from '../../components/post/write/WriteFooter';
 import TagModal from '../../components/post/write/TagModal';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from '../../navigations/CommunityStackNavigator';
 import {RouteProp} from '@react-navigation/native';
-import {ImageType, TagType} from '../../apis/post/types';
+import {TagType} from '../../apis/post/types';
 import {useEditPost, useWritePost} from '../../apis/post/usePosts';
 import {showBottomToast} from '../../utils/toast';
 import {AxiosProgressEvent} from 'axios';
@@ -28,6 +27,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import CustomText from 'components/common/CustomText';
+import {Results as ImageSelectType} from '@baronha/react-native-multiple-image-picker';
+import PostImage from 'components/post/PostImage';
 
 export type PostWriteScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
@@ -48,10 +49,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
   });
 
   const [content, setContent] = useState<string>('');
-  const [imageData, setImageData] = useState<ImageType[]>([]);
-
-  const [isImageInfo, setIsImageInfo] = useState(false);
-  const [fadeAnim] = useState(new RNAnimated.Value(1));
+  const [imageData, setImageData] = useState<ImageSelectType[]>([]);
 
   const animatedProgress = useSharedValue(0);
 
@@ -64,6 +62,11 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
   const {mutate: writePost, isPending: isWritePending} = useWritePost();
   const {mutate: editPost, isPending: isEditPending} = useEditPost();
 
+  const handleDeleteImage = (path: string) => {
+    const newImageData = [...imageData].filter(image => image.path !== path);
+    setImageData(newImageData);
+  };
+
   const handleProgress = (progressEvent: AxiosProgressEvent) => {
     if (progressEvent.total) {
       const percentCompleted = Math.round(
@@ -75,13 +78,24 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
 
   const handleWritePost = async () => {
     if (content.length === 0 && imageData.length === 0) {
-      showBottomToast(insets.bottom + 20, '글 또는 사진을 만들어주세요.');
+      showBottomToast(insets.bottom + 20, '글 또는 사진을 넣어주세요');
       return;
     }
     if (content.length > 1990) {
       showBottomToast(insets.bottom + 20, '최대 2,000자까지 작성 가능합니다.');
       return;
     }
+
+    const images = imageData.map(image => ({
+      uri: image.path,
+      name:
+        Platform.OS === 'ios'
+          ? image.fileName
+          : image.path.substring(image.path.lastIndexOf('/') + 1),
+      type: image.mime,
+      width: image.width,
+      height: image.height,
+    }));
 
     const tags = Object.entries(selectedTag)
       .filter(([_, value]) => value)
@@ -92,7 +106,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
         communityId: playerId,
         content,
         tags,
-        images: imageData,
+        images,
         handleProgress,
       });
     } else {
@@ -100,7 +114,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
         postId: feed.id,
         content,
         tags,
-        images: imageData,
+        images,
         handleProgress,
       });
     }
@@ -123,23 +137,6 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
       );
     }
   }, [feed]);
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (isImageInfo) {
-      timer = setTimeout(() => {
-        RNAnimated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }).start(() => {
-          setIsImageInfo(false);
-        });
-      }, 3000); // 3초 후
-    }
-
-    return () => clearTimeout(timer); // 타이머 정리
-  }, [fadeAnim, isImageInfo]);
 
   return (
     <>
@@ -206,27 +203,29 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
             isWritePending={isWritePending}
             isEditPending={isEditPending}
           />
-          <TagList selectedTag={selectedTag} setIsTagOpen={setIsTagOpen} />
-          <TextInput
-            placeholder="글을 작성해보세요"
-            multiline
-            placeholderTextColor={'#b4b4b4'}
-            value={content}
-            onChangeText={setContent}
-            style={{
-              fontSize: 18,
-              flex: 1,
-              paddingHorizontal: 12,
-              textAlignVertical: 'top',
-            }}
-          />
-          {isImageInfo && <ImageEditInfo fadeAnim={fadeAnim} />}
-          <WriteFooter
-            imageData={imageData}
-            setImageData={setImageData}
-            setIsImageInfo={setIsImageInfo}
-            fadeAnim={fadeAnim}
-          />
+          <ScrollView>
+            <TagList selectedTag={selectedTag} setIsTagOpen={setIsTagOpen} />
+            <TextInput
+              placeholder="글을 작성해보세요"
+              multiline
+              placeholderTextColor={'#b4b4b4'}
+              value={content}
+              onChangeText={setContent}
+              style={{
+                fontSize: 18,
+                paddingHorizontal: 12,
+                textAlignVertical: 'top',
+                marginBottom: 15,
+              }}
+            />
+            <PostImage
+              images={imageData}
+              type="WRITE"
+              handleDeleteImage={handleDeleteImage}
+            />
+          </ScrollView>
+
+          <WriteFooter imageData={imageData} setImageData={setImageData} />
           {isTagOpen && (
             <TagModal
               selectedTag={selectedTag}

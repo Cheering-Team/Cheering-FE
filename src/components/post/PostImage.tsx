@@ -1,19 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Image, Pressable, View} from 'react-native';
-import {ImageSizeType} from '../../apis/post/types';
+import {FlatList, Pressable, TouchableOpacity} from 'react-native';
+import {ImageType} from '../../apis/post/types';
 import {WINDOW_WIDTH} from '../../constants/dimension';
-import ImageView from 'react-native-image-viewing';
 import FastImage from 'react-native-fast-image';
 import PostVideo from 'components/common/PostVideo';
-import Video from 'react-native-video';
 import ImageVideoViewer from './ImageVideoViewer';
+import CloseSvg from 'assets/images/x_white.svg';
 
 interface PostImageProps {
-  images: ImageSizeType[];
+  images: ImageType[];
+  type: 'WRITE' | 'POST';
+  handleDeleteImage?: (path: string) => void;
 }
 
 const PostImage = (props: PostImageProps) => {
-  const {images} = props;
+  const {images, type, handleDeleteImage} = props;
+
+  const offset = type === 'POST' ? 1 : 2;
 
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
@@ -24,17 +27,22 @@ const PostImage = (props: PostImageProps) => {
   useEffect(() => {
     if (images.length) {
       if (images[0].width / images[0].height >= 0.75) {
-        setWidth(WINDOW_WIDTH - 30);
-        setHeight(images[0].height * ((WINDOW_WIDTH - 30) / images[0].width));
+        setWidth(WINDOW_WIDTH / offset - 30);
+        setHeight(
+          images[0].height * ((WINDOW_WIDTH / offset - 30) / images[0].width),
+        );
       } else {
-        const IMAGE_HEIGHT = (WINDOW_WIDTH - 30) / 0.75;
+        const IMAGE_HEIGHT = (WINDOW_WIDTH / offset - 30) / 0.75;
         setHeight(IMAGE_HEIGHT);
         setWidth(
-          Math.max(images[0].width * (IMAGE_HEIGHT / images[0].height), 105),
+          Math.max(
+            images[0].width * (IMAGE_HEIGHT / images[0].height),
+            105 / offset,
+          ),
         );
       }
     }
-  }, [images]);
+  }, [images, offset]);
 
   return (
     <>
@@ -48,18 +56,22 @@ const PostImage = (props: PostImageProps) => {
               setCurImage(index);
               setIsViewer(true);
             }}>
-            {item.url.endsWith('MOV') || item.url.endsWith('MP4') ? (
+            {item.path.endsWith('MOV') ||
+            item.path.endsWith('MP4') ||
+            item.path.endsWith('mov') ||
+            item.path.endsWith('mp4') ? (
               <PostVideo
                 video={item}
                 index={index}
                 imagesLength={images.length}
                 width={width}
                 height={height}
-                type="POST"
+                type={type}
+                handleDeleteImage={handleDeleteImage}
               />
             ) : (
               <FastImage
-                source={{uri: item.url}}
+                source={{uri: item.path}}
                 resizeMode="cover"
                 style={[
                   {
@@ -68,12 +80,12 @@ const PostImage = (props: PostImageProps) => {
                         ? width
                         : Math.max(
                             Math.min(
-                              item.width * (250 / item.height),
-                              WINDOW_WIDTH - 60,
+                              item.width * (250 / offset / item.height),
+                              WINDOW_WIDTH / offset - 60,
                             ),
-                            150,
+                            150 / offset,
                           ),
-                    height: images.length === 1 ? height : 250,
+                    height: images.length === 1 ? height : 250 / offset,
                     borderRadius: 5,
                     marginLeft: 10,
                     borderWidth: 0.5,
@@ -81,6 +93,14 @@ const PostImage = (props: PostImageProps) => {
                   },
                 ]}
               />
+            )}
+            {type === 'WRITE' && (
+              <TouchableOpacity
+                onPress={() => handleDeleteImage?.(item.path)}
+                activeOpacity={0.5}
+                className="bg-black/70 absolute right-[6] top-[6] p-[6] rounded-full">
+                <CloseSvg width={10} height={10} />
+              </TouchableOpacity>
             )}
           </Pressable>
         )}

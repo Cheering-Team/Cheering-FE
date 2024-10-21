@@ -15,20 +15,22 @@ export interface Post {
   isLike: boolean;
   likeCount: number;
   commentCount: number;
-  images: ImageSizeType[];
+  images: ImageType[];
   writer: Fan;
 }
 
 export interface ImageType {
-  uri: string;
-  name: string | undefined;
-  type: string;
-}
-
-export interface ImageSizeType {
-  url: string;
+  path: string;
+  fileName?: string;
+  localIdentifier?: string;
   width: number;
   height: number;
+  mime?: string;
+  size?: number;
+  bucketId?: number;
+  realPath?: string;
+  parentFolderName?: string;
+  creationDate?: string;
   type?: 'IMAGE' | 'VIDEO';
 }
 
@@ -44,11 +46,19 @@ export interface DailyIdPayload {
   dailyId: number;
 }
 
+export interface ImagePayload {
+  uri: string;
+  name: string;
+  type: string;
+  width: number;
+  height: number;
+}
+
 export interface WritePostPayload {
   communityId: number;
   content: string;
   tags: TagType[];
-  images: ImageType[];
+  images: ImagePayload[];
   handleProgress: (progressEvent: AxiosProgressEvent) => void;
 }
 
@@ -56,7 +66,7 @@ export interface EditPostPayload {
   postId: number;
   content: string;
   tags: TagType[];
-  images: ImageType[];
+  images: ImagePayload[];
   handleProgress: (progressEvent: AxiosProgressEvent) => void;
 }
 

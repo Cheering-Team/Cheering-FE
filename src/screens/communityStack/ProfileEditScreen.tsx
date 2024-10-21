@@ -1,10 +1,8 @@
 import React, {useRef} from 'react';
 import {ImageBackground, Pressable, SafeAreaView, View} from 'react-native';
 import CustomText from '../../components/common/CustomText';
-import BackSvg from '../../assets/images/arrow-left.svg';
 import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
 import CameraSvg from '../../assets/images/camera-01.svg';
-import ImagePicker from 'react-native-image-crop-picker';
 import OptionModal from '../../components/common/OptionModal';
 import {
   useGetPlayerUserInfo,
@@ -15,6 +13,7 @@ import StackHeader from 'components/common/StackHeader';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {openPicker} from '@baronha/react-native-multiple-image-picker';
 
 const ProfileEditScreen = ({route}) => {
   const {playerUserId} = route.params;
@@ -29,21 +28,29 @@ const ProfileEditScreen = ({route}) => {
 
   const imageUpload = async () => {
     try {
-      const image = await ImagePicker.openPicker({
-        cropperCircleOverlay: true,
-        cropping: true,
-        cropperChooseText: '확인',
-        cropperCancelText: '취소',
-        cropperToolbarTitle: '사진 선택',
+      const response = await openPicker({
+        usedCameraButton: true,
+        mediaType: 'image',
+        singleSelectedMode: true,
+        isCrop: true,
+        isCropCircle: true,
+        doneTitle: '추가',
+        cancelTitle: '취소',
+        emptyMessage: '사진이 하나도 없네요',
+        tapHereToChange: '앨범',
+        selectedColor: '#0988ff',
       });
+
       mutate({
         fanId: playerUserId,
-        image: {uri: image.path, name: image.filename || '', type: image.mime},
+        image: {
+          uri: response.crop.path,
+          name: response.fileName || '',
+          type: response.mime,
+        },
       });
-    } catch (error: any) {
-      if (error.code === 'E_PICKER_CANCELLED') {
-        return;
-      }
+    } catch (e) {
+      //
     }
   };
 
