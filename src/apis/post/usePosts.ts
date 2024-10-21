@@ -15,13 +15,12 @@ import {
   writeDaily,
   writePost,
 } from './index';
-import {FilterType, Post} from './types';
+import {FilterType} from './types';
 import {useNavigation} from '@react-navigation/native';
 import {PostWriteScreenNavigationProp} from '../../screens/communityStack/PostWriteScreen';
-import {hideToast, showBottomToast} from '../../utils/toast';
+import {hideToast, showBottomToast, showTopToast} from '../../utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryClient} from '../../../App';
-import {ApiResponse} from 'apis/types.ts';
 import {LayoutAnimation} from 'react-native';
 
 // 게시글 작성
@@ -44,7 +43,7 @@ export const useWritePost = () => {
       navigaion.replace('Post', {
         postId: data.result.id,
       });
-      showBottomToast(insets.bottom + 20, '작성이 완료되었습니다.');
+      showTopToast(insets.top + 20, '작성이 완료되었습니다.');
     },
   });
 };
@@ -142,13 +141,12 @@ export const useReportPost = () => {
 
 // 게시글 삭제
 export const useDeletePost = () => {
-  const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: deletePost,
     onSuccess: () => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
-      showBottomToast(insets.bottom + 20, '삭제되었습니다.');
+      hideToast();
     },
   });
 };

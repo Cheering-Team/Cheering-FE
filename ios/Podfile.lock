@@ -3,6 +3,7 @@ PODS:
   - boost (1.83.0)
   - BVLinearGradient (2.8.3):
     - React-Core
+  - CropViewController (2.6.1)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.74.6)
   - Firebase/CoreOnly (10.29.0):
@@ -1071,6 +1072,15 @@ PODS:
     - Yoga
   - react-native-encrypted-storage (4.0.3):
     - React-Core
+  - react-native-multiple-image-picker (1.1.9):
+    - CropViewController (= 2.6.1)
+    - React-Core
+    - react-native-multiple-image-picker/Viewer (= 1.1.9)
+    - TLPhotoPicker (= 2.1.9)
+  - react-native-multiple-image-picker/Viewer (1.1.9):
+    - CropViewController (= 2.6.1)
+    - React-Core
+    - TLPhotoPicker (= 2.1.9)
   - react-native-pager-view (6.4.1):
     - DoubleConversion
     - glog
@@ -1092,6 +1102,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-pinchable (0.2.1):
+    - React-Core
   - react-native-safe-area-context (4.11.1):
     - React-Core
   - react-native-splash-screen (3.3.0):
@@ -1449,15 +1461,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNImageCropPicker (0.40.2):
-    - React-Core
-    - React-RCTImage
-    - RNImageCropPicker/QBImagePickerController (= 0.40.2)
-    - TOCropViewController
-  - RNImageCropPicker/QBImagePickerController (0.40.2):
-    - React-Core
-    - React-RCTImage
-    - TOCropViewController
   - RNNaverLogin (4.0.1):
     - DoubleConversion
     - glog
@@ -1597,7 +1600,7 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.7.0)
-  - TOCropViewController (2.7.4)
+  - TLPhotoPicker (2.1.9)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1638,7 +1641,9 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-encrypted-storage (from `../node_modules/react-native-encrypted-storage`)
+  - "react-native-multiple-image-picker (from `../node_modules/@baronha/react-native-multiple-image-picker`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
+  - react-native-pinchable (from `../node_modules/react-native-pinchable`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-video (from `../node_modules/react-native-video`)
@@ -1674,7 +1679,6 @@ DEPENDENCIES:
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFlashList (from `../node_modules/@shopify/flash-list`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
-  - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - "RNNaverLogin (from `../node_modules/@react-native-seoul/naver-login`)"
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -1685,6 +1689,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Alamofire
+    - CropViewController
     - Firebase
     - FirebaseCore
     - FirebaseCoreExtension
@@ -1703,7 +1708,7 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageWebPCoder
     - SocketRocket
-    - TOCropViewController
+    - TLPhotoPicker
 
 EXTERNAL SOURCES:
   boost:
@@ -1775,8 +1780,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/blur"
   react-native-encrypted-storage:
     :path: "../node_modules/react-native-encrypted-storage"
+  react-native-multiple-image-picker:
+    :path: "../node_modules/@baronha/react-native-multiple-image-picker"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
+  react-native-pinchable:
+    :path: "../node_modules/react-native-pinchable"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
@@ -1847,8 +1856,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@shopify/flash-list"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
-  RNImageCropPicker:
-    :path: "../node_modules/react-native-image-crop-picker"
   RNNaverLogin:
     :path: "../node_modules/@react-native-seoul/naver-login"
   RNReactNativeHapticFeedback:
@@ -1866,6 +1873,7 @@ SPEC CHECKSUMS:
   Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
+  CropViewController: 58fb440f30dac788b129d2a1f24cffdcb102669c
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   FBLazyVector: 4b1589d37c9ff4dba11a63083fe7515fad3ac111
   Firebase: cec914dab6fd7b1bd8ab56ea07ce4e03dd251c2d
@@ -1913,7 +1921,9 @@ SPEC CHECKSUMS:
   React-Mapbuffer: d8adf69e5f42c7419d6594384f8a56e641141c8e
   react-native-blur: 68eda7d27e86b53ec96445fc59fe9e84f0921fea
   react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
+  react-native-multiple-image-picker: bfbdaa54e18ba98ca205f5fa7f141976d89247a9
   react-native-pager-view: ec794201907d9b62825bcf2a3a6ed3ff493c2ab8
+  react-native-pinchable: b4381b0807d15c12b14bfacd927128f52d96f0f1
   react-native-safe-area-context: 5141f11858b033636f1788b14f32eaba92cee810
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-video: 47ba1a42a5ade70b4e92dcb14f6f438d2d15f27e
@@ -1949,7 +1959,6 @@ SPEC CHECKSUMS:
   RNFBMessaging: 652aac21d91b8ddb85a5e25c0f04150ef60b5384
   RNFlashList: d12fc0b6c10ebd40f3485f1662c16d294432b6e6
   RNGestureHandler: 1cc5930a64f5168977e5726b9c24777ecc8a8570
-  RNImageCropPicker: d9616a0cb9b72e8551ff94a7a5021fbd29050aa5
   RNNaverLogin: 1e5f1b4c23191f077680e7258df65c725265fdba
   RNReactNativeHapticFeedback: dd1df8ab143dfd0ac79fe483cd08822d7a86fc85
   RNReanimated: f8dc6e880959a874d8d65c1e1fcdc29c946b9fea
@@ -1958,7 +1967,7 @@ SPEC CHECKSUMS:
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
-  TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
+  TLPhotoPicker: 939c40eaad130b69f9571e61e021e8120fa76329
   Yoga: dbb1bd5faecc60d38ed0a2f2a75db536c759b334
 
 PODFILE CHECKSUM: 9fa8ca62687a6c30d3c3977f5cba3ea2bcdefbfb

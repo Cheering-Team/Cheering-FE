@@ -83,7 +83,7 @@ const ChatRoomScreen = ({route}) => {
     const accessToken = await EncryptedStorage.getItem('accessToken');
 
     if (accessToken) {
-      const socket = new SockJS('http://192.168.0.34:8080/ws');
+      const socket = new SockJS('http://192.168.0.43:8080/ws');
       client.current = new StompJs.Client({
         webSocketFactory: () => socket,
         reconnectDelay: 5000, // 자동 재연결

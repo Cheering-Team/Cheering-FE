@@ -1,4 +1,10 @@
-import React, {Dispatch, RefObject, SetStateAction, useState} from 'react';
+import React, {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 import {
   ImageBackground,
   Keyboard,
@@ -13,12 +19,12 @@ import CameraSvg from '../../../../assets/images/camera-01.svg';
 import {ImageType} from '../JoinModal';
 import {NAME_REGEX} from '../../../../constants/regex';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import ImagePicker from 'react-native-image-crop-picker';
 import CustomBottomSheetTextInput from '../../../common/CustomBottomSheetTextInput';
 import {useJoinCommunity} from 'apis/player/usePlayers';
 import {showTopToast} from 'utils/toast';
 import {Community} from 'apis/player/types';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
+import {openPicker} from '@baronha/react-native-multiple-image-picker';
 
 interface Props {
   playerData: Community;
@@ -45,24 +51,26 @@ const JoinProfile = (props: Props) => {
 
   const imageUpload = async () => {
     try {
-      Keyboard.dismiss();
-      const image = await ImagePicker.openPicker({
-        cropperCircleOverlay: true,
-        cropping: true,
-        cropperChooseText: '확인',
-        cropperCancelText: '취소',
-        cropperToolbarTitle: '사진 선택',
+      const response = await openPicker({
+        usedCameraButton: true,
+        mediaType: 'image',
+        singleSelectedMode: true,
+        isCrop: true,
+        isCropCircle: true,
+        doneTitle: '추가',
+        cancelTitle: '취소',
+        emptyMessage: '사진이 하나도 없네요',
+        tapHereToChange: '앨범',
+        selectedColor: '#0988ff',
       });
 
       setImageData({
-        uri: image.path,
-        name: image.filename || '',
-        type: image.mime,
+        uri: response.crop.path,
+        name: response.fileName || '',
+        type: response.mime,
       });
-    } catch (error: any) {
-      if (error.code === 'E_PICKER_CANCELLED') {
-        return;
-      }
+    } catch (e) {
+      //
     }
   };
 

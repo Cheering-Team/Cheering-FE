@@ -53,7 +53,7 @@ const StarFeedList = ({community}: StarFeedListProps) => {
     }, 1000);
   };
 
-  if (community.user === null) {
+  if (community.user === null || community.manager === null) {
     return null;
   }
   return (

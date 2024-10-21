@@ -1,4 +1,4 @@
-import {ImageType} from 'apis/post/types';
+import {ImagePayload, ImageType} from 'apis/post/types';
 import {Fan} from '../user/types';
 import {Community} from 'apis/player/types';
 import {Page} from 'apis/types';
@@ -40,7 +40,7 @@ export interface CreateChatRoomPayload {
   name: string;
   description: string;
   max: number;
-  image: ImageType;
+  image: {uri: string; name: string; type: string};
 }
 
 // 응답

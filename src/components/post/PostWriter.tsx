@@ -7,7 +7,7 @@ import MoreSvg from '../../assets/images/three-dots.svg';
 import OptionModal from '../common/OptionModal';
 import AlertModal from '../common/AlertModal/AlertModal';
 import {useDeletePost, useReportPost} from '../../apis/post/usePosts';
-import {showBottomToast} from 'utils/toast';
+import {showBottomToast, showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import OfficialSvg from 'assets/images/official.svg';
@@ -39,7 +39,7 @@ const PostWriter = ({
 
   const handleDeletePost = async () => {
     type === 'feed'
-      ? showBottomToast(insets.bottom + 20, '삭제중..', false)
+      ? showTopToast(insets.top + 20, '삭제중..', false)
       : navigation.goBack();
     await deletePost({postId: feed.id});
   };

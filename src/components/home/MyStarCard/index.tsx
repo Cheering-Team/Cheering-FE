@@ -86,7 +86,8 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 
         <View>
           {community.type === 'PLAYER' &&
-            dailyData?.pages[0].result.dailys.length !== 0 && (
+            dailyData &&
+            dailyData.pages[0].result.dailys.length !== 0 && (
               <TouchableOpacity
                 activeOpacity={1}
                 className="mb-4 flex-row items-center"
@@ -142,13 +143,14 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 numberOfLines={1}
                 fontWeight="600"
                 className="ml-3 text-white text-[15px] flex-1">
-                {'[공지사항]  9/21일 경기안내'}
+                {/* {'[공지사항]  9/21일 경기안내'} */}
               </CustomText>
             </TouchableOpacity>
           )}
 
           <View className="flex-row justify-evenly items-center">
             <TouchableOpacity
+              className="p-1"
               activeOpacity={0.5}
               onPress={() =>
                 navigation.navigate('CommunityStack', {
@@ -164,6 +166,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
             </TouchableOpacity>
             <View className="h-5 bg-white w-[2]" />
             <TouchableOpacity
+              className="p-1"
               activeOpacity={0.5}
               onPress={() =>
                 navigation.navigate('CommunityStack', {
@@ -180,6 +183,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
             <View className="h-5 bg-white w-[2]" />
 
             <TouchableOpacity
+              className="p-1"
               activeOpacity={0.5}
               onPress={() => {
                 if (community.user) {
