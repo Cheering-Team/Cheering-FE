@@ -96,7 +96,7 @@ const PostWriter = ({
           firstOnPress={() => {
             navigation.navigate('CommunityStack', {
               screen: 'PostWrite',
-              params: {playerId: feed.player.id, feed},
+              params: {communityId: feed.community.id, post: feed},
             });
           }}
           secondText="삭제"

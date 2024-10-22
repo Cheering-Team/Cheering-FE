@@ -47,7 +47,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
       onPress={() =>
         navigation.navigate('CommunityStack', {
           screen: 'Community',
-          params: {playerId: community.id},
+          params: {communityId: community.id},
         })
       }
       onLongPress={() => {
@@ -95,7 +95,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                   navigation.navigate('CommunityStack', {
                     screen: 'Daily',
                     params: {
-                      playerId: community.id,
+                      communityId: community.id,
                       date: formatBarDate(new Date()),
                     },
                   })
@@ -119,7 +119,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                   navigation.navigate('CommunityStack', {
                     screen: 'Daily',
                     params: {
-                      playerId: community.id,
+                      communityId: community.id,
                       date: formatBarDate(new Date()),
                       write: true,
                     },
@@ -155,7 +155,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
               onPress={() =>
                 navigation.navigate('CommunityStack', {
                   screen: 'PostWrite',
-                  params: {playerId: community.id},
+                  params: {communityId: community.id},
                 })
               }>
               <CustomText
@@ -232,7 +232,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         secondOnPress={() => {
           navigation.navigate('CommunityStack', {
             screen: 'Community',
-            params: {playerId: community.id},
+            params: {communityId: community.id},
           });
         }}
         thirdText="커뮤니티 탈퇴"

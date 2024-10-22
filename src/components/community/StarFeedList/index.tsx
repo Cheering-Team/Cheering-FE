@@ -111,7 +111,7 @@ const StarFeedList = ({community}: StarFeedListProps) => {
             elevation: 3,
           }}
           onPress={() => {
-            navigation.navigate('PostWrite', {playerId: community.id});
+            navigation.navigate('PostWrite', {communityId: community.id});
           }}>
           <PlusSvg width={20} height={20} />
         </Pressable>

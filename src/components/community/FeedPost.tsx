@@ -40,7 +40,10 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
           setViewIndex(index);
           setIsViewerOpen(true);
         }}>
-        {item.path.endsWith('mov') || item.path.endsWith('mp4') ? (
+        {item.path.endsWith('mov') ||
+        item.path.endsWith('mp4') ||
+        item.path.endsWith('MOV') ||
+        item.path.endsWith('MP4') ? (
           <PostVideo
             video={item}
             index={index}

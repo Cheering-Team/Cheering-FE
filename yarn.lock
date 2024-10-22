@@ -4510,6 +4510,7 @@ __metadata:
     react-native: "npm:^0.74.0"
     react-native-calendars: "npm:^1.1307.0"
     react-native-collapsible-tab-view: "npm:^8.0.0"
+    react-native-compressor: "npm:^1.9.0"
     react-native-draggable-flatlist: "npm:^4.0.1"
     react-native-drawer-layout: "npm:^3.3.2"
     react-native-encrypted-storage: "npm:^4.0.3"
@@ -11222,6 +11223,16 @@ __metadata:
     "@shopify/flash-list":
       optional: true
   checksum: 10c0/967299ea6e667015bfa6f606b1d3822b0b64db8e8c9919abc87bf42be2bd7d806debc156832fcc332267d26904981a489e86bd221747d4f3cc0e90d73ce20881
+  languageName: node
+  linkType: hard
+
+"react-native-compressor@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "react-native-compressor@npm:1.9.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/5758ec0696fb91043f10306ab745d264eb0dd5ddeb948cd9cc6f514882c598e579c578def7991f00231997bf7085c0130a8b46bbf2c644a6669aba0cce9e42f6
   languageName: node
   linkType: hard
 

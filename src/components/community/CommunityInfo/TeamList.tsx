@@ -25,7 +25,7 @@ const TeamList = (props: TeamListProps) => {
             style={styles.teamContainer}
             key={item.teamName}
             onPress={() =>
-              navigation.push('Community', {playerId: item.communityId})
+              navigation.push('Community', {communityId: item.communityId})
             }>
             <Image
               source={{

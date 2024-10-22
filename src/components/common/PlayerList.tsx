@@ -44,7 +44,7 @@ const PlayerList = ({
           onPress={() => {
             navigation.navigate('CommunityStack', {
               screen: 'Community',
-              params: {playerId: item.id},
+              params: {communityId: item.id},
             });
           }}>
           <Image

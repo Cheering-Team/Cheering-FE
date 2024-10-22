@@ -15,8 +15,8 @@ import DailyScreen from 'screens/communityStack/DailyScreen';
 import {Post} from 'apis/post/types';
 
 export type CommunityStackParamList = {
-  Community: {playerId: number};
-  PostWrite: {playerId: number; feed?: Post};
+  Community: {communityId: number};
+  PostWrite: {communityId: number; post?: Post};
   Post: {postId: number};
   Daily: {playerId: number; date: string; write: boolean};
   ChatRoom: {chatRoomId: number};

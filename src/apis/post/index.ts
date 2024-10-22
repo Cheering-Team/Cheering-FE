@@ -107,7 +107,15 @@ export const editPost = async (data: EditPostPayload) => {
   const formData = new FormData();
   formData.append('content', content);
   tags.forEach(tag => formData.append('tags', tag));
-  images.forEach(image => formData.append('images', image));
+  images.forEach(image => {
+    formData.append('images', {
+      uri: image.uri,
+      type: image.type,
+      name: image.name,
+    });
+    formData.append('widthDatas', image.width);
+    formData.append(`heightDatas`, image.height);
+  });
 
   const response = await axiosInstance.put<ApiResponse<null>>(
     `/posts/${postId}`,

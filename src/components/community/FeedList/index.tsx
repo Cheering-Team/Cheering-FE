@@ -116,7 +116,7 @@ const FeedList = (props: Props) => {
             elevation: 3,
           }}
           onPress={() => {
-            navigation.navigate('PostWrite', {playerId: playerData.id});
+            navigation.navigate('PostWrite', {communityId: playerData.id});
           }}>
           <PlusSvg width={20} height={20} />
         </Pressable>

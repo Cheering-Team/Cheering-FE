@@ -20,7 +20,6 @@ import {RouteProp} from '@react-navigation/native';
 import {TagType} from '../../apis/post/types';
 import {useEditPost, useWritePost} from '../../apis/post/usePosts';
 import {showBottomToast} from '../../utils/toast';
-import {AxiosProgressEvent} from 'axios';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -29,6 +28,7 @@ import Animated, {
 import CustomText from 'components/common/CustomText';
 import {Results as ImageSelectType} from '@baronha/react-native-multiple-image-picker';
 import PostImage from 'components/post/PostImage';
+import {Image, Video} from 'react-native-compressor';
 
 export type PostWriteScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
@@ -39,7 +39,7 @@ type PostWriteScreenRouteProp = RouteProp<CommunityStackParamList, 'PostWrite'>;
 
 const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
   const insets = useSafeAreaInsets();
-  const {playerId, feed} = route.params;
+  const {communityId, post} = route.params;
 
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState<Record<TagType, boolean>>({
@@ -50,6 +50,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
 
   const [content, setContent] = useState<string>('');
   const [imageData, setImageData] = useState<ImageSelectType[]>([]);
+  const [isWriting, setIsWriting] = useState<boolean>(false);
 
   const animatedProgress = useSharedValue(0);
 
@@ -59,15 +60,15 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
     };
   });
 
-  const {mutate: writePost, isPending: isWritePending} = useWritePost();
-  const {mutate: editPost, isPending: isEditPending} = useEditPost();
+  const {mutate: writePost} = useWritePost();
+  const {mutate: editPost} = useEditPost();
 
   const handleDeleteImage = (path: string) => {
     const newImageData = [...imageData].filter(image => image.path !== path);
     setImageData(newImageData);
   };
 
-  const handleProgress = (progressEvent: AxiosProgressEvent) => {
+  const handleProgress = progressEvent => {
     if (progressEvent.total) {
       const percentCompleted = Math.round(
         (progressEvent.loaded * 100) / progressEvent.total,
@@ -86,61 +87,112 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
       return;
     }
 
-    const images = imageData.map(image => ({
-      uri: image.path,
-      name:
-        Platform.OS === 'ios'
-          ? image.fileName
-          : image.path.substring(image.path.lastIndexOf('/') + 1),
-      type: image.mime,
-      width: image.width,
-      height: image.height,
-    }));
+    setIsWriting(true);
+
+    const images = [];
+    const totalImages = imageData.length;
+    let compressionProgress = 0;
+
+    for (const [index, image] of imageData.entries()) {
+      let result;
+
+      const baseProgress = (index / totalImages) * 50;
+
+      if (image.mime) {
+        if (image.mime.startsWith('video')) {
+          result = await Video.compress(image.path, {}, progress => {
+            const videoProgress = baseProgress + (progress * 50) / totalImages;
+            handleProgress({loaded: videoProgress, total: 100});
+          });
+        } else {
+          result = await Image.compress(image.path, {
+            compressionMethod: 'manual',
+            maxWidth: 1600,
+            quality: 0.7,
+          });
+          compressionProgress = Math.round(((index + 1) / totalImages) * 50);
+          handleProgress({loaded: compressionProgress, total: 100});
+        }
+      }
+
+      images.push({
+        uri: result || image.path,
+        name:
+          image.fileName ||
+          `${post?.id}-IMAGE-${index}.${image.path.substring(image.path.lastIndexOf('.') + 1)}`,
+        type:
+          image.mime ||
+          (image.type === 'IMAGE'
+            ? `image/${image.path.substring(image.path.lastIndexOf('.') + 1).toLowerCase}`
+            : `video/${image.path.substring(image.path.lastIndexOf('.') + 1).toLowerCase}`),
+        width: image.width,
+        height: image.height,
+      });
+    }
 
     const tags = Object.entries(selectedTag)
       .filter(([_, value]) => value)
       .map(([key]) => key as TagType);
 
-    if (!feed) {
+    if (!post) {
       writePost({
-        communityId: playerId,
+        communityId: communityId,
         content,
         tags,
         images,
-        handleProgress,
+        handleProgress: progressEvent => {
+          if (progressEvent.total) {
+            const percentCompleted = Math.round(
+              50 + (progressEvent.loaded * 50) / progressEvent.total,
+            );
+            animatedProgress.value = withTiming(percentCompleted, {
+              duration: 500,
+            });
+          }
+        },
       });
     } else {
       editPost({
-        postId: feed.id,
+        postId: post.id,
         content,
         tags,
         images,
-        handleProgress,
+        handleProgress: progressEvent => {
+          if (progressEvent.total) {
+            const percentCompleted = Math.round(
+              50 + (progressEvent.loaded * 50) / progressEvent.total,
+            );
+            animatedProgress.value = withTiming(percentCompleted, {
+              duration: 500,
+            });
+          }
+        },
       });
     }
   };
 
   useEffect(() => {
-    if (feed) {
-      setContent(feed.content);
+    if (post) {
+      setContent(post.content);
 
-      feed.tags.map((tag: 'photo' | 'viewing' | 'information') =>
+      post.tags.map((tag: 'photo' | 'viewing' | 'information') =>
         setSelectedTag(prev => ({...prev, [tag]: true})),
       );
 
       setImageData(
-        feed.images.map(image => ({
-          uri: image.url,
-          name: `${feed.id}-IMG.JPG`,
-          type: 'image/jpeg',
+        post.images.map(image => ({
+          path: image.path,
+          width: image.width,
+          height: image.height,
+          type: image.type,
         })),
       );
     }
-  }, [feed]);
+  }, [post]);
 
   return (
     <>
-      {(isWritePending || isEditPending) && (
+      {isWriting && (
         <View
           style={{
             width: '100%',
@@ -200,8 +252,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
           )}
           <WriteHeader
             handleWritePost={handleWritePost}
-            isWritePending={isWritePending}
-            isEditPending={isEditPending}
+            isWriting={isWriting}
           />
           <ScrollView>
             <TagList selectedTag={selectedTag} setIsTagOpen={setIsTagOpen} />

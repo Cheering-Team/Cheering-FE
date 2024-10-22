@@ -28,7 +28,7 @@ export type CommunityScreenNavigationProp = NativeStackNavigationProp<
 type CommunityScreenRouteProp = RouteProp<CommunityStackParamList, 'Community'>;
 
 const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
-  const {playerId} = route.params;
+  const {communityId: playerId} = route.params;
   const [refreshKey, setRefreshKey] = useState(0);
   const insets = useSafeAreaInsets();
 

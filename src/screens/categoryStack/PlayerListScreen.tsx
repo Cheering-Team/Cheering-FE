@@ -92,7 +92,7 @@ const PlayerListScreen = ({
             onPress={() =>
               navigation.navigate('CommunityStack', {
                 screen: 'Community',
-                params: {playerId: teamData.result.communityId},
+                params: {communityId: teamData.result.communityId},
               })
             }>
             <CustomText
