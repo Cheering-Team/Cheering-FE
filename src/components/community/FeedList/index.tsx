@@ -9,17 +9,17 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PlusSvg from '../../../assets/images/plus-gray.svg';
 import {useNavigation} from '@react-navigation/native';
 import {Post} from 'apis/post/types';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 
 interface Props {
-  playerData: Community;
+  community: Community;
 }
 
 const FeedList = (props: Props) => {
-  const {playerData} = props;
+  const {community} = props;
 
   const insets = useSafeAreaInsets();
   const navigation =
@@ -30,12 +30,12 @@ const FeedList = (props: Props) => {
   const {
     selectedFilter,
     setSelectedFilter,
-    feedData,
+    posts,
     isLoading,
     refetch,
     isFetchingNextPage,
-    loadFeed,
-  } = useFeedList(playerData);
+    loadPosts,
+  } = useFeedList(community);
 
   const renderFeed: ListRenderItem<Post> = ({item}) => (
     <FeedPost feed={item} type="community" />
@@ -50,19 +50,17 @@ const FeedList = (props: Props) => {
     }, 1000);
   };
 
-  if (playerData.user == null) {
+  if (community.user == null) {
     return null;
   }
 
   return (
     <>
       <Tabs.FlatList
-        data={
-          isLoading ? [] : feedData?.pages.flatMap(page => page.result.posts)
-        }
+        data={isLoading ? [] : posts?.pages.flatMap(page => page.posts)}
         renderItem={renderFeed}
         ListHeaderComponent={
-          playerData.user ? (
+          community.user ? (
             <FeedFilter
               selectedFilter={selectedFilter}
               setSelectedFilter={setSelectedFilter}
@@ -71,10 +69,10 @@ const FeedList = (props: Props) => {
         }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 70}}
-        onEndReached={playerData.user && loadFeed}
-        onEndReachedThreshold={playerData.user && 1}
+        onEndReached={community.user && loadPosts}
+        onEndReachedThreshold={community.user && 1}
         ListFooterComponent={
-          isFetchingNextPage && playerData.user ? (
+          isFetchingNextPage && community.user ? (
             <FeedSkeleton type="Community" />
           ) : null
         }
@@ -86,7 +84,7 @@ const FeedList = (props: Props) => {
           )
         }
         refreshControl={
-          playerData.user ? (
+          community.user ? (
             <RefreshControl
               refreshing={isRefreshing}
               onRefresh={handleRefresh}
@@ -94,7 +92,7 @@ const FeedList = (props: Props) => {
           ) : undefined
         }
       />
-      {playerData.user && (
+      {community.user && (
         <Pressable
           style={{
             alignItems: 'center',
@@ -116,7 +114,7 @@ const FeedList = (props: Props) => {
             elevation: 3,
           }}
           onPress={() => {
-            navigation.navigate('PostWrite', {communityId: playerData.id});
+            navigation.navigate('PostWrite', {communityId: community.id});
           }}>
           <PlusSvg width={20} height={20} />
         </Pressable>

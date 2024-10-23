@@ -36,7 +36,7 @@ const ReComment = (props: Props) => {
         style={{height: 33}}
         onPress={() => {
           navigation.navigate('Profile', {
-            playerUserId: reComment.writer.id,
+            fanId: reComment.writer.id,
           });
         }}>
         <Avatar uri={reComment.writer.image} size={33} />

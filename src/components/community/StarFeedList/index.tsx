@@ -1,4 +1,4 @@
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import React, {useState} from 'react';
 import DailyList from '../DailyList';
 import {Tabs} from 'react-native-collapsible-tab-view';
@@ -26,7 +26,7 @@ const StarFeedList = ({community}: StarFeedListProps) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const {
-    data: feedData,
+    data: posts,
     isLoading,
     refetch,
     fetchNextPage,
@@ -38,7 +38,7 @@ const StarFeedList = ({community}: StarFeedListProps) => {
     <FeedPost feed={item} type="community" />
   );
 
-  const loadFeed = () => {
+  const loadPosts = () => {
     if (hasNextPage) {
       fetchNextPage();
     }
@@ -59,14 +59,12 @@ const StarFeedList = ({community}: StarFeedListProps) => {
   return (
     <>
       <Tabs.FlatList
-        data={
-          feedData ? feedData?.pages.flatMap(page => page.result.posts) : []
-        }
+        data={posts ? posts?.pages.flatMap(page => page.posts) : []}
         showsVerticalScrollIndicator={false}
         renderItem={renderFeed}
         ListHeaderComponent={<DailyList community={community} />}
         contentContainerStyle={{paddingBottom: 70}}
-        onEndReached={community.user && loadFeed}
+        onEndReached={community.user && loadPosts}
         onEndReachedThreshold={community.user && 1}
         ListFooterComponent={
           isFetchingNextPage && community.user ? (

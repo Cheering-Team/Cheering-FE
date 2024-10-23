@@ -34,7 +34,7 @@ const MoreScreen = ({navigation}: {navigation: MoreScreenNavigationProp}) => {
             className="flex-row justify-between items-center py-2"
             onPress={() => navigation.navigate('MyProfile')}>
             <CustomText fontWeight="500" className="text-lg mr-1 pb-[1]">
-              {data?.result.name}
+              {data?.name}
             </CustomText>
             <ChevronRightSvg width={16} height={16} />
           </Pressable>

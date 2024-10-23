@@ -6,7 +6,7 @@ import PostWriteScreen from '../screens/communityStack/PostWriteScreen';
 import PostScreen from '../screens/communityStack/PostScreen';
 import ProfileEditScreen from '../screens/communityStack/ProfileEditScreen';
 import EditNameScreen from '../screens/moreStack/EditNameScreen';
-import DeletePlayerUserScreen from '../screens/communityStack/DeletePlayerUserScreen';
+import DeletePlayerUserScreen from '../screens/communityStack/DeleteFanScreen';
 import ChatRoomScreen from '../screens/communityStack/ChatRoomScreen';
 import CreateChatRoomScreen from 'screens/communityStack/CreateChatRoomScreen';
 import ChatRoomEnterScreen from 'screens/communityStack/ChatRoomEnterScreen';
@@ -22,10 +22,10 @@ export type CommunityStackParamList = {
   ChatRoom: {chatRoomId: number};
   CreateChatRoom: {playerId: number};
   ChatRoomEnter: {chatRoomId: number};
-  Profile: {playerUserId: number};
-  ProfileEdit: {playerUserId: number};
-  EditName: {name: string; playerUserId: number | null};
-  DeletePlayerUser: {playerUserId: number};
+  Profile: {fanId: number};
+  ProfileEdit: {fanId: number};
+  EditName: {name: string; fanId: number | null};
+  DeleteFan: {fanId: number};
   BlockList: {playerUserId: number};
 };
 
@@ -84,7 +84,7 @@ const CommunityStackNavigator = () => {
         options={{headerShown: false}}
       />
       <CommunityStack.Screen
-        name="DeletePlayerUser"
+        name="DeleteFan"
         component={DeletePlayerUserScreen}
         options={{headerShown: false}}
       />

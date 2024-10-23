@@ -5,13 +5,12 @@ import {
   checkCodeSocial,
   connectSocial,
   deleteUser,
-  getPlayerAccountInfo,
+  getPlayerAccount,
   getUserInfo,
   kakaoSignIn,
   naverSignIn,
   registerManagerAccount,
   reissuePlayerAccountPassword,
-  saveFCMToken,
   sendSMS,
   signIn,
   signUp,
@@ -75,12 +74,6 @@ export const useDeleteUser = () => {
   });
 };
 
-export const useSaveFCMToken = () => {
-  return useMutation({
-    mutationFn: saveFCMToken,
-  });
-};
-
 export const useRegisterPlayerAccount = () => {
   return useMutation({
     mutationFn: registerManagerAccount,
@@ -96,8 +89,9 @@ export const useRegisterPlayerAccount = () => {
 export const useGetPlayerAccount = (playerId: number) => {
   return useQuery({
     queryKey: userKeys.playerAccount(playerId),
-    queryFn: getPlayerAccountInfo,
+    queryFn: getPlayerAccount,
     enabled: playerId !== 0,
+    retry: false,
   });
 };
 

@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Avatar from '../../common/Avatar';
 import DailySvg from '../../../assets/images/comment-white.svg';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import {formatBarDate} from 'utils/format';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
@@ -54,7 +54,7 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
             onPress={() => {
               if (playerData.user) {
                 navigation.navigate('Profile', {
-                  playerUserId: playerData.user.id,
+                  fanId: playerData.user.id,
                 });
               }
             }}>

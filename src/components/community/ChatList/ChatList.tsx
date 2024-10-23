@@ -7,7 +7,7 @@ import {Pressable, View} from 'react-native';
 import PlusSvg from '../../../assets/images/plus-gray.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CommunityScreenNavigationProp} from 'screens/communityStack/CommunityScreen';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import ChatRoomSkeleton from 'components/skeleton/ChatRoomSkeleton';
 
 interface Props {

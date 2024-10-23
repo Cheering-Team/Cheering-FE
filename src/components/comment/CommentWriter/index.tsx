@@ -72,7 +72,7 @@ const CommentWriter = ({
         style={{flexDirection: 'row', alignItems: 'center'}}
         onPress={() => {
           navigation.navigate('Profile', {
-            playerUserId: comment.writer.id,
+            fanId: comment.writer.id,
           });
         }}>
         <CustomText fontWeight="500" className="text-base">

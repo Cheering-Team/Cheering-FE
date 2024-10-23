@@ -8,32 +8,31 @@ import TeamList from './TeamList';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../common/CustomText';
 import {WINDOW_HEIGHT} from '../../../constants/dimension';
-import {ApiResponse} from 'apis/types';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import OfficialSvg from '../../../assets/images/official.svg';
 
 interface CommunityProfileProps {
-  playerData: ApiResponse<Community>;
+  community: Community;
 }
 
 const CommunityProfile = (props: CommunityProfileProps) => {
-  const {playerData} = props;
+  const {community} = props;
 
   const insets = useSafeAreaInsets();
 
   return (
     <View style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2}]}>
       <View style={[styles.infoContainer, {top: insets.top + 55}]}>
-        {playerData.result.sportName ? (
-          <CustomText className="ml-5 text-white text-[13px]">{`${playerData.result.sportName} / ${playerData.result.leagueName}`}</CustomText>
+        {community.sportName ? (
+          <CustomText className="ml-5 text-white text-[13px]">{`${community.sportName} / ${community.leagueName}`}</CustomText>
         ) : (
-          <TeamList playerData={playerData} />
+          <TeamList community={community} />
         )}
 
         <View style={{paddingLeft: 15}}>
-          {playerData.result.englishName && (
+          {community.englishName && (
             <CustomText fontWeight="500" style={styles.englishName}>
-              {playerData.result.englishName}
+              {community.englishName}
             </CustomText>
           )}
 
@@ -41,13 +40,13 @@ const CommunityProfile = (props: CommunityProfileProps) => {
             <CustomText
               fontWeight="600"
               style={
-                playerData.result.koreanName.length > 10
+                community.koreanName.length > 10
                   ? styles.koreanNameLong
                   : styles.koreanName
               }>
-              {playerData.result.koreanName}
+              {community.koreanName}
             </CustomText>
-            {playerData.result.manager && (
+            {community.manager && (
               <OfficialSvg
                 width={18}
                 height={18}
@@ -59,7 +58,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
           <View style={styles.fanCountContainer}>
             <StarOrangeSvg width={14} height={14} />
             <CustomText style={styles.fanCount}>
-              {formatComma(playerData.result.fanCount)}
+              {formatComma(community.fanCount)}
             </CustomText>
           </View>
         </View>
@@ -67,7 +66,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
 
       <FastImage
         source={{
-          uri: playerData.result.backgroundImage || playerData.result.image,
+          uri: community.backgroundImage || community.image,
           priority: FastImage.priority.high,
         }}
         resizeMode="cover"

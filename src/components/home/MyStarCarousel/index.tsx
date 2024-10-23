@@ -5,24 +5,29 @@ import {useSharedValue} from 'react-native-reanimated';
 import Carousel, {Pagination} from 'react-native-reanimated-carousel';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from 'screens/homeStack/HomeScreen';
-import {Pressable} from 'react-native-gesture-handler';
+import {PanGesture, Pressable} from 'react-native-gesture-handler';
 import MyStarCard from '../MyStarCard';
-import {useGetMyCommunities} from 'apis/player/usePlayers';
+import {useGetMyCommunities} from 'apis/community/useCommunities';
 import {useGetNotices} from 'apis/notice/useNotices';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {View} from 'react-native';
 import {queryClient} from '../../../../App';
-import {communityKeys} from 'apis/player/queries';
+import {communityKeys} from 'apis/community/queries';
 
 const MyStarCarousel = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const progress = useSharedValue<number>(0);
 
-  const {data: communityData} = useGetMyCommunities();
+  const {data: communities} = useGetMyCommunities();
   const {data: noticeData} = useGetNotices();
 
+  const handleConfigurePanGesture = (panGesture: PanGesture) => {
+    panGesture.activeOffsetX([-10, 10]);
+    panGesture.failOffsetY([-15, 15]);
+  };
+
   const renderItem = ({item, index}) => {
-    if (communityData && index >= communityData?.result.length) {
+    if (communities && index >= communities.length) {
       return (
         <Pressable
           className="w-full h-[220]"
@@ -45,26 +50,23 @@ const MyStarCarousel = () => {
   };
 
   useEffect(() => {
-    if (communityData) {
-      communityData.result.forEach(community => {
-        queryClient.setQueryData(communityKeys.detail(community.id, 0), {
-          status: 200,
-          message: '커뮤니티 정보 조회 완료',
-          result: community,
-        });
+    if (communities) {
+      communities.forEach(community => {
+        queryClient.setQueryData(
+          communityKeys.detail(community.id, 0),
+          community,
+        );
       });
     }
   });
 
-  if (communityData && noticeData) {
+  if (communities && noticeData) {
     return (
       <>
         <Carousel
+          onConfigurePanGesture={handleConfigurePanGesture}
           loop={false}
-          data={[
-            ...(communityData?.result || []),
-            ...(noticeData?.result || []),
-          ]}
+          data={[...(communities || []), ...(noticeData?.result || [])]}
           mode="parallax"
           width={WINDOW_WIDTH}
           height={220}
@@ -77,14 +79,11 @@ const MyStarCarousel = () => {
         />
         <Pagination.Basic
           progress={progress}
-          data={[
-            ...(communityData?.result || []),
-            ...(noticeData?.result || []),
-          ]}
+          data={[...(communities || []), ...(noticeData?.result || [])]}
           dotStyle={{
             width: Math.floor(
               (WINDOW_WIDTH * 0.4) /
-                (communityData.result.length + noticeData?.result.length),
+                (communities.length + noticeData?.result.length),
             ),
             height: 4,
             backgroundColor: '#ebebeb',

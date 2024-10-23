@@ -49,19 +49,20 @@ const HomeScreen = () => {
 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const {data, refetch, hasNextPage, fetchNextPage, isFetchingNextPage} =
-    useGetPosts(0, 'FAN_POST', 'all', true);
+  const {
+    data: posts,
+    refetch,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useGetPosts(0, 'FAN_POST', 'all', true);
   const {refetch: refetchUnRead} = useGetIsUnread();
   const {mutate} = useReadNotification();
 
   useEffect(() => {
-    if (data) {
-      data.pages[data.pages.length - 1].result.posts.forEach(post => {
-        queryClient.setQueryData(postKeys.detail(post.id), {
-          code: 200,
-          messag: '게시글 조회 완료',
-          result: post,
-        });
+    if (posts) {
+      posts.pages[posts.pages.length - 1].posts.forEach(post => {
+        queryClient.setQueryData(postKeys.detail(post.id), post);
       });
     }
   });
@@ -79,7 +80,7 @@ const HomeScreen = () => {
     <FeedPost feed={item} type="home" />
   );
 
-  const loadFeed = () => {
+  const loadPosts = () => {
     if (hasNextPage) {
       fetchNextPage();
     }
@@ -223,12 +224,12 @@ const HomeScreen = () => {
           ref={flatListRef}
           className="pt-[52]"
           style={{marginTop: insets.top}}
-          data={data ? data?.pages.flatMap(page => page.result.posts) : []}
+          data={posts ? posts?.pages.flatMap(page => page.posts) : []}
           renderItem={renderFeed}
           ListHeaderComponent={
             <>
               <MyStarCarousel />
-              {data ? (
+              {posts ? (
                 <View className="flex-row items-center justify-between pl-[13] pr-[15] py-[7] bg-white border-b border-[#e7e7e7]">
                   <CustomText
                     fontWeight="500"
@@ -242,11 +243,11 @@ const HomeScreen = () => {
           onScroll={handleScroll}
           scrollEventThrottle={16}
           contentContainerStyle={{paddingBottom: 150}}
-          onEndReached={loadFeed}
+          onEndReached={loadPosts}
           onEndReachedThreshold={1}
           ListFooterComponent={isFetchingNextPage ? <ListLoading /> : null}
           ListEmptyComponent={
-            data ? <ListEmpty type="feed" /> : <FeedSkeleton type="Home" />
+            posts ? <ListEmpty type="feed" /> : <FeedSkeleton type="Home" />
           }
           refreshControl={
             <RefreshControl

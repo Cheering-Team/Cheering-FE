@@ -17,9 +17,9 @@ const MyProfileScreen = ({
 }: {
   navigation: MyProfileScreenNavigationProp;
 }) => {
-  const {data, isLoading} = useGetUserInfo();
+  const {data} = useGetUserInfo();
 
-  if (isLoading || !data) {
+  if (!data) {
     return null;
   }
 
@@ -31,7 +31,7 @@ const MyProfileScreen = ({
           className="border border-slate-200 p-[18] flex-row items-center justify-between rounded-lg"
           onPress={() =>
             navigation.navigate('EditNickname', {
-              nickname: data.result.name,
+              nickname: data.name,
               playerUserId: null,
             })
           }>
@@ -42,12 +42,12 @@ const MyProfileScreen = ({
             <CustomText
               fontWeight="500"
               className="text-gray-400 text-[17px] mr-1">
-              {data.result.name}
+              {data.name}
             </CustomText>
             <ChevronRightSvg width={13} height={13} />
           </View>
         </Pressable>
-        {data.result.role === 'ROLE_ADMIN' && (
+        {data.role === 'ADMIN' && (
           <Pressable
             className="border border-slate-200 p-[18] flex-row items-center justify-between rounded-lg mt-4"
             onPress={() => navigation.navigate('Admin')}>

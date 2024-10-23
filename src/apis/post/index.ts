@@ -43,7 +43,7 @@ export const writePost = async (data: WritePostPayload) => {
       },
     },
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 커뮤니티 게시글 불러오기 (무한 스크롤) (id = 0 -> 내가 모든 커뮤니티 게시글)
@@ -60,7 +60,7 @@ export const getPosts = async ({
       filter === 'all' ? '' : filter
     }&page=${pageParam}&size=20`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 게시글 조회 (무한 스크롤)
@@ -75,7 +75,7 @@ export const getFanPosts = async ({
   const response = await axiosInstance.get<ApiResponse<GetPostsResponse>>(
     `/fans/${fanId}/posts?&page=${pageParam}&size=10`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 특정 게시글 조회
@@ -88,7 +88,7 @@ export const getPostById = async ({
   const response = await axiosInstance.get<ApiResponse<Post>>(
     `/posts/${postId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 게시글 좋아요 토글

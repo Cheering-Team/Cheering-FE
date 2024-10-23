@@ -15,7 +15,7 @@ import {Post} from 'apis/post/types';
 
 interface PostWriterProps {
   bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
-  feed: Post;
+  post: Post;
   isWriter: boolean;
   type: 'post' | 'feed';
   location?: 'community' | 'home';
@@ -23,7 +23,7 @@ interface PostWriterProps {
 
 const PostWriter = ({
   bottomSheetModalRef,
-  feed,
+  post,
   isWriter,
   type,
   location = 'community',
@@ -41,13 +41,13 @@ const PostWriter = ({
     type === 'feed'
       ? showTopToast(insets.top + 20, '삭제중..', false)
       : navigation.goBack();
-    await deletePost({postId: feed.id});
+    await deletePost({postId: post.id});
   };
 
   const handleReportPost = async () => {
-    const data = await reportPost({postId: feed.id});
+    const data = await reportPost({postId: post.id});
 
-    if (data.message === '존재하지 않는 게시글입니다.' && type === 'post') {
+    if (data.message === '존재하지 않는 게시글' && type === 'post') {
       navigation.goBack();
     }
   };
@@ -65,20 +65,20 @@ const PostWriter = ({
           style={{flexDirection: 'row', alignItems: 'center'}}
           onPress={() => {
             location === 'community'
-              ? navigation.navigate('Profile', {playerUserId: feed.writer.id})
+              ? navigation.navigate('Profile', {playerUserId: post.writer.id})
               : navigation.navigate('CommunityStack', {
                   screen: 'Profile',
-                  params: {playerUserId: feed.writer.id},
+                  params: {playerUserId: post.writer.id},
                 });
           }}>
           <CustomText fontWeight="500" className="text-base">
-            {feed.writer.name}
+            {post.writer.name}
           </CustomText>
-          {feed.writer.type === 'MANAGER' && (
+          {post.writer.type === 'MANAGER' && (
             <OfficialSvg width={14} height={14} className="ml-[2]" />
           )}
           <CustomText style={styles.createdAt}>
-            {formatBeforeDate(new Date(feed.createdAt))}
+            {formatBeforeDate(new Date(post.createdAt))}
           </CustomText>
         </Pressable>
         <TouchableOpacity
@@ -96,7 +96,7 @@ const PostWriter = ({
           firstOnPress={() => {
             navigation.navigate('CommunityStack', {
               screen: 'PostWrite',
-              params: {communityId: feed.community.id, post: feed},
+              params: {communityId: post.community.id, post: post},
             });
           }}
           secondText="삭제"

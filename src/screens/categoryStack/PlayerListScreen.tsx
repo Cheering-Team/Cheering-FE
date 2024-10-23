@@ -2,7 +2,10 @@ import React, {useEffect} from 'react';
 import {Image, Pressable, SafeAreaView, View} from 'react-native';
 import CustomText from '../../components/common/CustomText';
 import PlayerList from '../../components/common/PlayerList';
-import {useGetPlayersByTeam, useGetTeamById} from 'apis/player/usePlayers';
+import {
+  useGetCommunitiesByTeam,
+  useGetTeamById,
+} from 'apis/community/useCommunities';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
@@ -12,7 +15,7 @@ import {formatComma} from 'utils/format';
 import StackHeader from 'components/common/StackHeader';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryClient} from '../../../App';
-import {communityKeys} from 'apis/player/queries';
+import {communityKeys} from 'apis/community/queries';
 
 type PlayerListScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -34,22 +37,21 @@ const PlayerListScreen = ({
   const insets = useSafeAreaInsets();
   const {teamId, sportName, leagueName} = route.params;
 
-  const {data: teamData} = useGetTeamById(teamId);
-  const {data: communityData} = useGetPlayersByTeam(teamId);
+  const {data: team} = useGetTeamById(teamId);
+  const {data: communities} = useGetCommunitiesByTeam(teamId);
 
   useEffect(() => {
-    if (communityData) {
-      communityData.result.forEach(community => {
-        queryClient.setQueryData(communityKeys.detail(community.id, 0), {
-          status: 200,
-          message: '커뮤니티 정보 조회 완료',
-          result: community,
-        });
+    if (communities) {
+      communities.forEach(community => {
+        queryClient.setQueryData(
+          communityKeys.detail(community.id, 0),
+          community,
+        );
       });
     }
-  }, [communityData]);
+  }, [communities]);
 
-  if (!teamData) {
+  if (!team) {
     return null;
   }
 
@@ -61,7 +63,7 @@ const PlayerListScreen = ({
         style={{top: insets.top + 48}}>
         <Image
           source={{
-            uri: teamData.result.image,
+            uri: team.image,
           }}
           className="h-[75] w-[75]"
         />
@@ -70,7 +72,7 @@ const PlayerListScreen = ({
             <CustomText
               fontWeight="600"
               className="text-lg pb-0 text-[#2b2b2b]">
-              {`${teamData.result.firstName} ${teamData.result.secondName}`}
+              {`${team.firstName} ${team.secondName}`}
             </CustomText>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <StarOrangeSvg width={11} height={11} />
@@ -80,9 +82,8 @@ const PlayerListScreen = ({
                   fontSize: 12,
                   color: '#F99E35',
                   marginLeft: 3,
-                  paddingBottom: 2,
                 }}>
-                {formatComma(teamData.result.fanCount)}
+                {formatComma(team.fanCount)}
               </CustomText>
             </View>
           </View>
@@ -92,7 +93,7 @@ const PlayerListScreen = ({
             onPress={() =>
               navigation.navigate('CommunityStack', {
                 screen: 'Community',
-                params: {communityId: teamData.result.communityId},
+                params: {communityId: team.communityId},
               })
             }>
             <CustomText
@@ -110,8 +111,8 @@ const PlayerListScreen = ({
       </View>
       <PlayerList
         type="Team"
-        teamName={`${teamData.result.firstName} ${teamData.result.secondName}`}
-        communityData={communityData}
+        teamName={`${team.firstName} ${team.secondName}`}
+        communities={communities}
         paddingTop={true}
       />
     </SafeAreaView>

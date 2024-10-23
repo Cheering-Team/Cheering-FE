@@ -1,13 +1,13 @@
 import {useState} from 'react';
 import {useGetPosts} from '../../../apis/post/usePosts';
 import {FilterType} from '../../../apis/post/types';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 
 export const useFeedList = (playerData: Community) => {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
 
   const {
-    data: feedData,
+    data: posts,
     isLoading,
     refetch,
     fetchNextPage,
@@ -20,7 +20,7 @@ export const useFeedList = (playerData: Community) => {
     playerData.user !== null,
   );
 
-  const loadFeed = () => {
+  const loadPosts = () => {
     if (hasNextPage) {
       fetchNextPage();
     }
@@ -29,10 +29,10 @@ export const useFeedList = (playerData: Community) => {
   return {
     selectedFilter,
     setSelectedFilter,
-    feedData,
+    posts,
     isLoading,
     refetch,
     isFetchingNextPage,
-    loadFeed,
+    loadPosts,
   };
 };

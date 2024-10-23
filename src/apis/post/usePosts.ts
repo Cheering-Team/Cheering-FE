@@ -30,56 +30,51 @@ export const useWritePost = () => {
   return useMutation({
     mutationFn: writePost,
     onSuccess: data => {
-      if (data.message === '부적절한 단어가 포함되어 있습니다.') {
-        showBottomToast(insets.bottom + 20, data.message);
-        return;
-      }
       queryClient.prefetchQuery({
-        queryKey: postKeys.detail(data.result.id),
+        queryKey: postKeys.detail(data.id),
         queryFn: getPostById,
       });
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
       hideToast();
       navigaion.replace('Post', {
-        postId: data.result.id,
+        postId: data.id,
       });
-      showTopToast(insets.top + 20, '작성이 완료되었습니다.');
+      showTopToast(insets.top + 20, '작성 완료');
+    },
+    onError: () => {
+      if (error.code === 2004) {
+        showTopToast(insets.top + 20, data.message);
+      }
     },
   });
 };
 
 // 게시글 목록 불러오기 (무한 스크롤)
 export const useGetPosts = (
-  playerId: number,
+  communityId: number,
   type: string,
   filter: FilterType,
   enabled: boolean,
 ) => {
   return useInfiniteQuery({
-    queryKey: postKeys.list(playerId, filter, type),
+    queryKey: postKeys.list(communityId, filter, type),
     queryFn: getPosts,
     initialPageParam: 0,
-    getNextPageParam: (lastpage, pages) => {
-      if (lastpage.result.last) {
-        return undefined;
-      }
-      return pages.length;
+    getNextPageParam: lastPage => {
+      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
     },
     enabled: enabled,
   });
 };
 
 // 유저 게시글 불러오기 (무한 스크롤)
-export const useGetPlayerUserPosts = (playerUserId: number) => {
+export const useGetFanPosts = (fanId: number) => {
   return useInfiniteQuery({
-    queryKey: postKeys.listByFan(playerUserId),
+    queryKey: postKeys.listByFan(fanId),
     queryFn: getFanPosts,
     initialPageParam: 0,
-    getNextPageParam: (lastpage, pages) => {
-      if (lastpage.result.last) {
-        return undefined;
-      }
-      return pages.length;
+    getNextPageParam: lastPage => {
+      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
     },
   });
 };
@@ -89,6 +84,7 @@ export const useGetPostById = (postId: number) => {
   return useQuery({
     queryKey: postKeys.detail(postId),
     queryFn: getPostById,
+    retry: false,
   });
 };
 

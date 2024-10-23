@@ -9,7 +9,7 @@ import ChatList from '../../components/community/ChatList/ChatList';
 import {WINDOW_HEIGHT} from '../../constants/dimension';
 import JoinModal from '../../components/community/JoinModal/JoinModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {useGetPlayersInfo} from 'apis/player/usePlayers';
+import {useGetCommunityInfo} from 'apis/community/useCommunities';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -28,55 +28,52 @@ export type CommunityScreenNavigationProp = NativeStackNavigationProp<
 type CommunityScreenRouteProp = RouteProp<CommunityStackParamList, 'Community'>;
 
 const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
-  const {communityId: playerId} = route.params;
+  const {communityId} = route.params;
   const [refreshKey, setRefreshKey] = useState(0);
   const insets = useSafeAreaInsets();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {data: communityData} = useGetPlayersInfo(playerId, refreshKey);
+  const {data: community} = useGetCommunityInfo(communityId, refreshKey);
 
-  if (!communityData) {
+  if (!community) {
     return null;
   }
 
   return (
     <>
-      <CommunityHeader playerData={communityData.result} />
+      <CommunityHeader playerData={community} />
       <Tabs.Container
-        renderHeader={() => <CommunityProfile playerData={communityData} />}
+        renderHeader={() => <CommunityProfile community={community} />}
         headerHeight={HEADER_HEIGHT}
         minHeaderHeight={45 + insets.top}
         renderTabBar={props => <CommunityTabBar {...props} />}>
         <Tabs.Tab name="피드">
-          <FeedList playerData={communityData.result} />
+          <FeedList community={community} />
         </Tabs.Tab>
-        <Tabs.Tab name={communityData.result.type === 'PLAYER' ? '스타' : '팀'}>
-          <StarFeedList community={communityData.result} />
+        <Tabs.Tab name={community.type === 'PLAYER' ? '스타' : '팀'}>
+          <StarFeedList community={community} />
         </Tabs.Tab>
         <Tabs.Tab name="라이브">
           <LiveList />
         </Tabs.Tab>
         <Tabs.Tab name="채팅">
-          <ChatList community={communityData.result} />
+          <ChatList community={community} />
         </Tabs.Tab>
       </Tabs.Container>
-      {communityData.result.user == null && (
+      {community.user == null && (
         <NotJoin
-          community={communityData.result}
+          community={community}
           bottomSheetModalRef={bottomSheetModalRef}
         />
       )}
       <JoinModal
-        playerData={communityData.result}
+        community={community}
         setRefreshKey={setRefreshKey}
         bottomSheetModalRef={bottomSheetModalRef}
       />
-      {communityData.result.isManager && communityData.result.user === null && (
-        <OwnerModal
-          playerData={communityData.result}
-          setRefreshKey={setRefreshKey}
-        />
+      {community.isManager && community.user === null && (
+        <OwnerModal community={community} setRefreshKey={setRefreshKey} />
       )}
     </>
   );

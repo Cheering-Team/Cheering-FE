@@ -123,8 +123,8 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
         type:
           image.mime ||
           (image.type === 'IMAGE'
-            ? `image/${image.path.substring(image.path.lastIndexOf('.') + 1).toLowerCase}`
-            : `video/${image.path.substring(image.path.lastIndexOf('.') + 1).toLowerCase}`),
+            ? `image/${image.path.substring(image.path.lastIndexOf('.') + 1).toLowerCase()}`
+            : `video/${image.path.substring(image.path.lastIndexOf('.') + 1).toLowerCase()}`),
         width: image.width,
         height: image.height,
       });

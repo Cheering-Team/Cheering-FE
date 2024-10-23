@@ -1,4 +1,4 @@
-import {ImageType} from '../post/types';
+import {ImagePayload, ImageType} from '../post/types';
 import {Fan} from '../user/types';
 
 export interface Community {
@@ -49,7 +49,7 @@ export interface PlayerIdPayload {
 export interface JoinCommunityPayload {
   communityId: number;
   name: string;
-  image: ImageType;
+  image: ImagePayload;
 }
 
 export interface FanIdPayload {

@@ -46,27 +46,25 @@ const SignInScreen = ({
 
   const handleKakaoSignIn = async (): Promise<void> => {
     const token = await login();
-    const data = await kakaoSignIn({
-      accessToken: token.accessToken,
-    });
-
-    if (data.message === '회원가입 필요') {
-      setStatus('phone');
-      setPhone('');
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      navigation.navigate('AgreeTerm', {
+    try {
+      const data = await kakaoSignIn({
         accessToken: token.accessToken,
-        type: 'kakao',
       });
-      return;
-    }
-    if (data.message === '로그인 완료' && data.result) {
-      const {accessToken, refreshToken} = data.result;
-      showTopToast(insets.bottom + 20, data.message);
+      const {accessToken, refreshToken} = data;
+      showTopToast(insets.top + 20, '로그인 완료');
       signIn?.(accessToken, refreshToken);
-      return;
+    } catch (error: any) {
+      if (error.code === 2005) {
+        setStatus('phone');
+        setPhone('');
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+        navigation.navigate('AgreeTerm', {
+          accessToken: token.accessToken,
+          type: 'kakao',
+        });
+      }
     }
   };
 
@@ -74,26 +72,25 @@ const SignInScreen = ({
     const token = await NaverLogin.login();
 
     if (token.isSuccess && token.successResponse) {
-      const data = await naverSignIn({
-        accessToken: token.successResponse.accessToken,
-      });
-      if (data.message === '회원가입 필요') {
-        setStatus('phone');
-        setPhone('');
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-        }
-        navigation.navigate('AgreeTerm', {
+      try {
+        const data = await naverSignIn({
           accessToken: token.successResponse.accessToken,
-          type: 'naver',
         });
-        return;
-      }
-      if (data.message === '로그인 완료' && data.result) {
-        const {accessToken, refreshToken} = data.result;
-        showTopToast(insets.bottom + 20, data.message);
+        const {accessToken, refreshToken} = data;
+        showTopToast(insets.top + 20, '로그인 완료');
         signIn?.(accessToken, refreshToken);
-        return;
+      } catch (error: any) {
+        if (error.code === 2005) {
+          setStatus('phone');
+          setPhone('');
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+          }
+          navigation.navigate('AgreeTerm', {
+            accessToken: token.successResponse.accessToken,
+            type: 'naver',
+          });
+        }
       }
     }
   };
@@ -105,27 +102,26 @@ const SignInScreen = ({
     });
 
     if (appleAuthRequestResponse.identityToken) {
-      const data = await appleSignIn({
-        accessToken: appleAuthRequestResponse.identityToken,
-        name: `${appleAuthRequestResponse.fullName?.familyName}${appleAuthRequestResponse.fullName?.givenName}`,
-      });
-      if (data.message === '회원가입 필요') {
-        setStatus('phone');
-        setPhone('');
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-        }
-        navigation.navigate('AgreeTerm', {
+      try {
+        const data = await appleSignIn({
           accessToken: appleAuthRequestResponse.identityToken,
-          type: 'apple',
+          name: `${appleAuthRequestResponse.fullName?.familyName}${appleAuthRequestResponse.fullName?.givenName}`,
         });
-        return;
-      }
-      if (data.message === '로그인 완료' && data.result) {
-        const {accessToken, refreshToken} = data.result;
-        showTopToast(insets.bottom + 20, data.message);
+        const {accessToken, refreshToken} = data;
+        showTopToast(insets.top + 20, '로그인 완료');
         signIn?.(accessToken, refreshToken);
-        return;
+      } catch (error: any) {
+        if (error.code === 2005) {
+          setStatus('phone');
+          setPhone('');
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+          }
+          navigation.navigate('AgreeTerm', {
+            accessToken: appleAuthRequestResponse.identityToken,
+            type: 'apple',
+          });
+        }
       }
     }
   };

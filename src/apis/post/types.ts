@@ -1,5 +1,5 @@
 import {AxiosProgressEvent} from 'axios';
-import {Community} from '../player/types';
+import {Community} from '../community/types';
 import {Page} from '../types';
 import {Fan} from '../user/types';
 
@@ -50,8 +50,8 @@ export interface ImagePayload {
   uri: string;
   name: string;
   type: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 }
 
 export interface WritePostPayload {

@@ -10,6 +10,7 @@ export interface Page {
   totalElements: number;
   totalPages: number;
   last: boolean;
+  hasNext: boolean;
 }
 
 export interface Id {

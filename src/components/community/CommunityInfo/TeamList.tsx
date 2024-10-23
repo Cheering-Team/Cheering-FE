@@ -4,13 +4,14 @@ import CustomText from '../../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {Community} from 'apis/community/types';
 
 interface TeamListProps {
-  playerData: any;
+  community: Community;
 }
 
 const TeamList = (props: TeamListProps) => {
-  const {playerData} = props;
+  const {community} = props;
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
 
@@ -18,12 +19,12 @@ const TeamList = (props: TeamListProps) => {
     <View style={styles.container}>
       <FlatList
         horizontal={true}
-        data={playerData.result.teams}
+        data={community.teams}
         showsHorizontalScrollIndicator={false}
         renderItem={({item}) => (
           <Pressable
             style={styles.teamContainer}
-            key={item.teamName}
+            key={item.name}
             onPress={() =>
               navigation.push('Community', {communityId: item.communityId})
             }>

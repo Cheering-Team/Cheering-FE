@@ -147,10 +147,10 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
           <Pressable
             onPress={() => {
               type === 'community'
-                ? navigation.navigate('Profile', {playerUserId: feed.writer.id})
+                ? navigation.navigate('Profile', {fanId: feed.writer.id})
                 : navigation.navigate('CommunityStack', {
                     screen: 'Profile',
-                    params: {playerUserId: feed.writer.id},
+                    params: {fanId: feed.writer.id},
                   });
             }}>
             <Avatar uri={feed.writer.image} size={33} style={{marginTop: 3}} />
@@ -159,7 +159,7 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
           <View style={{marginLeft: 10, flex: 1}}>
             <PostWriter
               bottomSheetModalRef={bottomSheetModalRef}
-              feed={feed}
+              post={feed}
               isWriter={feed.user.id === feed.writer.id}
               type="feed"
               location={type}

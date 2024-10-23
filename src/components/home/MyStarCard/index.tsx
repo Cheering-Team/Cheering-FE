@@ -7,7 +7,7 @@ import MegaphoneSvg from 'assets/images/megaphone-white.svg';
 import MoreSvg from '../../../assets/images/three-dots-vertical-white.svg';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import Avatar from 'components/common/Avatar';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -189,7 +189,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 if (community.user) {
                   navigation.navigate('CommunityStack', {
                     screen: 'Profile',
-                    params: {playerUserId: community.user.id},
+                    params: {fanId: community.user.id},
                   });
                 }
               }}>
@@ -223,7 +223,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           if (community.user) {
             navigation.navigate('CommunityStack', {
               screen: 'Profile',
-              params: {playerUserId: community.user.id},
+              params: {fanId: community.user.id},
             });
           }
         }}
@@ -241,8 +241,8 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         thirdOnPress={() => {
           if (community.user) {
             navigation.navigate('CommunityStack', {
-              screen: 'DeletePlayerUser',
-              params: {playerUserId: community.user.id},
+              screen: 'DeleteFan',
+              params: {fanId: community.user.id},
             });
           }
         }}

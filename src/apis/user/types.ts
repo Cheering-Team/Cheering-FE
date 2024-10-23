@@ -1,4 +1,4 @@
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 
 export interface User {
   id: number;

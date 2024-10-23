@@ -1,4 +1,4 @@
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import {useGetDailys} from 'apis/post/usePosts';
 import DailyCard from 'components/post/DailyCard';
 import {WINDOW_WIDTH} from 'constants/dimension';
