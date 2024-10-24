@@ -6,8 +6,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import CustomButton from '../../components/common/CustomButton';
-import {useUpdatePlayerUserNickname} from '../../apis/player/usePlayers';
-import {showBottomToast} from '../../utils/toast';
+import {useUpdateFanName} from '../../apis/community/useCommunities';
+import {showBottomToast, showTopToast} from '../../utils/toast';
 import {useUpdateUserName} from 'apis/user/useUsers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
@@ -31,30 +31,31 @@ const EditNameScreen = ({
   navigation: EditNicknameScreenNavigationProp;
   route: EditNicknameScreenRouteProp;
 }) => {
-  const {playerUserId} = route.params;
+  const {fanId} = route.params;
   const insets = useSafeAreaInsets();
   const [name, setName] = useState(route.params.name);
   const [isNameValid, setIsNameValid] = useState(true);
   const [nameInvalidMessage, setNameInvalidMessage] = useState('');
 
-  const {mutateAsync: updatePlayerUserNickname} = useUpdatePlayerUserNickname();
+  const {mutateAsync: updateFanName} = useUpdateFanName();
   const {mutateAsync: updateUserName} = useUpdateUserName();
 
   const handlePlayerUserNickname = async () => {
-    const data = playerUserId
-      ? await updatePlayerUserNickname({fanId: playerUserId, name: name})
-      : await updateUserName({name: name});
-    if (data.message === '부적절한 단어가 포함되어 있습니다.') {
-      setIsNameValid(false);
-      setNameInvalidMessage('부적절한 이름입니다.');
-    }
-    if (data.message === '중복된 이름') {
-      setIsNameValid(false);
-      setNameInvalidMessage('이미 사용중인 이름입니다.');
-    }
-    if (data.message === '이름변경 완료') {
-      showBottomToast(insets.bottom + 20, data.message);
+    try {
+      fanId
+        ? await updateFanName({fanId: fanId, name: name})
+        : await updateUserName({name: name});
+      showTopToast(insets.top + 20, '변경 완료');
       navigation.pop();
+    } catch (error: any) {
+      if (error.code === 2004) {
+        setIsNameValid(false);
+        setNameInvalidMessage('적절하지 않은 이름입니다');
+      }
+      if (error.code === 2007) {
+        setIsNameValid(false);
+        setNameInvalidMessage('이미 사용중인 이름입니다.');
+      }
     }
   };
 

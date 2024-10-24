@@ -1,4 +1,4 @@
-import {PlayerIdPayload} from 'apis/player/types';
+import {PlayerIdPayload} from 'apis/community/types';
 import {axiosInstance} from '../index';
 import {ApiResponse} from '../types';
 import {
@@ -21,7 +21,7 @@ export const sendSMS = async (data: SendSMSPayload) => {
     '/phone/sms',
     data,
   );
-  return response.data;
+  return response.data.result;
 };
 
 export const checkCode = async (data: CheckCodePayload) => {
@@ -29,7 +29,7 @@ export const checkCode = async (data: CheckCodePayload) => {
     '/phone/code',
     data,
   );
-  return response.data;
+  return response.data.result;
 };
 
 export const signIn = async (data: CheckCodePayload) => {
@@ -45,7 +45,7 @@ export const signIn = async (data: CheckCodePayload) => {
       },
     },
   );
-  return response.data;
+  return response.data.result;
 };
 
 export const signUp = async (data: SignUpPayload) => {
@@ -53,34 +53,34 @@ export const signUp = async (data: SignUpPayload) => {
     '/signup',
     data,
   );
-  return response.data;
+  return response.data.result;
 };
 
 export const kakaoSignIn = async (data: TokenPayload) => {
   const {accessToken} = data;
-  const response = await axiosInstance.post<ApiResponse<Token | null>>(
+  const response = await axiosInstance.post<ApiResponse<Token>>(
     '/signin/kakao',
     {accessToken},
   );
-  return response.data;
+  return response.data.result;
 };
 
 export const naverSignIn = async (data: TokenPayload) => {
   const {accessToken} = data;
-  const response = await axiosInstance.post<ApiResponse<Token | null>>(
+  const response = await axiosInstance.post<ApiResponse<Token>>(
     `/signin/naver`,
     {accessToken},
   );
-  return response.data;
+  return response.data.result;
 };
 
 export const appleSignIn = async (data: TokenPayload) => {
   const {accessToken, name} = data;
-  const response = await axiosInstance.post<ApiResponse<Token | null>>(
+  const response = await axiosInstance.post<ApiResponse<Token>>(
     '/signin/apple',
     {accessToken, name},
   );
-  return response.data;
+  return response.data.result;
 };
 
 export const checkCodeSocial = async (data: CheckCodeSocialPayload) => {
@@ -98,12 +98,12 @@ export const connectSocial = async (data: ConnectSocialPayload) => {
     `/connect?&type=${type}`,
     {accessToken, userId},
   );
-  return response.data;
+  return response.data.result;
 };
 
 export const getUserInfo = async () => {
   const response = await axiosInstance.get<ApiResponse<User>>('/users');
-  return response.data;
+  return response.data.result;
 };
 
 export const updateUserName = async (data: UpdateUserNamePayload) => {
@@ -111,12 +111,12 @@ export const updateUserName = async (data: UpdateUserNamePayload) => {
     '/users/name',
     data,
   );
-  return response.data;
+  return response.data.result;
 };
 
 export const deleteUser = async () => {
   const response = await axiosInstance.delete<ApiResponse<null>>('/users');
-  return response.data;
+  return response.data.result;
 };
 
 export const saveFCMToken = async (data: SaveFCMTokenPayload) => {
@@ -141,7 +141,7 @@ export const registerManagerAccount = async (
     `/users/manager/${communityId}`,
     {phone},
   );
-  return response.data;
+  return response.data.result;
 };
 
 export const getPlayerAccount = async ({
@@ -153,7 +153,7 @@ export const getPlayerAccount = async ({
   const response = await axiosInstance.get<ApiResponse<SendSMSPayload | null>>(
     `/users/manager/${playerId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 export const reissuePlayerAccountPassword = async (
@@ -164,5 +164,5 @@ export const reissuePlayerAccountPassword = async (
     `/users/manager/${playerId}`,
     {phone},
   );
-  return response.data;
+  return response.data.result;
 };

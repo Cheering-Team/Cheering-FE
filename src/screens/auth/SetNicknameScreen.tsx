@@ -44,16 +44,15 @@ const SetNickNameScreen = ({
       setNicknameValid(false);
       return;
     }
-    const data = await signUp({phone, name: nickname});
-    if (data.message === '부적절한 단어가 포함되어 있습니다.') {
-      showBottomToast(insets.bottom + 20, '부적절한 단어가 포함되어 있습니다.');
-      return;
-    }
-    if (data.message === '회원가입 완료') {
-      const {accessToken, refreshToken} = data.result;
-      showTopToast(insets.top + 20, data.message);
+    try {
+      const {accessToken, refreshToken} = await signUp({phone, name: nickname});
+      showTopToast(insets.top + 20, '회원가입 완료');
       signIn?.(accessToken, refreshToken);
       return;
+    } catch (error: any) {
+      if (error.code === 2004) {
+        showTopToast(insets.top + 20, '부적절한 단어가 포함되어 있습니다');
+      }
     }
   };
 

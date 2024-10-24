@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Avatar from '../../common/Avatar';
 import DailySvg from '../../../assets/images/comment-white.svg';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import {formatBarDate} from 'utils/format';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
@@ -38,13 +38,16 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
         <View className="flex-row items-center">
           {playerData.manager && (
             <Pressable
-              onPress={() =>
-                navigation.navigate('Daily', {
-                  playerId: playerData.id,
-                  date: formatBarDate(new Date()),
-                  write: false,
-                })
-              }>
+              onPress={() => {
+                if (playerData.user) {
+                  navigation.navigate('Daily', {
+                    communityId: playerData.id,
+                    date: formatBarDate(new Date()),
+                    write: false,
+                    user: playerData.user,
+                  });
+                }
+              }}>
               <DailySvg width={20} height={20} />
             </Pressable>
           )}
@@ -54,7 +57,7 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
             onPress={() => {
               if (playerData.user) {
                 navigation.navigate('Profile', {
-                  playerUserId: playerData.user.id,
+                  fanId: playerData.user.id,
                 });
               }
             }}>

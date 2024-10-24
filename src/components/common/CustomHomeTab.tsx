@@ -57,7 +57,7 @@ function CustomTabBar({state, descriptors, navigation}) {
           routeName === 'DeleteUser' ||
           routeName === 'Profile' ||
           routeName === 'ProfileEdit' ||
-          routeName === 'DeletePlayerUser' ||
+          routeName === 'DeleteFan' ||
           routeName === 'ChatRoom' ||
           routeName === 'CreateChatRoom' ||
           routeName === 'ChatRoomEnter' ||
@@ -127,7 +127,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                   </>
                 ) : (
                   <>
-                    {data?.result && (
+                    {data && (
                       <View
                         style={{
                           position: 'absolute',

@@ -9,18 +9,26 @@ import {
   getMyChatRooms,
   getParticipants,
 } from './index';
+import {queryClient} from '../../../App';
 
 // 채팅방 개설
-export const useCreateChatRoom = () => {
-  return useMutation({mutationFn: createChatRoom});
+export const useCreateChatRoom = (communityId: number) => {
+  return useMutation({
+    mutationFn: createChatRoom,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: chatRoomKeys.list(communityId)});
+      queryClient.invalidateQueries({queryKey: chatRoomKeys.my()});
+    },
+  });
 };
 
 // 채팅방 목록
-export const useGetChatRooms = (playerId: number, enabled: boolean) => {
+export const useGetChatRooms = (communityId: number, enabled: boolean) => {
   return useQuery({
-    queryKey: chatRoomKeys.list(playerId),
+    queryKey: chatRoomKeys.list(communityId),
     queryFn: getChatRooms,
     enabled: enabled,
+    retry: false,
   });
 };
 
@@ -29,6 +37,7 @@ export const useGetMyChatRooms = () => {
   return useQuery({
     queryKey: chatRoomKeys.my(),
     queryFn: getMyChatRooms,
+    retry: false,
   });
 };
 
@@ -38,6 +47,7 @@ export const useGetChatRoomById = (chatRoomId: number, enabled: boolean) => {
     queryKey: chatRoomKeys.detail(chatRoomId),
     queryFn: getChatRoomById,
     enabled: enabled,
+    retry: false,
   });
 };
 
@@ -47,12 +57,10 @@ export const useGetChats = (chatRoomId: number) => {
     queryKey: chatKeys.list(chatRoomId),
     queryFn: getChats,
     initialPageParam: 0,
-    getNextPageParam: (lastpage, pages) => {
-      if (lastpage.result.last) {
-        return undefined;
-      }
-      return pages.length;
+    getNextPageParam: lastPage => {
+      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
     },
+    retry: false,
   });
 };
 
@@ -61,6 +69,7 @@ export const useGetParticipants = (chatRoomId: number) => {
   return useQuery({
     queryKey: chatRoomKeys.participants(chatRoomId),
     queryFn: getParticipants,
+    retry: false,
   });
 };
 

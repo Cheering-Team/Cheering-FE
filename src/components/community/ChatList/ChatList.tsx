@@ -7,7 +7,7 @@ import {Pressable, View} from 'react-native';
 import PlusSvg from '../../../assets/images/plus-gray.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CommunityScreenNavigationProp} from 'screens/communityStack/CommunityScreen';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import ChatRoomSkeleton from 'components/skeleton/ChatRoomSkeleton';
 
 interface Props {
@@ -19,7 +19,7 @@ const ChatList = (props: Props) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<CommunityScreenNavigationProp>();
 
-  const {data, isLoading} = useGetChatRooms(
+  const {data: chatRooms} = useGetChatRooms(
     community.id,
     community.user !== null,
   );
@@ -31,7 +31,7 @@ const ChatList = (props: Props) => {
   return (
     <>
       <Tabs.SectionList
-        sections={data?.result || []}
+        sections={chatRooms || []}
         renderItem={({item}) => (
           <ChatCard
             key={item.id}
@@ -50,7 +50,7 @@ const ChatList = (props: Props) => {
             return null;
           }
         }}
-        ListEmptyComponent={data ? null : <ChatRoomSkeleton />}
+        ListEmptyComponent={chatRooms ? null : <ChatRoomSkeleton />}
       />
       {community.user && (
         <Pressable
@@ -67,7 +67,7 @@ const ChatList = (props: Props) => {
             elevation: 3,
           }}
           onPress={() => {
-            navigation.navigate('CreateChatRoom', {playerId: community.id});
+            navigation.navigate('CreateChatRoom', {communityId: community.id});
           }}>
           <PlusSvg width={20} height={20} />
         </Pressable>

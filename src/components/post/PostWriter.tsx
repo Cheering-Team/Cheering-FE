@@ -7,15 +7,17 @@ import MoreSvg from '../../assets/images/three-dots.svg';
 import OptionModal from '../common/OptionModal';
 import AlertModal from '../common/AlertModal/AlertModal';
 import {useDeletePost, useReportPost} from '../../apis/post/usePosts';
-import {showBottomToast, showTopToast} from 'utils/toast';
+import {showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import OfficialSvg from 'assets/images/official.svg';
 import {Post} from 'apis/post/types';
+import {queryClient} from '../../../App';
+import {postKeys} from 'apis/post/queries';
 
 interface PostWriterProps {
   bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
-  feed: Post;
+  post: Post;
   isWriter: boolean;
   type: 'post' | 'feed';
   location?: 'community' | 'home';
@@ -23,32 +25,35 @@ interface PostWriterProps {
 
 const PostWriter = ({
   bottomSheetModalRef,
-  feed,
+  post,
   isWriter,
   type,
   location = 'community',
 }: PostWriterProps) => {
-  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
 
-  const {mutateAsync: deletePost} = useDeletePost();
-  const {mutateAsync: reportPost} = useReportPost();
+  const {mutate: deletePost} = useDeletePost(post.id, type);
+  const {mutateAsync: reportPost} = useReportPost(type);
 
-  const handleDeletePost = async () => {
-    type === 'feed'
-      ? showTopToast(insets.top + 20, '삭제중..', false)
-      : navigation.goBack();
-    await deletePost({postId: feed.id});
+  const handleDeletePost = () => {
+    deletePost({postId: post.id});
   };
 
   const handleReportPost = async () => {
-    const data = await reportPost({postId: feed.id});
-
-    if (data.message === '존재하지 않는 게시글입니다.' && type === 'post') {
-      navigation.goBack();
+    try {
+      await reportPost({postId: post.id});
+    } catch (error: any) {
+      if (error.message === '존재하지 않는 게시글') {
+        queryClient.invalidateQueries({queryKey: postKeys.lists()});
+        showTopToast(insets.top + 20, '삭제된 글입니다');
+        if (type === 'post') {
+          navigation.goBack();
+        }
+      }
     }
   };
 
@@ -65,20 +70,20 @@ const PostWriter = ({
           style={{flexDirection: 'row', alignItems: 'center'}}
           onPress={() => {
             location === 'community'
-              ? navigation.navigate('Profile', {playerUserId: feed.writer.id})
+              ? navigation.navigate('Profile', {fanId: post.writer.id})
               : navigation.navigate('CommunityStack', {
                   screen: 'Profile',
-                  params: {playerUserId: feed.writer.id},
+                  params: {fanId: post.writer.id},
                 });
           }}>
           <CustomText fontWeight="500" className="text-base">
-            {feed.writer.name}
+            {post.writer.name}
           </CustomText>
-          {feed.writer.type === 'MANAGER' && (
+          {post.writer.type === 'MANAGER' && (
             <OfficialSvg width={14} height={14} className="ml-[2]" />
           )}
           <CustomText style={styles.createdAt}>
-            {formatBeforeDate(new Date(feed.createdAt))}
+            {formatBeforeDate(new Date(post.createdAt))}
           </CustomText>
         </Pressable>
         <TouchableOpacity
@@ -96,7 +101,7 @@ const PostWriter = ({
           firstOnPress={() => {
             navigation.navigate('CommunityStack', {
               screen: 'PostWrite',
-              params: {playerId: feed.player.id, feed},
+              params: {communityId: post.community.id, post: post},
             });
           }}
           secondText="삭제"

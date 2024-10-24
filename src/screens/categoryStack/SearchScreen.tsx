@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Platform,
   Pressable,
@@ -7,11 +7,10 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import SearchSvg from '../../assets/images/search-sm.svg';
 import CloseSvg from '../../assets/images/close-black.svg';
 import {useQueryClient} from '@tanstack/react-query';
 import PlayerList from '../../components/common/PlayerList';
-import {useGetPlayers} from 'apis/player/usePlayers';
+import {useGetCommunities} from 'apis/community/useCommunities';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -31,7 +30,7 @@ const SearchScreen = ({
 
   const [content, setContent] = useState('');
 
-  const {data} = useGetPlayers(content, content.length !== 0);
+  const {data: communities} = useGetCommunities(content, content.length !== 0);
 
   return (
     <SafeAreaView className="flex-1">
@@ -58,7 +57,11 @@ const SearchScreen = ({
           />
         </View>
       </View>
-      {data ? <PlayerList type="Search" communityData={data} /> : <></>}
+      {communities ? (
+        <PlayerList type="Search" communities={communities} />
+      ) : (
+        <></>
+      )}
     </SafeAreaView>
   );
 };

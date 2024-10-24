@@ -7,7 +7,7 @@ import MegaphoneSvg from 'assets/images/megaphone-white.svg';
 import MoreSvg from '../../../assets/images/three-dots-vertical-white.svg';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import Avatar from 'components/common/Avatar';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -27,7 +27,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {data: dailyData} = useGetDailys(
+  const {data: dailys} = useGetDailys(
     community.id,
     formatBarDate(new Date()),
     community.manager !== null,
@@ -47,7 +47,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
       onPress={() =>
         navigation.navigate('CommunityStack', {
           screen: 'Community',
-          params: {playerId: community.id},
+          params: {communityId: community.id},
         })
       }
       onLongPress={() => {
@@ -86,45 +86,51 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 
         <View>
           {community.type === 'PLAYER' &&
-            dailyData &&
-            dailyData.pages[0].result.dailys.length !== 0 && (
+            dailys &&
+            dailys.pages[0].dailys.length !== 0 && (
               <TouchableOpacity
                 activeOpacity={1}
                 className="mb-4 flex-row items-center"
-                onPress={() =>
-                  navigation.navigate('CommunityStack', {
-                    screen: 'Daily',
-                    params: {
-                      playerId: community.id,
-                      date: formatBarDate(new Date()),
-                    },
-                  })
-                }>
+                onPress={() => {
+                  if (community.user) {
+                    navigation.navigate('CommunityStack', {
+                      screen: 'Daily',
+                      params: {
+                        communityId: community.id,
+                        date: formatBarDate(new Date()),
+                        user: community.user,
+                      },
+                    });
+                  }
+                }}>
                 <Avatar uri={community.image} size={27} />
                 <CustomText
                   numberOfLines={1}
                   fontWeight="600"
                   className="ml-3 text-white text-[16px] flex-1">
-                  {dailyData?.pages[0].result.dailys[0].content}
+                  {dailys?.pages[0].dailys[0].content}
                 </CustomText>
               </TouchableOpacity>
             )}
           {community.type === 'PLAYER' &&
-            dailyData?.pages[0].result.dailys.length === 0 &&
+            dailys?.pages[0].dailys.length === 0 &&
             community.user?.type === 'MANAGER' && (
               <TouchableOpacity
                 activeOpacity={1}
                 className="mb-4 flex-row items-center"
-                onPress={() =>
-                  navigation.navigate('CommunityStack', {
-                    screen: 'Daily',
-                    params: {
-                      playerId: community.id,
-                      date: formatBarDate(new Date()),
-                      write: true,
-                    },
-                  })
-                }>
+                onPress={() => {
+                  if (community.user) {
+                    navigation.navigate('CommunityStack', {
+                      screen: 'Daily',
+                      params: {
+                        communityId: community.id,
+                        date: formatBarDate(new Date()),
+                        write: true,
+                        user: community.user,
+                      },
+                    });
+                  }
+                }}>
                 <Avatar uri={community.image} size={27} />
                 <CustomText
                   numberOfLines={1}
@@ -155,7 +161,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
               onPress={() =>
                 navigation.navigate('CommunityStack', {
                   screen: 'PostWrite',
-                  params: {playerId: community.id},
+                  params: {communityId: community.id},
                 })
               }>
               <CustomText
@@ -189,7 +195,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 if (community.user) {
                   navigation.navigate('CommunityStack', {
                     screen: 'Profile',
-                    params: {playerUserId: community.user.id},
+                    params: {fanId: community.user.id},
                   });
                 }
               }}>
@@ -223,7 +229,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           if (community.user) {
             navigation.navigate('CommunityStack', {
               screen: 'Profile',
-              params: {playerUserId: community.user.id},
+              params: {fanId: community.user.id},
             });
           }
         }}
@@ -232,7 +238,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         secondOnPress={() => {
           navigation.navigate('CommunityStack', {
             screen: 'Community',
-            params: {playerId: community.id},
+            params: {communityId: community.id},
           });
         }}
         thirdText="커뮤니티 탈퇴"
@@ -241,8 +247,8 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         thirdOnPress={() => {
           if (community.user) {
             navigation.navigate('CommunityStack', {
-              screen: 'DeletePlayerUser',
-              params: {playerUserId: community.user.id},
+              screen: 'DeleteFan',
+              params: {fanId: community.user.id},
             });
           }
         }}

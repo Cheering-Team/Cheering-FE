@@ -6,26 +6,27 @@ import PostWriteScreen from '../screens/communityStack/PostWriteScreen';
 import PostScreen from '../screens/communityStack/PostScreen';
 import ProfileEditScreen from '../screens/communityStack/ProfileEditScreen';
 import EditNameScreen from '../screens/moreStack/EditNameScreen';
-import DeletePlayerUserScreen from '../screens/communityStack/DeletePlayerUserScreen';
+import DeletePlayerUserScreen from '../screens/communityStack/DeleteFanScreen';
 import ChatRoomScreen from '../screens/communityStack/ChatRoomScreen';
 import CreateChatRoomScreen from 'screens/communityStack/CreateChatRoomScreen';
 import ChatRoomEnterScreen from 'screens/communityStack/ChatRoomEnterScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
 import DailyScreen from 'screens/communityStack/DailyScreen';
 import {Post} from 'apis/post/types';
+import {Fan} from 'apis/user/types';
 
 export type CommunityStackParamList = {
-  Community: {playerId: number};
-  PostWrite: {playerId: number; feed?: Post};
+  Community: {communityId: number};
+  PostWrite: {communityId: number; post?: Post};
   Post: {postId: number};
-  Daily: {playerId: number; date: string; write: boolean};
+  Daily: {communityId: number; date: string; write: boolean; user: Fan};
   ChatRoom: {chatRoomId: number};
-  CreateChatRoom: {playerId: number};
+  CreateChatRoom: {communityId: number};
   ChatRoomEnter: {chatRoomId: number};
-  Profile: {playerUserId: number};
-  ProfileEdit: {playerUserId: number};
-  EditName: {name: string; playerUserId: number | null};
-  DeletePlayerUser: {playerUserId: number};
+  Profile: {fanId: number};
+  ProfileEdit: {fanId: number};
+  EditName: {name: string; fanId: number | null};
+  DeleteFan: {fanId: number};
   BlockList: {playerUserId: number};
 };
 
@@ -84,7 +85,7 @@ const CommunityStackNavigator = () => {
         options={{headerShown: false}}
       />
       <CommunityStack.Screen
-        name="DeletePlayerUser"
+        name="DeleteFan"
         component={DeletePlayerUserScreen}
         options={{headerShown: false}}
       />

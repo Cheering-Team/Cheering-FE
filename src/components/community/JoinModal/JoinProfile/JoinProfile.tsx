@@ -1,28 +1,15 @@
-import React, {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
-import {
-  ImageBackground,
-  Keyboard,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import React, {Dispatch, RefObject, SetStateAction, useState} from 'react';
+import {ImageBackground, Pressable, StyleSheet, View} from 'react-native';
 import CustomText from '../../../common/CustomText';
 import Avatar from '../../../common/Avatar';
 import CustomButton from '../../../common/CustomButton';
 import CameraSvg from '../../../../assets/images/camera-01.svg';
-import {ImageType} from '../JoinModal';
 import {NAME_REGEX} from '../../../../constants/regex';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomBottomSheetTextInput from '../../../common/CustomBottomSheetTextInput';
-import {useJoinCommunity} from 'apis/player/usePlayers';
+import {useJoinCommunity} from 'apis/community/useCommunities';
 import {showTopToast} from 'utils/toast';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
 
@@ -82,29 +69,24 @@ const JoinProfile = (props: Props) => {
       );
       return;
     }
-
-    const joinData = await joinCommunity({
-      communityId: playerData.id,
-      name: nickname,
-      image: imageData,
-    });
-
-    if (joinData?.message === '부적절한 단어가 포함되어 있습니다.') {
-      setIsValid(false);
-      setNicknameInvalidMessage('부적절한 닉네임입니다.');
-      return;
-    }
-
-    if (joinData?.message === '중복된 이름') {
-      setIsValid(false);
-      setNicknameInvalidMessage('이미 사용중인 이름입니다.');
-      return;
-    }
-
-    if (joinData.message === '커뮤니티 가입 완료') {
+    try {
+      await joinCommunity({
+        communityId: playerData.id,
+        name: nickname,
+        image: imageData,
+      });
       bottomSheetModalRef.current?.dismiss();
       setRefreshKey((prev: number) => prev + 1);
-      showTopToast(insets.top + 20, joinData.message);
+      showTopToast(insets.top + 20, '가입 완료');
+    } catch (error: any) {
+      if (error.code === 2004) {
+        setIsValid(false);
+        setNicknameInvalidMessage('부적절한 닉네임입니다.');
+      }
+      if (error.code === 2007) {
+        setIsValid(false);
+        setNicknameInvalidMessage('이미 사용중인 이름입니다.');
+      }
     }
   };
 

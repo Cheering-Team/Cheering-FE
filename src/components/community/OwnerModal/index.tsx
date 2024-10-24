@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import {Community} from 'apis/player/types';
-import {useJoinCommunity} from 'apis/player/usePlayers';
+import {Community} from 'apis/community/types';
+import {useJoinCommunity} from 'apis/community/useCommunities';
 import CustomText from 'components/common/CustomText';
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import {Modal, Pressable, View} from 'react-native';
@@ -8,12 +8,12 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {showTopToast} from 'utils/toast';
 
 interface OwnerModalProps {
-  playerData: Community;
+  community: Community;
   setRefreshKey: Dispatch<SetStateAction<number>>;
 }
 
 const OwnerModal = (props: OwnerModalProps) => {
-  const {playerData, setRefreshKey} = props;
+  const {community, setRefreshKey} = props;
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
@@ -22,21 +22,18 @@ const OwnerModal = (props: OwnerModalProps) => {
   const {mutateAsync: joinCommunity} = useJoinCommunity();
 
   const handleJoinCommunity = async () => {
-    const data = await joinCommunity({
-      communityId: playerData.id,
-      name: playerData.koreanName,
+    await joinCommunity({
+      communityId: community.id,
+      name: community.koreanName,
       image: {
         uri: '',
         name: '',
-        type: '',
+        type: 'image',
       },
     });
-
-    if (data.message === '커뮤니티 가입 완료') {
-      setIsModalOpen(false);
-      setRefreshKey((prev: number) => prev + 1);
-      showTopToast(insets.top + 20, '커뮤니티에 참여했어요.');
-    }
+    setIsModalOpen(false);
+    setRefreshKey((prev: number) => prev + 1);
+    showTopToast(insets.top + 20, '커뮤니티에 참여했어요.');
   };
 
   return (
@@ -52,7 +49,7 @@ const OwnerModal = (props: OwnerModalProps) => {
           }}>
           <View className="flex-1 px-4 pt-5">
             <CustomText className="text-lg text-gray-800" fontWeight="500">
-              {`${playerData.koreanName}님! 다시 한번 환영합니다`}
+              {`${community.koreanName}님! 다시 한번 환영합니다`}
             </CustomText>
             <CustomText className="text-lg text-gray-800" fontWeight="500">
               등등 선수들이 사용할 수 있는 기능들에 대한 간략한 설명

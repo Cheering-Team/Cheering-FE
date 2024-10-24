@@ -6,17 +6,17 @@ import BackSvg from '../../assets/images/arrow-left.svg';
 import CustomText from '../../components/common/CustomText';
 import CheckBox from '../../components/common/CheckBox';
 import CustomButton from '../../components/common/CustomButton';
-import {useDeletePlayerUser} from '../../apis/player/usePlayers';
+import {useDeleteFan} from '../../apis/community/useCommunities';
 
 const DeletePlayerUserScreen = ({navigation, route}) => {
-  const {playerUserId} = route.params;
+  const {fanId} = route.params;
 
   const [isAgree, setIsAgree] = useState(false);
 
-  const {mutate} = useDeletePlayerUser();
+  const {mutate} = useDeleteFan();
 
   const handleDeleteUser = () => {
-    mutate({fanId: playerUserId});
+    mutate({fanId: fanId});
   };
 
   return (

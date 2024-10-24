@@ -11,15 +11,18 @@ import {
 import SearchSvg from '../../assets/images/search-sm.svg';
 import React, {useEffect, useState} from 'react';
 import CustomText from '../../components/common/CustomText';
-import {useGetLeagues, useGetSports, useGetTeams} from 'apis/player/usePlayers';
+import {
+  useGetLeagues,
+  useGetSports,
+  useGetTeams,
+} from 'apis/community/useCommunities';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
 import {SvgUri} from 'react-native-svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import {queryClient} from '../../../App';
-import {teamKeys} from 'apis/player/queries';
-import {Sport} from 'apis/player/types';
+import {teamKeys} from 'apis/community/queries';
+import {Sport} from 'apis/community/types';
 import {IdName} from 'apis/types';
 import TeamSkeleton from 'components/skeleton/TeamSkeleton';
 
@@ -37,32 +40,28 @@ const CategoryScreen = ({
   const [selectedSport, setSelectedSport] = useState<Sport | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<IdName | null>(null);
 
-  const {data: sports, isLoading: sportsLoading} = useGetSports();
+  const {data: sports} = useGetSports();
   const {data: leagues} = useGetLeagues(
     selectedSport ? selectedSport.id : null,
   );
   const {data: teams} = useGetTeams(selectedLeague ? selectedLeague.id : null);
 
   useEffect(() => {
-    if (sports && sports.result.length) {
-      setSelectedSport(sports.result[0]);
+    if (sports?.length) {
+      setSelectedSport(sports[0]);
     }
   }, [sports]);
 
   useEffect(() => {
-    if (leagues && leagues.result.length) {
-      setSelectedLeague(leagues.result[0]);
+    if (leagues?.length) {
+      setSelectedLeague(leagues[0]);
     }
   }, [leagues]);
 
   useEffect(() => {
     if (teams) {
-      teams.result.forEach(team => {
-        queryClient.setQueryData(teamKeys.detail(team.id), {
-          code: 200,
-          message: '팀 조회 완료',
-          result: team,
-        });
+      teams.forEach(team => {
+        queryClient.setQueryData(teamKeys.detail(team.id), team);
       });
     }
   });
@@ -85,7 +84,7 @@ const CategoryScreen = ({
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         className="flex-grow-0 bg-[#f4f4f4] border-b border-b-gray-100 h-[80]"
-        data={sports ? sports.result : []}
+        data={sports || []}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
           <Pressable
@@ -110,7 +109,7 @@ const CategoryScreen = ({
       <View className="flex-row flex-1">
         <FlatList
           className="w-[120] bg-[#f4f4f4]"
-          data={leagues ? leagues.result : []}
+          data={leagues || []}
           keyExtractor={item => item.id.toString()}
           renderItem={({item}) => (
             <Pressable
@@ -132,10 +131,10 @@ const CategoryScreen = ({
           columnWrapperStyle={styles.justifyaround}
           contentContainerStyle={styles.padding}
           data={
-            teams && teams.result.length !== 0
+            teams && teams.length !== 0
               ? [
-                  ...teams.result,
-                  ...new Array(3 - (teams.result.length % 3)).fill({
+                  ...teams,
+                  ...new Array(3 - (teams.length % 3)).fill({
                     name: null,
                   }),
                 ]

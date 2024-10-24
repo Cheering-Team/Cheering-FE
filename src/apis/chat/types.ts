@@ -1,6 +1,6 @@
 import {ImagePayload, ImageType} from 'apis/post/types';
 import {Fan} from '../user/types';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import {Page} from 'apis/types';
 
 // 엔티티

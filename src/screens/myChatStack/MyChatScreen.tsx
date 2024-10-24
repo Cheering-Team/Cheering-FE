@@ -1,23 +1,18 @@
 import React, {useRef, useState} from 'react';
 import {
   ActivityIndicator,
-  FlatList,
   ListRenderItem,
-  Pressable,
   RefreshControl,
   SectionList,
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native';
-import CustomText from '../../components/common/CustomText';
 import {useGetMyChatRooms} from '../../apis/chat/useChats';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ListLoading from '../../components/common/ListLoading/ListLoading';
 import ListEmpty from '../../components/common/ListEmpty/ListEmpty';
 import {useScrollToTop} from '@react-navigation/native';
 import {ChatRoom} from '../../apis/chat/types';
-import Avatar from '../../components/common/Avatar';
-import OfficialSvg from '../../assets/images/official.svg';
 import ChatCard from 'components/common/ChatCard';
 import StackHeader from 'components/common/StackHeader';
 
@@ -28,7 +23,7 @@ const MyChatScreen = ({navigation}) => {
 
   const sectionListRef = useRef<SectionList<ChatRoom>>(null);
 
-  const {data, isLoading, refetch} = useGetMyChatRooms();
+  const {data: chatRooms, isLoading, refetch} = useGetMyChatRooms();
 
   useScrollToTop(
     useRef({
@@ -75,10 +70,10 @@ const MyChatScreen = ({navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <StackHeader title="내 채팅" type="none" />
-      {data ? (
+      {chatRooms ? (
         <SectionList
           ref={sectionListRef}
-          sections={data.result}
+          sections={chatRooms}
           renderItem={renderChatRoom}
           contentContainerStyle={{paddingBottom: insets.bottom + 50}}
           onEndReachedThreshold={1}

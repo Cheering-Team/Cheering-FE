@@ -8,16 +8,17 @@ import CustomTextInput from 'components/common/CustomTextInput';
 import {Picker} from '@react-native-picker/picker';
 import {useCreateChatRoom} from 'apis/chat/useChats';
 import {NAME_REGEX} from 'constants/regex';
-import {showBottomToast, showTopToast} from 'utils/toast';
+import {showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
 
 const CreateChatRoomScreen = ({navigation, route}) => {
-  const {playerId} = route.params;
+  const {communityId} = route.params;
 
   const insets = useSafeAreaInsets();
 
-  const {mutateAsync: createChatRoom, isPending} = useCreateChatRoom();
+  const {mutateAsync: createChatRoom, isPending} =
+    useCreateChatRoom(communityId);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -76,16 +77,18 @@ const CreateChatRoomScreen = ({navigation, route}) => {
       return;
     }
 
-    const data = await createChatRoom({communityId: playerId, ...formData});
-
-    if (data.message === '부적절한 단어가 포함되어 있습니다.') {
-      showBottomToast(insets.bottom + 20, data.message);
-      return;
-    }
-
-    if (data.message === '채팅방 생성 완료') {
-      showBottomToast(insets.bottom + 20, data.message);
-      navigation.replace('ChatRoom', {chatRoomId: data.result.id});
+    try {
+      const data = await createChatRoom({
+        communityId: communityId,
+        ...formData,
+      });
+      showTopToast(insets.top + 20, '생성 완료');
+      navigation.replace('ChatRoom', {chatRoomId: data.id});
+    } catch (error: any) {
+      if (error.code === 2004) {
+        showTopToast(insets.top + 20, '부적절한 단어가 포함되어있어요');
+        return;
+      }
     }
   };
 

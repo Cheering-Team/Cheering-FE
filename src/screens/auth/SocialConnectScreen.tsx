@@ -5,7 +5,7 @@ import CustomText from '../../components/common/CustomText';
 import CustomButton from '../../components/common/CustomButton';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {AuthContext} from '../../navigations/AuthSwitch';
-import {useConnectSocial, useSaveFCMToken} from 'apis/user/useUsers';
+import {useConnectSocial} from 'apis/user/useUsers';
 import {showTopToast} from 'utils/toast';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AuthStackParamList} from 'navigations/AuthStackNavigator';
@@ -43,12 +43,9 @@ const SocialConnectScreen = ({
       type,
       userId: user.id,
     });
-    if (data.message === '계정 연결 완료') {
-      const {accessToken: sessionToken, refreshToken} = data.result;
-      showTopToast(insets.top + 20, data.message);
-      signIn?.(sessionToken, refreshToken);
-      return;
-    }
+    const {accessToken: sessionToken, refreshToken} = data;
+    showTopToast(insets.top + 20, '로그인 완료');
+    signIn?.(sessionToken, refreshToken);
   };
 
   const formatDate = (date: string) => {

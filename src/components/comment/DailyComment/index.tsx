@@ -1,7 +1,7 @@
 import {Comment} from 'apis/comment/types';
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
-import React, {useRef, useState} from 'react';
+import React, {RefObject, useRef, useState} from 'react';
 import {Pressable, TouchableOpacity, View} from 'react-native';
 import OfficialSvg from 'assets/images/official.svg';
 import MoreSvg from 'assets/images/three-dots.svg';
@@ -10,33 +10,56 @@ import OptionModal from 'components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useDeleteComment, useReportComment} from 'apis/comment/useComments';
 import {showTopToast} from 'utils/toast';
+import {dailyKeys} from 'apis/post/queries';
+import {queryClient} from '../../../../App';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {commentKeys} from 'apis/comment/queries';
+import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
 interface DailyCommentProps {
   comment: Comment;
+  postId: number | null;
+  bottomSheetRef: RefObject<BottomSheetMethods>;
 }
 
-const DailyComment = ({comment}: DailyCommentProps) => {
+const DailyComment = ({comment, postId, bottomSheetRef}: DailyCommentProps) => {
   const insets = useSafeAreaInsets();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
 
-  const {mutate: deleteComment} = useDeleteComment();
-  const {mutate: reportComment} = useReportComment();
+  const {mutate: deleteComment} = useDeleteComment(postId);
+  const {mutateAsync: reportComment} = useReportComment(postId);
 
   const handleDeleteComment = () => {
-    showTopToast(insets.top + 20, '삭제중..');
     deleteComment({commentId: comment.id});
   };
 
-  const handleReportComment = () => {
-    reportComment({commentId: comment.id});
+  const handleReportComment = async () => {
+    if (postId) {
+      try {
+        await reportComment({postId, commentId: comment.id});
+      } catch (error: any) {
+        if (error.message === '존재하지 않는 게시글') {
+          showTopToast(insets.top + 20, '삭제된 글입니다');
+          queryClient.invalidateQueries({queryKey: dailyKeys.lists()});
+          bottomSheetRef.current?.close();
+        }
+        if (error.message === '존재하지 않는 댓글') {
+          showTopToast(insets.top + 20, '삭제된 댓글입니다');
+          queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
+        }
+      }
+    }
   };
   return (
     <Pressable
-      className="flex-row py-3"
+      className="flex-row py-3 px-[10]"
+      style={comment.status === 'temp' && {backgroundColor: '#e2e8f0'}}
       onLongPress={() => bottomSheetModalRef.current?.present()}>
       <Avatar uri={comment.writer.image} size={36} className="mt-[2]" />
       <View className="ml-2 flex-1">

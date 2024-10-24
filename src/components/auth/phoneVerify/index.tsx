@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import {ApiResponse} from 'apis/types';
 import {User} from 'apis/user/types';
 import {
   useCheckCode,
@@ -6,6 +7,7 @@ import {
   useSendSMS,
   useSignIn,
 } from 'apis/user/useUsers';
+import {AxiosError} from 'axios';
 import CustomButton from 'components/common/CustomButton';
 import CustomText from 'components/common/CustomText';
 import CustomTextInput from 'components/common/CustomTextInput';
@@ -65,82 +67,86 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
   const {mutateAsync: checkCodeSocial} = useCheckCodeSocial();
 
   const invalidCode = useCallback(
-    (message: string) => {
-      if (message === '인증번호가 일치하지 않습니다.') {
+    (errorCode: number) => {
+      if (errorCode === 2002) {
+        showTopToast(insets.top + 20, '인증번호 만료');
+        setStatus('phone');
+      }
+      if (errorCode === 2003) {
         setCodeValid(false);
         return;
-      }
-      if (message === '인증번호가 만료되었습니다.') {
-        showTopToast(insets.top + 20, message);
-        setStatus('phone');
       }
     },
     [insets.top, setStatus],
   );
 
   const handleSendCode = async (): Promise<void> => {
-    const data = await sendSMS({phone});
-    if (data.message === '올바르지 않은 휴대폰 번호입니다.') {
-      setPhoneValid('invalid');
-    }
-    if (data.message === '전송 완료') {
+    try {
+      const data = await sendSMS({phone});
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       setLimitTime(300);
       setStatus('code');
       setCode('');
       setCodeValid(true);
-      setUser(data.result);
-      showTopToast(insets.top + 20, data.message);
+      setUser(data);
+      showTopToast(insets.top + 20, '전송 완료');
       customTextInputRef.current?.focus();
+    } catch (error: any) {
+      if (error.code === 2001) {
+        setPhoneValid('invalid');
+      }
     }
   };
 
   const handleCheckCodeToSignUp = useCallback(async () => {
-    const data = await checkCode({phone, code});
-    if (data.message === '인증 완료') {
+    try {
+      await checkCode({phone, code});
       navigation.replace('AgreeTerm', {phone});
-      return;
+    } catch (error: any) {
+      invalidCode(error.code);
     }
-    invalidCode(data.message);
   }, [checkCode, code, invalidCode, navigation, phone]);
 
   const handleCheckCodeToSignIn = useCallback(async () => {
-    const data = await signInApi({phone, code});
-    if (data.message === '로그인 완료') {
-      const {accessToken: sessionToken, refreshToken} = data.result;
-      showTopToast(insets.top + 20, data.message);
+    try {
+      const {accessToken: sessionToken, refreshToken} = await signInApi({
+        phone,
+        code,
+      });
+      showTopToast(insets.top + 20, '로그인 완료');
       signIn?.(sessionToken, refreshToken);
-      return;
+    } catch (error: any) {
+      invalidCode(error.code);
     }
-    invalidCode(data.message);
   }, [code, insets.top, invalidCode, phone, signIn, signInApi]);
 
   const handleCheckCodeSocial = useCallback(async () => {
     if (type === 'kakao' || type === 'naver' || type === 'apple') {
-      const data = await checkCodeSocial({
-        accessToken,
-        phone,
-        code,
-        type,
-      });
-
-      if (data.message === '존재하는 유저' && 'id' in data.result) {
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-        }
-        navigation.replace('SocialConnect', {
+      try {
+        const data = await checkCodeSocial({
           accessToken,
-          user: data.result,
+          phone,
+          code,
           type,
         });
+        if (data.message === '존재하는 유저' && 'id' in data.result) {
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+          }
+          navigation.replace('SocialConnect', {
+            accessToken,
+            user: data.result,
+            type,
+          });
+        }
+        if (data.message === '회원가입 완료' && 'accessToken' in data.result) {
+          const {accessToken: sessionToken, refreshToken} = data.result;
+          showTopToast(insets.top + 20, data.message);
+          signIn?.(sessionToken, refreshToken);
+        }
+      } catch (error: any) {
+        invalidCode(error.code);
       }
-      if (data.message === '회원가입 완료' && 'accessToken' in data.result) {
-        const {accessToken: sessionToken, refreshToken} = data.result;
-        showTopToast(insets.top + 20, data.message);
-        signIn?.(sessionToken, refreshToken);
-        return;
-      }
-      invalidCode(data.message);
     }
   }, [
     accessToken,

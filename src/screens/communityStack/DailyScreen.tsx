@@ -22,7 +22,7 @@ import {
 } from 'react-native';
 import CustomText from 'components/common/CustomText';
 import CloseSvg from '../../assets/images/close-black.svg';
-import {showBottomToast} from 'utils/toast';
+import {showBottomToast, showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BottomSheet, {
   BottomSheetBackdrop,
@@ -41,6 +41,8 @@ import {formatBarDate, formatMonthDay, formatXDate} from 'utils/format';
 import DailySkeleton from 'components/skeleton/DailySkeleton';
 import DailyComment from 'components/comment/DailyComment';
 import CommentSkeleton from 'components/skeleton/CommentSkeleton';
+import {queryClient} from '../../../App';
+import {dailyKeys} from 'apis/post/queries';
 
 if (Platform.OS === 'android') {
   UIManager.setLayoutAnimationEnabledExperimental &&
@@ -55,7 +57,7 @@ type MarkingType = {
 };
 
 const DailyScreen = ({navigation, route}) => {
-  const {playerId, date, write} = route.params;
+  const {communityId, date, write, user} = route.params;
   const insets = useSafeAreaInsets();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -86,43 +88,40 @@ const DailyScreen = ({navigation, route}) => {
   const [markedDates, setMarkedDates] = useState({});
 
   const {
-    data: dailyData,
+    data: dailys,
     hasNextPage,
     fetchNextPage,
-  } = useGetDailys(playerId, date, true);
-  const {data: commentData} = useGetComments(curComment);
-  const {data: dailyExistData} = useGetDailyExist(playerId);
+  } = useGetDailys(communityId, date, true);
+  const {
+    data: commentData,
+    isError,
+    error,
+  } = useGetComments(curComment, !!curComment);
+  const {data: dailyExists} = useGetDailyExist(communityId);
   const {mutateAsync: writeDaily} = useWriteDaily();
   const {mutateAsync: editDaily} = useEditDaily();
-  const {mutateAsync: deleteDaily} = useDeleteDaily();
+  const {mutateAsync: deleteDaily} = useDeleteDaily(curId);
 
   const handleWriteDaily = async () => {
-    const data = await writeDaily({communityId: playerId, content});
+    await writeDaily({communityId: communityId, content});
     setIsWriteOpen(false);
-    if (data.message === '작성 완료') {
-      showBottomToast(insets.bottom + 20, data.message);
-      setContent('');
-    }
+    showTopToast(insets.top + 20, '작성 완료');
+    setContent('');
   };
 
   const handleEditDaily = async () => {
     if (curId) {
-      const data = await editDaily({dailyId: curId, content});
+      await editDaily({dailyId: curId, content});
       setIsWriteOpen(false);
-      if (data.message === '수정 완료') {
-        showBottomToast(insets.bottom + 20, data.message);
-        setContent('');
-      }
+      showTopToast(insets.bottom + 20, '수정 완료');
+      setContent('');
     }
   };
 
   const handleDeleteDaily = async () => {
     if (curId) {
-      const data = await deleteDaily({dailyId: curId});
-      if (data.message === '삭제 완료') {
-        showBottomToast(insets.bottom + 20, data.message);
-        setContent('');
-      }
+      await deleteDaily({dailyId: curId});
+      showTopToast(insets.top + 20, '삭제 완료');
     }
   };
 
@@ -133,21 +132,31 @@ const DailyScreen = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    if (dailyExistData) {
+    if (dailyExists) {
       const marking: MarkingType = {};
-      for (const day of dailyExistData.result) {
+      for (const day of dailyExists) {
         marking[day] = {marked: true};
       }
       marking[date] = {...marking[date], selected: true};
       setMarkedDates(marking);
     }
-  }, [dailyExistData, date]);
+  }, [dailyExists, date]);
 
   useEffect(() => {
     if (write) {
       setIsWriteOpen(true);
     }
   }, [write]);
+
+  useEffect(() => {
+    if (isError && error.message === '존재하지 않는 게시글') {
+      bottomSheetRef.current?.close();
+      showTopToast(insets.top + 20, '글이 삭제되었어요');
+      queryClient.invalidateQueries({
+        queryKey: dailyKeys.list(communityId, date),
+      });
+    }
+  }, [communityId, date, error, insets.top, isError]);
 
   return (
     <SafeAreaView className="flex-1">
@@ -182,7 +191,10 @@ const DailyScreen = ({navigation, route}) => {
               borderBottomColor: '#eeeeee',
             }}
             onDayPress={day => {
-              navigation.setParams({playerId, date: day.dateString});
+              navigation.setParams({
+                playerId: communityId,
+                date: day.dateString,
+              });
             }}
             maxDate={formatBarDate(new Date())}
             monthFormat={'M월 yyyy'}
@@ -205,9 +217,7 @@ const DailyScreen = ({navigation, route}) => {
         )}
 
         <FlatList
-          data={
-            dailyData ? dailyData.pages.flatMap(page => page.result.dailys) : []
-          }
+          data={dailys ? dailys.pages.flatMap(page => page.dailys) : []}
           className="bg-white"
           contentContainerStyle={{
             paddingHorizontal: 15,
@@ -218,7 +228,7 @@ const DailyScreen = ({navigation, route}) => {
           onEndReachedThreshold={1}
           renderItem={({item}) => (
             <Daily
-              dailyData={dailyData?.pages[0].result}
+              dailyData={dailys?.pages[0]}
               post={item}
               setIsWriteOpen={setIsWriteOpen}
               setContent={setContent}
@@ -229,13 +239,9 @@ const DailyScreen = ({navigation, route}) => {
             />
           )}
           ListFooterComponent={
-            dailyData?.pages[0].result.isManager &&
-            date === formatBarDate(new Date()) ? (
+            dailys?.pages[0].isManager && date === formatBarDate(new Date()) ? (
               <View className="flex-row items-center my-2">
-                <Avatar
-                  uri={dailyData.pages[0].result.manager.image}
-                  size={40}
-                />
+                <Avatar uri={dailys.pages[0].manager.image} size={40} />
                 <Pressable
                   className="bg-white p-3 ml-3 rounded-[15px] flex-row items-center"
                   onPress={() => {
@@ -260,7 +266,7 @@ const DailyScreen = ({navigation, route}) => {
             ) : null
           }
           ListEmptyComponent={
-            dailyData ? (
+            dailys ? (
               formatBarDate(new Date()) === date ? null : (
                 <View
                   style={{
@@ -345,6 +351,10 @@ const DailyScreen = ({navigation, route}) => {
             <DailyTextInput
               dailyId={curComment}
               isToady={date === formatBarDate(new Date())}
+              writer={user}
+              bottomSheetRef={bottomSheetRef}
+              communityId={communityId}
+              date={date}
               {...props}
             />
           )}
@@ -353,13 +363,19 @@ const DailyScreen = ({navigation, route}) => {
           android_keyboardInputMode="adjustResize">
           <BottomSheetFlatList
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: 100, paddingHorizontal: 10}}
+            contentContainerStyle={{paddingBottom: 100}}
             viewabilityConfig={viewabilityConfig}
             ListEmptyComponent={
               commentData ? <ListEmpty type="comment" /> : <CommentSkeleton />
             }
-            data={commentData?.pages.flatMap(page => page.result.comments)}
-            renderItem={({item}) => <DailyComment comment={item} />}
+            data={commentData?.pages.flatMap(page => page.comments)}
+            renderItem={({item}) => (
+              <DailyComment
+                comment={item}
+                postId={curComment}
+                bottomSheetRef={bottomSheetRef}
+              />
+            )}
           />
         </BottomSheet>
       </View>

@@ -16,10 +16,11 @@ interface Props {
   setUnder: Dispatch<SetStateAction<number | null>>;
   setTo: Dispatch<SetStateAction<IdName | null>>;
   inputRef: RefObject<TextInput>;
+  postId: number;
 }
 
 const ReComment = (props: Props) => {
-  const {commentId, reComment, setUnder, setTo, inputRef} = props;
+  const {commentId, reComment, setUnder, setTo, inputRef, postId} = props;
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
 
@@ -27,16 +28,22 @@ const ReComment = (props: Props) => {
 
   return (
     <Pressable
-      style={{
-        paddingTop: 10,
-        flexDirection: 'row',
-      }}
+      style={[
+        {
+          paddingTop: 10,
+          flexDirection: 'row',
+        },
+        reComment.status === 'temp' && {
+          backgroundColor: '#e2e8f0',
+          borderRadius: 5,
+        },
+      ]}
       onLongPress={() => bottomSheetModalRef.current?.present()}>
       <Pressable
         style={{height: 33}}
         onPress={() => {
           navigation.navigate('Profile', {
-            playerUserId: reComment.writer.id,
+            fanId: reComment.writer.id,
           });
         }}>
         <Avatar uri={reComment.writer.image} size={33} />
@@ -47,6 +54,8 @@ const ReComment = (props: Props) => {
           bottomSheetModalRef={bottomSheetModalRef}
           comment={reComment}
           type="reComment"
+          postId={postId}
+          under={commentId}
         />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <CustomText fontWeight="500" style={{color: '#939393', fontSize: 15}}>

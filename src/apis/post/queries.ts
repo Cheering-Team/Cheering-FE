@@ -12,7 +12,7 @@ export const postKeys = {
 
 export const dailyKeys = {
   all: ['dailys'] as const,
-  lists: () => [...postKeys.all, 'list'] as const,
+  lists: () => [...dailyKeys.all, 'list'] as const,
   list: (communityId: number, date: string) =>
     [...dailyKeys.lists(), {communityId, date}] as const,
   exist: (communityId: number) =>

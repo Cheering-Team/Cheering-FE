@@ -40,7 +40,7 @@ const NotificationScreen = ({navigation}) => {
   );
 
   const {
-    data,
+    data: notifications,
     isLoading,
     refetch,
     isFetchingNextPage,
@@ -170,10 +170,10 @@ const NotificationScreen = ({navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <StackHeader title="알림" type="none" />
-      {data ? (
+      {notifications ? (
         <FlatList
           ref={flatListRef}
-          data={data.pages.flatMap(page => page.result.notifications)}
+          data={notifications.pages.flatMap(page => page.notifications)}
           renderItem={renderNotification}
           contentContainerStyle={{paddingBottom: insets.bottom + 50}}
           onEndReached={loadNotifications}

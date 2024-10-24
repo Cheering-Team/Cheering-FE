@@ -11,6 +11,9 @@ import {GetDailysResponse, Post} from 'apis/post/types';
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {useGetRandomComment} from 'apis/comment/useComments';
 import RefreshSvg from '../../../assets/images/refresh.svg';
+import {queryClient} from '../../../../App';
+import {dailyKeys} from 'apis/post/queries';
+import {commentKeys} from 'apis/comment/queries';
 
 const options = {
   enableVibrateFallback: true,
@@ -40,7 +43,7 @@ const Daily = ({
 }: DailyProps) => {
   const moreModalRef = useRef<BottomSheetModal>(null);
 
-  const {data, refetch} = useGetRandomComment(post.id);
+  const {data: randomComment, refetch} = useGetRandomComment(post.id);
 
   return (
     <View>
@@ -98,6 +101,9 @@ const Daily = ({
         onPress={() => {
           bottomSheetRef.current?.snapToIndex(0);
           setCurComment(post.id);
+          queryClient.invalidateQueries({
+            queryKey: commentKeys.random(post.id),
+          });
         }}
         style={{
           shadowColor: '#000000',
@@ -118,9 +124,9 @@ const Daily = ({
         </View>
         {post.commentCount !== 0 && (
           <View className="flex-row items-center mt-2 h-10">
-            <Avatar uri={data?.result?.writer.image} size={25} />
+            <Avatar uri={randomComment?.writer.image} size={25} />
             <CustomText className="mx-3 text-[15px] flex-1" numberOfLines={2}>
-              {data?.result?.content}
+              {randomComment?.content}
             </CustomText>
             <Pressable
               onPress={() => refetch()}

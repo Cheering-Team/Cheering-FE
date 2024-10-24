@@ -4,6 +4,7 @@ import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {LayoutAnimation, Modal, Pressable} from 'react-native';
 import {
   GestureEvent,
+  GestureHandlerRootView,
   PanGesture,
   PanGestureHandler,
   PanGestureHandlerEventPayload,
@@ -105,35 +106,37 @@ const Viewer = ({
 
   return (
     <Modal transparent={true} animationType="fade" visible={isViewerOpen}>
-      <Animated.View className="w-full h-full" style={animatedOpacityStyle}>
-        <PanGestureHandler
-          onGestureEvent={onOuterGestureEvent}
-          onEnded={onGestureEnd}>
-          <Animated.View className="w-full h-full" style={animatedStyle}>
-            <Carousel
-              loop={false}
-              defaultIndex={viewIndex}
-              onConfigurePanGesture={handleConfigurePanGesture}
-              onProgressChange={(_, absoluteProgress) =>
-                setCurrentIndex(absoluteProgress)
-              }
-              data={images}
-              renderItem={({item, index}) => (
-                <ViewerCard image={item} isFocus={index === currentIndex} />
-              )}
-              width={WINDOW_WIDTH}
-            />
-          </Animated.View>
-        </PanGestureHandler>
-        {isTool && (
-          <Pressable
-            className="absolute left-3 bg-gray-900 p-[10] rounded-full"
-            style={{top: insets.top + 12}}
-            onPress={() => setIsViewerOpen(false)}>
-            <CloseSvg width={16} height={16} />
-          </Pressable>
-        )}
-      </Animated.View>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <Animated.View className="w-full h-full" style={animatedOpacityStyle}>
+          <PanGestureHandler
+            onGestureEvent={onOuterGestureEvent}
+            onEnded={onGestureEnd}>
+            <Animated.View className="w-full h-full" style={animatedStyle}>
+              <Carousel
+                loop={false}
+                defaultIndex={viewIndex}
+                onConfigurePanGesture={handleConfigurePanGesture}
+                onProgressChange={(_, absoluteProgress) =>
+                  setCurrentIndex(absoluteProgress)
+                }
+                data={images}
+                renderItem={({item, index}) => (
+                  <ViewerCard image={item} isFocus={index === currentIndex} />
+                )}
+                width={WINDOW_WIDTH}
+              />
+            </Animated.View>
+          </PanGestureHandler>
+          {isTool && (
+            <Pressable
+              className="absolute left-3 bg-gray-900 p-[10] rounded-full"
+              style={{top: insets.top + 12}}
+              onPress={() => setIsViewerOpen(false)}>
+              <CloseSvg width={16} height={16} />
+            </Pressable>
+          )}
+        </Animated.View>
+      </GestureHandlerRootView>
     </Modal>
   );
 };

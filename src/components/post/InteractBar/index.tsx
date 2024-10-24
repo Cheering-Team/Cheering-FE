@@ -18,25 +18,11 @@ const InteractBar = (props: InteractBarProps) => {
   const {post, type} = props;
   const navigation = useNavigation();
 
-  const [likeStatus, setLikeStatus] = useState<boolean>(false);
-  const [likeCount, setLikeCount] = useState<number>(0);
+  const {mutate: likePost} = useLikePost(post.id);
 
-  const {mutateAsync: likePost} = useLikePost(post.id);
-
-  const handleLikePost = async () => {
-    setLikeCount(prev => (likeStatus ? prev - 1 : prev + 1));
-    setLikeStatus(prev => !prev);
-
-    await likePost({postId: post.id});
+  const handleLikePost = () => {
+    likePost({postId: post.id});
   };
-
-  // 현재 좋아요 상태 반영
-  useEffect(() => {
-    if (post) {
-      setLikeStatus(post.isLike);
-      setLikeCount(post.likeCount);
-    }
-  }, [post]);
 
   return (
     <View
@@ -61,7 +47,7 @@ const InteractBar = (props: InteractBarProps) => {
             paddingTop: 10,
             paddingBottom: 12,
           }}>
-          {likeStatus ? (
+          {post.isLike ? (
             <HeartFillSvg width={18} height={18} />
           ) : (
             <HeartSvg width={18} height={18} />
@@ -70,7 +56,9 @@ const InteractBar = (props: InteractBarProps) => {
             style={{
               color: '#6a6a6a',
               marginLeft: 6,
-            }}>{`${likeCount}`}</CustomText>
+            }}>
+            {post.likeCount}
+          </CustomText>
         </TouchableOpacity>
         <View
           style={{

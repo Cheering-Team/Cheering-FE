@@ -3,9 +3,9 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import {useGetPlayers} from 'apis/player/usePlayers';
+import {useGetCommunities} from 'apis/community/useCommunities';
 import {
-  useGetPlayerAccountInfo,
+  useGetPlayerAccount,
   useRegisterPlayerAccount,
   useReissuePlayerAccountPassword,
 } from 'apis/user/useUsers';
@@ -17,7 +17,7 @@ import StackHeader from 'components/common/StackHeader';
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {FlatList, Pressable, SafeAreaView, TextInput, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {showBottomToast} from 'utils/toast';
+import {showTopToast} from 'utils/toast';
 
 const PlayerAccountScreen = ({navigation}) => {
   const insets = useSafeAreaInsets();
@@ -42,34 +42,26 @@ const PlayerAccountScreen = ({navigation}) => {
     [],
   );
 
-  const {data: playersData, refetch} = useGetPlayers(name, false);
-  const {data: playerAccountData} = useGetPlayerAccountInfo(playerId);
+  const {data: communities, refetch} = useGetCommunities(name, false);
+  const {isError, error} = useGetPlayerAccount(playerId);
   const {mutateAsync: registerPlayerAccount} = useRegisterPlayerAccount();
   const {mutateAsync: reissuePlayerAccountPassword} =
     useReissuePlayerAccountPassword();
 
   const handleRegisterPlayerAccount = async () => {
-    const data = await registerPlayerAccount({communityId: playerId, phone});
-
-    if (data.message === '매니저 계정 등록 완료') {
-      bottomSheetModalRef.current?.close();
-      showBottomToast(insets.bottom + 20, data.message);
-    }
-
     setPhone('');
+    await registerPlayerAccount({communityId: playerId, phone});
+    bottomSheetModalRef.current?.close();
+    showTopToast(insets.top + 20, '등록 완료');
   };
 
   const handleReissuePlayerAccountPassword = async () => {
-    const data = await reissuePlayerAccountPassword({
+    await reissuePlayerAccountPassword({
       communityId: playerId,
       phone,
     });
-
-    if (data.message === '비밀번호 재발급 완료') {
-      bottomSheetModalRef.current?.close();
-      showBottomToast(insets.bottom + 20, data.message);
-    }
-
+    bottomSheetModalRef.current?.close();
+    showTopToast(insets.top + 20, '재발급 완료');
     setPhone('');
   };
 
@@ -92,7 +84,7 @@ const PlayerAccountScreen = ({navigation}) => {
         </Pressable>
       </View>
       <FlatList
-        data={playersData?.result}
+        data={communities || []}
         renderItem={({item}) => (
           <Pressable
             className="flex-row items-center p-2"
@@ -117,7 +109,7 @@ const PlayerAccountScreen = ({navigation}) => {
         android_keyboardInputMode="adjustResize">
         <BottomSheetView className="flex-1">
           <View className="p-3">
-            {playerAccountData?.message === '존재하지 않는 매니저 계정' ? (
+            {isError && error.code === 2006 ? (
               <>
                 <CustomBottomSheetTextInput
                   label="휴대폰 번호"

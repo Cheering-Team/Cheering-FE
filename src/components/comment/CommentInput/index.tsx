@@ -16,9 +16,17 @@ import {
   useWriteReComment,
 } from '../../../apis/comment/useComments';
 import {hideToast, showBottomToast, showTopToast} from '../../../utils/toast';
+import {Fan} from 'apis/user/types';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {queryClient} from '../../../../App';
+import {commentKeys} from 'apis/comment/queries';
+import {postKeys} from 'apis/post/queries';
 
 interface CommentInputProps {
   postId: number;
+  writer: Fan;
   to: IdName | null;
   setTo: Dispatch<SetStateAction<IdName | null>>;
   under: number | null;
@@ -27,38 +35,36 @@ interface CommentInputProps {
 }
 
 const CommentInput: FC<CommentInputProps> = props => {
-  const {postId, to, setTo, under, setUnder, inputRef} = props;
+  const {postId, writer, to, setTo, under, setUnder, inputRef} = props;
 
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
   const [comment, setComment] = useState('');
 
-  const {mutateAsync: writeComment} = useWriteComment();
-  const {mutateAsync: writeReComment} = useWriteReComment(postId);
+  const {mutateAsync: writeComment} = useWriteComment(postId, writer);
+  const {mutateAsync: writeReComment} = useWriteReComment(to, writer);
 
   const handleWriteComment = async () => {
     if (comment.trim().length === 0) {
       return;
     }
-
     setComment('');
-    showTopToast(insets.top + 20, '작성중..', false);
-
-    const commentResponse = await writeComment({
-      postId,
-      content: comment,
-    });
-
-    hideToast();
-
-    if (commentResponse.message === '작성 완료') {
-      return;
-    } else {
-      showBottomToast(insets.bottom + 20, '잠시 후 다시시도 해주세요.');
-    }
-
-    if (commentResponse.message === '부적절한 단어가 포함되어 있습니다.') {
-      showBottomToast(insets.bottom + 20, commentResponse.message);
+    try {
+      await writeComment({
+        postId,
+        content: comment,
+      });
+    } catch (error: any) {
+      if (error.code === 2004) {
+        showTopToast(insets.top + 20, '부적절한 단어가 포함되어 있습니다');
+      }
+      if (error.code === 404) {
+        showTopToast(insets.top + 20, '삭제된 글입니다');
+        queryClient.invalidateQueries({queryKey: postKeys.lists()});
+        navigation.goBack();
+      }
     }
   };
 
@@ -66,28 +72,30 @@ const CommentInput: FC<CommentInputProps> = props => {
     if (comment.trim().length === 0 || !to || !under) {
       return;
     }
-
     setComment('');
-    showTopToast(insets.top + 20, '작성중..', false);
-
-    const reCommentResponse = await writeReComment({
-      commentId: under,
-      content: comment,
-      toId: to.id,
-    });
-
-    hideToast();
-
-    if (reCommentResponse.message === '답글 작성 완료') {
-      setTo(null);
-      setUnder(null);
-    } else {
-      showBottomToast(insets.bottom + 20, '잠시 후 다시시도 해주세요.');
+    try {
+      await writeReComment({
+        postId,
+        commentId: under,
+        content: comment,
+        toId: to.id,
+      });
+    } catch (error: any) {
+      if (error.code === 2004) {
+        showTopToast(insets.top + 20, '부적절한 단어가 포함되어 있습니다');
+      }
+      if (error.message === '존재하지 않는 게시글') {
+        showTopToast(insets.top + 20, '삭제된 글입니다');
+        queryClient.invalidateQueries({queryKey: postKeys.lists()});
+        navigation.goBack();
+      }
+      if (error.message === '존재하지 않는 댓글') {
+        showTopToast(insets.top + 20, '삭제된 댓글입니다');
+        queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
+      }
     }
-
-    if (reCommentResponse.message === '부적절한 단어가 포함되어 있습니다.') {
-      showBottomToast(insets.bottom + 20, reCommentResponse.message);
-    }
+    setTo(null);
+    setUnder(null);
   };
 
   return (

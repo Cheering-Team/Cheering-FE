@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import StarWhiteSvg from '../../assets/images/star-white.svg';
 import CustomText from '../common/CustomText';
 import Avatar from '../common/Avatar';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import {WINDOW_HEIGHT} from 'constants/dimension';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';

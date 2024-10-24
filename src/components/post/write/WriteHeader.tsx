@@ -7,12 +7,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface WriterHeaderProps {
   handleWritePost: () => void;
-  isWritePending: boolean;
-  isEditPending: boolean;
+  isWriting: boolean;
 }
 
 const WriteHeader = (props: WriterHeaderProps) => {
-  const {handleWritePost, isWritePending, isEditPending} = props;
+  const {handleWritePost, isWriting} = props;
   const insets = useSafeAreaInsets();
 
   const navigation = useNavigation();
@@ -40,7 +39,7 @@ const WriteHeader = (props: WriterHeaderProps) => {
         onPress={() => {
           handleWritePost();
         }}
-        disabled={isWritePending || isEditPending}
+        disabled={isWriting}
         style={{
           backgroundColor: 'black',
           paddingVertical: 6,

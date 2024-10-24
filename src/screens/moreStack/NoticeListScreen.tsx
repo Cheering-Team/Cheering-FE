@@ -7,14 +7,14 @@ import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
 import StackHeader from 'components/common/StackHeader';
 
 const NoticeListScreen = ({navigation}) => {
-  const {data} = useGetNotices();
+  const {data: noticies} = useGetNotices();
 
   return (
     <SafeAreaView className="flex-1">
       <StackHeader title="공지사항" type="back" />
-      {data && (
+      {noticies && (
         <FlatList
-          data={data.result}
+          data={noticies}
           renderItem={({item}) => (
             <Pressable
               className="flex-row px-4 py-3 border-b border-b-gray-100 justify-between items-center"

@@ -3,14 +3,14 @@ import {Pressable, View} from 'react-native';
 import CustomText from '../../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import ChevronLeftSvg from '../../../assets/images/chevron-left.svg';
-import {Community} from '../../../apis/player/types';
+import {Community} from '../../../apis/community/types';
 
 interface PostHeaderProps {
-  player: Community;
+  community: Community;
 }
 
 const PostHeader = (props: PostHeaderProps) => {
-  const {player} = props;
+  const {community} = props;
 
   const navigation = useNavigation();
 
@@ -37,13 +37,13 @@ const PostHeader = (props: PostHeaderProps) => {
             fontSize: 16,
             paddingBottom: 0,
           }}>
-          {player.koreanName}
+          {community.koreanName}
         </CustomText>
-        {player.englishName && (
+        {community.englishName && (
           <CustomText
             fontWeight="400"
             style={{fontSize: 12, paddingBottom: 0, color: '#979797'}}>
-            {player.englishName}
+            {community.englishName}
           </CustomText>
         )}
       </View>

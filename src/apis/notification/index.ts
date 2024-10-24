@@ -11,7 +11,7 @@ export const getNotifications = async ({
   const response = await axiosInstance.get<
     ApiResponse<GetNotificationsResponse>
   >(`/notifications?page=${pageParam}&size=20`);
-  return response.data;
+  return response.data.result;
 };
 
 // 알림 여부 확인
@@ -19,7 +19,7 @@ export const getIsUnread = async () => {
   const response = await axiosInstance.get<ApiResponse<boolean>>(
     '/notifications/is-unread',
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 알림 읽기
@@ -28,5 +28,5 @@ export const readNotification = async (data: ReadNotificationPayload) => {
   const response = await axiosInstance.put<ApiResponse<null>>(
     `/notifications/${notificationId}`,
   );
-  return response.data;
+  return response.data.result;
 };

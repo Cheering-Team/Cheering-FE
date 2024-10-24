@@ -17,7 +17,7 @@ import {
 // 종목 불러오기
 export const getSports = async () => {
   const response = await axiosInstance.get<ApiResponse<Sport[]>>('/sports');
-  return response.data;
+  return response.data.result;
 };
 
 // 리그 불러오기
@@ -30,7 +30,7 @@ export const getLeagues = async ({
   const response = await axiosInstance.get<ApiResponse<IdName[]>>(
     `/sports/${sportId}/leagues`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 팀 불러오기
@@ -43,7 +43,7 @@ export const getTeams = async ({
   const response = await axiosInstance.get<ApiResponse<TeamName[]>>(
     `/leagues/${leagueId}/teams`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 팀 조회
@@ -56,7 +56,7 @@ export const getTeamById = async ({
   const response = await axiosInstance.get<ApiResponse<TeamName>>(
     `/teams/${teamId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 커뮤니티 검색
@@ -69,10 +69,10 @@ export const getCommunities = async ({
   const response = await axiosInstance.get<ApiResponse<Community[]>>(
     `/communities?name=${filter}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
-// 특정 팀, 소속 선수 커뮤니티 불러오기
+// 특정 팀, 소속 선수 커뮤니티 조회
 export const getCommunitiesByTeam = async ({
   queryKey,
 }: {
@@ -82,20 +82,20 @@ export const getCommunitiesByTeam = async ({
   const response = await axiosInstance.get<ApiResponse<Community[]>>(
     `/teams/${teamId}/communities`,
   );
-  return response.data;
+  return response.data.result;
 };
 
-// 선수 정보 불러오기
+// 커뮤니티 정보 조회
 export const getCommunityInfo = async ({
   queryKey,
 }: {
   queryKey: ReturnType<typeof communityKeys.detail>;
 }) => {
-  const [, , playerId] = queryKey;
+  const [, , communityId] = queryKey;
   const response = await axiosInstance.get<ApiResponse<Community>>(
-    `/communities/${playerId}`,
+    `/communities/${communityId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 커뮤니티 가입
@@ -115,14 +115,14 @@ export const joinCommunity = async (data: JoinCommunityPayload) => {
       },
     },
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 내가 가입한 커뮤니티 조회
 export const getMyCommunities = async () => {
   const response =
     await axiosInstance.get<ApiResponse<Community[]>>('/my/communities');
-  return response.data;
+  return response.data.result;
 };
 
 // 팬 정보 조회
@@ -135,7 +135,7 @@ export const getFanInfo = async ({
   const response = await axiosInstance.get<ApiResponse<GetFanInfoResponse>>(
     `/fans/${fanId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 팬 이미지 변경
@@ -157,7 +157,7 @@ export const updateFanImage = async (data: UpdateFanImagePayload) => {
       },
     },
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 팬 이름 변경
@@ -167,7 +167,7 @@ export const updateFanName = async (data: UpdateFanNamePayload) => {
     `/fans/${fanId}/name`,
     {name},
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 커뮤니티 탈퇴
@@ -176,7 +176,7 @@ export const deleteFan = async (data: FanIdPayload) => {
   const response = await axiosInstance.delete<ApiResponse<null>>(
     `/fans/${fanId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 팬 차단
@@ -185,7 +185,7 @@ export const blockFan = async (data: FanIdPayload) => {
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/blocks/${fanId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 차단한 팬 목록 조회
@@ -198,7 +198,7 @@ export const getBlockedFans = async ({
   const response = await axiosInstance.get<ApiResponse<Fan[]>>(
     `/blocks/${fanId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 차단 해제
@@ -207,5 +207,5 @@ export const unblockFan = async (data: FanIdPayload) => {
   const response = await axiosInstance.delete<ApiResponse<null>>(
     `/blocks/${fanId}`,
   );
-  return response.data;
+  return response.data.result;
 };

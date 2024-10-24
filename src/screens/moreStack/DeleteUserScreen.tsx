@@ -28,12 +28,9 @@ const DeleteUserScreen = ({
   const {mutateAsync: deleteUser, isPending} = useDeleteUser();
 
   const handleDeleteUser = async () => {
-    const data = await deleteUser();
-
-    if (data.message === '회원탈퇴 완료') {
-      signOut?.();
-      showTopToast(insets.top + 20, data.message);
-    }
+    await deleteUser();
+    signOut?.();
+    showTopToast(insets.top + 20, '로그아웃 완료');
   };
 
   return (

@@ -6,22 +6,21 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Avatar from './Avatar';
 import {CategoryStackParamList} from '../../navigations/CategoryStackNavigator';
 import {formatComma} from '../../utils/format';
-import {Community} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 import OfficialSvg from '../../assets/images/official.svg';
-import {ApiResponse} from 'apis/types';
 import CommunitySkeleton from 'components/skeleton/CommunitySkeleton';
 
 interface PlayerListProps {
   type: 'Team' | 'Search';
   teamName?: string;
-  communityData?: ApiResponse<Community[]>;
+  communities?: Community[];
   paddingTop?: boolean;
 }
 
 const PlayerList = ({
   type,
   teamName,
-  communityData,
+  communities,
   paddingTop = false,
 }: PlayerListProps) => {
   const navigation = useNavigation<NavigationProp<CategoryStackParamList>>();
@@ -33,7 +32,7 @@ const PlayerList = ({
         paddingTop && {paddingTop: 80},
         {paddingBottom: 50},
       ]}
-      data={communityData ? communityData.result : []}
+      data={communities || []}
       renderItem={({item}) => (
         <Pressable
           style={{
@@ -44,7 +43,7 @@ const PlayerList = ({
           onPress={() => {
             navigation.navigate('CommunityStack', {
               screen: 'Community',
-              params: {playerId: item.id},
+              params: {communityId: item.id},
             });
           }}>
           <Image
@@ -112,7 +111,7 @@ const PlayerList = ({
                 if (item.user !== null) {
                   navigation.navigate('CommunityStack', {
                     screen: 'Profile',
-                    params: {playerUserId: item.user.id},
+                    params: {fanId: item.user.id},
                   });
                 }
               }}>
@@ -132,7 +131,7 @@ const PlayerList = ({
         </Pressable>
       )}
       ListEmptyComponent={
-        !communityData ? (
+        !communities ? (
           <CommunitySkeleton />
         ) : type === 'Team' ? (
           <View

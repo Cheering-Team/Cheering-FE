@@ -1,4 +1,7 @@
-import {useGetBlockedUsers, useUnblockUser} from 'apis/player/usePlayers';
+import {
+  useGetBlockedUsers,
+  useUnblockUser,
+} from 'apis/community/useCommunities';
 import AlertModal from 'components/common/AlertModal/AlertModal';
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
@@ -13,15 +16,15 @@ const BlockListScreen = ({route}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  const {data} = useGetBlockedUsers(playerUserId);
+  const {data: blockedUsers} = useGetBlockedUsers(playerUserId);
   const {mutate: unblockUser} = useUnblockUser(playerUserId);
 
   return (
     <SafeAreaView className="flex-1">
       <StackHeader title="차단한 계정" />
-      {data && (
+      {blockedUsers && (
         <FlatList
-          data={data.result}
+          data={blockedUsers}
           renderItem={({item}) => (
             <View className="flex-row py-[10] px-4 items-center">
               <Avatar uri={item.image} size={43} />
