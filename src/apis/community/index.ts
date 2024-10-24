@@ -185,7 +185,7 @@ export const blockFan = async (data: FanIdPayload) => {
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/blocks/${fanId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 차단한 팬 목록 조회
@@ -198,7 +198,7 @@ export const getBlockedFans = async ({
   const response = await axiosInstance.get<ApiResponse<Fan[]>>(
     `/blocks/${fanId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 차단 해제
@@ -207,5 +207,5 @@ export const unblockFan = async (data: FanIdPayload) => {
   const response = await axiosInstance.delete<ApiResponse<null>>(
     `/blocks/${fanId}`,
   );
-  return response.data;
+  return response.data.result;
 };

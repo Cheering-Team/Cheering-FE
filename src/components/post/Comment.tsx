@@ -2,6 +2,7 @@ import React, {
   Dispatch,
   RefObject,
   SetStateAction,
+  useEffect,
   useRef,
   useState,
 } from 'react';
@@ -17,33 +18,53 @@ import {IdName} from 'apis/types';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {queryClient} from '../../../App';
+import {commentKeys} from 'apis/comment/queries';
+import {showTopToast} from 'utils/toast';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface Props {
   comment: CommentType;
   setUnder: Dispatch<SetStateAction<number | null>>;
   setTo: Dispatch<SetStateAction<IdName | null>>;
   inputRef: RefObject<TextInput>;
+  postId: number;
 }
 
-const Comment = ({comment, setUnder, setTo, inputRef}: Props) => {
+const Comment = ({comment, setUnder, setTo, inputRef, postId}: Props) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
+  const insets = useSafeAreaInsets();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const [isReCommentOpen, setIsReCommentOpen] = useState(false);
 
-  const {data} = useGetRecomments(comment.id, isReCommentOpen);
+  const {
+    data: recomments,
+    isError,
+    error,
+  } = useGetRecomments(comment.id, isReCommentOpen);
+
+  useEffect(() => {
+    if (isError && error.message === '존재하지 않는 댓글') {
+      showTopToast(insets.top + 20, '삭제된 댓글입니다');
+      queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
+    }
+  }, [error?.message, insets.top, isError, postId]);
 
   return (
     <Pressable
-      style={{
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        flexDirection: 'row',
-        borderTopWidth: 1,
-        borderTopColor: '#eeeeee',
-      }}
+      style={[
+        {
+          paddingHorizontal: 15,
+          paddingVertical: 10,
+          flexDirection: 'row',
+          borderTopWidth: 1,
+          borderTopColor: '#eeeeee',
+        },
+        comment.status === 'temp' && {backgroundColor: '#e2e8f0'},
+      ]}
       onLongPress={() => bottomSheetModalRef.current?.present()}>
       <Pressable
         style={{height: 33}}
@@ -58,6 +79,8 @@ const Comment = ({comment, setUnder, setTo, inputRef}: Props) => {
           bottomSheetModalRef={bottomSheetModalRef}
           comment={comment}
           type="comment"
+          postId={postId}
+          under={comment.id}
         />
         <CustomText className="text-[#282828] text-base">
           {comment.content}
@@ -67,6 +90,7 @@ const Comment = ({comment, setUnder, setTo, inputRef}: Props) => {
           onPress={() => {
             setUnder(comment.id);
             setTo({id: comment.writer.id, name: comment.writer.name});
+            setIsReCommentOpen(true);
             inputRef.current?.focus();
           }}>
           <CustomText
@@ -76,8 +100,8 @@ const Comment = ({comment, setUnder, setTo, inputRef}: Props) => {
           </CustomText>
         </TouchableOpacity>
         {isReCommentOpen &&
-          data &&
-          data.result.reComments.map(reComment => (
+          recomments &&
+          recomments.map(reComment => (
             <ReComment
               key={reComment.id}
               commentId={comment.id}
@@ -85,6 +109,7 @@ const Comment = ({comment, setUnder, setTo, inputRef}: Props) => {
               setUnder={setUnder}
               setTo={setTo}
               inputRef={inputRef}
+              postId={postId}
             />
           ))}
         {comment.reCount !== 0 && (

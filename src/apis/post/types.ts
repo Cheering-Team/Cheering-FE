@@ -90,3 +90,8 @@ export interface GetDailysResponse extends Page {
   isManager: boolean;
   manager: Fan;
 }
+
+export interface PostLikeResponse {
+  isLike: boolean;
+  likeCount: number;
+}

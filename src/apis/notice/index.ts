@@ -5,7 +5,7 @@ import {noticeKeys} from './queries';
 
 export const getNotices = async () => {
   const response = await axiosInstance.get<ApiResponse<Notice[]>>('/notices');
-  return response.data;
+  return response.data.result;
 };
 
 export const getNoticeById = async ({
@@ -17,7 +17,7 @@ export const getNoticeById = async ({
   const response = await axiosInstance.get<ApiResponse<Notice>>(
     `/notices/${noticeId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 export const apply = async (data: ApplyPayload) => {
@@ -39,5 +39,5 @@ export const apply = async (data: ApplyPayload) => {
       },
     },
   );
-  return response.data;
+  return response.data.result;
 };

@@ -32,6 +32,7 @@ export const useGetSports = () => {
   return useQuery({
     queryKey: ['sports'],
     queryFn: getSports,
+    retry: false,
   });
 };
 
@@ -41,6 +42,7 @@ export const useGetLeagues = (sportId: number | null) => {
     queryKey: leagueKeys.list(sportId),
     queryFn: getLeagues,
     enabled: !!sportId,
+    retry: false,
   });
 };
 
@@ -50,6 +52,7 @@ export const useGetTeams = (leagueId: number | null) => {
     queryKey: teamKeys.list(leagueId),
     queryFn: getTeams,
     enabled: !!leagueId,
+    retry: false,
   });
 };
 
@@ -58,6 +61,7 @@ export const useGetTeamById = (teamId: number) => {
   return useQuery({
     queryKey: teamKeys.detail(teamId),
     queryFn: getTeamById,
+    retry: false,
   });
 };
 
@@ -67,6 +71,7 @@ export const useGetCommunities = (name: string, enabled: boolean) => {
     queryKey: communityKeys.list(name),
     queryFn: getCommunities,
     enabled,
+    retry: false,
   });
 };
 
@@ -75,6 +80,7 @@ export const useGetCommunitiesByTeam = (teamId: number) => {
   return useQuery({
     queryKey: communityKeys.listByTeam(teamId),
     queryFn: getCommunitiesByTeam,
+    retry: false,
   });
 };
 
@@ -86,6 +92,7 @@ export const useGetCommunityInfo = (
   return useQuery({
     queryKey: communityKeys.detail(communityId, refreshKey),
     queryFn: getCommunityInfo,
+    retry: false,
   });
 };
 
@@ -104,6 +111,7 @@ export const useGetMyCommunities = () => {
   return useQuery({
     queryKey: communityKeys.list('my'),
     queryFn: getMyCommunities,
+    retry: false,
   });
 };
 
@@ -177,8 +185,8 @@ export const useBlockUser = () => {
   const navigation = useNavigation();
   return useMutation({
     mutationFn: blockFan,
-    onSuccess: data => {
-      showBottomToast(insets.bottom + 20, data.message);
+    onSuccess: () => {
+      showTopToast(insets.top + 20, '차단 완료');
       navigation.goBack();
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
       queryClient.invalidateQueries({queryKey: commentKeys.lists()});
@@ -190,22 +198,23 @@ export const useBlockUser = () => {
 };
 
 // 차단한 유저 목록 불러오기
-export const useGetBlockedUsers = (playerUserId: number) => {
+export const useGetBlockedUsers = (fanId: number) => {
   return useQuery({
-    queryKey: fanKeys.blockList(playerUserId),
+    queryKey: fanKeys.blockList(fanId),
     queryFn: getBlockedFans,
+    retry: false,
   });
 };
 
 // 차단 해제하기
-export const useUnblockUser = (playerUserId: number) => {
+export const useUnblockUser = (fanId: number) => {
   const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: unblockFan,
-    onSuccess: data => {
-      showBottomToast(insets.bottom + 20, data.message);
+    onSuccess: () => {
+      showTopToast(insets.top + 20, '차단 해제 완료');
       queryClient.invalidateQueries({
-        queryKey: fanKeys.blockList(playerUserId),
+        queryKey: fanKeys.blockList(fanId),
       });
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
       queryClient.invalidateQueries({queryKey: commentKeys.lists()});

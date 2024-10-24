@@ -57,7 +57,7 @@ const HomeScreen = () => {
     isFetchingNextPage,
   } = useGetPosts(0, 'FAN_POST', 'all', true);
   const {refetch: refetchUnRead} = useGetIsUnread();
-  const {mutate} = useReadNotification();
+  const {mutateAsync: readNotificaiton} = useReadNotification();
 
   useEffect(() => {
     if (posts) {
@@ -189,32 +189,44 @@ const HomeScreen = () => {
   }, []);
 
   useEffect(() => {
-    messaging().onNotificationOpenedApp(remoteMessage => {
+    messaging().onNotificationOpenedApp(async remoteMessage => {
       if (remoteMessage && remoteMessage.data) {
         const {postId, notificationId} = remoteMessage.data;
-
-        navigation.navigate('CommunityStack', {
-          screen: 'Post',
-          params: {postId: Number(postId)},
-        });
-        mutate({notificationId: Number(notificationId)});
-      }
-    });
-
-    messaging()
-      .getInitialNotification()
-      .then(remoteMessage => {
-        if (remoteMessage && remoteMessage.data) {
-          const {postId, notificationId} = remoteMessage.data;
+        try {
+          await readNotificaiton({notificationId: Number(notificationId)});
 
           navigation.navigate('CommunityStack', {
             screen: 'Post',
             params: {postId: Number(postId)},
           });
-          mutate({notificationId: Number(notificationId)});
+        } catch (error: any) {
+          if (error.message === '존재하지 않는 알림') {
+            navigation.navigate('Home');
+          }
+        }
+      }
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then(async remoteMessage => {
+        if (remoteMessage && remoteMessage.data) {
+          const {postId, notificationId} = remoteMessage.data;
+          try {
+            await readNotificaiton({notificationId: Number(notificationId)});
+
+            navigation.navigate('CommunityStack', {
+              screen: 'Post',
+              params: {postId: Number(postId)},
+            });
+          } catch (error: any) {
+            if (error.message === '존재하지 않는 알림') {
+              navigation.navigate('Home');
+            }
+          }
         }
       });
-  }, [navigation]);
+  }, [navigation, readNotificaiton]);
 
   return (
     <>

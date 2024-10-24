@@ -5,7 +5,7 @@ import React, {useState} from 'react';
 import {ImageBackground, Pressable, View} from 'react-native';
 import PlusSvg from '../../../assets/images/plus.svg';
 import {useApply} from 'apis/notice/useNotices';
-import {showBottomToast} from 'utils/toast';
+import {showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
 
@@ -54,24 +54,21 @@ const PlayerForm = () => {
   };
 
   const handleApply = async () => {
-    const data = await apply({
+    await apply({
       field1: formData.name,
       field2: formData.sportName,
       field3: formData.leagueName,
       field4: formData.teamName,
       image: formData.image,
     });
-
-    if (data.message === '신청 완료') {
-      showBottomToast(insets.bottom + 20, data.message);
-      setFormData({
-        name: '',
-        sportName: '',
-        leagueName: '',
-        teamName: '',
-        image: {uri: '', name: '', type: ''},
-      });
-    }
+    showTopToast(insets.top + 20, '신청 완료');
+    setFormData({
+      name: '',
+      sportName: '',
+      leagueName: '',
+      teamName: '',
+      image: {uri: '', name: '', type: ''},
+    });
   };
 
   return (

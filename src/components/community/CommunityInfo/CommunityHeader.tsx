@@ -38,13 +38,16 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
         <View className="flex-row items-center">
           {playerData.manager && (
             <Pressable
-              onPress={() =>
-                navigation.navigate('Daily', {
-                  playerId: playerData.id,
-                  date: formatBarDate(new Date()),
-                  write: false,
-                })
-              }>
+              onPress={() => {
+                if (playerData.user) {
+                  navigation.navigate('Daily', {
+                    communityId: playerData.id,
+                    date: formatBarDate(new Date()),
+                    write: false,
+                    user: playerData.user,
+                  });
+                }
+              }}>
               <DailySvg width={20} height={20} />
             </Pressable>
           )}

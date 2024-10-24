@@ -7,13 +7,11 @@ export const useGetNotifications = () => {
     queryKey: notificationKeys.lists(),
     queryFn: getNotifications,
     initialPageParam: 0,
-    getNextPageParam: (lastpage, pages) => {
-      if (lastpage.result.last) {
-        return undefined;
-      }
-      return pages.length;
+    getNextPageParam: lastPage => {
+      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
     },
     enabled: false,
+    retry: false,
   });
 };
 
@@ -21,6 +19,7 @@ export const useGetIsUnread = () => {
   return useQuery({
     queryKey: notificationKeys.isUnread(),
     queryFn: getIsUnread,
+    retry: false,
   });
 };
 

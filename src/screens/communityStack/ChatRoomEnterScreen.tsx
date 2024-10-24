@@ -1,12 +1,11 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {Pressable, SafeAreaView, View} from 'react-native';
-import CloseSvg from '../../assets/images/close-black.svg';
+import {SafeAreaView, View} from 'react-native';
 import {useGetChatRoomById} from 'apis/chat/useChats';
 import CustomButton from 'components/common/CustomButton';
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
-import {showBottomToast} from 'utils/toast';
+import {showBottomToast, showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import StackHeader from 'components/common/StackHeader';
 
@@ -15,9 +14,21 @@ const ChatRoomEnterScreen = ({route}) => {
 
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
-  const {data, refetch} = useGetChatRoomById(chatRoomId, true);
+  const {
+    data: chatRoom,
+    refetch,
+    isError,
+    error,
+  } = useGetChatRoomById(chatRoomId, true);
 
-  if (!data) {
+  useEffect(() => {
+    if (isError && error.message === '존재하지 않는 채팅방') {
+      navigation.goBack();
+      showTopToast(insets.top + 20, '채팅방이 삭제됐어요');
+    }
+  }, [error?.message, insets.top, isError, navigation]);
+
+  if (!chatRoom) {
     return null;
   }
 
@@ -26,17 +37,17 @@ const ChatRoomEnterScreen = ({route}) => {
       <StackHeader type="close" />
       <View className="px-[15] py-[10] justify-between flex-1">
         <View className="flex-1 items-center pt-10">
-          <Avatar uri={data.result.image} size={120} />
+          <Avatar uri={chatRoom.image} size={120} />
           <CustomText
             fontWeight="500"
             className="text-gray-600 text-[13px] ml-1 pb-0 mt-4">
-            {data.result.player.koreanName}
+            {chatRoom.community.koreanName}
           </CustomText>
           <CustomText fontWeight="500" className="text-3xl mt-1">
-            {data.result.name}
+            {chatRoom.name}
           </CustomText>
           <CustomText className="text-gray-500 mt-2">
-            {data.result.description}
+            {chatRoom.description}
           </CustomText>
         </View>
         <View className="flex-row justify-between mb-5 mx-1">
@@ -44,17 +55,15 @@ const ChatRoomEnterScreen = ({route}) => {
             <CustomText className="text-gray-500 mr-3 text-[13px]">
               참여 인원
             </CustomText>
-            <CustomText fontWeight="700">{data.result.count}</CustomText>
-            <CustomText>{`/${data.result.max}명`}</CustomText>
+            <CustomText fontWeight="700">{chatRoom.count}</CustomText>
+            <CustomText>{`/${chatRoom.max}명`}</CustomText>
           </View>
           <View className="flex-row items-center">
             <CustomText className="text-gray-500 mr-3 text-[13px]">
               방장
             </CustomText>
-            <Avatar uri={data.result.manager?.image} size={20} />
-            <CustomText className="ml-1">
-              {data.result.manager?.name}
-            </CustomText>
+            <Avatar uri={chatRoom.manager?.image} size={20} />
+            <CustomText className="ml-1">{chatRoom.manager?.name}</CustomText>
           </View>
         </View>
         <CustomButton
@@ -62,13 +71,13 @@ const ChatRoomEnterScreen = ({route}) => {
           text="입장하기"
           onPress={() => {
             refetch();
-            if (data.result.count >= data.result.max) {
+            if (chatRoom.count >= chatRoom.max) {
               showBottomToast(
                 insets.bottom + 20,
                 '입장가능 인원을 초과하였습니다.',
               );
             } else {
-              navigation.replace('ChatRoom', {chatRoomId: data.result.id});
+              navigation.replace('ChatRoom', {chatRoomId: chatRoom.id});
             }
           }}
         />

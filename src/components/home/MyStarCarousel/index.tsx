@@ -19,7 +19,7 @@ const MyStarCarousel = () => {
   const progress = useSharedValue<number>(0);
 
   const {data: communities} = useGetMyCommunities();
-  const {data: noticeData} = useGetNotices();
+  const {data: noticies} = useGetNotices();
 
   const handleConfigurePanGesture = (panGesture: PanGesture) => {
     panGesture.activeOffsetX([-10, 10]);
@@ -60,13 +60,13 @@ const MyStarCarousel = () => {
     }
   });
 
-  if (communities && noticeData) {
+  if (communities && noticies) {
     return (
       <>
         <Carousel
           onConfigurePanGesture={handleConfigurePanGesture}
           loop={false}
-          data={[...(communities || []), ...(noticeData?.result || [])]}
+          data={[...(communities || []), ...(noticies || [])]}
           mode="parallax"
           width={WINDOW_WIDTH}
           height={220}
@@ -79,11 +79,10 @@ const MyStarCarousel = () => {
         />
         <Pagination.Basic
           progress={progress}
-          data={[...(communities || []), ...(noticeData?.result || [])]}
+          data={[...(communities || []), ...(noticies || [])]}
           dotStyle={{
             width: Math.floor(
-              (WINDOW_WIDTH * 0.4) /
-                (communities.length + noticeData?.result.length),
+              (WINDOW_WIDTH * 0.4) / (communities.length + noticies.length),
             ),
             height: 4,
             backgroundColor: '#ebebeb',

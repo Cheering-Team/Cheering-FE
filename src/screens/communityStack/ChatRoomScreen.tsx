@@ -44,7 +44,7 @@ import {Drawer} from 'react-native-drawer-layout';
 import DrawerSvg from '../../assets/images/drawer.svg';
 import ExitSvg from '../../assets/images/exit-gray.svg';
 import AlertModal from 'components/common/AlertModal/AlertModal';
-import {showBottomToast} from 'utils/toast';
+import {showBottomToast, showTopToast} from 'utils/toast';
 import SockJS from 'sockjs-client';
 
 const TextEncodingPolyfill = require('text-encoding');
@@ -74,8 +74,19 @@ const ChatRoomScreen = ({route}) => {
   const client = useRef<StompJs.Client | null>(null);
   const flatListRef = useRef<FlatList>(null);
 
-  const {data, refetch} = useGetChatRoomById(chatRoomId, false);
-  const {data: chatData, hasNextPage, fetchNextPage} = useGetChats(chatRoomId);
+  const {
+    data: chatRoom,
+    refetch,
+    isError,
+    error,
+  } = useGetChatRoomById(chatRoomId, false);
+  const {
+    data: chats,
+    hasNextPage,
+    fetchNextPage,
+    isError: chatIsError,
+    error: chatError,
+  } = useGetChats(chatRoomId);
   const {data: participants} = useGetParticipants(chatRoomId);
   const {mutateAsync: deleteChatRoom} = useDeleteChatRoom();
 
@@ -152,7 +163,7 @@ const ChatRoomScreen = ({route}) => {
   };
 
   const disconnect = () => {
-    if (data?.result.type === 'OFFICIAL') {
+    if (chatRoom?.type === 'OFFICIAL') {
       client.current?.publish({
         destination: '/pub/disconnect',
         body: JSON.stringify({
@@ -202,7 +213,7 @@ const ChatRoomScreen = ({route}) => {
   };
 
   const renderChatMessage: ListRenderItem<Chat> = ({item}) => {
-    if (item.sender.id === data?.result.user?.id) {
+    if (item.sender.id === chatRoom?.user?.id) {
       return (
         <View
           style={{
@@ -308,10 +319,27 @@ const ChatRoomScreen = ({route}) => {
   }, [isRefresh]);
 
   useEffect(() => {
-    setMessages(chatData?.pages.flatMap(page => page.result.chats) || []);
-  }, [chatData]);
+    setMessages(chats?.pages.flatMap(page => page.chats) || []);
+  }, [chats]);
 
-  if (!data || isLoading) {
+  useEffect(() => {
+    if (
+      (isError && error.message === '존재하지 않는 채팅방') ||
+      (chatIsError && chatError.message === '존재하지 않는 채팅방')
+    ) {
+      navigation.goBack();
+      showTopToast(insets.top + 20, '채팅방이 삭제됐어요');
+    }
+  }, [
+    chatError?.message,
+    chatIsError,
+    error?.message,
+    insets.top,
+    isError,
+    navigation,
+  ]);
+
+  if (!chatRoom || isLoading) {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <CustomText fontWeight="500" style={{fontSize: 20}}>
@@ -331,7 +359,7 @@ const ChatRoomScreen = ({route}) => {
       onClose={() => setIsDrawerOpen(false)}
       renderDrawerContent={() => (
         <SafeAreaView className="flex-1">
-          {data.result.type === 'OFFICIAL' ? (
+          {chatRoom.type === 'OFFICIAL' ? (
             <View className="flex-1" />
           ) : (
             <FlatList
@@ -349,10 +377,10 @@ const ChatRoomScreen = ({route}) => {
                     className="flex-row items-center py-[7]"
                     onPress={() =>
                       navigation.navigate('Profile', {
-                        playerUserId: data.result.manager.id,
+                        playerUserId: chatRoom.manager.id,
                       })
                     }>
-                    <Avatar uri={data.result.manager?.image} size={32} />
+                    <Avatar uri={chatRoom.manager?.image} size={32} />
                     <View className="bg-gray-800 rounded-xl px-1 py-[1] mx-[5]">
                       <CustomText
                         fontWeight="600"
@@ -360,7 +388,7 @@ const ChatRoomScreen = ({route}) => {
                         방장
                       </CustomText>
                     </View>
-                    <CustomText>{data.result.manager?.name}</CustomText>
+                    <CustomText>{chatRoom.manager?.name}</CustomText>
                   </Pressable>
                 </>
               }
@@ -383,18 +411,18 @@ const ChatRoomScreen = ({route}) => {
           <Pressable
             className="h-[48] border-t border-t-[#eeeeee] items-center px-4 flex-row-reverse"
             onPress={() =>
-              data.result.manager?.id === data.result.user?.id
+              chatRoom.manager?.id === chatRoom.user?.id
                 ? setIsDeleteAlertOpen(true)
                 : setIsExitAlertOpen(true)
             }>
             <ExitSvg width={24} height={24} />
             <CustomText className="mr-3 text-[#555555] text-[15px]">
-              {data.result.manager?.id === data.result.user?.id
+              {chatRoom.manager?.id === chatRoom.user?.id
                 ? '채팅방 삭제'
                 : '채팅방 나가기'}
             </CustomText>
           </Pressable>
-          {data.result.manager?.id === data.result.user?.id ? (
+          {chatRoom.manager?.id === chatRoom.user?.id ? (
             <AlertModal
               isModalOpen={isDeleteAlertOpen}
               setIsModalOpen={setIsDeleteAlertOpen}
@@ -453,16 +481,16 @@ const ChatRoomScreen = ({route}) => {
                 <CustomText
                   fontWeight="600"
                   style={{fontSize: 17, marginRight: 3}}>
-                  {data?.result.name}
+                  {chatRoom?.name}
                 </CustomText>
-                {data.result.type === 'OFFICIAL' && (
+                {chatRoom.type === 'OFFICIAL' && (
                   <OfficialSvg width={15} height={15} />
                 )}
               </View>
 
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <PersonSvg width={10} height={10} />
-                <CustomText className="color-[#626262] ml-[3]">{`${data.result.count}`}</CustomText>
+                <CustomText className="color-[#626262] ml-[3]">{`${chatRoom.count}`}</CustomText>
                 <View
                   style={{
                     width: 1,
@@ -474,7 +502,7 @@ const ChatRoomScreen = ({route}) => {
                 <Pressable
                   onPress={() =>
                     navigation.navigate('Community', {
-                      playerId: data.result.player.id,
+                      playerId: chatRoom.player.id,
                     })
                   }>
                   <CustomText style={{color: '#626262', marginRight: 2}}>
@@ -489,7 +517,7 @@ const ChatRoomScreen = ({route}) => {
               <DrawerSvg width={27} height={27} style={{marginRight: 5}} />
             </Pressable>
           </View>
-          {data?.result.description !== '' && (
+          {chatRoom?.description !== '' && (
             <View
               className="mt-[5] mx-[10] rounded-[10px] bg-white py-[10] px-[15] flex-row border border-[#eeeeee]"
               style={{
@@ -505,7 +533,7 @@ const ChatRoomScreen = ({route}) => {
               <CustomText
                 className="flex-1 text-[#484848] text-[15px] mx-[10]"
                 numberOfLines={isDescriptionOpen ? undefined : 2}>
-                {data?.result.description}
+                {chatRoom?.description}
               </CustomText>
               <Pressable onPress={() => setIsDescriptionOpen(prev => !prev)}>
                 {isDescriptionOpen ? (

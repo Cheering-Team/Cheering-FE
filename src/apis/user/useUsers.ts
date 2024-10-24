@@ -56,7 +56,11 @@ export const useConnectSocial = () => {
 };
 
 export const useGetUserInfo = () => {
-  return useQuery({queryKey: userKeys.detail(), queryFn: getUserInfo});
+  return useQuery({
+    queryKey: userKeys.detail(),
+    queryFn: getUserInfo,
+    retry: false,
+  });
 };
 
 export const useUpdateUserName = () => {

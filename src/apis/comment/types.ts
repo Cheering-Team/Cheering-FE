@@ -9,6 +9,7 @@ export interface Comment {
   reCount: number;
   writer: Fan;
   isWriter: boolean;
+  status?: 'temp';
 }
 
 export interface ReComment {
@@ -18,6 +19,7 @@ export interface ReComment {
   to: Fan;
   writer: Fan;
   isWriter: boolean;
+  status?: 'temp';
 }
 
 // 요청
@@ -29,12 +31,23 @@ export interface ReCommentIdPayload {
   reCommentId: number;
 }
 
+export interface ReportCommentPayload {
+  postId: number;
+  commentId: number;
+}
+
+export interface ReportReCommentPayload {
+  postId: number;
+  reCommentId: number;
+}
+
 export interface WriteCommentPayload {
   postId: number;
   content: string;
 }
 
 export interface WriteReCommentPayload {
+  postId: number;
   commentId: number;
   content: string;
   toId: number;
@@ -43,8 +56,4 @@ export interface WriteReCommentPayload {
 // 응답
 export interface GetCommentsResponse extends Page {
   comments: Comment[];
-}
-
-export interface GetReCommentsResponse {
-  reComments: ReComment[];
 }

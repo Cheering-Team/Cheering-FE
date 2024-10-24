@@ -19,17 +19,24 @@ import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import OfficialSvg from 'assets/images/official.svg';
+import {queryClient} from '../../../../App';
+import {postKeys} from 'apis/post/queries';
+import {commentKeys, reCommentKeys} from 'apis/comment/queries';
 
 interface CommentWriterProps {
   bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
   comment: Comment | ReComment;
   type: 'comment' | 'reComment';
+  postId: number;
+  under: number;
 }
 
 const CommentWriter = ({
   bottomSheetModalRef,
   comment,
   type,
+  postId,
+  under,
 }: CommentWriterProps) => {
   const insets = useSafeAreaInsets();
   const navigation =
@@ -37,26 +44,51 @@ const CommentWriter = ({
 
   const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
 
-  const {mutate: deleteComment} = useDeleteComment();
-  const {mutate: deleteReComment} = useDeleteReComment();
-  const {mutate: reportComment} = useReportComment();
-  const {mutate: reportReComment} = useReportReComment();
+  const {mutate: deleteComment} = useDeleteComment(postId);
+  const {mutate: deleteReComment} = useDeleteReComment(comment.id);
+  const {mutateAsync: reportComment} = useReportComment(postId);
+  const {mutateAsync: reportReComment} = useReportReComment(under);
 
   const handleDeleteComment = () => {
-    showTopToast(insets.top + 20, '삭제중..');
     deleteComment({commentId: comment.id});
   };
 
   const handleDeleteReComment = () => {
-    showTopToast(insets.top + 20, '삭제중..');
     deleteReComment({reCommentId: comment.id});
+    showTopToast(insets.top + 20, '삭제 완료');
   };
 
-  const handleReportComment = () => {
-    reportComment({commentId: comment.id});
+  const handleReportComment = async () => {
+    try {
+      await reportComment({postId, commentId: comment.id});
+    } catch (error: any) {
+      if (error.message === '존재하지 않는 게시글') {
+        showTopToast(insets.top + 20, '삭제된 글입니다');
+        navigation.goBack();
+        queryClient.invalidateQueries({queryKey: postKeys.lists()});
+      }
+      if (error.message === '존재하지 않는 댓글') {
+        showTopToast(insets.top + 20, '삭제된 댓글입니다');
+        queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
+      }
+    }
   };
-  const handleReportReComment = () => {
-    reportReComment({reCommentId: comment.id});
+  const handleReportReComment = async () => {
+    try {
+      await reportReComment({postId, reCommentId: comment.id});
+    } catch (error: any) {
+      if (error.message === '존재하지 않는 게시글') {
+        showTopToast(insets.top + 20, '삭제된 글입니다');
+        navigation.goBack();
+        queryClient.invalidateQueries({queryKey: postKeys.lists()});
+      }
+      if (error.message === '존재하지 않는 댓글') {
+        showTopToast(insets.top + 20, '삭제된 댓글입니다');
+        queryClient.invalidateQueries({
+          queryKey: reCommentKeys.list(comment.id),
+        });
+      }
+    }
   };
 
   return (

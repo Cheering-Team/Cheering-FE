@@ -9,6 +9,7 @@ import {
   GetPostsResponse,
   Post,
   PostIdPayload,
+  PostLikeResponse,
   WriteDailyPayload,
   WritePostPayload,
 } from './types';
@@ -94,10 +95,10 @@ export const getPostById = async ({
 // 게시글 좋아요 토글
 export const likePost = async (data: PostIdPayload) => {
   const {postId} = data;
-  const response = await axiosInstance.post<ApiResponse<null>>(
+  const response = await axiosInstance.post<ApiResponse<PostLikeResponse>>(
     `/posts/${postId}/likes`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 게시글 수정
@@ -129,7 +130,7 @@ export const editPost = async (data: EditPostPayload) => {
       },
     },
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 게시글 삭제
@@ -138,7 +139,7 @@ export const deletePost = async (data: PostIdPayload) => {
   const response = await axiosInstance.delete<ApiResponse<null>>(
     `/posts/${postId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 게시글 신고
@@ -147,7 +148,7 @@ export const reportPost = async (data: PostIdPayload) => {
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/posts/${postId}/reports`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 데일리 작성
@@ -157,7 +158,7 @@ export const writeDaily = async (data: WriteDailyPayload) => {
     `/communities/${communityId}/dailys`,
     {content},
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 특정 날짜 데일리 조회
@@ -172,7 +173,7 @@ export const getDailys = async ({
   const response = await axiosInstance.get<ApiResponse<GetDailysResponse>>(
     `/communities/${communityId}/dailys?date=${date}&page=${pageParam}&size=10`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 데일리 수정
@@ -182,7 +183,7 @@ export const editDaily = async (data: EditDailyPayload) => {
     `/dailys/${dailyId}`,
     {content},
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 데일리 삭제
@@ -191,7 +192,7 @@ export const deleteDaily = async (data: DailyIdPayload) => {
   const response = await axiosInstance.delete<ApiResponse<null>>(
     `/dailys/${dailyId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 데일리 유무 로드
@@ -205,5 +206,5 @@ export const getDailyExist = async ({
     `/communities/${communityId}/dailys/exist`,
   );
 
-  return response.data;
+  return response.data.result;
 };

@@ -20,13 +20,14 @@ const DailyCard = ({daily}: DailyCardProps) => {
   return (
     <Pressable
       className="bg-white px-4 py-3 h-[110] justify-between  rounded-xl mt-[10] border border-gray-200"
-      onPress={() =>
+      onPress={() => {
         navigation.navigate('Daily', {
-          playerId: daily.community.id,
+          communityId: daily.community.id,
           date: formatBarDate(new Date(daily.createdAt)),
           write: false,
-        })
-      }
+          user: daily.user,
+        });
+      }}
       style={{
         shadowColor: '#000000',
         shadowOffset: {

@@ -54,7 +54,12 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
     isError,
     error,
   } = useGetPostById(postId);
-  const {data, isLoading, hasNextPage, fetchNextPage} = useGetComments(postId);
+  const {
+    data: comments,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+  } = useGetComments(postId, !!post && !postIsLoading && !isError);
 
   const loadComment = () => {
     if (hasNextPage) {
@@ -80,7 +85,7 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
           <PostHeader community={post.community} />
           <FlatList
             data={
-              isLoading ? [] : data?.pages.flatMap(page => page.result.comments)
+              isLoading ? [] : comments?.pages.flatMap(page => page.comments)
             }
             renderItem={({item}) => (
               <Comment
@@ -88,6 +93,7 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                 setUnder={setUnder}
                 setTo={setTo}
                 inputRef={commentInputRef}
+                postId={postId}
               />
             )}
             onEndReached={loadComment}
@@ -181,11 +187,12 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
               </>
             }
             ListEmptyComponent={
-              data ? <ListEmpty type="comment" /> : <CommentSkeleton />
+              comments ? <ListEmpty type="comment" /> : <CommentSkeleton />
             }
           />
           <CommentInput
             postId={postId}
+            writer={post.user}
             to={to}
             setTo={setTo}
             under={under}

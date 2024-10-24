@@ -3,40 +3,57 @@ import {
   BottomSheetFooterProps,
   BottomSheetTextInput,
 } from '@gorhom/bottom-sheet';
-import React, {useState} from 'react';
+import React, {RefObject, useState} from 'react';
 import {Platform, Pressable, View} from 'react-native';
 import ArrowSvg from '../../../assets/images/arrow_up.svg';
 import {useWriteComment} from 'apis/comment/useComments';
-import {hideToast, showTopToast} from 'utils/toast';
+import {showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Fan} from 'apis/user/types';
+import {queryClient} from '../../../../App';
+import {dailyKeys} from 'apis/post/queries';
+import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
 interface DailyTextInputProps extends BottomSheetFooterProps {
   dailyId: number | null;
   isToady: boolean;
+  writer?: Fan;
+  communityId: number;
+  date: string;
+  bottomSheetRef: RefObject<BottomSheetMethods>;
 }
 
 const DailyTextInput = ({
   dailyId,
   isToady,
+  writer,
+  bottomSheetRef,
+  communityId,
+  date,
   animatedFooterPosition,
 }: DailyTextInputProps) => {
   const insets = useSafeAreaInsets();
 
   const [content, setContent] = useState('');
 
-  const {mutateAsync: writeComment} = useWriteComment();
+  const {mutateAsync: writeComment} = useWriteComment(dailyId, writer);
 
   const handleWriteComment = async () => {
     if (dailyId) {
-      setContent('');
-      showTopToast(insets.top + 20, '작성중..', false);
-
-      const data = await writeComment({postId: dailyId, content});
-
-      hideToast();
-
-      if (data.message === '작성 완료') {
-        return;
+      try {
+        setContent('');
+        await writeComment({postId: dailyId, content});
+      } catch (error: any) {
+        if (error.code === 2004) {
+          showTopToast(insets.top + 20, '부적절한 단어가 포함되어 있습니다');
+        }
+        if (error.code === 404) {
+          bottomSheetRef.current?.close();
+          showTopToast(insets.top + 20, '글이 삭제되었어요');
+          queryClient.invalidateQueries({
+            queryKey: dailyKeys.list(communityId, date),
+          });
+        }
       }
     }
   };

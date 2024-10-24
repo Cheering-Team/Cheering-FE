@@ -29,7 +29,7 @@ export const createChatRoom = async (data: CreateChatRoomPayload) => {
       },
     },
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 채팅방 목록 조회
@@ -42,7 +42,7 @@ export const getChatRooms = async ({
   const response = await axiosInstance.get<ApiResponse<ChatRoomListResponse[]>>(
     `/communities/${communityId}/chatrooms`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 참여중인 채팅방 목록 조회
@@ -52,7 +52,7 @@ export const getMyChatRooms = async () => {
     await axiosInstance.get<ApiResponse<ChatRoomListResponse[]>>(
       '/my/chatrooms',
     );
-  return response.data;
+  return response.data.result;
 };
 
 // 채팅방 정보 조회
@@ -65,7 +65,7 @@ export const getChatRoomById = async ({
   const response = await axiosInstance.get<ApiResponse<ChatRoom>>(
     `/chatrooms/${chatRoomId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 채팅 목록 조회
@@ -80,7 +80,7 @@ export const getChats = async ({
   const response = await axiosInstance.get<ApiResponse<GetChatsResponse>>(
     `/chatrooms/${chatRoomId}/chats?page=${pageParam}&size=20`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 채팅 참여자 조회

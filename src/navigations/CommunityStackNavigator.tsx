@@ -13,14 +13,15 @@ import ChatRoomEnterScreen from 'screens/communityStack/ChatRoomEnterScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
 import DailyScreen from 'screens/communityStack/DailyScreen';
 import {Post} from 'apis/post/types';
+import {Fan} from 'apis/user/types';
 
 export type CommunityStackParamList = {
   Community: {communityId: number};
   PostWrite: {communityId: number; post?: Post};
   Post: {postId: number};
-  Daily: {playerId: number; date: string; write: boolean};
+  Daily: {communityId: number; date: string; write: boolean; user: Fan};
   ChatRoom: {chatRoomId: number};
-  CreateChatRoom: {playerId: number};
+  CreateChatRoom: {communityId: number};
   ChatRoomEnter: {chatRoomId: number};
   Profile: {fanId: number};
   ProfileEdit: {fanId: number};

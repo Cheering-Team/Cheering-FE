@@ -9,9 +9,9 @@ import Carousel from 'react-native-reanimated-carousel';
 const HomeBanner = () => {
   const navigation = useNavigation();
 
-  const {data} = useGetNotices();
+  const {data: noticies} = useGetNotices();
 
-  if (!data) {
+  if (!noticies) {
     return null;
   }
 
@@ -20,7 +20,7 @@ const HomeBanner = () => {
       loop={false}
       width={WINDOW_WIDTH}
       height={WINDOW_WIDTH * 0.75}
-      data={data.result}
+      data={noticies}
       renderItem={({item}) => (
         <TouchableOpacity
           activeOpacity={1}

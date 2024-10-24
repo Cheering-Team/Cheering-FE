@@ -127,7 +127,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                   </>
                 ) : (
                   <>
-                    {data?.result && (
+                    {data && (
                       <View
                         style={{
                           position: 'absolute',

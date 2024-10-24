@@ -27,7 +27,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {data: dailyData} = useGetDailys(
+  const {data: dailys} = useGetDailys(
     community.id,
     formatBarDate(new Date()),
     community.manager !== null,
@@ -86,45 +86,51 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 
         <View>
           {community.type === 'PLAYER' &&
-            dailyData &&
-            dailyData.pages[0].result.dailys.length !== 0 && (
+            dailys &&
+            dailys.pages[0].dailys.length !== 0 && (
               <TouchableOpacity
                 activeOpacity={1}
                 className="mb-4 flex-row items-center"
-                onPress={() =>
-                  navigation.navigate('CommunityStack', {
-                    screen: 'Daily',
-                    params: {
-                      communityId: community.id,
-                      date: formatBarDate(new Date()),
-                    },
-                  })
-                }>
+                onPress={() => {
+                  if (community.user) {
+                    navigation.navigate('CommunityStack', {
+                      screen: 'Daily',
+                      params: {
+                        communityId: community.id,
+                        date: formatBarDate(new Date()),
+                        user: community.user,
+                      },
+                    });
+                  }
+                }}>
                 <Avatar uri={community.image} size={27} />
                 <CustomText
                   numberOfLines={1}
                   fontWeight="600"
                   className="ml-3 text-white text-[16px] flex-1">
-                  {dailyData?.pages[0].result.dailys[0].content}
+                  {dailys?.pages[0].dailys[0].content}
                 </CustomText>
               </TouchableOpacity>
             )}
           {community.type === 'PLAYER' &&
-            dailyData?.pages[0].result.dailys.length === 0 &&
+            dailys?.pages[0].dailys.length === 0 &&
             community.user?.type === 'MANAGER' && (
               <TouchableOpacity
                 activeOpacity={1}
                 className="mb-4 flex-row items-center"
-                onPress={() =>
-                  navigation.navigate('CommunityStack', {
-                    screen: 'Daily',
-                    params: {
-                      communityId: community.id,
-                      date: formatBarDate(new Date()),
-                      write: true,
-                    },
-                  })
-                }>
+                onPress={() => {
+                  if (community.user) {
+                    navigation.navigate('CommunityStack', {
+                      screen: 'Daily',
+                      params: {
+                        communityId: community.id,
+                        date: formatBarDate(new Date()),
+                        write: true,
+                        user: community.user,
+                      },
+                    });
+                  }
+                }}>
                 <Avatar uri={community.image} size={27} />
                 <CustomText
                   numberOfLines={1}

@@ -13,7 +13,7 @@ interface DailyListProps {
 
 const DailyList = ({community}: DailyListProps) => {
   const {
-    data: dailyData,
+    data: dailys,
     hasNextPage,
     fetchNextPage,
   } = useGetDailys(community.id, '', true);
@@ -21,18 +21,17 @@ const DailyList = ({community}: DailyListProps) => {
   const loadDaily = useCallback(
     (_: number, absoluteProgress: number) => {
       if (
-        dailyData &&
+        dailys &&
         hasNextPage &&
-        absoluteProgress >=
-          dailyData.pages.flatMap(page => page.result.dailys).length - 5
+        absoluteProgress >= dailys.pages.flatMap(page => page.dailys).length - 5
       ) {
         fetchNextPage();
       }
     },
-    [dailyData, fetchNextPage, hasNextPage],
+    [dailys, fetchNextPage, hasNextPage],
   );
 
-  if (!dailyData) {
+  if (!dailys) {
     return (
       <SkeletonPlaceholder backgroundColor="#f4f4f4" highlightColor="#ffffff">
         <View style={{height: 90, margin: 20, borderRadius: 10}} />
@@ -40,13 +39,13 @@ const DailyList = ({community}: DailyListProps) => {
     );
   }
 
-  if (dailyData.pages.flatMap(page => page.result.dailys).length === 0) {
+  if (dailys.pages.flatMap(page => page.dailys).length === 0) {
     return null;
   }
 
   return (
     <Carousel
-      data={dailyData?.pages.flatMap(page => page.result.dailys)}
+      data={dailys?.pages.flatMap(page => page.dailys)}
       renderItem={({item}) => <DailyCard daily={item} />}
       width={WINDOW_WIDTH}
       height={130}

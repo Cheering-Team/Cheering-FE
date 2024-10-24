@@ -4,13 +4,14 @@ import {
   Comment,
   CommentIdPayload,
   GetCommentsResponse,
-  GetReCommentsResponse,
+  ReComment,
   ReCommentIdPayload,
+  ReportCommentPayload,
+  ReportReCommentPayload,
   WriteCommentPayload,
   WriteReCommentPayload,
 } from './types';
 import {commentKeys, reCommentKeys} from './queries';
-import {PostIdPayload} from 'apis/post/types';
 
 //// 댓글
 
@@ -23,7 +24,7 @@ export const writeComment = async (data: WriteCommentPayload) => {
       content,
     },
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 댓글 목록 조회 (무한 스크롤)
@@ -38,7 +39,7 @@ export const getComments = async ({
   const response = await axiosInstance.get<ApiResponse<GetCommentsResponse>>(
     `/posts/${postId}/comments?page=${pageParam}&size=15`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 댓글 삭제
@@ -47,14 +48,14 @@ export const deleteComment = async (data: CommentIdPayload) => {
   const response = await axiosInstance.delete<ApiResponse<null>>(
     `/comments/${commentId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 댓글 신고
-export const reportComment = async (data: CommentIdPayload) => {
-  const {commentId} = data;
+export const reportComment = async (data: ReportCommentPayload) => {
+  const {postId, commentId} = data;
   const response = await axiosInstance.post<ApiResponse<null>>(
-    `/comments/${commentId}/reports`,
+    `posts/${postId}/comments/${commentId}/reports`,
   );
   return response.data;
 };
@@ -69,22 +70,22 @@ export const getRandomComment = async ({
   const response = await axiosInstance.get<ApiResponse<Comment | null>>(
     `/posts/${postId}/random-comments`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 //// 답글
 
 // 답글 작성
 export const writeReComment = async (data: WriteReCommentPayload) => {
-  const {commentId, content, toId} = data;
+  const {postId, commentId, content, toId} = data;
   const response = await axiosInstance.post<ApiResponse<Id>>(
-    `/comments/${commentId}/re`,
+    `posts/${postId}/comments/${commentId}/re`,
     {
       content,
       toId,
     },
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 답글 불러오기
@@ -94,10 +95,10 @@ export const getReComments = async ({
   queryKey: ReturnType<typeof reCommentKeys.list>;
 }) => {
   const [, , {commentId}] = queryKey;
-  const response = await axiosInstance.get<ApiResponse<GetReCommentsResponse>>(
+  const response = await axiosInstance.get<ApiResponse<ReComment[]>>(
     `/comments/${commentId}/re`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 답글 삭제
@@ -106,14 +107,14 @@ export const deleteReComment = async (data: ReCommentIdPayload) => {
   const response = await axiosInstance.delete<ApiResponse<null>>(
     `/reComments/${reCommentId}`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 답글 신고
-export const reportReComment = async (data: ReCommentIdPayload) => {
-  const {reCommentId} = data;
+export const reportReComment = async (data: ReportReCommentPayload) => {
+  const {postId, reCommentId} = data;
   const response = await axiosInstance.post<ApiResponse<null>>(
-    `/reComments/${reCommentId}/reports`,
+    `/posts/${postId}/reComments/${reCommentId}/reports`,
   );
-  return response.data;
+  return response.data.result;
 };
