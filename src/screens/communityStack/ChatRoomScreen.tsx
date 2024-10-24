@@ -87,14 +87,18 @@ const ChatRoomScreen = ({route}) => {
     isError: chatIsError,
     error: chatError,
   } = useGetChats(chatRoomId);
-  const {data: participants} = useGetParticipants(chatRoomId);
+  const {
+    data: participants,
+    isError: participantIsError,
+    error: participantError,
+  } = useGetParticipants(chatRoomId);
   const {mutateAsync: deleteChatRoom} = useDeleteChatRoom();
 
   const connect = async () => {
     const accessToken = await EncryptedStorage.getItem('accessToken');
 
     if (accessToken) {
-      const socket = new SockJS('http://192.168.0.43:8080/ws');
+      const socket = new SockJS('http://192.168.0.10:8080/ws');
       client.current = new StompJs.Client({
         webSocketFactory: () => socket,
         reconnectDelay: 5000, // 자동 재연결
@@ -297,13 +301,11 @@ const ChatRoomScreen = ({route}) => {
   };
 
   const handleDeleteChatRoom = async () => {
-    const data = await deleteChatRoom({chatRoomId});
-    if (data.message === '채팅방 삭제 완료') {
-      client.current?.deactivate();
-      queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
-      showBottomToast(insets.bottom + 20, data.message);
-      navigation.goBack();
-    }
+    await deleteChatRoom({chatRoomId});
+    client.current?.deactivate();
+    queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
+    showTopToast(insets.top + 20, '삭제 완료');
+    navigation.goBack();
   };
 
   useEffect(() => {
@@ -325,10 +327,12 @@ const ChatRoomScreen = ({route}) => {
   useEffect(() => {
     if (
       (isError && error.message === '존재하지 않는 채팅방') ||
-      (chatIsError && chatError.message === '존재하지 않는 채팅방')
+      (chatIsError && chatError.message === '존재하지 않는 채팅방') ||
+      (participantIsError &&
+        participantError.message === '존재하지 않는 채팅방')
     ) {
       navigation.goBack();
-      showTopToast(insets.top + 20, '채팅방이 삭제됐어요');
+      showTopToast(insets.top + 20, '방장에 의해 채팅방이 삭제됐습니다');
     }
   }, [
     chatError?.message,
@@ -337,6 +341,8 @@ const ChatRoomScreen = ({route}) => {
     insets.top,
     isError,
     navigation,
+    participantError?.message,
+    participantIsError,
   ]);
 
   if (!chatRoom || isLoading) {
