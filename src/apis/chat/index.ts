@@ -93,7 +93,7 @@ export const getParticipants = async ({
   const response = await axiosInstance.get<ApiResponse<Fan[]>>(
     `/chatrooms/${chatRoomId}/participants`,
   );
-  return response.data;
+  return response.data.result;
 };
 
 // 채팅방 삭제
@@ -102,5 +102,5 @@ export const deleteChatRoom = async (data: ChatRoomIdPayload) => {
   const response = await axiosInstance.delete<ApiResponse<null>>(
     `/chatrooms/${chatRoomId}`,
   );
-  return response.data;
+  return response.data.result;
 };
