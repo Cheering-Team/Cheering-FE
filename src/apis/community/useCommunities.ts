@@ -18,7 +18,7 @@ import {
   getTeamById,
 } from './index';
 import {queryClient} from '../../../App';
-import {showBottomToast, showTopToast} from '../../utils/toast';
+import {showTopToast} from '../../utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {postKeys} from '../post/queries';
@@ -134,6 +134,12 @@ export const useUpdateFanImage = () => {
       queryClient.invalidateQueries({
         queryKey: fanKeys.detail(fanId),
       });
+      queryClient.invalidateQueries({
+        queryKey: communityKeys.details(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: postKeys.lists(),
+      });
       image
         ? showTopToast(insets.top + 20, '수정이 완료되었습니다.')
         : showTopToast(insets.top + 20, '삭제가 완료되었습니다.');
@@ -166,15 +172,9 @@ export const useDeleteFan = () => {
         index: 0,
         routes: [{name: 'HomeStack'}],
       });
-      queryClient.invalidateQueries({
-        queryKey: communityKeys.details(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: postKeys.lists(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: chatRoomKeys.lists(),
-      });
+      queryClient.invalidateQueries({queryKey: communityKeys.lists()});
+      queryClient.invalidateQueries({queryKey: postKeys.lists()});
+      queryClient.removeQueries();
     },
   });
 };

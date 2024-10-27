@@ -9,6 +9,7 @@ import {formatComma} from '../../utils/format';
 import {Community} from 'apis/community/types';
 import OfficialSvg from '../../assets/images/official.svg';
 import CommunitySkeleton from 'components/skeleton/CommunitySkeleton';
+import FastImage from 'react-native-fast-image';
 
 interface PlayerListProps {
   type: 'Team' | 'Search';
@@ -46,7 +47,7 @@ const PlayerList = ({
               params: {communityId: item.id},
             });
           }}>
-          <Image
+          <FastImage
             source={{uri: item.image}}
             resizeMode={item.sportName ? 'contain' : 'cover'}
             style={{
@@ -72,16 +73,12 @@ const PlayerList = ({
                   {teamName || (item.teams && item.teams[0].name)}
                 </CustomText>
               )}
-              <View className="flex-row">
+              <View className="flex-row items-center">
                 <CustomText fontWeight="500" style={{fontSize: 16}}>
                   {item.koreanName}
                 </CustomText>
                 {item.manager && (
-                  <OfficialSvg
-                    width={12}
-                    height={12}
-                    style={{marginTop: 5, marginLeft: 1}}
-                  />
+                  <OfficialSvg width={12} height={12} style={{marginLeft: 2}} />
                 )}
               </View>
             </View>

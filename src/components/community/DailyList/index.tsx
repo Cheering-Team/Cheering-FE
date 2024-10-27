@@ -16,7 +16,7 @@ const DailyList = ({community}: DailyListProps) => {
     data: dailys,
     hasNextPage,
     fetchNextPage,
-  } = useGetDailys(community.id, '', true);
+  } = useGetDailys(community.id, '', community.manager !== null);
 
   const loadDaily = useCallback(
     (_: number, absoluteProgress: number) => {

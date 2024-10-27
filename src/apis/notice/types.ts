@@ -1,4 +1,4 @@
-import {ImageType} from 'apis/post/types';
+import {ImagePayload, ImageType} from 'apis/post/types';
 
 export interface Notice {
   id: number;
@@ -14,7 +14,7 @@ export interface ApplyPayload {
   field2: string;
   field3: string;
   field4: string;
-  image: ImageType;
+  image: ImagePayload;
 }
 
 // 타입가드

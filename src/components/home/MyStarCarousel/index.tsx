@@ -7,18 +7,21 @@ import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from 'screens/homeStack/HomeScreen';
 import {PanGesture, Pressable} from 'react-native-gesture-handler';
 import MyStarCard from '../MyStarCard';
-import {useGetMyCommunities} from 'apis/community/useCommunities';
 import {useGetNotices} from 'apis/notice/useNotices';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {View} from 'react-native';
 import {queryClient} from '../../../../App';
 import {communityKeys} from 'apis/community/queries';
+import {Community} from 'apis/community/types';
 
-const MyStarCarousel = () => {
+interface MyStarCarouselProps {
+  communities?: Community[];
+}
+
+const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const progress = useSharedValue<number>(0);
 
-  const {data: communities} = useGetMyCommunities();
   const {data: noticies} = useGetNotices();
 
   const handleConfigurePanGesture = (panGesture: PanGesture) => {

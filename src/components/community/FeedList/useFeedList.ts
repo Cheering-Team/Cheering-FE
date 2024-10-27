@@ -3,7 +3,7 @@ import {useGetPosts} from '../../../apis/post/usePosts';
 import {FilterType} from '../../../apis/post/types';
 import {Community} from 'apis/community/types';
 
-export const useFeedList = (playerData: Community) => {
+export const useFeedList = (community: Community) => {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
 
   const {
@@ -14,10 +14,10 @@ export const useFeedList = (playerData: Community) => {
     hasNextPage,
     isFetchingNextPage,
   } = useGetPosts(
-    playerData.id,
+    community.id,
     'FAN_POST',
     selectedFilter,
-    playerData.user !== null,
+    community.user !== null,
   );
 
   const loadPosts = () => {

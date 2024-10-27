@@ -1,7 +1,7 @@
 import React from 'react';
-import {Image, ImageProps} from 'react-native';
+import FastImage, {FastImageProps} from 'react-native-fast-image';
 
-interface AvatarProps extends ImageProps {
+interface AvatarProps extends FastImageProps {
   uri?: string | null;
   size: number;
 }
@@ -14,7 +14,7 @@ const Avatar = (props: AvatarProps) => {
     ...rest
   } = props;
   return (
-    <Image
+    <FastImage
       source={{
         uri:
           uri ||

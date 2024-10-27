@@ -25,6 +25,7 @@ import {teamKeys} from 'apis/community/queries';
 import {Sport} from 'apis/community/types';
 import {IdName} from 'apis/types';
 import TeamSkeleton from 'components/skeleton/TeamSkeleton';
+import FastImage from 'react-native-fast-image';
 
 type CategoryScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -157,8 +158,8 @@ const CategoryScreen = ({
                     });
                   }
                 }}>
-                <Image
-                  resizeMode="center"
+                <FastImage
+                  resizeMode="contain"
                   source={{uri: item.image}}
                   className="w-[55] h-[55] bg-white rounded-[13px] mb-[5]"
                 />

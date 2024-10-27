@@ -1,17 +1,14 @@
 import axios from 'axios';
 import * as RootNavigation from '../navigations/RootNavigation';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import Toast from 'react-native-toast-message';
 import {queryClient} from '../../App';
-import {showBottomToast, showTopToast} from '../utils/toast';
-import {postKeys} from './post/queries';
-import {commentKeys, reCommentKeys} from './comment/queries';
+import {showBottomToast} from '../utils/toast';
 import {Platform} from 'react-native';
 
 export const axiosInstance = axios.create({
   baseURL:
     Platform.OS === 'ios'
-      ? 'http://192.168.0.10:8080/api'
+      ? 'http://192.168.0.26:8080/api'
       : 'http://10.0.2.2:8080/api',
 });
 

@@ -1,4 +1,10 @@
-import React, {Dispatch, RefObject, SetStateAction, useState} from 'react';
+import React, {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 import {ImageBackground, Pressable, StyleSheet, View} from 'react-native';
 import CustomText from '../../../common/CustomText';
 import Avatar from '../../../common/Avatar';
@@ -12,6 +18,9 @@ import {showTopToast} from 'utils/toast';
 import {Community} from 'apis/community/types';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
+import LoadingOverlay from 'components/common/LoadingOverlay';
+import {Image} from 'react-native-compressor';
+import {ImagePayload} from 'apis/post/types';
 
 interface Props {
   playerData: Community;
@@ -24,7 +33,7 @@ const JoinProfile = (props: Props) => {
 
   const insets = useSafeAreaInsets();
 
-  const [imageData, setImageData] = useState<ImageType>({
+  const [imageData, setImageData] = useState<ImagePayload>({
     uri: '',
     name: '',
     type: '',
@@ -33,11 +42,13 @@ const JoinProfile = (props: Props) => {
   const [nickname, setNickname] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [nicknameInvalidMessage, setNicknameInvalidMessage] = useState('');
+  const [imageLoding, setImageLoding] = useState(false);
 
-  const {mutateAsync: joinCommunity} = useJoinCommunity();
+  const {mutateAsync: joinCommunity, isPending} = useJoinCommunity();
 
   const imageUpload = async () => {
     try {
+      setImageLoding(true);
       const response = await openPicker({
         usedCameraButton: true,
         mediaType: 'image',
@@ -50,14 +61,15 @@ const JoinProfile = (props: Props) => {
         tapHereToChange: '앨범',
         selectedColor: '#0988ff',
       });
-
       setImageData({
-        uri: response.crop.path,
+        uri: response.path,
         name: response.fileName || '',
         type: response.mime,
       });
     } catch (e) {
       //
+    } finally {
+      setImageLoding(false);
     }
   };
 
@@ -70,10 +82,19 @@ const JoinProfile = (props: Props) => {
       return;
     }
     try {
+      let result = '';
+      if (imageData.uri) {
+        result = await Image.compress(imageData.uri, {
+          compressionMethod: 'manual',
+          maxWidth: 1600,
+          quality: 0.7,
+        });
+      }
+
       await joinCommunity({
         communityId: playerData.id,
         name: nickname,
-        image: imageData,
+        image: {uri: result, name: imageData.name, type: imageData.type},
       });
       bottomSheetModalRef.current?.dismiss();
       setRefreshKey((prev: number) => prev + 1);
@@ -91,7 +112,9 @@ const JoinProfile = (props: Props) => {
   };
 
   return (
-    <View className="flex-1 w-[90%] items-center justify-between mt-1">
+    <View className="flex-1 w-[90%] items-center mt-1">
+      <LoadingOverlay isLoading={imageLoding} type="LOADING" />
+      <LoadingOverlay isLoading={isPending} type="OVERLAY" />
       <View className="w-full items-center">
         <CustomText fontWeight="600" style={styles.profileTitle}>
           커뮤니티 가입
@@ -133,7 +156,9 @@ const JoinProfile = (props: Props) => {
         type="normal"
         disabled={nickname.length < 2}
         onPress={handleJoinCommunity}
+        isLoading={isPending}
       />
+      {/* <View className="h-[200] w-full bg-red-500" /> */}
     </View>
   );
 };

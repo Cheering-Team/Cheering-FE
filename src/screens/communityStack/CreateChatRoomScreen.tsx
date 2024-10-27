@@ -11,6 +11,8 @@ import {NAME_REGEX} from 'constants/regex';
 import {showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
+import {Image} from 'react-native-compressor';
+import LoadingOverlay from 'components/common/LoadingOverlay';
 
 const CreateChatRoomScreen = ({navigation, route}) => {
   const {communityId} = route.params;
@@ -31,6 +33,7 @@ const CreateChatRoomScreen = ({navigation, route}) => {
     max: 0,
   });
   const [isValid, setIsValid] = useState(true);
+  const [imageLoding, setImageLoding] = useState(false);
 
   const handleChange = (key, value) => {
     if (key === 'name') {
@@ -44,6 +47,7 @@ const CreateChatRoomScreen = ({navigation, route}) => {
 
   const imageUpload = async () => {
     try {
+      setImageLoding(true);
       const response = await openPicker({
         usedCameraButton: true,
         mediaType: 'image',
@@ -64,6 +68,8 @@ const CreateChatRoomScreen = ({navigation, route}) => {
       });
     } catch (e) {
       //
+    } finally {
+      setImageLoding(false);
     }
   };
 
@@ -76,6 +82,20 @@ const CreateChatRoomScreen = ({navigation, route}) => {
       showTopToast(insets.top + 20, '최대 인원수를 선택해주세요.');
       return;
     }
+
+    let result = '';
+    if (formData.image.uri) {
+      result = await Image.compress(formData.image.uri, {
+        compressionMethod: 'manual',
+        maxWidth: 1600,
+        quality: 0.7,
+      });
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      image: {uri: result, name: prev.image.name, type: prev.image.type},
+    }));
 
     try {
       const data = await createChatRoom({
@@ -94,6 +114,7 @@ const CreateChatRoomScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView className="flex-1">
+      <LoadingOverlay isLoading={imageLoding} type="LOADING" />
       <View className="flex-row justify-between items-center h-[45] pr-4 pl-[10] border-b border-b-[#e1e1e1]">
         <Pressable
           onPress={() => {

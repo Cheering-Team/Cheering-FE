@@ -65,7 +65,6 @@ export const CommunityTabItem = <T extends TabName = string>(
       onPress={() => onPress(name)}
       android_ripple={{
         borderless: true,
-        color: pressColor,
       }}
       {...rest}>
       {renderedLabel}

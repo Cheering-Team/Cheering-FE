@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {Community} from 'apis/community/types';
+import FastImage from 'react-native-fast-image';
 
 interface TeamListProps {
   community: Community;
@@ -28,12 +29,11 @@ const TeamList = (props: TeamListProps) => {
             onPress={() =>
               navigation.push('Community', {communityId: item.communityId})
             }>
-            <Image
+            <FastImage
               source={{
                 uri: item.image,
               }}
-              width={18}
-              height={18}
+              style={{width: 18, height: 18}}
             />
             <CustomText fontWeight="500" style={styles.teamName}>
               {item.name}
