@@ -29,6 +29,7 @@ import CustomText from 'components/common/CustomText';
 import {Results as ImageSelectType} from '@baronha/react-native-multiple-image-picker';
 import PostImage from 'components/post/PostImage';
 import {Image, Video} from 'react-native-compressor';
+import uuid from 'react-native-uuid';
 
 export type PostWriteScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
@@ -117,9 +118,9 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
 
       images.push({
         uri: result || image.path,
-        name:
-          image.fileName ||
-          `${post?.id}-IMAGE-${index}.${image.path.substring(image.path.lastIndexOf('.') + 1)}`,
+        name: !post
+          ? `${uuid.v4()}.${image.mime.substring(image.mime.lastIndexOf('/') + 1)}`
+          : `${post?.id}-IMAGE-${index}.${image.path.substring(image.path.lastIndexOf('.') + 1)}`,
         type:
           image.mime ||
           (image.type === 'IMAGE'

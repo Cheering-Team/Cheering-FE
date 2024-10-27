@@ -8,6 +8,8 @@ import {useApply} from 'apis/notice/useNotices';
 import {showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
+import {Image} from 'react-native-compressor';
+import LoadingOverlay from 'components/common/LoadingOverlay';
 
 const PlayerForm = () => {
   const insets = useSafeAreaInsets();
@@ -19,11 +21,13 @@ const PlayerForm = () => {
     teamName: '',
     image: {uri: '', name: '', type: ''},
   });
+  const [imageLoding, setImageLoding] = useState(false);
 
   const {mutateAsync: apply, isPending} = useApply();
 
   const handleImageUpload = async () => {
     try {
+      setImageLoding(true);
       const response = await openPicker({
         usedCameraButton: true,
         mediaType: 'image',
@@ -43,6 +47,8 @@ const PlayerForm = () => {
       handleChange('image', imageObj);
     } catch (e) {
       //
+    } finally {
+      setImageLoding(false);
     }
   };
 
@@ -54,12 +60,25 @@ const PlayerForm = () => {
   };
 
   const handleApply = async () => {
+    let result = '';
+    if (formData.image.uri) {
+      result = await Image.compress(formData.image.uri, {
+        compressionMethod: 'manual',
+        maxWidth: 1600,
+        quality: 0.7,
+      });
+    }
+
     await apply({
       field1: formData.name,
       field2: formData.sportName,
       field3: formData.leagueName,
       field4: formData.teamName,
-      image: formData.image,
+      image: {
+        uri: result,
+        name: formData.image.name,
+        type: formData.image.type,
+      },
     });
     showTopToast(insets.top + 20, '신청 완료');
     setFormData({
@@ -73,6 +92,7 @@ const PlayerForm = () => {
 
   return (
     <View className="mt-10 border p-5 border-gray-200 rounded bg-white shadow-2xl">
+      <LoadingOverlay isLoading={imageLoding} type="LOADING" />
       <CustomText fontWeight="500" className="text-black text-xl mb-5">
         신청 양식
       </CustomText>

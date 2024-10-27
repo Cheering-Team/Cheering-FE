@@ -140,7 +140,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 </CustomText>
               </TouchableOpacity>
             )}
-          {community.type === 'TEAM' && (
+          {/* {community.type === 'TEAM' && (
             <TouchableOpacity
               activeOpacity={1}
               className="mb-4 flex-row items-center ml-1">
@@ -149,10 +149,10 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 numberOfLines={1}
                 fontWeight="600"
                 className="ml-3 text-white text-[15px] flex-1">
-                {/* {'[공지사항]  9/21일 경기안내'} */}
+                {'[공지사항]  9/21일 경기안내'}
               </CustomText>
             </TouchableOpacity>
-          )}
+          )} */}
 
           <View className="flex-row justify-evenly items-center">
             <TouchableOpacity

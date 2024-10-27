@@ -31,7 +31,7 @@ export interface ImageType {
   realPath?: string;
   parentFolderName?: string;
   creationDate?: string;
-  type?: 'IMAGE' | 'VIDEO' | 'image' | 'video';
+  type?: string;
 }
 
 export type FilterType = 'all' | 'hot' | 'photo' | 'viewing' | 'information';

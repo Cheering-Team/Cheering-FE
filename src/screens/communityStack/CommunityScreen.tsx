@@ -55,7 +55,7 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
           <StarFeedList community={community} />
         </Tabs.Tab>
         <Tabs.Tab name="라이브">
-          <LiveList />
+          <LiveList community={community} />
         </Tabs.Tab>
         <Tabs.Tab name="채팅">
           <ChatList community={community} />

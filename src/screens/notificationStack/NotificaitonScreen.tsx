@@ -21,6 +21,7 @@ import ListLoading from '../../components/common/ListLoading/ListLoading';
 import ListEmpty from '../../components/common/ListEmpty/ListEmpty';
 import {formatBeforeDate} from '../../utils/format';
 import StackHeader from 'components/common/StackHeader';
+import FastImage from 'react-native-fast-image';
 
 const NotificationScreen = ({navigation}) => {
   const insets = useSafeAreaInsets();
@@ -132,7 +133,7 @@ const NotificationScreen = ({navigation}) => {
         )}
 
         {item.post.image && (
-          <Image
+          <FastImage
             source={{uri: item.post.image.url}}
             style={{width: 45, height: 45, borderRadius: 10, marginLeft: 10}}
           />

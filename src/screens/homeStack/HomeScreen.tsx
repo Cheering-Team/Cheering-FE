@@ -4,6 +4,7 @@ import {
   ListRenderItem,
   PermissionsAndroid,
   Platform,
+  Pressable,
   RefreshControl,
   View,
 } from 'react-native';
@@ -32,6 +33,9 @@ import {queryClient} from '../../../App';
 import {postKeys} from 'apis/post/queries';
 import {Post} from 'apis/post/types';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
+import {showBottomToast, showTopToast} from 'utils/toast';
+import {useGetMyCommunities} from 'apis/community/useCommunities';
+import {WINDOW_HEIGHT} from 'constants/dimension';
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -56,6 +60,7 @@ const HomeScreen = () => {
     fetchNextPage,
     isFetchingNextPage,
   } = useGetPosts(0, 'FAN_POST', 'all', true);
+  const {data: communities} = useGetMyCommunities();
   const {refetch: refetchUnRead} = useGetIsUnread();
   const {mutateAsync: readNotificaiton} = useReadNotification();
 
@@ -232,6 +237,7 @@ const HomeScreen = () => {
     <>
       <View className="flex-1">
         <HomeHeader translateY={translateY} />
+
         <Animated.FlatList
           ref={flatListRef}
           className="pt-[52]"
@@ -240,7 +246,7 @@ const HomeScreen = () => {
           renderItem={renderFeed}
           ListHeaderComponent={
             <>
-              <MyStarCarousel />
+              <MyStarCarousel communities={communities} />
               {posts ? (
                 <View className="flex-row items-center justify-between pl-[13] pr-[15] py-[7] bg-white border-b border-[#e7e7e7]">
                   <CustomText
@@ -259,7 +265,34 @@ const HomeScreen = () => {
           onEndReachedThreshold={1}
           ListFooterComponent={isFetchingNextPage ? <ListLoading /> : null}
           ListEmptyComponent={
-            posts ? <ListEmpty type="feed" /> : <FeedSkeleton type="Home" />
+            posts ? (
+              communities?.length === 0 ? (
+                <View
+                  className="items-center justify-center"
+                  style={{
+                    height: WINDOW_HEIGHT - 400 - insets.bottom - insets.top,
+                  }}>
+                  <CustomText
+                    className="text-xl text-gray-800"
+                    fontWeight="600">
+                    아직 참여한 커뮤니티가 없어요
+                  </CustomText>
+                  <Pressable
+                    className="bg-black p-2 rounded-md mt-2"
+                    onPress={() => navigation.navigate('Category')}>
+                    <CustomText
+                      className="text-white text-[15px]"
+                      fontWeight="500">
+                      선수 찾아보기
+                    </CustomText>
+                  </Pressable>
+                </View>
+              ) : (
+                <ListEmpty type="feed" />
+              )
+            ) : (
+              <FeedSkeleton type="Home" />
+            )
           }
           refreshControl={
             <RefreshControl

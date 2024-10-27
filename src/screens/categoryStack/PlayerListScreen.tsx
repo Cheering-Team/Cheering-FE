@@ -16,6 +16,7 @@ import StackHeader from 'components/common/StackHeader';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryClient} from '../../../App';
 import {communityKeys} from 'apis/community/queries';
+import FastImage from 'react-native-fast-image';
 
 type PlayerListScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -61,7 +62,7 @@ const PlayerListScreen = ({
       <View
         className="absolute z-10 bg-white w-full h-20 flex-row items-center px-[15] border-t border-t-[#efefef] rounded-b-2xl"
         style={{top: insets.top + 48}}>
-        <Image
+        <FastImage
           source={{
             uri: team.image,
           }}

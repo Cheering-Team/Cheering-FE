@@ -7,13 +7,14 @@ import CustomText from '../../components/common/CustomText';
 import CheckBox from '../../components/common/CheckBox';
 import CustomButton from '../../components/common/CustomButton';
 import {useDeleteFan} from '../../apis/community/useCommunities';
+import LoadingOverlay from 'components/common/LoadingOverlay';
 
 const DeletePlayerUserScreen = ({navigation, route}) => {
   const {fanId} = route.params;
 
   const [isAgree, setIsAgree] = useState(false);
 
-  const {mutate} = useDeleteFan();
+  const {mutate, isPending} = useDeleteFan();
 
   const handleDeleteUser = () => {
     mutate({fanId: fanId});
@@ -21,6 +22,7 @@ const DeletePlayerUserScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
+      <LoadingOverlay isLoading={isPending} type="OVERLAY" />
       <View
         style={{
           flexDirection: 'row',
@@ -63,6 +65,7 @@ const DeletePlayerUserScreen = ({navigation, route}) => {
         <CustomButton
           type="normal"
           text="커뮤니티 탈퇴"
+          isLoading={isPending}
           disabled={!isAgree}
           onPress={handleDeleteUser}
         />

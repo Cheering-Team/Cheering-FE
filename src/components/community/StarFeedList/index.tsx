@@ -1,8 +1,8 @@
 import {Community} from 'apis/community/types';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import DailyList from '../DailyList';
 import {Tabs} from 'react-native-collapsible-tab-view';
-import {ListRenderItem, Pressable, RefreshControl} from 'react-native';
+import {ListRenderItem, Pressable, RefreshControl, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PlusSvg from '../../../assets/images/plus-gray.svg';
 import {useNavigation} from '@react-navigation/native';
@@ -13,6 +13,9 @@ import {Post} from 'apis/post/types';
 import FeedPost from '../FeedPost';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
+import CustomText from 'components/common/CustomText';
+import {WINDOW_HEIGHT} from 'constants/dimension';
+import Avatar from 'components/common/Avatar';
 
 interface StarFeedListProps {
   community: Community;
@@ -32,7 +35,12 @@ const StarFeedList = ({community}: StarFeedListProps) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetPosts(community.id, 'PLAYER_POST', 'all', community.user !== null);
+  } = useGetPosts(
+    community.id,
+    'PLAYER_POST',
+    'all',
+    community.user !== null && community.manager !== null,
+  );
 
   const renderFeed: ListRenderItem<Post> = ({item}) => (
     <FeedPost feed={item} type="community" />
@@ -53,9 +61,35 @@ const StarFeedList = ({community}: StarFeedListProps) => {
     }, 1000);
   };
 
-  if (community.user === null || community.manager === null) {
+  if (community.user === null) {
     return null;
   }
+
+  if (community.manager === null) {
+    return (
+      <Tabs.FlatList
+        data={[]}
+        renderItem={() => <></>}
+        ListEmptyComponent={
+          <View
+            className="items-center justify-center pb-4"
+            style={{
+              height: WINDOW_HEIGHT / 2 - insets.bottom - 45 - 40,
+            }}>
+            <Avatar
+              uri={community.image}
+              size={80}
+              style={{borderWidth: 1, borderColor: 'black'}}
+            />
+            <CustomText className="mt-5 text-lg" fontWeight="600">
+              아직 참여하지 않으셨어요
+            </CustomText>
+          </View>
+        }
+      />
+    );
+  }
+
   return (
     <>
       <Tabs.FlatList

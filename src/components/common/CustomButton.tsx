@@ -3,10 +3,8 @@ import {
   Pressable,
   PressableProps,
   StyleSheet,
-  View,
 } from 'react-native';
-import React, {useState} from 'react';
-import LinearGradient from 'react-native-linear-gradient';
+import React from 'react';
 import CustomText from './CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -39,8 +37,8 @@ const CustomButton = (props: CustomButtonProps) => {
           backgroundColor: disabled
             ? '#aeaeae'
             : pressed
-            ? '#232323'
-            : '#000000',
+              ? '#232323'
+              : '#000000',
         },
         type === 'bottom'
           ? {
