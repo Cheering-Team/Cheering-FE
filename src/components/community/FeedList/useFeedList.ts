@@ -1,9 +1,9 @@
 import {useState} from 'react';
 import {useGetPosts} from '../../../apis/post/usePosts';
 import {FilterType} from '../../../apis/post/types';
-import {Community} from 'apis/community/types';
+import {Player} from 'apis/player/types';
 
-export const useFeedList = (community: Community) => {
+export const useFeedList = (community: Player) => {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
 
   const {
@@ -17,7 +17,7 @@ export const useFeedList = (community: Community) => {
     community.id,
     'FAN_POST',
     selectedFilter,
-    community.user !== null,
+    community.curFan !== null,
   );
 
   const loadPosts = () => {

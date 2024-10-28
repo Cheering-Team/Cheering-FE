@@ -44,7 +44,7 @@ import {Drawer} from 'react-native-drawer-layout';
 import DrawerSvg from '../../assets/images/drawer.svg';
 import ExitSvg from '../../assets/images/exit-gray.svg';
 import AlertModal from 'components/common/AlertModal/AlertModal';
-import {showBottomToast, showTopToast} from 'utils/toast';
+import {showTopToast} from 'utils/toast';
 import SockJS from 'sockjs-client';
 
 const TextEncodingPolyfill = require('text-encoding');
@@ -98,7 +98,7 @@ const ChatRoomScreen = ({route}) => {
     const accessToken = await EncryptedStorage.getItem('accessToken');
 
     if (accessToken) {
-      const socket = new SockJS('http://192.168.0.32:8080/ws');
+      const socket = new SockJS('http://192.168.0.11:8080/ws');
       client.current = new StompJs.Client({
         webSocketFactory: () => socket,
         reconnectDelay: 5000, // 자동 재연결

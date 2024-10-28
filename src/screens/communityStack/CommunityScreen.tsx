@@ -9,14 +9,14 @@ import ChatList from '../../components/community/ChatList/ChatList';
 import {WINDOW_HEIGHT} from '../../constants/dimension';
 import JoinModal from '../../components/community/JoinModal/JoinModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {useGetCommunityInfo} from 'apis/community/useCommunities';
+import {useGetPlayerById} from 'apis/player/usePlayers';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import OwnerModal from 'components/community/OwnerModal';
-import StarFeedList from 'components/community/StarFeedList';
-import LiveList from 'components/community/LiveList';
 import NotJoin from 'components/community/NotJoin';
+import {useGetTeamById} from 'apis/team/useTeams';
+import {useGetCommunityById} from 'apis/community/useCommunities';
 
 const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
 
@@ -29,12 +29,12 @@ type CommunityScreenRouteProp = RouteProp<CommunityStackParamList, 'Community'>;
 
 const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
   const {communityId} = route.params;
-  const [refreshKey, setRefreshKey] = useState(0);
+
   const insets = useSafeAreaInsets();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {data: community} = useGetCommunityInfo(communityId, refreshKey);
+  const {data: community} = useGetCommunityById(communityId);
 
   if (!community) {
     return null;
@@ -42,7 +42,7 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
 
   return (
     <>
-      <CommunityHeader playerData={community} />
+      <CommunityHeader community={community} />
       <Tabs.Container
         renderHeader={() => <CommunityProfile community={community} />}
         headerHeight={HEADER_HEIGHT}
@@ -51,17 +51,11 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
         <Tabs.Tab name="피드">
           <FeedList community={community} />
         </Tabs.Tab>
-        <Tabs.Tab name={community.type === 'PLAYER' ? '스타' : '팀'}>
-          <StarFeedList community={community} />
-        </Tabs.Tab>
-        <Tabs.Tab name="라이브">
-          <LiveList community={community} />
-        </Tabs.Tab>
         <Tabs.Tab name="채팅">
           <ChatList community={community} />
         </Tabs.Tab>
       </Tabs.Container>
-      {community.user == null && (
+      {community.curFan == null && (
         <NotJoin
           community={community}
           bottomSheetModalRef={bottomSheetModalRef}
@@ -69,12 +63,8 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
       )}
       <JoinModal
         community={community}
-        setRefreshKey={setRefreshKey}
         bottomSheetModalRef={bottomSheetModalRef}
       />
-      {community.isManager && community.user === null && (
-        <OwnerModal community={community} setRefreshKey={setRefreshKey} />
-      )}
     </>
   );
 };

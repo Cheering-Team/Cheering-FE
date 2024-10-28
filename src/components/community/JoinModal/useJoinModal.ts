@@ -4,7 +4,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {ImageType} from './JoinModal';
-import {postCommunityJoin} from '../../../apis/community';
+import {postCommunityJoin} from '../../../apis/player';
 import Toast from 'react-native-toast-message';
 
 export const useJoinModal = (

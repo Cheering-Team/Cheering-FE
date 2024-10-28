@@ -7,8 +7,8 @@ import {Pressable, View} from 'react-native';
 import PlusSvg from '../../../assets/images/plus-gray.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CommunityScreenNavigationProp} from 'screens/communityStack/CommunityScreen';
-import {Community} from 'apis/community/types';
 import ChatRoomSkeleton from 'components/skeleton/ChatRoomSkeleton';
+import {Community} from 'apis/community/types';
 
 interface Props {
   community: Community;
@@ -21,10 +21,10 @@ const ChatList = (props: Props) => {
 
   const {data: chatRooms} = useGetChatRooms(
     community.id,
-    community.user !== null,
+    community.curFan !== null,
   );
 
-  if (community.user == null) {
+  if (community.curFan == null) {
     return null;
   }
 
@@ -52,7 +52,7 @@ const ChatList = (props: Props) => {
         }}
         ListEmptyComponent={chatRooms ? null : <ChatRoomSkeleton />}
       />
-      {community.user && (
+      {community.curFan && (
         <Pressable
           className="items-center absolute right-[17] w-[42] h-[42] justify-center bg-[#ffffff] rounded-full"
           style={{

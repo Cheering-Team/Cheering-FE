@@ -13,7 +13,7 @@ import {WINDOW_WIDTH} from '../../constants/dimension';
 import PostWriter from '../post/PostWriter';
 import InteractBar from '../post/InteractBar';
 import FastImage from 'react-native-fast-image';
-import {ImageType, Post} from 'apis/post/types';
+import {ImageType, Post, PostImageType} from 'apis/post/types';
 import PostVideo from 'components/common/PostVideo';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import Viewer from 'components/post/Viewer';
@@ -33,7 +33,7 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [viewIndex, setViewIndex] = useState(0);
 
-  const renderItem: ListRenderItem<ImageType> = ({item, index}) => {
+  const renderItem: ListRenderItem<PostImageType> = ({item, index}) => {
     return (
       <Pressable
         onPress={() => {

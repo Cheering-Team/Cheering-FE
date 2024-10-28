@@ -9,7 +9,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../common/CustomText';
 import {WINDOW_HEIGHT} from '../../../constants/dimension';
 import {Community} from 'apis/community/types';
-import OfficialSvg from '../../../assets/images/official.svg';
 
 interface CommunityProfileProps {
   community: Community;
@@ -23,11 +22,10 @@ const CommunityProfile = (props: CommunityProfileProps) => {
   return (
     <View style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2}]}>
       <View style={[styles.infoContainer, {top: insets.top + 55}]}>
-        {community.sportName ? (
+        {community.type === 'TEAM' && (
           <CustomText className="ml-5 text-white text-[13px]">{`${community.sportName} / ${community.leagueName}`}</CustomText>
-        ) : (
-          <TeamList community={community} />
         )}
+        {community.type === 'PLAYER' && <TeamList playerId={community.id} />}
 
         <View style={{paddingLeft: 15}}>
           {community.englishName && (
@@ -46,13 +44,6 @@ const CommunityProfile = (props: CommunityProfileProps) => {
               }>
               {community.koreanName}
             </CustomText>
-            {community.manager && (
-              <OfficialSvg
-                width={18}
-                height={18}
-                style={{marginTop: 6, marginLeft: 3}}
-              />
-            )}
           </View>
 
           <View style={styles.fanCountContainer}>

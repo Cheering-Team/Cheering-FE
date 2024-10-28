@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
-import {Community} from 'apis/community/types';
-import {useJoinCommunity} from 'apis/community/useCommunities';
+import {Player} from 'apis/player/types';
+import {useJoinCommunity} from 'apis/player/usePlayers';
 import CustomText from 'components/common/CustomText';
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import {Modal, Pressable, View} from 'react-native';
@@ -8,7 +8,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {showTopToast} from 'utils/toast';
 
 interface OwnerModalProps {
-  community: Community;
+  community: Player;
   setRefreshKey: Dispatch<SetStateAction<number>>;
 }
 

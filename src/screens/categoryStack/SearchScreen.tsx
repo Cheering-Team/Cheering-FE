@@ -10,10 +10,10 @@ import {
 import CloseSvg from '../../assets/images/close-black.svg';
 import {useQueryClient} from '@tanstack/react-query';
 import PlayerList from '../../components/common/PlayerList';
-import {useGetCommunities} from 'apis/community/useCommunities';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useGetCommunities} from 'apis/community/useCommunities';
 
 type SearchScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -39,7 +39,6 @@ const SearchScreen = ({
         style={{paddingTop: Platform.OS === 'ios' ? 12 : insets.top + 12}}>
         <Pressable
           onPress={() => {
-            queryClient.removeQueries({queryKey: ['players']});
             navigation.goBack();
           }}>
           <CloseSvg width={30} height={30} />
@@ -58,7 +57,7 @@ const SearchScreen = ({
         </View>
       </View>
       {communities ? (
-        <PlayerList type="Search" communities={communities} />
+        <PlayerList type="SEARCH" communities={communities} />
       ) : (
         <></>
       )}

@@ -1,7 +1,6 @@
 import {
   Dimensions,
   FlatList,
-  Image,
   Platform,
   Pressable,
   SafeAreaView,
@@ -11,21 +10,17 @@ import {
 import SearchSvg from '../../assets/images/search-sm.svg';
 import React, {useEffect, useState} from 'react';
 import CustomText from '../../components/common/CustomText';
-import {
-  useGetLeagues,
-  useGetSports,
-  useGetTeams,
-} from 'apis/community/useCommunities';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
 import {SvgUri} from 'react-native-svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryClient} from '../../../App';
-import {teamKeys} from 'apis/community/queries';
-import {Sport} from 'apis/community/types';
 import {IdName} from 'apis/types';
 import TeamSkeleton from 'components/skeleton/TeamSkeleton';
 import FastImage from 'react-native-fast-image';
+import {useGetLeagues, useGetSports, useGetTeams} from 'apis/team/useTeams';
+import {Sport} from 'apis/team/types';
+import {teamKeys} from 'apis/team/queries';
 
 type CategoryScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -58,14 +53,6 @@ const CategoryScreen = ({
       setSelectedLeague(leagues[0]);
     }
   }, [leagues]);
-
-  useEffect(() => {
-    if (teams) {
-      teams.forEach(team => {
-        queryClient.setQueryData(teamKeys.detail(team.id), team);
-      });
-    }
-  });
 
   return (
     <SafeAreaView className="flex-1">
@@ -148,7 +135,7 @@ const CategoryScreen = ({
             return (
               <Pressable
                 key={item.name}
-                className="items-center flex-1"
+                className="items-center flex-1 px-2"
                 onPress={() => {
                   if (selectedSport && selectedLeague) {
                     navigation.navigate('PlayerList', {
@@ -165,13 +152,9 @@ const CategoryScreen = ({
                 />
                 <CustomText
                   fontWeight="500"
-                  className="pb-0 text-[12px] text-center">
-                  {item.firstName}
-                </CustomText>
-                <CustomText
-                  fontWeight="500"
-                  className="pb-0 text-[12px] text-center">
-                  {item.secondName}
+                  className="pb-0 text-[12px] text-center"
+                  numberOfLines={2}>
+                  {item.koreanName}
                 </CustomText>
               </Pressable>
             );

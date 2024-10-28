@@ -13,23 +13,23 @@ import CameraSvg from '../../../../assets/images/camera-01.svg';
 import {NAME_REGEX} from '../../../../constants/regex';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomBottomSheetTextInput from '../../../common/CustomBottomSheetTextInput';
-import {useJoinCommunity} from 'apis/community/useCommunities';
 import {showTopToast} from 'utils/toast';
-import {Community} from 'apis/community/types';
+import {Player} from 'apis/player/types';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
 import LoadingOverlay from 'components/common/LoadingOverlay';
 import {Image} from 'react-native-compressor';
 import {ImagePayload} from 'apis/post/types';
+import {Community} from 'apis/community/types';
+import {useJoinCommunity} from 'apis/community/useCommunities';
 
 interface Props {
-  playerData: Community;
-  setRefreshKey: Dispatch<SetStateAction<number>>;
+  community: Community;
   bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
 }
 
 const JoinProfile = (props: Props) => {
-  const {playerData, setRefreshKey, bottomSheetModalRef} = props;
+  const {community, bottomSheetModalRef} = props;
 
   const insets = useSafeAreaInsets();
 
@@ -92,12 +92,11 @@ const JoinProfile = (props: Props) => {
       }
 
       await joinCommunity({
-        communityId: playerData.id,
+        communityId: community.id,
         name: nickname,
         image: {uri: result, name: imageData.name, type: imageData.type},
       });
       bottomSheetModalRef.current?.dismiss();
-      setRefreshKey((prev: number) => prev + 1);
       showTopToast(insets.top + 20, '가입 완료');
     } catch (error: any) {
       if (error.code === 2004) {
@@ -120,10 +119,10 @@ const JoinProfile = (props: Props) => {
           커뮤니티 가입
         </CustomText>
         <CustomText fontWeight="400" style={styles.profileInfo}>
-          {`${playerData.koreanName}의 팬이 되신 걸 환영합니다!`}
+          {`${community.koreanName}의 팬이 되신 걸 환영합니다!`}
         </CustomText>
         <View style={styles.imageContainer}>
-          <Avatar uri={playerData.image} size={85} style={styles.playerImage} />
+          <Avatar uri={community.image} size={85} style={styles.playerImage} />
           <Pressable onPress={imageUpload} style={styles.profileImageContainer}>
             <ImageBackground
               source={{
@@ -158,7 +157,6 @@ const JoinProfile = (props: Props) => {
         onPress={handleJoinCommunity}
         isLoading={isPending}
       />
-      {/* <View className="h-[200] w-full bg-red-500" /> */}
     </View>
   );
 };

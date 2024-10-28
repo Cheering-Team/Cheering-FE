@@ -1,4 +1,4 @@
-import {Community} from 'apis/community/types';
+import {Player} from 'apis/player/types';
 import React, {useEffect, useState} from 'react';
 import DailyList from '../DailyList';
 import {Tabs} from 'react-native-collapsible-tab-view';
@@ -18,7 +18,7 @@ import {WINDOW_HEIGHT} from 'constants/dimension';
 import Avatar from 'components/common/Avatar';
 
 interface StarFeedListProps {
-  community: Community;
+  community: Player;
 }
 
 const StarFeedList = ({community}: StarFeedListProps) => {
@@ -39,7 +39,7 @@ const StarFeedList = ({community}: StarFeedListProps) => {
     community.id,
     'PLAYER_POST',
     'all',
-    community.user !== null && community.manager !== null,
+    community.curFan !== null && community.manager !== null,
   );
 
   const renderFeed: ListRenderItem<Post> = ({item}) => (
@@ -61,7 +61,7 @@ const StarFeedList = ({community}: StarFeedListProps) => {
     }, 1000);
   };
 
-  if (community.user === null) {
+  if (community.curFan === null) {
     return null;
   }
 
@@ -98,10 +98,10 @@ const StarFeedList = ({community}: StarFeedListProps) => {
         renderItem={renderFeed}
         ListHeaderComponent={<DailyList community={community} />}
         contentContainerStyle={{paddingBottom: 70}}
-        onEndReached={community.user && loadPosts}
-        onEndReachedThreshold={community.user && 1}
+        onEndReached={community.curFan && loadPosts}
+        onEndReachedThreshold={community.curFan && 1}
         ListFooterComponent={
-          isFetchingNextPage && community.user ? (
+          isFetchingNextPage && community.curFan ? (
             <FeedSkeleton type="Community" />
           ) : null
         }
@@ -113,7 +113,7 @@ const StarFeedList = ({community}: StarFeedListProps) => {
           )
         }
         refreshControl={
-          community.user ? (
+          community.curFan ? (
             <RefreshControl
               refreshing={isRefreshing}
               onRefresh={handleRefresh}
@@ -121,7 +121,7 @@ const StarFeedList = ({community}: StarFeedListProps) => {
           ) : undefined
         }
       />
-      {community.user?.type === 'MANAGER' && (
+      {community.curFan?.type === 'MANAGER' && (
         <Pressable
           style={{
             alignItems: 'center',

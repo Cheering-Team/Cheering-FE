@@ -9,13 +9,13 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PlusSvg from '../../../assets/images/plus-gray.svg';
 import {useNavigation} from '@react-navigation/native';
 import {Post} from 'apis/post/types';
-import {Community} from 'apis/community/types';
+import {Player} from 'apis/player/types';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 
 interface Props {
-  community: Community;
+  community: Player;
 }
 
 const FeedList = (props: Props) => {
@@ -50,7 +50,7 @@ const FeedList = (props: Props) => {
     }, 1000);
   };
 
-  if (community.user == null) {
+  if (community.curFan == null) {
     return null;
   }
 
@@ -60,7 +60,7 @@ const FeedList = (props: Props) => {
         data={isLoading ? [] : posts?.pages.flatMap(page => page.posts)}
         renderItem={renderFeed}
         ListHeaderComponent={
-          community.user ? (
+          community.curFan ? (
             <FeedFilter
               selectedFilter={selectedFilter}
               setSelectedFilter={setSelectedFilter}
@@ -69,10 +69,10 @@ const FeedList = (props: Props) => {
         }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: 70}}
-        onEndReached={community.user && loadPosts}
-        onEndReachedThreshold={community.user && 1}
+        onEndReached={community.curFan && loadPosts}
+        onEndReachedThreshold={community.curFan && 1}
         ListFooterComponent={
-          isFetchingNextPage && community.user ? (
+          isFetchingNextPage && community.curFan ? (
             <FeedSkeleton type="Community" />
           ) : null
         }
@@ -84,7 +84,7 @@ const FeedList = (props: Props) => {
           )
         }
         refreshControl={
-          community.user ? (
+          community.curFan ? (
             <RefreshControl
               refreshing={isRefreshing}
               onRefresh={handleRefresh}
@@ -92,7 +92,7 @@ const FeedList = (props: Props) => {
           ) : undefined
         }
       />
-      {community.user && (
+      {community.curFan && (
         <Pressable
           style={{
             alignItems: 'center',

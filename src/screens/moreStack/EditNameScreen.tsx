@@ -1,18 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {Pressable, SafeAreaView, View} from 'react-native';
-import BackSvg from '../../assets/images/arrow-left.svg';
+import {SafeAreaView, View} from 'react-native';
 import {NAME_REGEX} from '../../constants/regex';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import CustomButton from '../../components/common/CustomButton';
-import {useUpdateFanName} from '../../apis/community/useCommunities';
-import {showBottomToast, showTopToast} from '../../utils/toast';
+import {showTopToast} from '../../utils/toast';
 import {useUpdateUserName} from 'apis/user/useUsers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import StackHeader from 'components/common/StackHeader';
+import {useUpdateFanName} from 'apis/fan/useFans';
 
 type EditNicknameScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,

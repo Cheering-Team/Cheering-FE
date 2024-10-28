@@ -34,7 +34,7 @@ import {postKeys} from 'apis/post/queries';
 import {Post} from 'apis/post/types';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 import {showBottomToast, showTopToast} from 'utils/toast';
-import {useGetMyCommunities} from 'apis/community/useCommunities';
+import {useGetMyCommunities} from 'apis/player/usePlayers';
 import {WINDOW_HEIGHT} from 'constants/dimension';
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
@@ -53,43 +53,43 @@ const HomeScreen = () => {
 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const {
-    data: posts,
-    refetch,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useGetPosts(0, 'FAN_POST', 'all', true);
-  const {data: communities} = useGetMyCommunities();
-  const {refetch: refetchUnRead} = useGetIsUnread();
-  const {mutateAsync: readNotificaiton} = useReadNotification();
+  // const {
+  //   data: posts,
+  //   refetch,
+  //   hasNextPage,
+  //   fetchNextPage,
+  //   isFetchingNextPage,
+  // } = useGetPosts(0, 'FAN_POST', 'all', true);
+  // const {data: communities} = useGetMyCommunities();
+  // const {refetch: refetchUnRead} = useGetIsUnread();
+  // const {mutateAsync: readNotificaiton} = useReadNotification();
 
-  useEffect(() => {
-    if (posts) {
-      posts.pages[posts.pages.length - 1].posts.forEach(post => {
-        queryClient.setQueryData(postKeys.detail(post.id), post);
-      });
-    }
-  });
+  // useEffect(() => {
+  //   if (posts) {
+  //     posts.pages[posts.pages.length - 1].posts.forEach(post => {
+  //       queryClient.setQueryData(postKeys.detail(post.id), post);
+  //     });
+  //   }
+  // });
 
-  useScrollToTop(
-    useRef({
-      scrollToTop: () => {
-        flatListRef.current?.scrollToOffset({offset: 0, animated: true});
-        handleRefresh();
-      },
-    }),
-  );
+  // useScrollToTop(
+  //   useRef({
+  //     scrollToTop: () => {
+  //       flatListRef.current?.scrollToOffset({offset: 0, animated: true});
+  //       handleRefresh();
+  //     },
+  //   }),
+  // );
 
-  const renderFeed: ListRenderItem<Post> = ({item}) => (
-    <FeedPost feed={item} type="home" />
-  );
+  // const renderFeed: ListRenderItem<Post> = ({item}) => (
+  //   <FeedPost feed={item} type="home" />
+  // );
 
-  const loadPosts = () => {
-    if (hasNextPage) {
-      fetchNextPage();
-    }
-  };
+  // const loadPosts = () => {
+  //   if (hasNextPage) {
+  //     fetchNextPage();
+  //   }
+  // };
 
   const calcTranslateY = (curOffsetY: number, lastScrollY: number) => {
     'worklet';
@@ -137,14 +137,14 @@ const HomeScreen = () => {
     return;
   });
 
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    refetch();
+  // const handleRefresh = () => {
+  //   setIsRefreshing(true);
+  //   refetch();
 
-    setTimeout(() => {
-      setIsRefreshing(false);
-    }, 1000);
-  };
+  //   setTimeout(() => {
+  //     setIsRefreshing(false);
+  //   }, 1000);
+  // };
 
   useEffect(() => {
     const getToken = async () => {
@@ -185,60 +185,60 @@ const HomeScreen = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async () => {
-      refetchUnRead();
-    });
+  // useEffect(() => {
+  //   const unsubscribe = messaging().onMessage(async () => {
+  //     refetchUnRead();
+  //   });
 
-    return unsubscribe;
-  }, []);
+  //   return unsubscribe;
+  // }, []);
 
-  useEffect(() => {
-    messaging().onNotificationOpenedApp(async remoteMessage => {
-      if (remoteMessage && remoteMessage.data) {
-        const {postId, notificationId} = remoteMessage.data;
-        try {
-          await readNotificaiton({notificationId: Number(notificationId)});
+  // useEffect(() => {
+  //   messaging().onNotificationOpenedApp(async remoteMessage => {
+  //     if (remoteMessage && remoteMessage.data) {
+  //       const {postId, notificationId} = remoteMessage.data;
+  //       try {
+  //         await readNotificaiton({notificationId: Number(notificationId)});
 
-          navigation.navigate('CommunityStack', {
-            screen: 'Post',
-            params: {postId: Number(postId)},
-          });
-        } catch (error: any) {
-          if (error.message === '존재하지 않는 알림') {
-            navigation.navigate('Home');
-          }
-        }
-      }
-    });
+  //         navigation.navigate('CommunityStack', {
+  //           screen: 'Post',
+  //           params: {postId: Number(postId)},
+  //         });
+  //       } catch (error: any) {
+  //         if (error.message === '존재하지 않는 알림') {
+  //           navigation.navigate('Home');
+  //         }
+  //       }
+  //     }
+  //   });
 
-    messaging()
-      .getInitialNotification()
-      .then(async remoteMessage => {
-        if (remoteMessage && remoteMessage.data) {
-          const {postId, notificationId} = remoteMessage.data;
-          try {
-            await readNotificaiton({notificationId: Number(notificationId)});
+  //   messaging()
+  //     .getInitialNotification()
+  //     .then(async remoteMessage => {
+  //       if (remoteMessage && remoteMessage.data) {
+  //         const {postId, notificationId} = remoteMessage.data;
+  //         try {
+  //           await readNotificaiton({notificationId: Number(notificationId)});
 
-            navigation.navigate('CommunityStack', {
-              screen: 'Post',
-              params: {postId: Number(postId)},
-            });
-          } catch (error: any) {
-            if (error.message === '존재하지 않는 알림') {
-              navigation.navigate('Home');
-            }
-          }
-        }
-      });
-  }, [navigation, readNotificaiton]);
+  //           navigation.navigate('CommunityStack', {
+  //             screen: 'Post',
+  //             params: {postId: Number(postId)},
+  //           });
+  //         } catch (error: any) {
+  //           if (error.message === '존재하지 않는 알림') {
+  //             navigation.navigate('Home');
+  //           }
+  //         }
+  //       }
+  //     });
+  // }, [navigation, readNotificaiton]);
 
   return (
     <>
       <View className="flex-1">
         <HomeHeader translateY={translateY} />
 
-        <Animated.FlatList
+        {/* <Animated.FlatList
           ref={flatListRef}
           className="pt-[52]"
           style={{marginTop: insets.top}}
@@ -302,7 +302,7 @@ const HomeScreen = () => {
               colors={['#787878']}
             />
           }
-        />
+        /> */}
       </View>
     </>
   );

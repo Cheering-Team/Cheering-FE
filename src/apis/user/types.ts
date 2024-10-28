@@ -1,20 +1,9 @@
-import {Community} from 'apis/community/types';
-
 export interface User {
   id: number;
   phone: string;
   name: string;
   createdAt?: string;
   role?: string;
-  community?: Community;
-}
-
-export interface Fan {
-  id: number;
-  type: 'FAN' | 'MANAGER';
-  name: string;
-  image: string;
-  isManager?: boolean;
 }
 
 export interface Token {

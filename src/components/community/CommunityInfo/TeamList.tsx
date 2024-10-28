@@ -1,33 +1,38 @@
 import React from 'react';
-import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
+import {FlatList, Pressable, StyleSheet, View} from 'react-native';
 import CustomText from '../../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import {Community} from 'apis/community/types';
 import FastImage from 'react-native-fast-image';
+import {useGetTeamsByPlayer} from 'apis/team/useTeams';
 
 interface TeamListProps {
-  community: Community;
+  playerId: number;
 }
 
-const TeamList = (props: TeamListProps) => {
-  const {community} = props;
+const TeamList = ({playerId}: TeamListProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
+
+  const {data: teams} = useGetTeamsByPlayer(playerId);
+
+  if (!teams) {
+    return <View className="h-[27]" />;
+  }
 
   return (
     <View style={styles.container}>
       <FlatList
         horizontal={true}
-        data={community.teams}
+        data={teams}
         showsHorizontalScrollIndicator={false}
         renderItem={({item}) => (
           <Pressable
             style={styles.teamContainer}
-            key={item.name}
+            key={item.id}
             onPress={() =>
-              navigation.push('Community', {communityId: item.communityId})
+              navigation.push('Community', {communityId: item.id})
             }>
             <FastImage
               source={{
@@ -36,7 +41,7 @@ const TeamList = (props: TeamListProps) => {
               style={{width: 18, height: 18}}
             />
             <CustomText fontWeight="500" style={styles.teamName}>
-              {item.name}
+              {item.koreanName}
             </CustomText>
           </Pressable>
         )}

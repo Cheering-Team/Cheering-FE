@@ -4,10 +4,6 @@ import CustomText from '../../components/common/CustomText';
 import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
 import CameraSvg from '../../assets/images/camera-01.svg';
 import OptionModal from '../../components/common/OptionModal';
-import {
-  useGetFanInfo,
-  useUpdateFanImage,
-} from '../../apis/community/useCommunities';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import StackHeader from 'components/common/StackHeader';
 import {useNavigation} from '@react-navigation/native';
@@ -16,6 +12,7 @@ import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
 import {Image} from 'react-native-compressor';
 import LoadingOverlay from 'components/common/LoadingOverlay';
+import {useGetFanInfo, useUpdateFanImage} from 'apis/fan/useFans';
 
 const ProfileEditScreen = ({route}) => {
   const {fanId} = route.params;
@@ -25,7 +22,7 @@ const ProfileEditScreen = ({route}) => {
 
   const [imageLoding, setImageLoding] = useState(false);
 
-  const {data: fan, isLoading} = useGetFanInfo(fanId);
+  const {data: profile, isLoading} = useGetFanInfo(fanId);
 
   const {mutate} = useUpdateFanImage();
 
@@ -77,7 +74,7 @@ const ProfileEditScreen = ({route}) => {
     return null;
   }
 
-  if (fan) {
+  if (profile) {
     return (
       <SafeAreaView style={{flex: 1}}>
         <LoadingOverlay isLoading={imageLoding} type="LOADING" />
@@ -93,7 +90,7 @@ const ProfileEditScreen = ({route}) => {
             }}>
             <ImageBackground
               source={{
-                uri: fan.user.image,
+                uri: profile.fan.image,
               }}
               style={{
                 width: 95,
@@ -119,8 +116,8 @@ const ProfileEditScreen = ({route}) => {
             }}
             onPress={() =>
               navigation.navigate('EditName', {
-                name: fan.user.name,
-                fanId: fan.user.id,
+                name: profile.fan.name,
+                fanId: profile.fan.id,
               })
             }>
             <CustomText fontWeight="600" style={{fontSize: 18}}>
@@ -134,13 +131,13 @@ const ProfileEditScreen = ({route}) => {
                   fontSize: 17,
                   marginRight: 3,
                 }}>
-                {fan.user.name}
+                {profile.fan.name}
               </CustomText>
               <ChevronRightSvg width={13} height={13} />
             </View>
           </Pressable>
         </View>
-        {fan.user.image ===
+        {profile.fan.image ===
         'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/default-profile.jpg' ? (
           <OptionModal
             modalRef={bottomSheetModalRef}

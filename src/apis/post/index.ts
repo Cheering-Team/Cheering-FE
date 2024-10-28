@@ -47,7 +47,7 @@ export const writePost = async (data: WritePostPayload) => {
   return response.data.result;
 };
 
-// 커뮤니티 게시글 불러오기 (무한 스크롤) (id = 0 -> 내가 모든 커뮤니티 게시글)
+// 커뮤니티 게시글 조회 (무한 스크롤) (id = 0 -> 내가 모든 커뮤니티 게시글)
 export const getPosts = async ({
   queryKey,
   pageParam = 0,
@@ -64,7 +64,7 @@ export const getPosts = async ({
   return response.data.result;
 };
 
-// 게시글 조회 (무한 스크롤)
+// 팬 게시글 조회 (무한 스크롤)
 export const getFanPosts = async ({
   queryKey,
   pageParam = 0,
@@ -79,7 +79,7 @@ export const getFanPosts = async ({
   return response.data.result;
 };
 
-// 특정 게시글 조회
+// 게시글 조회
 export const getPostById = async ({
   queryKey,
 }: {

@@ -1,11 +1,7 @@
 import React, {useEffect} from 'react';
-import {Image, Pressable, SafeAreaView, View} from 'react-native';
+import {Pressable, SafeAreaView, View} from 'react-native';
 import CustomText from '../../components/common/CustomText';
 import PlayerList from '../../components/common/PlayerList';
-import {
-  useGetCommunitiesByTeam,
-  useGetTeamById,
-} from 'apis/community/useCommunities';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
@@ -15,8 +11,12 @@ import {formatComma} from 'utils/format';
 import StackHeader from 'components/common/StackHeader';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryClient} from '../../../App';
-import {communityKeys} from 'apis/community/queries';
+import {playerKeys} from 'apis/player/queries';
 import FastImage from 'react-native-fast-image';
+import {
+  useGetCommunitiesByTeam,
+  useGetCommunityById,
+} from 'apis/community/useCommunities';
 
 type PlayerListScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -38,19 +38,16 @@ const PlayerListScreen = ({
   const insets = useSafeAreaInsets();
   const {teamId, sportName, leagueName} = route.params;
 
-  const {data: team} = useGetTeamById(teamId);
-  const {data: communities} = useGetCommunitiesByTeam(teamId);
+  const {data: team} = useGetCommunityById(teamId);
+  const {data: players} = useGetCommunitiesByTeam(teamId);
 
-  useEffect(() => {
-    if (communities) {
-      communities.forEach(community => {
-        queryClient.setQueryData(
-          communityKeys.detail(community.id, 0),
-          community,
-        );
-      });
-    }
-  }, [communities]);
+  // useEffect(() => {
+  //   if (players) {
+  //     players.forEach(community => {
+  //       queryClient.setQueryData(playerKeys.detail(community.id, 0), community);
+  //     });
+  //   }
+  // }, [players]);
 
   if (!team) {
     return null;
@@ -73,7 +70,7 @@ const PlayerListScreen = ({
             <CustomText
               fontWeight="600"
               className="text-lg pb-0 text-[#2b2b2b]">
-              {`${team.firstName} ${team.secondName}`}
+              {team.koreanName}
             </CustomText>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <StarOrangeSvg width={11} height={11} />
@@ -94,7 +91,7 @@ const PlayerListScreen = ({
             onPress={() =>
               navigation.navigate('CommunityStack', {
                 screen: 'Community',
-                params: {communityId: team.communityId},
+                params: {communityId: team.id, type: 'TEAM'},
               })
             }>
             <CustomText
@@ -111,9 +108,9 @@ const PlayerListScreen = ({
         </View>
       </View>
       <PlayerList
-        type="Team"
-        teamName={`${team.firstName} ${team.secondName}`}
-        communities={communities}
+        type="TEAM"
+        teamName={team.koreanName}
+        communities={players}
         paddingTop={true}
       />
     </SafeAreaView>

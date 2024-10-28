@@ -13,7 +13,7 @@ import ChatRoomEnterScreen from 'screens/communityStack/ChatRoomEnterScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
 import DailyScreen from 'screens/communityStack/DailyScreen';
 import {Post} from 'apis/post/types';
-import {Fan} from 'apis/user/types';
+import {Fan} from 'apis/fan/types';
 
 export type CommunityStackParamList = {
   Community: {communityId: number};

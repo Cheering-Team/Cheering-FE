@@ -1,4 +1,4 @@
-import {Fan} from 'apis/user/types';
+import {Fan} from 'apis/fan/types';
 import {axiosInstance} from '../index';
 import {ApiResponse, Id} from '../types';
 import {chatKeys, chatRoomKeys} from './queries';

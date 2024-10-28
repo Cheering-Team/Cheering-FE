@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   Dimensions,
   Platform,
@@ -15,7 +15,7 @@ import CustomText from '../../components/common/CustomText';
 import FeedPost from '../../components/community/FeedPost';
 import OptionModal from '../../components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {useBlockUser, useGetFanInfo} from '../../apis/community/useCommunities';
+
 import {useGetFanPosts} from '../../apis/post/usePosts';
 import AlertModal from 'components/common/AlertModal/AlertModal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -24,9 +24,10 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import Viewer from 'components/post/Viewer';
-import StackHeader from 'components/common/StackHeader';
+
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import NotFound from 'components/notfound';
+import {useBlockUser, useGetFanInfo} from 'apis/fan/useFans';
 
 const ProfileScreen = () => {
   const navigation =
@@ -41,12 +42,11 @@ const ProfileScreen = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
 
-  const {data: fan, isLoading, isError, error} = useGetFanInfo(fanId);
+  const {data: profile, isLoading, isError, error} = useGetFanInfo(fanId);
   const {mutate: blockUser} = useBlockUser();
 
   const {
     data: posts,
-    isLoading: feedIsLoading,
     fetchNextPage,
     hasNextPage,
     refetch,
@@ -76,7 +76,7 @@ const ProfileScreen = () => {
     return <NotFound type="FAN" />;
   }
 
-  if (fan) {
+  if (profile) {
     return (
       <SafeAreaView style={{flex: 1}}>
         <View
@@ -98,20 +98,20 @@ const ProfileScreen = () => {
               style={{
                 fontSize: 17,
               }}>
-              {fan.community.koreanName}
+              {profile.communityKoreanName}
             </CustomText>
-            {fan.community.englishName &&
-              fan.community.englishName.length < 20 && (
+            {profile.communityEnglishName &&
+              profile.communityEnglishName.length < 20 && (
                 <CustomText
                   fontWeight="500"
                   style={{
                     fontSize: 17,
                   }}>
-                  {` / ${fan.community.englishName}`}
+                  {` / ${profile.communityEnglishName}`}
                 </CustomText>
               )}
           </View>
-          {fan.isUser ? (
+          {profile.isUser ? (
             <Pressable onPress={() => bottomSheetModalRef.current?.present()}>
               <MoreSvg width={18} height={18} />
             </Pressable>
@@ -135,16 +135,16 @@ const ProfileScreen = () => {
                   alignItems: 'center',
                 }}>
                 <Pressable onPress={() => setIsViewerOpen(true)}>
-                  <Avatar uri={fan.user.image} size={68} />
+                  <Avatar uri={profile.fan.image} size={68} />
                 </Pressable>
                 <View style={{marginLeft: 15, marginTop: 3}}>
                   <CustomText fontWeight="500" style={{fontSize: 22}}>
-                    {fan.user.name}
+                    {profile.fan.name}
                   </CustomText>
                 </View>
               </View>
               <View style={{paddingHorizontal: 20}}>
-                {fan.isUser ? (
+                {profile.isUser ? (
                   <Pressable
                     style={{
                       borderWidth: 1,
@@ -157,7 +157,7 @@ const ProfileScreen = () => {
                     }}
                     onPress={() =>
                       navigation.navigate('ProfileEdit', {
-                        fanId: fan.user.id,
+                        fanId: fanId,
                       })
                     }>
                     <CustomText fontWeight="500" style={{fontSize: 16}}>
@@ -233,7 +233,7 @@ const ProfileScreen = () => {
             />
           }
         />
-        {fan.isUser && (
+        {profile.isUser && (
           <OptionModal
             modalRef={bottomSheetModalRef}
             firstText="차단한 계정"
@@ -253,7 +253,7 @@ const ProfileScreen = () => {
             }}
           />
         )}
-        {!fan.isUser && (
+        {!profile.isUser && (
           <AlertModal
             title="사용자를 차단하시겠습니까?"
             content="해당 사용자의 모든 활동이 더이상 보이지 않습니다."
@@ -268,7 +268,7 @@ const ProfileScreen = () => {
           />
         )}
         <Viewer
-          images={[{path: fan.user.image, type: 'IMAGE'}]}
+          images={[{path: profile.fan.image, type: 'IMAGE'}]}
           isViewerOpen={isViewerOpen}
           setIsViewerOpen={setIsViewerOpen}
           viewIndex={0}

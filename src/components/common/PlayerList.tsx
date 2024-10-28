@@ -1,4 +1,4 @@
-import {Dimensions, FlatList, Image, Pressable, View} from 'react-native';
+import {Dimensions, FlatList, Pressable, View} from 'react-native';
 import CustomText from './CustomText';
 import React from 'react';
 import StarOrangeSvg from '../../assets/images/star-orange.svg';
@@ -6,13 +6,12 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Avatar from './Avatar';
 import {CategoryStackParamList} from '../../navigations/CategoryStackNavigator';
 import {formatComma} from '../../utils/format';
-import {Community} from 'apis/community/types';
-import OfficialSvg from '../../assets/images/official.svg';
 import CommunitySkeleton from 'components/skeleton/CommunitySkeleton';
 import FastImage from 'react-native-fast-image';
+import {Community} from 'apis/community/types';
 
 interface PlayerListProps {
-  type: 'Team' | 'Search';
+  type: 'TEAM' | 'SEARCH';
   teamName?: string;
   communities?: Community[];
   paddingTop?: boolean;
@@ -33,7 +32,7 @@ const PlayerList = ({
         paddingTop && {paddingTop: 80},
         {paddingBottom: 50},
       ]}
-      data={communities || []}
+      data={communities}
       renderItem={({item}) => (
         <Pressable
           style={{
@@ -62,24 +61,23 @@ const PlayerList = ({
               paddingVertical: 6,
             }}>
             <View>
-              {item.sportName ? (
+              {item.type === 'TEAM' ? (
                 <CustomText
+                  numberOfLines={1}
                   style={{fontSize: 12, color: '#3f3f3f', paddingBottom: 0}}>
-                  {`${item.sportName}/${item.leagueName}`}
+                  {`${item.sportName} / ${item.leagueName}`}
                 </CustomText>
               ) : (
                 <CustomText
+                  numberOfLines={1}
                   style={{fontSize: 12, color: '#3f3f3f', paddingBottom: 0}}>
-                  {teamName || (item.teams && item.teams[0].name)}
+                  {teamName || item.firstTeamName}
                 </CustomText>
               )}
               <View className="flex-row items-center">
                 <CustomText fontWeight="500" style={{fontSize: 16}}>
                   {item.koreanName}
                 </CustomText>
-                {item.manager && (
-                  <OfficialSvg width={12} height={12} style={{marginLeft: 2}} />
-                )}
               </View>
             </View>
 
@@ -102,18 +100,18 @@ const PlayerList = ({
               </CustomText>
             </View>
           </View>
-          {item.user && (
+          {item.curFan && (
             <Pressable
               onPress={() => {
-                if (item.user !== null) {
+                if (item.curFan) {
                   navigation.navigate('CommunityStack', {
                     screen: 'Profile',
-                    params: {fanId: item.user.id},
+                    params: {fanId: item.curFan?.id},
                   });
                 }
               }}>
               <Avatar
-                uri={item.user.image}
+                uri={item.curFan.image}
                 size={30}
                 style={{
                   position: 'absolute',
@@ -130,7 +128,7 @@ const PlayerList = ({
       ListEmptyComponent={
         !communities ? (
           <CommunitySkeleton />
-        ) : type === 'Team' ? (
+        ) : type === 'TEAM' ? (
           <View
             style={{
               height: Dimensions.get('window').height * 0.3 + 20,

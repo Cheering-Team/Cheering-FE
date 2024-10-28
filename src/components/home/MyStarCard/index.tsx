@@ -7,7 +7,7 @@ import MegaphoneSvg from 'assets/images/megaphone-white.svg';
 import MoreSvg from '../../../assets/images/three-dots-vertical-white.svg';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-import {Community} from 'apis/community/types';
+import {Player} from 'apis/player/types';
 import Avatar from 'components/common/Avatar';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -18,7 +18,7 @@ import {useGetDailys} from 'apis/post/usePosts';
 import {formatBarDate} from 'utils/format';
 
 interface MyStarCardProps {
-  community: Community;
+  community: Player;
 }
 
 const MyStarCard = ({community}: MyStarCardProps) => {
@@ -92,13 +92,13 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 activeOpacity={1}
                 className="mb-4 flex-row items-center"
                 onPress={() => {
-                  if (community.user) {
+                  if (community.curFan) {
                     navigation.navigate('CommunityStack', {
                       screen: 'Daily',
                       params: {
                         communityId: community.id,
                         date: formatBarDate(new Date()),
-                        user: community.user,
+                        user: community.curFan,
                       },
                     });
                   }
@@ -114,19 +114,19 @@ const MyStarCard = ({community}: MyStarCardProps) => {
             )}
           {community.type === 'PLAYER' &&
             dailys?.pages[0].dailys.length === 0 &&
-            community.user?.type === 'MANAGER' && (
+            community.curFan?.type === 'MANAGER' && (
               <TouchableOpacity
                 activeOpacity={1}
                 className="mb-4 flex-row items-center"
                 onPress={() => {
-                  if (community.user) {
+                  if (community.curFan) {
                     navigation.navigate('CommunityStack', {
                       screen: 'Daily',
                       params: {
                         communityId: community.id,
                         date: formatBarDate(new Date()),
                         write: true,
-                        user: community.user,
+                        user: community.curFan,
                       },
                     });
                   }
@@ -192,10 +192,10 @@ const MyStarCard = ({community}: MyStarCardProps) => {
               className="p-1"
               activeOpacity={0.5}
               onPress={() => {
-                if (community.user) {
+                if (community.curFan) {
                   navigation.navigate('CommunityStack', {
                     screen: 'Profile',
-                    params: {fanId: community.user.id},
+                    params: {fanId: community.curFan.id},
                   });
                 }
               }}>
@@ -223,13 +223,13 @@ const MyStarCard = ({community}: MyStarCardProps) => {
       />
       <OptionModal
         modalRef={bottomSheetModalRef}
-        firstText={community.user?.name}
-        firstAvatar={community.user?.image}
+        firstText={community.curFan?.name}
+        firstAvatar={community.curFan?.image}
         firstOnPress={() => {
-          if (community.user) {
+          if (community.curFan) {
             navigation.navigate('CommunityStack', {
               screen: 'Profile',
-              params: {fanId: community.user.id},
+              params: {fanId: community.curFan.id},
             });
           }
         }}
@@ -245,10 +245,10 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         thirdColor="#ff2626"
         thirdSvg="exit"
         thirdOnPress={() => {
-          if (community.user) {
+          if (community.curFan) {
             navigation.navigate('CommunityStack', {
               screen: 'DeleteFan',
-              params: {fanId: community.user.id},
+              params: {fanId: community.curFan.id},
             });
           }
         }}

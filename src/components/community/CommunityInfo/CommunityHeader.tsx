@@ -4,18 +4,16 @@ import CheveronLeft from '../../../assets/images/chevron-left-white.svg';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Avatar from '../../common/Avatar';
-import DailySvg from '../../../assets/images/comment-white.svg';
-import {Community} from 'apis/community/types';
-import {formatBarDate} from 'utils/format';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {Community} from 'apis/community/types';
 
 interface CommunityHeaderProps {
-  playerData: Community;
+  community: Community;
 }
 
 const CommunityHeader = (props: CommunityHeaderProps) => {
-  const {playerData} = props;
+  const {community} = props;
   const insets = useSafeAreaInsets();
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
@@ -34,35 +32,19 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
         <CheveronLeft width={20} height={20} />
       </Pressable>
 
-      {playerData.user && (
+      {community.curFan && (
         <View className="flex-row items-center">
-          {playerData.manager && (
-            <Pressable
-              onPress={() => {
-                if (playerData.user) {
-                  navigation.navigate('Daily', {
-                    communityId: playerData.id,
-                    date: formatBarDate(new Date()),
-                    write: false,
-                    user: playerData.user,
-                  });
-                }
-              }}>
-              <DailySvg width={20} height={20} />
-            </Pressable>
-          )}
-
           <Pressable
             className="ml-5"
             onPress={() => {
-              if (playerData.user) {
+              if (community.curFan) {
                 navigation.navigate('Profile', {
-                  fanId: playerData.user.id,
+                  fanId: community.curFan.id,
                 });
               }
             }}>
             <Avatar
-              uri={playerData.user.image}
+              uri={community.curFan.image}
               size={25}
               style={styles.communityUserAvatar}
             />

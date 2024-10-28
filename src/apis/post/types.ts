@@ -1,12 +1,11 @@
 import {AxiosProgressEvent} from 'axios';
-import {Community} from '../community/types';
 import {Page} from '../types';
-import {Fan} from '../user/types';
+import {Community} from 'apis/community/types';
+import {Fan} from 'apis/fan/types';
 
 // 엔티티
 export interface Post {
   id: number;
-  user: Fan;
   community: Community;
   content: string;
   isHide: boolean;
@@ -15,8 +14,9 @@ export interface Post {
   isLike: boolean;
   likeCount: number;
   commentCount: number;
-  images: ImageType[];
+  images: PostImageType[];
   writer: Fan;
+  user: Fan;
 }
 
 export interface ImageType {
@@ -32,6 +32,13 @@ export interface ImageType {
   parentFolderName?: string;
   creationDate?: string;
   type?: string;
+}
+
+export interface PostImageType {
+  path: string;
+  width: number;
+  height: number;
+  type: string;
 }
 
 export type FilterType = 'all' | 'hot' | 'photo' | 'viewing' | 'information';

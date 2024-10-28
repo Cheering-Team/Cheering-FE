@@ -13,17 +13,17 @@ import {
 import {StyleSheet} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import JoinProfile from './JoinProfile/JoinProfile';
-import {Community} from 'apis/community/types';
+import {Player} from 'apis/player/types';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
+import {Community} from 'apis/community/types';
 
 interface Props {
   community: Community;
-  setRefreshKey: Dispatch<SetStateAction<number>>;
   bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
 }
 
 const JoinModal = (props: Props) => {
-  const {community, setRefreshKey, bottomSheetModalRef} = props;
+  const {community, bottomSheetModalRef} = props;
 
   const insets = useSafeAreaInsets();
   const snapPoints = useMemo(() => [380 + insets.bottom], [insets.bottom]);
@@ -52,8 +52,7 @@ const JoinModal = (props: Props) => {
       <BottomSheetView
         style={[styles.contentContainer, {paddingBottom: insets.bottom + 20}]}>
         <JoinProfile
-          playerData={community}
-          setRefreshKey={setRefreshKey}
+          community={community}
           bottomSheetModalRef={bottomSheetModalRef}
         />
       </BottomSheetView>

@@ -11,11 +11,11 @@ import {useGetNotices} from 'apis/notice/useNotices';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {View} from 'react-native';
 import {queryClient} from '../../../../App';
-import {communityKeys} from 'apis/community/queries';
-import {Community} from 'apis/community/types';
+import {playerKeys} from 'apis/player/queries';
+import {Player} from 'apis/player/types';
 
 interface MyStarCarouselProps {
-  communities?: Community[];
+  communities?: Player[];
 }
 
 const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
@@ -55,10 +55,7 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
   useEffect(() => {
     if (communities) {
       communities.forEach(community => {
-        queryClient.setQueryData(
-          communityKeys.detail(community.id, 0),
-          community,
-        );
+        queryClient.setQueryData(playerKeys.detail(community.id, 0), community);
       });
     }
   });

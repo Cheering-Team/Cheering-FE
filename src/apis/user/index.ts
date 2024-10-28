@@ -1,4 +1,4 @@
-import {PlayerIdPayload} from 'apis/community/types';
+import {PlayerIdPayload} from 'apis/player/types';
 import {axiosInstance} from '../index';
 import {ApiResponse} from '../types';
 import {
