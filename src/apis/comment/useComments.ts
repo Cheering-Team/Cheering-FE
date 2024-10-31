@@ -12,15 +12,13 @@ import {
 } from './index';
 import {commentKeys, reCommentKeys} from './queries';
 import {postKeys} from '../post/queries';
-import {showBottomToast, showTopToast} from '../../utils/toast';
+import {showTopToast} from '../../utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryClient} from '../../../App';
 import {LayoutAnimation} from 'react-native';
-import {Fan} from 'apis/user/types';
 import {Comment, ReComment} from './types';
 import {IdName} from 'apis/types';
-import {useNavigation} from '@react-navigation/native';
-import {useEffect} from 'react';
+import {Fan} from 'apis/fan/types';
 
 // 댓글 작성
 export const useWriteComment = (

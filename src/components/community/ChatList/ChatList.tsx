@@ -6,7 +6,7 @@ import ChatCard from 'components/common/ChatCard';
 import {Pressable, View} from 'react-native';
 import PlusSvg from '../../../assets/images/plus-gray.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {CommunityScreenNavigationProp} from 'screens/communityStack/CommunityScreen';
+import {CommunityScreenNavigationProp} from 'screens/Community/CommunityScreen';
 import ChatRoomSkeleton from 'components/skeleton/ChatRoomSkeleton';
 import {Community} from 'apis/community/types';
 

@@ -110,9 +110,6 @@ const CommentWriter = ({
         <CustomText fontWeight="500" className="text-base">
           {comment.writer.name}
         </CustomText>
-        {comment.writer.type === 'MANAGER' && (
-          <OfficialSvg width={13} height={13} className="ml-[2]" />
-        )}
         <CustomText style={{color: '#a5a5a5', marginLeft: 5}}>
           {formatBeforeDate(comment.createdAt)}
         </CustomText>

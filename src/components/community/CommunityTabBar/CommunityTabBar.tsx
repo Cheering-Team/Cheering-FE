@@ -26,7 +26,6 @@ const CommunityTabBar = <T extends TabName = TabName>({
   scrollEnabled = false,
   indicatorStyle,
   index,
-  TabItemComponent = MaterialTabItem,
   getLabelText = name => String(name).toUpperCase(),
   onTabPress,
   style,

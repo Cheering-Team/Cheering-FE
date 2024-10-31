@@ -1,5 +1,5 @@
+import {Fan} from 'apis/fan/types';
 import {Page} from '../types';
-import {Fan} from '../user/types';
 
 // 엔티티
 export interface Comment {

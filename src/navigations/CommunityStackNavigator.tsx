@@ -1,19 +1,22 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import CommunityScreen from '../screens/communityStack/CommunityScreen';
-import ProfileScreen from '../screens/communityStack/ProfileScreen';
-import PostWriteScreen from '../screens/communityStack/PostWriteScreen';
-import PostScreen from '../screens/communityStack/PostScreen';
-import ProfileEditScreen from '../screens/communityStack/ProfileEditScreen';
-import EditNameScreen from '../screens/moreStack/EditNameScreen';
-import DeletePlayerUserScreen from '../screens/communityStack/DeleteFanScreen';
-import ChatRoomScreen from '../screens/communityStack/ChatRoomScreen';
-import CreateChatRoomScreen from 'screens/communityStack/CreateChatRoomScreen';
-import ChatRoomEnterScreen from 'screens/communityStack/ChatRoomEnterScreen';
-import BlockListScreen from 'screens/communityStack/BlockListScreen';
-import DailyScreen from 'screens/communityStack/DailyScreen';
 import {Post} from 'apis/post/types';
 import {Fan} from 'apis/fan/types';
+import ScheduleScreen from 'screens/Community/Schedule/ScheduleScreen';
+import {Community} from 'apis/community/types';
+import MatchScreen from 'screens/Community/Schedule/MatchScreen';
+import CommunityScreen from 'screens/Community/CommunityScreen';
+import ProfileScreen from 'screens/Community/ProfileScreen';
+import PostWriteScreen from 'screens/Community/PostWriteScreen';
+import PostScreen from 'screens/Community/PostScreen';
+import DailyScreen from 'screens/Community/DailyScreen';
+import ChatRoomScreen from 'screens/Community/ChatRoomScreen';
+import CreateChatRoomScreen from 'screens/Community/CreateChatRoomScreen';
+import ChatRoomEnterScreen from 'screens/Community/ChatRoomEnterScreen';
+import ProfileEditScreen from 'screens/Community/ProfileEditScreen';
+import EditNameScreen from 'screens/moreStack/EditNameScreen';
+import DeletePlayerUserScreen from 'screens/Community/DeleteFanScreen';
+import BlockListScreen from 'screens/Community/BlockListScreen';
 
 export type CommunityStackParamList = {
   Community: {communityId: number};
@@ -28,6 +31,8 @@ export type CommunityStackParamList = {
   EditName: {name: string; fanId: number | null};
   DeleteFan: {fanId: number};
   BlockList: {playerUserId: number};
+  Schedule: {community: Community};
+  Match: {matchId: number; community: Community};
 };
 
 const CommunityStackNavigator = () => {
@@ -92,6 +97,16 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="BlockList"
         component={BlockListScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="Schedule"
+        component={ScheduleScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="Match"
+        component={MatchScreen}
         options={{headerShown: false}}
       />
     </CommunityStack.Navigator>

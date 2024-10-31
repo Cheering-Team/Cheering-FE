@@ -26,7 +26,6 @@ import {
   useGetChats,
   useGetParticipants,
 } from '../../apis/chat/useChats';
-import {BlurView} from '@react-native-community/blur';
 import OfficialSvg from '../../assets/images/official.svg';
 import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
 import MegaphoneSvg from '../../assets/images/megaphone.svg';
@@ -369,7 +368,7 @@ const ChatRoomScreen = ({route}) => {
             <View className="flex-1" />
           ) : (
             <FlatList
-              data={participants?.result}
+              data={participants}
               contentContainerStyle={{
                 paddingHorizontal: 15,
                 paddingTop: Platform.OS === 'ios' ? 5 : insets.top + 5,
@@ -508,7 +507,7 @@ const ChatRoomScreen = ({route}) => {
                 <Pressable
                   onPress={() =>
                     navigation.navigate('Community', {
-                      playerId: chatRoom.player.id,
+                      playerId: chatRoom.community.id,
                     })
                   }>
                   <CustomText style={{color: '#626262', marginRight: 2}}>

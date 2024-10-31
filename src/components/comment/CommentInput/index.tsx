@@ -8,21 +8,21 @@ import {
 } from 'react-native';
 import CustomText from '../../common/CustomText';
 import CloseSvg from '../../../assets/images/x_white.svg';
-import ArrowSvg from '../../../assets/images/arrow_up.svg';
+import ArrowSvg from 'assets/images/arrow_up.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {IdName} from '../../../apis/types';
 import {
   useWriteComment,
   useWriteReComment,
 } from '../../../apis/comment/useComments';
-import {hideToast, showBottomToast, showTopToast} from '../../../utils/toast';
-import {Fan} from 'apis/user/types';
+import {showTopToast} from '../../../utils/toast';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {queryClient} from '../../../../App';
 import {commentKeys} from 'apis/comment/queries';
 import {postKeys} from 'apis/post/queries';
+import {Fan} from 'apis/fan/types';
 
 interface CommentInputProps {
   postId: number;

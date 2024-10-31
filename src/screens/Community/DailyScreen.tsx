@@ -36,7 +36,7 @@ import {useGetComments} from 'apis/comment/useComments';
 import Daily from 'components/post/Daily';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import DownSvg from '../../assets/images/tri-down-gray.svg';
-import {Calendar} from 'react-native-calendars';
+// import {Calendar} from 'react-native-calendars';
 import {formatBarDate, formatMonthDay, formatXDate} from 'utils/format';
 import DailySkeleton from 'components/skeleton/DailySkeleton';
 import DailyComment from 'components/comment/DailyComment';
@@ -184,7 +184,7 @@ const DailyScreen = ({navigation, route}) => {
           </Pressable>
           <View className="w-8 h-8" />
         </View>
-        {isCalendarOpen && (
+        {/* {isCalendarOpen && (
           <Calendar
             style={{
               borderBottomWidth: 1,
@@ -214,7 +214,7 @@ const DailyScreen = ({navigation, route}) => {
             )}
             markedDates={markedDates}
           />
-        )}
+        )} */}
 
         <FlatList
           data={dailys ? dailys.pages.flatMap(page => page.dailys) : []}

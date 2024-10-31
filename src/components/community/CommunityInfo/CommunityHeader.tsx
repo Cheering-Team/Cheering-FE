@@ -7,6 +7,7 @@ import Avatar from '../../common/Avatar';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {Community} from 'apis/community/types';
+import CalendarSvg from 'assets/images/calendar.svg';
 
 interface CommunityHeaderProps {
   community: Community;
@@ -34,6 +35,10 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 
       {community.curFan && (
         <View className="flex-row items-center">
+          <Pressable
+            onPress={() => navigation.navigate('Schedule', {community})}>
+            <CalendarSvg width={23} height={23} />
+          </Pressable>
           <Pressable
             className="ml-5"
             onPress={() => {

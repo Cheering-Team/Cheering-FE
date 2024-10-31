@@ -237,6 +237,13 @@ const HomeScreen = () => {
     <>
       <View className="flex-1">
         <HomeHeader translateY={translateY} />
+        <Pressable
+          className="h-[200] bg-black"
+          onPress={() =>
+            navigation.navigate('CommunityStack', {screen: 'Schedule'})
+          }>
+          <CustomText>스케줄</CustomText>
+        </Pressable>
 
         {/* <Animated.FlatList
           ref={flatListRef}

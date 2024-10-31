@@ -47,7 +47,16 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
         renderHeader={() => <CommunityProfile community={community} />}
         headerHeight={HEADER_HEIGHT}
         minHeaderHeight={45 + insets.top}
-        renderTabBar={props => <CommunityTabBar {...props} />}>
+        renderTabBar={props => (
+          <CommunityTabBar
+            {...props}
+            labelStyle={{color: 'white'}}
+            tabStyle={{backgroundColor: 'black'}}
+            indicatorStyle={{backgroundColor: 'white'}}
+            activeColor="white"
+            inactiveColor="white"
+          />
+        )}>
         <Tabs.Tab name="피드">
           <FeedList community={community} />
         </Tabs.Tab>

@@ -24,7 +24,8 @@ export const CommunityTabItem = <T extends TabName = string>(
     style,
     labelStyle,
     inactiveOpacity = 0.4,
-    pressColor = '#DDDDDD',
+    activeColor,
+    inactiveColor,
     pressOpacity = Platform.OS === 'ios' ? 1 : 1,
     ...rest
   } = props;
@@ -37,7 +38,10 @@ export const CommunityTabItem = <T extends TabName = string>(
         [inactiveOpacity, 1, inactiveOpacity],
         Extrapolation.CLAMP,
       ),
-      color: Math.abs(index - indexDecimal.value) < 0.5 ? 'white' : 'white',
+      color:
+        Math.abs(index - indexDecimal.value) < 0.5
+          ? activeColor
+          : inactiveColor,
     };
   });
 
