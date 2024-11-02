@@ -4,6 +4,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  RefreshControl,
   TextInput,
   View,
 } from 'react-native';
@@ -47,16 +48,19 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
 
   const [under, setUnder] = useState<number | null>(null);
   const [to, setTo] = useState<IdName | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const {
     data: post,
     isLoading: postIsLoading,
+    refetch: refetchPost,
     isError,
     error,
   } = useGetPostById(postId);
   const {
     data: comments,
     isLoading,
+    refetch,
     hasNextPage,
     fetchNextPage,
   } = useGetComments(postId, !!post && !postIsLoading && !isError);
@@ -65,6 +69,16 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
     if (hasNextPage) {
       fetchNextPage();
     }
+  };
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    refetch();
+    postRefetch();
+
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
   };
 
   if (postIsLoading) {
@@ -82,7 +96,11 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
           style={{flex: 1}}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={-insets.bottom}>
-          <PostHeader community={post.community} />
+          <PostHeader
+            community={post.community}
+            refetchPost={refetchPost}
+            refetch={refetch}
+          />
           <FlatList
             data={
               isLoading ? [] : comments?.pages.flatMap(page => page.comments)
@@ -99,6 +117,12 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
             onEndReached={loadComment}
             onEndReachedThreshold={1}
             contentContainerStyle={{paddingBottom: 70}}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={handleRefresh}
+              />
+            }
             ListHeaderComponent={
               <>
                 <View

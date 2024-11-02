@@ -3,7 +3,6 @@ import {useGetNotifications} from '../../apis/notification/useNotifications';
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   ListRenderItem,
   Pressable,
   RefreshControl,
@@ -170,7 +169,7 @@ const NotificationScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <StackHeader title="알림" type="none" />
+      <StackHeader title="알림" type="back" />
       {notifications ? (
         <FlatList
           ref={flatListRef}

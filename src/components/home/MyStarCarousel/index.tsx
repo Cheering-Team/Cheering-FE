@@ -11,11 +11,10 @@ import {useGetNotices} from 'apis/notice/useNotices';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {View} from 'react-native';
 import {queryClient} from '../../../../App';
-import {playerKeys} from 'apis/player/queries';
-import {Player} from 'apis/player/types';
+import {Community} from 'apis/community/types';
 
 interface MyStarCarouselProps {
-  communities?: Player[];
+  communities?: Community[];
 }
 
 const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
@@ -52,13 +51,13 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
     return <MyStarCard community={item} />;
   };
 
-  useEffect(() => {
-    if (communities) {
-      communities.forEach(community => {
-        queryClient.setQueryData(playerKeys.detail(community.id, 0), community);
-      });
-    }
-  });
+  // useEffect(() => {
+  //   if (communities) {
+  //     communities.forEach(community => {
+  //       queryClient.setQueryData(playerKeys.detail(community.id, 0), community);
+  //     });
+  //   }
+  // });
 
   if (communities && noticies) {
     return (

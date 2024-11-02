@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Animated, {
   Easing,
@@ -6,9 +6,13 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
-import {View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import LogoSvg from '../../../assets/images/logo-text.svg';
-import CustomText from 'components/common/CustomText';
+import AlertSvg from 'assets/images/alert-black.svg';
+import {useGetIsUnread} from 'apis/notification/useNotifications';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 
 interface HomeHeaderProps {
   translateY: SharedValue<number>;
@@ -16,7 +20,18 @@ interface HomeHeaderProps {
 
 const HomeHeader = (props: HomeHeaderProps) => {
   const {translateY} = props;
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const insets = useSafeAreaInsets();
+
+  const {data, refetch} = useGetIsUnread();
+
+  useFocusEffect(
+    useCallback(() => {
+      // 화면이 focus될 때마다 refetch를 호출합니다.
+      refetch();
+    }, [refetch]),
+  );
 
   const animatedHeaderStyle = useAnimatedStyle(() => {
     return {
@@ -60,7 +75,23 @@ const HomeHeader = (props: HomeHeaderProps) => {
         ]}>
         <View style={{width: 30, height: 30}} />
         <LogoSvg width={200} height={50} />
-        <View style={{width: 30, height: 30}} />
+        <Pressable
+          className="w-[30] h-[30] items-center justify-center"
+          onPress={() => navigation.navigate('Notification')}>
+          <AlertSvg width={22} height={22} />
+          <View
+            style={{
+              position: 'absolute',
+              zIndex: 100,
+              width: 11,
+              height: 11,
+              backgroundColor: 'red',
+              borderRadius: 100,
+              top: 2,
+              right: 2,
+            }}
+          />
+        </Pressable>
       </Animated.View>
     </View>
   );

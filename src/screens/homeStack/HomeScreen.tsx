@@ -34,8 +34,8 @@ import {postKeys} from 'apis/post/queries';
 import {Post} from 'apis/post/types';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 import {showBottomToast, showTopToast} from 'utils/toast';
-import {useGetMyCommunities} from 'apis/player/usePlayers';
 import {WINDOW_HEIGHT} from 'constants/dimension';
+import {useGetMyCommunities} from 'apis/community/useCommunities';
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -60,7 +60,7 @@ const HomeScreen = () => {
   //   fetchNextPage,
   //   isFetchingNextPage,
   // } = useGetPosts(0, 'FAN_POST', 'all', true);
-  // const {data: communities} = useGetMyCommunities();
+  const {data: communities} = useGetMyCommunities();
   // const {refetch: refetchUnRead} = useGetIsUnread();
   // const {mutateAsync: readNotificaiton} = useReadNotification();
 
@@ -237,13 +237,13 @@ const HomeScreen = () => {
     <>
       <View className="flex-1">
         <HomeHeader translateY={translateY} />
-        <Pressable
-          className="h-[200] bg-black"
-          onPress={() =>
-            navigation.navigate('CommunityStack', {screen: 'Schedule'})
-          }>
-          <CustomText>스케줄</CustomText>
-        </Pressable>
+        <FlatList
+          className="pt-[52]"
+          style={{marginTop: insets.top}}
+          data={[]}
+          renderItem={() => <></>}
+          ListHeaderComponent={<MyStarCarousel communities={communities} />}
+        />
 
         {/* <Animated.FlatList
           ref={flatListRef}

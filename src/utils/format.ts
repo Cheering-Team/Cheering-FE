@@ -37,7 +37,7 @@ export const formatTime = (inputTimeString: string) => {
   return `${ampm} ${hours}:${formattedMinutes}`;
 };
 
-export const formatBeforeDate = (input: Date) => {
+export const formatBeforeDate = (input: string) => {
   const inputDate = new Date(input);
   const now = new Date();
 

@@ -20,7 +20,10 @@ import TeamSkeleton from 'components/skeleton/TeamSkeleton';
 import FastImage from 'react-native-fast-image';
 import {useGetLeagues, useGetSports, useGetTeams} from 'apis/team/useTeams';
 import {Sport} from 'apis/team/types';
-import {teamKeys} from 'apis/team/queries';
+import SoccerSvg from 'assets/images/soccer.svg';
+import BaseballSvg from 'assets/images/baseball.svg';
+import BasketballSvg from 'assets/images/basketball.svg';
+import VolleyballSvg from 'assets/images/volleyball.svg';
 
 type CategoryScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -79,12 +82,10 @@ const CategoryScreen = ({
             onPress={() => setSelectedSport(item)}
             className={`items-center px-[10] ${selectedSport === item && 'bg-white'} justify-evenly`}>
             <View className="w-[40] h-[40] items-center justify-center">
-              <SvgUri
-                uri={item.image}
-                width={35}
-                height={35}
-                className="rounded-lg"
-              />
+              {item.name === '야구' && <BaseballSvg width={35} height={35} />}
+              {item.name === '축구' && <SoccerSvg width={35} height={35} />}
+              {item.name === '농구' && <BasketballSvg width={35} height={35} />}
+              {item.name === '배구' && <VolleyballSvg width={35} height={35} />}
             </View>
             <CustomText
               fontWeight={selectedSport === item ? '600' : '400'}
@@ -129,12 +130,12 @@ const CategoryScreen = ({
               : []
           }
           renderItem={({item}) => {
-            if (item.name === null) {
+            if (item.koreanName === null) {
               return <View className="flex-1" />;
             }
             return (
               <Pressable
-                key={item.name}
+                key={item.koreanName}
                 className="items-center flex-1 px-2"
                 onPress={() => {
                   if (selectedSport && selectedLeague) {
@@ -150,12 +151,24 @@ const CategoryScreen = ({
                   source={{uri: item.image}}
                   className="w-[55] h-[55] bg-white rounded-[13px] mb-[5]"
                 />
-                <CustomText
-                  fontWeight="500"
-                  className="pb-0 text-[12px] text-center"
-                  numberOfLines={2}>
-                  {item.koreanName}
-                </CustomText>
+                {item.shortName && item.shortName.length >= 7 ? (
+                  item.shortName.split(' ').map(name => (
+                    <CustomText
+                      key={name}
+                      fontWeight="500"
+                      className="pb-0 text-[13px] text-center"
+                      numberOfLines={2}>
+                      {name}
+                    </CustomText>
+                  ))
+                ) : (
+                  <CustomText
+                    fontWeight="500"
+                    className="pb-0 text-[13px] text-center"
+                    numberOfLines={2}>
+                    {item.shortName}
+                  </CustomText>
+                )}
               </Pressable>
             );
           }}

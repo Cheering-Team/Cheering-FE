@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {Platform, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  Platform,
+  RefreshControl,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ArrowSvg from 'assets/images/arrow_up.svg';
@@ -11,7 +17,8 @@ import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {queryClient} from '../../../../../App';
 import {matchKeys} from 'apis/match/queries';
 import Cheer from './Cheer';
-import CountdownTimer from './TimerTest';
+import ListEmpty from 'components/common/ListEmpty/ListEmpty';
+import CommentSkeleton from 'components/skeleton/CommentSkeleton';
 
 interface CheerListProps {
   matchId: number;
@@ -24,9 +31,17 @@ const CheerList = ({matchId, communityId}: CheerListProps) => {
   const insets = useSafeAreaInsets();
 
   const [content, setContent] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const {mutateAsync: writeCheer} = useWriteCheer();
-  const {data: cheers, isLoading} = useGetCheers(matchId, communityId);
+  const {
+    data: cheers,
+    isLoading,
+    refetch,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useGetCheers(matchId, communityId);
 
   const handleWriteCheer = async () => {
     if (content.trim().length === 0) {
@@ -46,9 +61,24 @@ const CheerList = ({matchId, communityId}: CheerListProps) => {
       if (error.message === '존재하지 않는 경기') {
         showTopToast(insets.top + 20, '취소된 경기입니다');
         navigation.goBack();
-        queryClient.invalidateQueries({queryKey: matchKeys.list(communityId)});
+        queryClient.invalidateQueries({queryKey: matchKeys.lists()});
       }
     }
+  };
+
+  const loadCheers = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    refetch();
+
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
   };
 
   return (
@@ -60,6 +90,15 @@ const CheerList = ({matchId, communityId}: CheerListProps) => {
         )}
         contentContainerStyle={{paddingHorizontal: 10, paddingVertical: 10}}
         estimatedItemSize={100}
+        onEndReached={loadCheers}
+        onEndReachedThreshold={1}
+        ListFooterComponent={isFetchingNextPage ? <CommentSkeleton /> : null}
+        ListEmptyComponent={
+          isLoading ? <CommentSkeleton /> : <ListEmpty type="cheer" />
+        }
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+        }
       />
       <View
         className="px-2 pt-[5] border-t border-t-[#eeeeee]"

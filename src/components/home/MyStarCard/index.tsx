@@ -27,11 +27,11 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {data: dailys} = useGetDailys(
-    community.id,
-    formatBarDate(new Date()),
-    community.manager !== null,
-  );
+  // const {data: dailys} = useGetDailys(
+  //   community.id,
+  //   formatBarDate(new Date()),
+  //   community.manager !== null,
+  // );
 
   return (
     <TouchableOpacity
@@ -85,7 +85,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         </View>
 
         <View>
-          {community.type === 'PLAYER' &&
+          {/* {community.type === 'PLAYER' &&
             dailys &&
             dailys.pages[0].dailys.length !== 0 && (
               <TouchableOpacity
@@ -139,7 +139,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                   오늘의 한마디를 남겨주세요
                 </CustomText>
               </TouchableOpacity>
-            )}
+            )} */}
           {/* {community.type === 'TEAM' && (
             <TouchableOpacity
               activeOpacity={1}

@@ -67,7 +67,6 @@ const MatchScreen = () => {
         <Tabs.Tab name="응원">
           <CheerList matchId={matchId} communityId={community.id} />
         </Tabs.Tab>
-        <Tabs.Tab name="MVP 투표"></Tabs.Tab>
       </Tabs.Container>
     </KeyboardAvoidingView>
   );

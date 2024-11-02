@@ -1,12 +1,17 @@
-import {useQuery} from '@tanstack/react-query';
+import {keepPreviousData, useQuery} from '@tanstack/react-query';
 import {matchKeys} from './queries';
 import {getMatchDetail, getMatchSchedule} from '.';
 
-export const useGetMatchSchedule = (communityId: number) => {
+export const useGetMatchSchedule = (
+  communityId: number,
+  year: number,
+  month: number,
+) => {
   return useQuery({
-    queryKey: matchKeys.list(communityId),
+    queryKey: matchKeys.list(communityId, year, month),
     queryFn: getMatchSchedule,
     retry: false,
+    placeholderData: keepPreviousData,
   });
 };
 

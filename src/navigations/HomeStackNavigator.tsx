@@ -6,11 +6,13 @@ import CommunityStackNavigator, {
 } from './CommunityStackNavigator';
 import NoticeScreen from 'screens/moreStack/NoticeScreen';
 import {NavigationPropType} from './types';
+import NotificationScreen from 'screens/homeStack/NotificaitonScreen';
 
 export type HomeStackParamList = {
   Home: undefined;
   CommunityStack: NavigationPropType<CommunityStackParamList>;
   Notice: {noticeId: number};
+  Notification: undefined;
 };
 
 const HomeStackNavigator = () => {
@@ -33,6 +35,11 @@ const HomeStackNavigator = () => {
       <HomeStack.Screen
         name="Notice"
         component={NoticeScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="Notification"
+        component={NotificationScreen}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>

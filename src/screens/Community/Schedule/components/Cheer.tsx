@@ -1,7 +1,7 @@
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import React, {useRef} from 'react';
-import {Pressable, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import {formatBeforeDate} from 'utils/format';
 import MoreSvg from 'assets/images/three-dots-black.svg';
 import {Cheer as CheerType} from 'apis/cheer/types';
@@ -26,7 +26,14 @@ const Cheer = ({cheer, matchId, communityId}: CheerProps) => {
 
   return (
     <>
-      <View className="flex-row px-3 py-2 bg-slate-50 rounded-lg mb-2">
+      <View
+        className="flex-row px-3 py-2 bg-white rounded-lg mb-2 border border-gray-100"
+        style={{
+          shadowColor: '#000',
+          shadowOffset: {width: 1, height: 1},
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+        }}>
         <Avatar uri={cheer.writer.image} size={30} className="mt-1" />
         <View className="ml-2 flex-1">
           <View className="flex-row items-center">

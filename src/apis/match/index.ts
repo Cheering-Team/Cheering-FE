@@ -8,9 +8,9 @@ export const getMatchSchedule = async ({
 }: {
   queryKey: ReturnType<typeof matchKeys.list>;
 }) => {
-  const [, , {communityId}] = queryKey;
+  const [, , {communityId, year, month}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<MatchSchedule>>(
-    `/communities/${communityId}/matches`,
+    `/communities/${communityId}/matches?year=${year}&month=${month}`,
   );
   return response.data.result;
 };

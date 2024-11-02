@@ -8,4 +8,5 @@ export interface Team {
   id: number;
   koreanName: string;
   image: string;
+  shortName: string;
 }

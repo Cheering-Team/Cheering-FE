@@ -7,7 +7,7 @@ import {Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CloseSvg from 'assets/images/close-black.svg';
 import FastImage from 'react-native-fast-image';
-import MatchSchedule from 'components/schedule/MatchSchedule';
+import ScheduleList from './components/ScheduleList';
 
 const ScheduleScreen = () => {
   const navigation =
@@ -19,8 +19,11 @@ const ScheduleScreen = () => {
   return (
     <>
       <View
-        className="px-[5] flex-row justify-between items-center bg-white z-50"
-        style={{paddingTop: insets.top, height: 48 + insets.top}}>
+        className="px-[5] flex-row justify-between items-center bg-white z-50 border-b border-b-gray-200"
+        style={{
+          paddingTop: insets.top,
+          height: 48 + insets.top,
+        }}>
         <Pressable className="pr-[28]" onPress={() => navigation.goBack()}>
           <CloseSvg width={32} height={32} />
         </Pressable>
@@ -32,18 +35,18 @@ const ScheduleScreen = () => {
             }}
             className="w-[35] h-[35] rounded-full mr-1"
           />
-          <CustomText fontWeight="500" className="text-lg pb-0 ml-1">
+          <CustomText fontWeight="500" className="text-lg pb-0">
             {community.koreanName}
           </CustomText>
         </View>
         <View className="flex-row items-center pr-1 w-[65]">
-          <View className="w-5 h-5 bg-slate-200 rounded-md mr-1" />
-          <CustomText className="text-slate-500" fontWeight="600">
+          <View className="w-5 h-5 bg-[#ffa6a6] rounded-md mr-1" />
+          <CustomText className="text-[#000000]" fontWeight="600">
             홈경기
           </CustomText>
         </View>
       </View>
-      <MatchSchedule community={community} />
+      <ScheduleList community={community} />
     </>
   );
 };
