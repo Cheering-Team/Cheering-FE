@@ -1,6 +1,6 @@
 import {keepPreviousData, useQuery} from '@tanstack/react-query';
 import {matchKeys} from './queries';
-import {getMatchDetail, getMatchSchedule} from '.';
+import {getMatchDetail, getMatchSchedule, getNextMatch} from '.';
 
 export const useGetMatchSchedule = (
   communityId: number,
@@ -21,5 +21,13 @@ export const useGetMatchDetail = (matchId: number | null) => {
     queryFn: getMatchDetail,
     retry: false,
     enabled: !!matchId,
+  });
+};
+
+export const useGetNextMatch = (communityId: number) => {
+  return useQuery({
+    queryKey: matchKeys.nextList(communityId),
+    queryFn: getNextMatch,
+    retry: false,
   });
 };

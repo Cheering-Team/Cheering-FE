@@ -26,3 +26,15 @@ export const getMatchDetail = async ({
   );
   return response.data.result;
 };
+
+export const getNextMatch = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof matchKeys.nextList>;
+}) => {
+  const [, , , {communityId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<MatchDetail>>(
+    `/communities/${communityId}/matches/next`,
+  );
+  return response.data.result;
+};

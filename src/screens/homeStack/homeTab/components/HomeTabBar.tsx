@@ -1,0 +1,93 @@
+import CustomText from 'components/common/CustomText';
+import React, {View, TouchableOpacity, Pressable} from 'react-native';
+import AlertSvg from 'assets/images/alert-black.svg';
+
+const HomeTabBar = ({state, descriptors, navigation, position}) => {
+  return (
+    <View
+      style={{
+        paddingTop: 2,
+        flexDirection: 'row',
+        alignSelf: 'center',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: 50,
+        paddingHorizontal: 10,
+        width: '100%',
+      }}>
+      <Pressable className="w-10 h-10" />
+      <View
+        style={{
+          width: '37%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+        }}>
+        {state.routes.map((route, index) => {
+          const {options} = descriptors[route.key];
+          const label =
+            options.tabBarLabel !== undefined
+              ? options.tabBarLabel
+              : options.title !== undefined
+                ? options.title
+                : route.name;
+
+          const isFocused = state.index === index;
+
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
+
+            if (!isFocused && !event.defaultPrevented) {
+              navigation.navigate(route.name, route.params);
+            }
+          };
+
+          const onLongPress = () => {
+            navigation.emit({
+              type: 'tabLongPress',
+              target: route.key,
+            });
+          };
+
+          return (
+            <TouchableOpacity
+              activeOpacity={1}
+              key={label}
+              accessibilityRole="button"
+              accessibilityState={isFocused ? {selected: true} : {}}
+              accessibilityLabel={options.tabBarAccessibilityLabel}
+              testID={options.tabBarTestID}
+              onPress={onPress}
+              onLongPress={onLongPress}
+              style={[
+                {paddingBottom: 3, paddingLeft: 3, paddingRight: 0},
+                isFocused
+                  ? {borderBottomWidth: 3, borderBlockColor: 'black'}
+                  : {borderBottomWidth: 3, borderBlockColor: 'white'},
+              ]}>
+              <CustomText
+                fontWeight="600"
+                style={{
+                  fontSize: 28,
+                  color: isFocused ? 'black' : 'rgb(190,190,190)',
+                  textAlign: 'center',
+                }}>
+                {label}
+              </CustomText>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+
+      <Pressable className="w-10 h-10 items-center justify-center">
+        <AlertSvg />
+      </Pressable>
+    </View>
+  );
+};
+
+export default HomeTabBar;

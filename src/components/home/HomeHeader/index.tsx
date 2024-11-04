@@ -79,18 +79,20 @@ const HomeHeader = (props: HomeHeaderProps) => {
           className="w-[30] h-[30] items-center justify-center"
           onPress={() => navigation.navigate('Notification')}>
           <AlertSvg width={22} height={22} />
-          <View
-            style={{
-              position: 'absolute',
-              zIndex: 100,
-              width: 11,
-              height: 11,
-              backgroundColor: 'red',
-              borderRadius: 100,
-              top: 2,
-              right: 2,
-            }}
-          />
+          {data && (
+            <View
+              style={{
+                position: 'absolute',
+                zIndex: 100,
+                width: 11,
+                height: 11,
+                backgroundColor: 'red',
+                borderRadius: 100,
+                top: 2,
+                right: 2,
+              }}
+            />
+          )}
         </Pressable>
       </Animated.View>
     </View>

@@ -1,27 +1,19 @@
-import {WINDOW_WIDTH} from 'constants/dimension';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
 import React, {useEffect} from 'react';
-import FastImage from 'react-native-fast-image';
 import {useSharedValue} from 'react-native-reanimated';
 import Carousel, {Pagination} from 'react-native-reanimated-carousel';
-import {useNavigation} from '@react-navigation/native';
-import {HomeScreenNavigationProp} from 'screens/homeStack/HomeScreen';
-import {PanGesture, Pressable} from 'react-native-gesture-handler';
+import {PanGesture} from 'react-native-gesture-handler';
 import MyStarCard from '../MyStarCard';
-import {useGetNotices} from 'apis/notice/useNotices';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {View} from 'react-native';
 import {queryClient} from '../../../../App';
-import {Community} from 'apis/community/types';
+import {communityKeys} from 'apis/community/queries';
+import {useGetMyCommunities} from 'apis/community/useCommunities';
 
-interface MyStarCarouselProps {
-  communities?: Community[];
-}
-
-const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+const MyStarCarousel = () => {
   const progress = useSharedValue<number>(0);
 
-  const {data: noticies} = useGetNotices();
+  const {data: communities} = useGetMyCommunities();
 
   const handleConfigurePanGesture = (panGesture: PanGesture) => {
     panGesture.activeOffsetX([-10, 10]);
@@ -29,46 +21,27 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
   };
 
   const renderItem = ({item, index}) => {
-    if (communities && index >= communities.length) {
-      return (
-        <Pressable
-          className="w-full h-[220]"
-          style={{
-            shadowColor: '#5a5a5a',
-            shadowOffset: {width: 0, height: 5},
-            shadowOpacity: 0.6,
-            shadowRadius: 5,
-          }}
-          onPress={() => navigation.navigate('Notice', {noticeId: item.id})}>
-          <FastImage
-            source={{uri: item.image}}
-            resizeMode="cover"
-            className="w-full h-full rounded-2xl"
-          />
-        </Pressable>
-      );
-    }
     return <MyStarCard community={item} />;
   };
 
-  // useEffect(() => {
-  //   if (communities) {
-  //     communities.forEach(community => {
-  //       queryClient.setQueryData(playerKeys.detail(community.id, 0), community);
-  //     });
-  //   }
-  // });
+  useEffect(() => {
+    if (communities) {
+      communities.forEach(community => {
+        queryClient.setQueryData(communityKeys.detail(community.id), community);
+      });
+    }
+  });
 
-  if (communities && noticies) {
+  if (communities) {
     return (
       <>
         <Carousel
           onConfigurePanGesture={handleConfigurePanGesture}
           loop={false}
-          data={[...(communities || []), ...(noticies || [])]}
+          data={communities}
           mode="parallax"
           width={WINDOW_WIDTH}
-          height={220}
+          height={WINDOW_HEIGHT * 0.75}
           onProgressChange={progress}
           modeConfig={{
             parallaxScrollingScale: 0.87,
@@ -78,11 +51,9 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
         />
         <Pagination.Basic
           progress={progress}
-          data={[...(communities || []), ...(noticies || [])]}
+          data={communities}
           dotStyle={{
-            width: Math.floor(
-              (WINDOW_WIDTH * 0.4) / (communities.length + noticies.length),
-            ),
+            width: Math.floor((WINDOW_WIDTH * 0.4) / communities.length),
             height: 4,
             backgroundColor: '#ebebeb',
             borderRadius: 1,
@@ -91,20 +62,23 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
             overflow: 'hidden',
             backgroundColor: '#393939',
           }}
-          containerStyle={{gap: 6, marginBottom: 10}}
+          containerStyle={{gap: 5, bottom: 90}}
           horizontal
         />
       </>
     );
   } else {
     return (
-      <SkeletonPlaceholder backgroundColor="#f4f4f4" highlightColor="#ffffff">
+      <SkeletonPlaceholder
+        backgroundColor="#f4f4f4"
+        highlightColor="#ffffff"
+        speed={1500}>
         <View
           style={{
-            height: 195,
+            height: WINDOW_HEIGHT * 0.65,
             marginBottom: 20,
             marginHorizontal: 25,
-            marginTop: 15,
+            marginTop: 43,
             borderRadius: 20,
           }}
         />

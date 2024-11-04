@@ -54,15 +54,26 @@ const CommunityProfile = (props: CommunityProfileProps) => {
           </View>
         </View>
       </View>
+      {community.backgroundImage ? (
+        <FastImage
+          source={{
+            uri: community.backgroundImage,
+            priority: FastImage.priority.high,
+          }}
+          resizeMode="cover"
+          style={styles.backgroundImage}
+        />
+      ) : (
+        <FastImage
+          source={{
+            uri: community.image,
+            priority: FastImage.priority.high,
+          }}
+          resizeMode="contain"
+          style={styles.backgroundImage}
+        />
+      )}
 
-      <FastImage
-        source={{
-          uri: community.backgroundImage || community.image,
-          priority: FastImage.priority.high,
-        }}
-        resizeMode="cover"
-        style={styles.backgroundImage}
-      />
       <LinearGradient
         start={{x: 1, y: 1}}
         end={{x: 0, y: 0}}
