@@ -1,7 +1,11 @@
 import {axiosInstance} from 'apis';
 import {ApiResponse} from 'apis/types';
 import {communityKeys} from './queries';
-import {Community, JoinCommunityPayload} from './types';
+import {
+  ChangeCommunityOrderPayload,
+  Community,
+  JoinCommunityPayload,
+} from './types';
 
 // 커뮤니티 조회
 export const getCommunityById = async ({
@@ -66,5 +70,16 @@ export const joinCommunity = async (data: JoinCommunityPayload) => {
 export const getMyCommunities = async () => {
   const response =
     await axiosInstance.get<ApiResponse<Community[]>>('/my/communities');
+  return response.data.result;
+};
+
+// 커뮤니티 순서 변경
+export const changeCommunityOrder = async (
+  data: ChangeCommunityOrderPayload[],
+) => {
+  const response = await axiosInstance.put<ApiResponse<null>>(
+    '/communities/order',
+    data,
+  );
   return response.data.result;
 };

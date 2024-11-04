@@ -1,5 +1,6 @@
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {useIsFetching, useMutation, useQuery} from '@tanstack/react-query';
 import {
+  changeCommunityOrder,
   getCommunities,
   getCommunitiesByTeam,
   getCommunityById,
@@ -8,6 +9,10 @@ import {
 } from './index';
 import {communityKeys} from './queries';
 import {queryClient} from '../../../App';
+import {useNavigation} from '@react-navigation/native';
+import {showTopToast} from 'utils/toast';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useEffect} from 'react';
 
 // 커뮤니티 조회
 export const useGetCommunityById = (communityId: number) => {
@@ -56,5 +61,19 @@ export const useGetMyCommunities = () => {
     queryKey: communityKeys.listByMy(),
     queryFn: getMyCommunities,
     retry: false,
+  });
+};
+
+// 커뮤니티 순서 변경
+export const useChangeCommuniyOrder = () => {
+  const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+  return useMutation({
+    mutationFn: changeCommunityOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: communityKeys.listByMy()});
+      navigation.goBack();
+      showTopToast(insets.top + 10, '저장 완료');
+    },
   });
 };

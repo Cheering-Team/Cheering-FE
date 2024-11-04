@@ -13,6 +13,7 @@ export interface Community {
   sportName?: string;
   leagueName?: string;
   firstTeamName?: string;
+  officalRoomId: number | null;
 }
 
 // 요청
@@ -20,4 +21,9 @@ export interface JoinCommunityPayload {
   communityId: number;
   name: string;
   image: ImagePayload;
+}
+
+export interface ChangeCommunityOrderPayload {
+  communityId: number;
+  communityOrder: number;
 }

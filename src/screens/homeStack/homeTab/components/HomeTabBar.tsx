@@ -1,17 +1,24 @@
 import CustomText from 'components/common/CustomText';
-import React, {View, TouchableOpacity, Pressable} from 'react-native';
+import React, {View, TouchableOpacity, Pressable, Platform} from 'react-native';
 import AlertSvg from 'assets/images/alert-black.svg';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 
 const HomeTabBar = ({state, descriptors, navigation, position}) => {
+  const insets = useSafeAreaInsets();
+  const stackNavigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   return (
     <View
       style={{
-        paddingTop: 2,
+        paddingTop: Platform.OS === 'android' ? 2 + insets.top : 2,
         flexDirection: 'row',
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: 50,
+        height: Platform.OS === 'android' ? 50 + insets.top : 50,
         paddingHorizontal: 10,
         width: '100%',
       }}>
@@ -83,7 +90,11 @@ const HomeTabBar = ({state, descriptors, navigation, position}) => {
         })}
       </View>
 
-      <Pressable className="w-10 h-10 items-center justify-center">
+      <Pressable
+        className="w-10 h-10 items-center justify-center z-10"
+        onPress={() => {
+          stackNavigation.navigate('Notification');
+        }}>
         <AlertSvg />
       </Pressable>
     </View>

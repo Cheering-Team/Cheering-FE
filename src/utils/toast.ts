@@ -1,3 +1,4 @@
+import {Platform} from 'react-native';
 import Toast from 'react-native-toast-message';
 
 export const showBottomToast = (
@@ -6,9 +7,9 @@ export const showBottomToast = (
   autoHide: boolean = true,
 ) => {
   Toast.show({
-    type: 'default',
+    type: Platform.OS === 'android' ? 'success' : 'successBlur',
     position: 'bottom',
-    visibilityTime: 2000,
+    visibilityTime: 2500,
     autoHide: autoHide,
     bottomOffset: offset,
     text1: message,
@@ -21,9 +22,9 @@ export const showTopToast = (
   autoHide: boolean = true,
 ) => {
   Toast.show({
-    type: 'default',
+    type: Platform.OS === 'android' ? 'success' : 'successBlur',
     position: 'top',
-    visibilityTime: 2000,
+    visibilityTime: 2500,
     autoHide: autoHide,
     topOffset: offset,
     text1: message,

@@ -1,9 +1,9 @@
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import AuthSwitch from './src/navigations/AuthSwitch';
-import {StatusBar} from 'react-native';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import {navigationRef} from './src/navigations/RootNavigation';
-import Toast, {BaseToast} from 'react-native-toast-message';
+import Toast from 'react-native-toast-message';
 import {QueryClientProvider, QueryClient} from '@tanstack/react-query';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import NaverLogin from '@react-native-seoul/naver-login';
@@ -15,29 +15,83 @@ import messaging from '@react-native-firebase/messaging';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {deleteFCMToken, saveFCMToken} from 'apis/user';
 import {DevToolsBubble} from 'react-native-react-query-devtools';
+import {BlurView} from '@react-native-community/blur';
+import CustomText from 'components/common/CustomText';
+import CheckSvg from 'assets/images/check-white.svg';
 
 export const toastConfig = {
-  default: props => (
-    <BaseToast
-      {...props}
+  successBlur: ({text1, props}) => (
+    <View
       style={{
-        borderLeftColor: '#2d2d2d',
-        backgroundColor: '#2d2d2d',
-      }}
-      contentContainerStyle={{paddingHorizontal: 10}}
-      text1Style={{
-        fontWeight: 'normal',
-        fontFamily: 'NotoSansKR-Medium',
-        fontSize: 15,
-        color: 'white',
-      }}
-      text2Style={{
-        fontWeight: 'normal',
-        fontFamily: 'NotoSansKR-Medium',
-        fontSize: 15,
-        color: 'white',
-      }}
-    />
+        overflow: 'hidden',
+        width: '85%',
+        height: 65,
+        borderRadius: 10,
+      }}>
+      <BlurView
+        blurType="dark"
+        blurAmount={3}
+        style={[
+          {
+            alignItems: 'center',
+            flexDirection: 'row',
+            borderRadius: 10,
+          },
+        ]}>
+        <View
+          style={{
+            padding: 3,
+            backgroundColor: '#0ea5e9',
+            borderRadius: 999,
+            marginLeft: 20,
+            marginRight: 15,
+          }}>
+          <CheckSvg width={13} height={13} />
+        </View>
+        <CustomText
+          fontWeight="500"
+          style={{
+            color: 'white',
+            fontSize: 16,
+            textAlign: 'center',
+            lineHeight: 65,
+          }}>
+          {text1}
+        </CustomText>
+      </BlurView>
+    </View>
+  ),
+  success: ({text1, props}) => (
+    <View
+      style={{
+        width: '85%',
+        height: 60,
+        borderRadius: 10,
+        backgroundColor: 'rgba(78, 78, 78, 0.98)',
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}>
+      <View
+        style={{
+          padding: 3,
+          backgroundColor: '#0ea5e9',
+          borderRadius: 999,
+          marginLeft: 20,
+          marginRight: 15,
+        }}>
+        <CheckSvg width={13} height={13} />
+      </View>
+      <CustomText
+        fontWeight="500"
+        style={{
+          color: 'white',
+          fontSize: 16,
+          textAlign: 'center',
+          lineHeight: 60,
+        }}>
+        {text1}
+      </CustomText>
+    </View>
   ),
 };
 
@@ -109,7 +163,7 @@ function App(): React.JSX.Element {
             <Toast config={toastConfig} />
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
-        {/* <DevToolsBubble /> */}
+        <DevToolsBubble />
       </QueryClientProvider>
     </SafeAreaProvider>
   );

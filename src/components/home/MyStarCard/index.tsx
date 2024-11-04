@@ -12,6 +12,7 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from 'components/common/OptionModal';
 import {useGetNextMatch} from 'apis/match/useMatches';
 import {Community} from 'apis/community/types';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
 
 interface MyStarCardProps {
   community: Community;
@@ -26,27 +27,27 @@ const MyStarCard = ({community}: MyStarCardProps) => {
   const {data: match} = useGetNextMatch(community.id);
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      className="w-full bg-white rounded-2xl"
-      style={{
-        shadowColor: '#464646',
-        shadowOffset: {width: 2, height: 2},
-        shadowOpacity: 0.7,
-        shadowRadius: 4,
-        elevation: 5,
-      }}
-      onPress={() =>
-        navigation.navigate('CommunityStack', {
-          screen: 'Community',
-          params: {communityId: community.id},
-        })
-      }
-      onLongPress={() => {
-        bottomSheetModalRef.current?.present();
-      }}>
-      <View className="absolute z-10 w-full h-full p-5 justify-between">
-        <View className="flex-row justify-between">
+    <>
+      <TouchableOpacity
+        activeOpacity={1}
+        className="bg-white rounded-2xl p-5 w-full h-full justify-between"
+        style={{
+          shadowColor: '#464646',
+          shadowOffset: {width: 2, height: 2},
+          shadowOpacity: 0.7,
+          shadowRadius: 4,
+          elevation: 5,
+        }}
+        onPress={() =>
+          navigation.navigate('CommunityStack', {
+            screen: 'Community',
+            params: {communityId: community.id},
+          })
+        }
+        onLongPress={() => {
+          bottomSheetModalRef.current?.present();
+        }}>
+        <View className="flex-row justify-between items-start z-10">
           <View>
             {community.type === 'PLAYER' ? (
               <CustomText
@@ -79,7 +80,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           </TouchableOpacity>
         </View>
 
-        <View>
+        <View className="z-10 items-end">
           {match &&
             (match.status === 'live' ||
             match.status === 'delayed' ||
@@ -156,7 +157,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
             ) : (
               <TouchableOpacity
                 activeOpacity={0.7}
-                className="mb-5 p-1"
+                className="mb-5 p-1 flex-row self-end items-end"
                 style={{
                   shadowColor: '#000',
                   shadowOffset: {width: 2, height: 2},
@@ -170,46 +171,36 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                     params: {community},
                   })
                 }>
-                <View>
-                  <View
-                    key={match.id}
-                    className="flex-row items-end justify-end">
-                    <View className="items-center">
-                      <CustomText className="text-white text-[15px]">
-                        {match.location}
-                      </CustomText>
-                      <CustomText
-                        className="text-4xl text-white"
-                        fontWeight="800">
-                        VS
-                      </CustomText>
-                      <CustomText className="text-base text-white">
-                        11.02 14:00
-                      </CustomText>
-                    </View>
-                    <View className="items-center ml-3">
-                      <FastImage
-                        source={{
-                          uri:
-                            community.id === match.homeTeam.id
-                              ? match.awayTeam.image
-                              : match.homeTeam.image,
-                        }}
-                        className="w-[60] h-[60]"
-                      />
-                      <CustomText
-                        className="text-white text-base"
-                        fontWeight="500">
-                        {community.id === match.homeTeam.id
-                          ? match.awayTeam.shortName
-                          : match.homeTeam.shortName}
-                      </CustomText>
-                    </View>
-                  </View>
+                <View className="items-center">
+                  <CustomText className="text-white text-[15px]">
+                    {match.location}
+                  </CustomText>
+                  <CustomText className="text-4xl text-white" fontWeight="800">
+                    VS
+                  </CustomText>
+                  <CustomText className="text-base text-white">
+                    11.02 14:00
+                  </CustomText>
+                </View>
+                <View className="items-center ml-3">
+                  <FastImage
+                    source={{
+                      uri:
+                        community.id === match.homeTeam.id
+                          ? match.awayTeam.image
+                          : match.homeTeam.image,
+                    }}
+                    className="w-[60] h-[60]"
+                  />
+                  <CustomText className="text-white text-base" fontWeight="500">
+                    {community.id === match.homeTeam.id
+                      ? match.awayTeam.shortName
+                      : match.homeTeam.shortName}
+                  </CustomText>
                 </View>
               </TouchableOpacity>
             ))}
-          <View className="flex-row justify-evenly items-center">
+          <View className="w-full flex-row justify-evenly items-center">
             <TouchableOpacity
               className="p-1"
               activeOpacity={0.5}
@@ -220,29 +211,30 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 })
               }>
               <CustomText
-                className="text-white text-center text-base"
+                className="text-white text-center text-[17px]"
                 fontWeight="500">
                 글 작성
               </CustomText>
             </TouchableOpacity>
-            <View className="h-5 bg-white w-[2]" />
+            <CustomText className="text-lg text-white">|</CustomText>
             <TouchableOpacity
               className="p-1"
               activeOpacity={0.5}
-              // onPress={() =>
-              //   navigation.navigate('CommunityStack', {
-              //     screen: 'ChatRoom',
-              //     params: {chatRoomId: community.officialChatRoomId},
-              //   })
-              // }
-            >
+              onPress={() => {
+                if (community.officalRoomId !== null) {
+                  navigation.navigate('CommunityStack', {
+                    screen: 'ChatRoom',
+                    params: {chatRoomId: community.officalRoomId},
+                  });
+                }
+              }}>
               <CustomText
-                className="text-white text-center text-base"
+                className="text-white text-center text-[17px]"
                 fontWeight="500">
                 대표 채팅
               </CustomText>
             </TouchableOpacity>
-            <View className="h-5 bg-white w-[2]" />
+            <CustomText className="text-lg text-white">|</CustomText>
 
             <TouchableOpacity
               className="p-1"
@@ -256,39 +248,40 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 }
               }}>
               <CustomText
-                className="text-white text-center text-base"
+                className="text-white text-center text-[17px]"
                 fontWeight="500">
                 내 프로필
               </CustomText>
             </TouchableOpacity>
           </View>
         </View>
-      </View>
 
-      {community.backgroundImage ? (
-        <FastImage
-          source={{
-            uri: community.backgroundImage,
-            priority: FastImage.priority.high,
+        {community.backgroundImage ? (
+          <FastImage
+            source={{
+              uri: community.backgroundImage,
+              priority: FastImage.priority.high,
+            }}
+            style={{...StyleSheet.absoluteFillObject}}
+            resizeMode="cover"
+            className="rounded-2xl"
+          />
+        ) : (
+          <FastImage
+            source={{uri: community.image, priority: FastImage.priority.high}}
+            style={{...StyleSheet.absoluteFillObject}}
+            resizeMode="contain"
+            className="rounded-2xl"
+          />
+        )}
+        <LinearGradient
+          colors={['rgba(0, 0, 0, 0.6)', 'rgba(0, 0, 0, 0.6)']}
+          className="rounded-2xl"
+          style={{
+            ...StyleSheet.absoluteFillObject,
           }}
-          resizeMode="cover"
-          className="w-full h-full rounded-2xl"
         />
-      ) : (
-        <FastImage
-          source={{uri: community.image, priority: FastImage.priority.high}}
-          resizeMode="contain"
-          className="w-full h-full rounded-2xl"
-        />
-      )}
-
-      <LinearGradient
-        colors={['rgba(0, 0, 0, 0.6)', 'rgba(0, 0, 0, 0.6)']}
-        className="rounded-2xl"
-        style={{
-          ...StyleSheet.absoluteFillObject,
-        }}
-      />
+      </TouchableOpacity>
       <OptionModal
         modalRef={bottomSheetModalRef}
         firstText={community.curFan?.name}
@@ -321,7 +314,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           }
         }}
       />
-    </TouchableOpacity>
+    </>
   );
 };
 

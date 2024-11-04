@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  PermissionsAndroid,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  View,
-} from 'react-native';
+import {PermissionsAndroid, Platform, Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
@@ -18,6 +12,9 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import {useGetMyCommunities} from 'apis/community/useCommunities';
 import MyStarCarousel from 'components/home/MyStarCarousel';
+import CustomText from 'components/common/CustomText';
+import ChageSvg from 'assets/images/change.svg';
+import {showTopToast} from 'utils/toast';
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -26,7 +23,8 @@ export type HomeScreenNavigationProp = NativeStackNavigationProp<
 
 const HomeMyScreen = () => {
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
 
   const {data: communities} = useGetMyCommunities();
 
@@ -124,6 +122,18 @@ const HomeMyScreen = () => {
 
   return (
     <View className="flex-1">
+      <Pressable
+        onPress={() => {
+          navigation.navigate('ChangeOrder');
+        }}
+        className="self-end top-3 mr-4 z-10 flex-row items-center">
+        <ChageSvg width={12} height={12} />
+        <CustomText
+          className="text-gray-400 text-[15px] ml-[4]"
+          fontWeight="700">
+          순서 변경
+        </CustomText>
+      </Pressable>
       <MyStarCarousel />
     </View>
   );

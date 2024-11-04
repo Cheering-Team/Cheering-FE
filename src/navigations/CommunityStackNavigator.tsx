@@ -17,6 +17,7 @@ import ProfileEditScreen from 'screens/Community/ProfileEditScreen';
 import EditNameScreen from 'screens/moreStack/EditNameScreen';
 import DeletePlayerUserScreen from 'screens/Community/DeleteFanScreen';
 import BlockListScreen from 'screens/Community/BlockListScreen';
+import {SafeAreaView} from 'react-native';
 
 export type CommunityStackParamList = {
   Community: {communityId: number};

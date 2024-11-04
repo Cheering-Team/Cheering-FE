@@ -5,10 +5,11 @@ import Carousel, {Pagination} from 'react-native-reanimated-carousel';
 import {PanGesture} from 'react-native-gesture-handler';
 import MyStarCard from '../MyStarCard';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import {View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import {queryClient} from '../../../../App';
 import {communityKeys} from 'apis/community/queries';
 import {useGetMyCommunities} from 'apis/community/useCommunities';
+import CustomText from 'components/common/CustomText';
 
 const MyStarCarousel = () => {
   const progress = useSharedValue<number>(0);
@@ -62,7 +63,7 @@ const MyStarCarousel = () => {
             overflow: 'hidden',
             backgroundColor: '#393939',
           }}
-          containerStyle={{gap: 5, bottom: 90}}
+          containerStyle={{gap: 5, bottom: 80}}
           horizontal
         />
       </>
