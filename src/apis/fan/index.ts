@@ -3,7 +3,6 @@ import {
   Fan,
   FanIdPayload,
   GetFanInfoResponse,
-  JoinCommunityPayload,
   UpdateFanImagePayload,
   UpdateFanNamePayload,
 } from './types';

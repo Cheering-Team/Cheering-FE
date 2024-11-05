@@ -20,8 +20,8 @@ const HomeMyStackNavigator = () => {
         component={ChangeOrderScreen}
         options={{
           headerShown: false,
-          animation: 'fade',
-          animationDuration: 200,
+          animation: 'slide_from_bottom',
+          animationDuration: 400,
         }}
       />
     </HomeMyStack.Navigator>

@@ -25,7 +25,7 @@ const HomeTabBar = ({state, descriptors, navigation, position}) => {
       <Pressable className="w-10 h-10" />
       <View
         style={{
-          width: '37%',
+          width: '34%',
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-around',
@@ -61,8 +61,7 @@ const HomeTabBar = ({state, descriptors, navigation, position}) => {
           };
 
           return (
-            <TouchableOpacity
-              activeOpacity={1}
+            <Pressable
               key={label}
               accessibilityRole="button"
               accessibilityState={isFocused ? {selected: true} : {}}
@@ -71,21 +70,21 @@ const HomeTabBar = ({state, descriptors, navigation, position}) => {
               onPress={onPress}
               onLongPress={onLongPress}
               style={[
-                {paddingBottom: 3, paddingLeft: 3, paddingRight: 0},
+                {paddingBottom: 2, paddingLeft: 3, paddingRight: 0},
                 isFocused
-                  ? {borderBottomWidth: 3, borderBlockColor: 'black'}
-                  : {borderBottomWidth: 3, borderBlockColor: 'white'},
+                  ? {borderBottomWidth: 2, borderBlockColor: 'black'}
+                  : {borderBottomWidth: 2, borderBlockColor: 'white'},
               ]}>
               <CustomText
                 fontWeight="600"
                 style={{
-                  fontSize: 28,
+                  fontSize: 26,
                   color: isFocused ? 'black' : 'rgb(190,190,190)',
                   textAlign: 'center',
                 }}>
                 {label}
               </CustomText>
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </View>
