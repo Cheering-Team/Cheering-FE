@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@baronha/react-native-multiple-image-picker": "^1.1.9",
+    "@bwjohns4/react-native-draggable-flatlist": "^4.0.1-patch",
     "@gorhom/bottom-sheet": "^5.0.2",
     "@invertase/react-native-apple-authentication": "^2.4.0",
     "@likashefqet/react-native-image-zoom": "^4.2.0",
@@ -47,7 +48,6 @@
     "react-native-calendars": "1.1307.0",
     "react-native-collapsible-tab-view": "^8.0.0",
     "react-native-compressor": "^1.9.0",
-    "react-native-draggable-flatlist": "^4.0.1",
     "react-native-drawer-layout": "^3.3.2",
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-fast-image": "^8.6.3",

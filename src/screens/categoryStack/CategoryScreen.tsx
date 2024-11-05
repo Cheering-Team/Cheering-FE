@@ -4,7 +4,7 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
-  StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import SearchSvg from '../../assets/images/search-sm.svg';
@@ -12,18 +12,13 @@ import React, {useEffect, useState} from 'react';
 import CustomText from '../../components/common/CustomText';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
-import {SvgUri} from 'react-native-svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {queryClient} from '../../../App';
 import {IdName} from 'apis/types';
 import TeamSkeleton from 'components/skeleton/TeamSkeleton';
 import FastImage from 'react-native-fast-image';
 import {useGetLeagues, useGetSports, useGetTeams} from 'apis/team/useTeams';
 import {Sport} from 'apis/team/types';
-import SoccerSvg from 'assets/images/soccer.svg';
-import BaseballSvg from 'assets/images/baseball.svg';
-import BasketballSvg from 'assets/images/basketball.svg';
-import VolleyballSvg from 'assets/images/volleyball.svg';
+import RightSvg from 'assets/images/chevron-right-gray.svg';
 
 type CategoryScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -74,25 +69,48 @@ const CategoryScreen = ({
       <FlatList
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        className="flex-grow-0 bg-[#f4f4f4] border-b border-b-gray-100 h-[80]"
+        contentContainerStyle={{paddingHorizontal: 5}}
+        className="flex-grow-0 bg-white h-[100] border-b border-gray-100"
         data={sports || []}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
-          <Pressable
+          <TouchableOpacity
+            activeOpacity={0.6}
             onPress={() => setSelectedSport(item)}
-            className={`items-center px-[10] ${selectedSport === item && 'bg-white'} justify-evenly`}>
-            <View className="w-[40] h-[40] items-center justify-center">
-              {item.name === '야구' && <BaseballSvg width={35} height={35} />}
-              {item.name === '축구' && <SoccerSvg width={35} height={35} />}
-              {item.name === '농구' && <BasketballSvg width={35} height={35} />}
-              {item.name === '배구' && <VolleyballSvg width={35} height={35} />}
+            className="items-center px-2 justify-center"
+            style={{opacity: selectedSport !== item ? 0.45 : 1}}>
+            <View className="w-[53] h-[53] items-center justify-center">
+              {item.name === '야구' && (
+                <FastImage
+                  source={require('../../assets/images/baseball-bg.png')}
+                  className="rounded-full w-[50] h-[50]"
+                />
+              )}
+              {item.name === '축구' && (
+                <FastImage
+                  source={require('../../assets/images/soccer-bg.jpg')}
+                  className="rounded-full w-[50] h-[50]"
+                />
+              )}
+              {item.name === '농구' && (
+                <FastImage
+                  source={require('../../assets/images/basketball-bg.png')}
+                  className="rounded-full w-[50] h-[50]"
+                />
+              )}
+              {item.name === '배구' && (
+                <FastImage
+                  source={require('../../assets/images/volleyball-bg.png')}
+                  className="rounded-full w-[50] h-[50]"
+                />
+              )}
             </View>
             <CustomText
-              fontWeight={selectedSport === item ? '600' : '400'}
-              className={`color-[#9b9b9b] text-[14px] ${selectedSport === item && 'text-black'}`}>
+              fontWeight="600"
+              className="text-[15px] text-slate-800 mt-[6]">
               {item.name}
             </CustomText>
-          </Pressable>
+          </TouchableOpacity>
         )}
       />
       <View className="flex-row flex-1">
@@ -103,40 +121,27 @@ const CategoryScreen = ({
           renderItem={({item}) => (
             <Pressable
               onPress={() => setSelectedLeague(item)}
-              className={`py-[9] pl-3 ${selectedLeague === item && 'bg-white'}`}>
+              className={`py-4 pl-3 ${selectedLeague === item && 'bg-white'}`}>
               <CustomText
-                fontWeight={selectedLeague === item ? '500' : '400'}
-                className={`color-[#9b9b9b] text-[15px] ${selectedLeague === item && 'text-black'}`}>
+                fontWeight="600"
+                className={`color-[#6f6f6f] text-[15px] ${selectedLeague === item && 'text-black'}`}>
                 {item.name}
               </CustomText>
             </Pressable>
           )}
         />
         <FlatList
-          numColumns={3}
           style={{
             width: Dimensions.get('window').width - 120,
           }}
-          columnWrapperStyle={styles.justifyaround}
-          contentContainerStyle={styles.padding}
-          data={
-            teams && teams.length !== 0
-              ? [
-                  ...teams,
-                  ...new Array(3 - (teams.length % 3)).fill({
-                    name: null,
-                  }),
-                ]
-              : []
-          }
+          contentContainerStyle={{paddingBottom: 50}}
+          data={teams || []}
           renderItem={({item}) => {
             if (item.koreanName === null) {
               return <View className="flex-1" />;
             }
             return (
-              <Pressable
-                key={item.koreanName}
-                className="items-center flex-1 px-2"
+              <TouchableOpacity
                 onPress={() => {
                   if (selectedSport && selectedLeague) {
                     navigation.navigate('PlayerList', {
@@ -145,31 +150,30 @@ const CategoryScreen = ({
                       leagueName: selectedLeague?.name,
                     });
                   }
-                }}>
+                }}
+                activeOpacity={0.6}
+                className="flex-row my-[2] mx-[2] items-center justify-end">
                 <FastImage
-                  resizeMode="contain"
                   source={{uri: item.image}}
-                  className="w-[55] h-[55] bg-white rounded-[13px] mb-[5]"
+                  resizeMode="cover"
+                  style={{
+                    marginRight: 40,
+                    width: 85,
+                    height: 50,
+                    backgroundColor: 'white',
+                  }}
                 />
-                {item.shortName && item.shortName.length >= 7 ? (
-                  item.shortName.split(' ').map(name => (
-                    <CustomText
-                      key={name}
-                      fontWeight="500"
-                      className="pb-0 text-[13px] text-center"
-                      numberOfLines={2}>
-                      {name}
-                    </CustomText>
-                  ))
-                ) : (
+                <View className="absolute flex-row justify-between w-full px-4 items-center">
                   <CustomText
-                    fontWeight="500"
-                    className="pb-0 text-[13px] text-center"
-                    numberOfLines={2}>
+                    className="text-[16px] text-gray-800"
+                    fontWeight="500">
                     {item.shortName}
                   </CustomText>
-                )}
-              </Pressable>
+                  <Pressable>
+                    <RightSvg />
+                  </Pressable>
+                </View>
+              </TouchableOpacity>
             );
           }}
           ListEmptyComponent={
@@ -188,7 +192,7 @@ const CategoryScreen = ({
                 </CustomText>
               </View>
             ) : (
-              <TeamSkeleton />
+              <></>
             )
           }
         />
@@ -196,10 +200,5 @@ const CategoryScreen = ({
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  justifyaround: {marginBottom: 25},
-  padding: {paddingVertical: 20, paddingHorizontal: 5, paddingBottom: 40},
-});
 
 export default CategoryScreen;

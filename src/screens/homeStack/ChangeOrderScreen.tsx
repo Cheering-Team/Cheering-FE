@@ -12,7 +12,7 @@ import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native';
 import DraggableFlatList, {
   RenderItemParams,
   ScaleDecorator,
-} from 'react-native-draggable-flatlist';
+} from '@bwjohns4/react-native-draggable-flatlist';
 import FastImage from 'react-native-fast-image';
 import ListSvg from 'assets/images/list-white.svg';
 import LinearGradient from 'react-native-linear-gradient';
