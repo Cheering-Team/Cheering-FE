@@ -23,7 +23,6 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
     <Animated.View
       style={[
         styles.headerContainer,
-
         {paddingTop: insets.top, height: insets.top + 45},
       ]}>
       <Pressable

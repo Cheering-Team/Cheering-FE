@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import CommunityHeader from '../../components/community/CommunityInfo/CommunityHeader';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -9,13 +9,10 @@ import ChatList from '../../components/community/ChatList/ChatList';
 import {WINDOW_HEIGHT} from '../../constants/dimension';
 import JoinModal from '../../components/community/JoinModal/JoinModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {useGetPlayerById} from 'apis/player/usePlayers';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import OwnerModal from 'components/community/OwnerModal';
 import NotJoin from 'components/community/NotJoin';
-import {useGetTeamById} from 'apis/team/useTeams';
 import {useGetCommunityById} from 'apis/community/useCommunities';
 
 const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
@@ -53,8 +50,7 @@ const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
             labelStyle={{color: 'white'}}
             tabStyle={{backgroundColor: 'black'}}
             indicatorStyle={{backgroundColor: 'white'}}
-            activeColor="white"
-            inactiveColor="white"
+            activeColor={community.color}
           />
         )}>
         <Tabs.Tab name="피드">

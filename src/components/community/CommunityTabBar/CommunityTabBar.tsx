@@ -32,7 +32,6 @@ const CommunityTabBar = <T extends TabName = TabName>({
   tabProps,
   contentContainerStyle,
   labelStyle,
-  inactiveColor,
   activeColor,
   tabStyle,
   width: customWidth,

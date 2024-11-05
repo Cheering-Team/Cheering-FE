@@ -14,11 +14,10 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CategoryStackParamList} from 'navigations/CategoryStackNavigator';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {IdName} from 'apis/types';
-import TeamSkeleton from 'components/skeleton/TeamSkeleton';
 import FastImage from 'react-native-fast-image';
 import {useGetLeagues, useGetSports, useGetTeams} from 'apis/team/useTeams';
 import {Sport} from 'apis/team/types';
-import RightSvg from 'assets/images/chevron-right-gray.svg';
+import RightSvg from 'assets/images/chevron-right-white.svg';
 
 type CategoryScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -55,7 +54,7 @@ const CategoryScreen = ({
   return (
     <SafeAreaView className="flex-1">
       <Pressable
-        className="flex-row pb-3 px-4 border-b-gray-200 border-b"
+        className="flex-row pb-3 px-4"
         style={{paddingTop: Platform.OS === 'ios' ? 12 : insets.top + 12}}
         onPress={() => navigation.navigate('Search')}>
         <View className="flex-1 flex-row bg-[#f0f0f0] h-10 rounded justify-between items-center px-3">
@@ -68,49 +67,25 @@ const CategoryScreen = ({
 
       <FlatList
         horizontal={true}
-        showsHorizontalScrollIndicator={false}
+        className="flex-grow-0 bg-white border-b-gray-50 border-b"
         contentContainerStyle={{paddingHorizontal: 5}}
-        className="flex-grow-0 bg-white h-[100] border-b border-gray-100"
         data={sports || []}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
-          <TouchableOpacity
-            activeOpacity={0.6}
+          <Pressable
             onPress={() => setSelectedSport(item)}
-            className="items-center px-2 justify-center"
-            style={{opacity: selectedSport !== item ? 0.45 : 1}}>
-            <View className="w-[53] h-[53] items-center justify-center">
-              {item.name === '야구' && (
-                <FastImage
-                  source={require('../../assets/images/baseball-bg.png')}
-                  className="rounded-full w-[50] h-[50]"
-                />
-              )}
-              {item.name === '축구' && (
-                <FastImage
-                  source={require('../../assets/images/soccer-bg.jpg')}
-                  className="rounded-full w-[50] h-[50]"
-                />
-              )}
-              {item.name === '농구' && (
-                <FastImage
-                  source={require('../../assets/images/basketball-bg.png')}
-                  className="rounded-full w-[50] h-[50]"
-                />
-              )}
-              {item.name === '배구' && (
-                <FastImage
-                  source={require('../../assets/images/volleyball-bg.png')}
-                  className="rounded-full w-[50] h-[50]"
-                />
-              )}
-            </View>
+            className="items-center px-[14] py-[10] justify-center"
+            style={{
+              borderBottomWidth: 3,
+              borderBlockColor: selectedSport === item ? 'black' : 'white',
+            }}>
             <CustomText
               fontWeight="600"
-              className="text-[15px] text-slate-800 mt-[6]">
+              className="text-[18px]"
+              style={{color: selectedSport === item ? 'black' : 'gray'}}>
               {item.name}
             </CustomText>
-          </TouchableOpacity>
+          </Pressable>
         )}
       />
       <View className="flex-row flex-1">
@@ -152,7 +127,8 @@ const CategoryScreen = ({
                   }
                 }}
                 activeOpacity={0.6}
-                className="flex-row my-[2] mx-[2] items-center justify-end">
+                className="flex-row my-[1] mx-[2] items-center justify-end rounded-md"
+                style={{backgroundColor: item.color}}>
                 <FastImage
                   source={{uri: item.image}}
                   resizeMode="cover"
@@ -160,13 +136,12 @@ const CategoryScreen = ({
                     marginRight: 40,
                     width: 85,
                     height: 50,
-                    backgroundColor: 'white',
                   }}
                 />
-                <View className="absolute flex-row justify-between w-full px-4 items-center">
+                <View className="absolute flex-row justify-between w-full pl-4 pr-3 items-center">
                   <CustomText
-                    className="text-[16px] text-gray-800"
-                    fontWeight="500">
+                    className="text-[16px] text-white"
+                    fontWeight="600">
                     {item.shortName}
                   </CustomText>
                   <Pressable>

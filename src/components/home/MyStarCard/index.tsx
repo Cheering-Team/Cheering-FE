@@ -12,8 +12,6 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from 'components/common/OptionModal';
 import {useGetNextMatch} from 'apis/match/useMatches';
 import {Community} from 'apis/community/types';
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
-
 interface MyStarCardProps {
   community: Community;
 }

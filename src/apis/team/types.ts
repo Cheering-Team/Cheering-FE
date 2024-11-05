@@ -9,4 +9,5 @@ export interface Team {
   koreanName: string;
   image: string;
   shortName: string;
+  color: string;
 }

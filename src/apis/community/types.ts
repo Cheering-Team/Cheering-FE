@@ -14,6 +14,7 @@ export interface Community {
   leagueName?: string;
   firstTeamName?: string;
   officalRoomId: number | null;
+  color: string;
 }
 
 // 요청

@@ -20,7 +20,11 @@ const CommunityProfile = (props: CommunityProfileProps) => {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2}]}>
+    <View
+      style={[
+        styles.profileContainer,
+        {height: WINDOW_HEIGHT / 2, backgroundColor: community.color},
+      ]}>
       <View style={[styles.infoContainer, {top: insets.top + 55}]}>
         {community.type === 'TEAM' && (
           <CustomText className="ml-5 text-white text-[13px]">{`${community.sportName} / ${community.leagueName}`}</CustomText>
@@ -77,7 +81,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
       <LinearGradient
         start={{x: 1, y: 1}}
         end={{x: 0, y: 0}}
-        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.45)', '#000000']}
+        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.45)', 'rgba(0,0,0,0.6)']}
         style={{
           ...StyleSheet.absoluteFillObject,
         }}
@@ -95,7 +99,6 @@ const CommunityProfile = (props: CommunityProfileProps) => {
 const styles = StyleSheet.create({
   profileContainer: {
     width: '100%',
-    backgroundColor: 'black',
   },
   infoContainer: {position: 'absolute', zIndex: 2, width: '100%'},
   englishName: {color: 'white', fontSize: 17, marginLeft: 2},
