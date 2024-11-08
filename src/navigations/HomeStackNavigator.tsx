@@ -1,16 +1,11 @@
 import React from 'react';
-import NoticeScreen from 'screens/moreStack/NoticeScreen';
 import NotificationScreen from 'screens/homeStack/NotificaitonScreen';
 import HomeTabNavigator from './HomeTabNavigator';
 import CommunityStackNavigator, {
   CommunityStackParamList,
 } from './CommunityStackNavigator';
 import {NavigationPropType} from './types';
-import {
-  CardStyleInterpolators,
-  createStackNavigator,
-} from '@react-navigation/stack';
-import ChangeOrderScreen from 'screens/homeStack/ChangeOrderScreen';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 export type HomeStackParamList = {
   HomeTab: undefined;
@@ -21,7 +16,7 @@ export type HomeStackParamList = {
 };
 
 const HomeStackNavigator = () => {
-  const HomeStack = createStackNavigator<HomeStackParamList>();
+  const HomeStack = createNativeStackNavigator<HomeStackParamList>();
 
   return (
     <HomeStack.Navigator>
@@ -37,7 +32,6 @@ const HomeStackNavigator = () => {
         component={NotificationScreen}
         options={{
           headerShown: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       />
       <HomeStack.Screen
@@ -45,7 +39,6 @@ const HomeStackNavigator = () => {
         component={CommunityStackNavigator}
         options={{
           headerShown: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       />
     </HomeStack.Navigator>

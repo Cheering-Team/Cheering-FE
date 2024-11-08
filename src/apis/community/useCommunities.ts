@@ -1,8 +1,7 @@
-import {useIsFetching, useMutation, useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   changeCommunityOrder,
   getCommunities,
-  getCommunitiesByTeam,
   getCommunityById,
   getMyCommunities,
   joinCommunity,
@@ -12,7 +11,6 @@ import {queryClient} from '../../../App';
 import {useNavigation} from '@react-navigation/native';
 import {showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useEffect} from 'react';
 
 // 커뮤니티 조회
 export const useGetCommunityById = (communityId: number) => {
@@ -23,21 +21,11 @@ export const useGetCommunityById = (communityId: number) => {
   });
 };
 
-// 특정 팀 소속 커뮤니티 목록 조회
-export const useGetCommunitiesByTeam = (teamId: number) => {
-  return useQuery({
-    queryKey: communityKeys.listByTeam(teamId),
-    queryFn: getCommunitiesByTeam,
-    retry: false,
-  });
-};
-
 // 커뮤니티 검색
-export const useGetCommunities = (name: string, enabled: boolean) => {
+export const useGetCommunities = (teamId: number | null, name: string) => {
   return useQuery({
-    queryKey: communityKeys.listBySearch(name),
+    queryKey: communityKeys.listBySearch(teamId, name),
     queryFn: getCommunities,
-    enabled,
     retry: false,
   });
 };

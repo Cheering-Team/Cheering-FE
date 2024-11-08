@@ -64,7 +64,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
             <View className="flex-row items-center">
               <CustomText
                 className="text-white text-[30px] leading-[33px]"
-                fontWeight="700">
+                type="title">
                 {community.koreanName}
               </CustomText>
             </View>
@@ -91,42 +91,41 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                     params: {community, matchId: match.id},
                   })
                 }
-                className="mb-5 p-1"
-                style={{
-                  shadowColor: '#000',
-                  shadowOffset: {width: 2, height: 2},
-                  shadowOpacity: 0.5,
-                  shadowRadius: 8,
-                  elevation: 5,
-                }}>
+                className="mb-5 p-1">
                 <View>
                   <View
                     key={match.id}
                     className="flex-row items-end justify-end">
                     <CustomText
                       className="text-[85px] text-white mr-4"
+                      style={styles.shadow}
                       fontWeight="700">
                       {48}
                     </CustomText>
                     <View className="flex-row items-center">
                       <View className="items-center">
-                        <CustomText className="text-white text-[15px]">
+                        <CustomText
+                          className="text-white text-[15px]"
+                          style={styles.shadow}>
                           {match.location}
                         </CustomText>
                         <CustomText
                           className="text-4xl text-white"
-                          fontWeight="800">
+                          fontWeight="800"
+                          style={styles.shadow}>
                           VS
                         </CustomText>
                         <CustomText
                           className="text-[20px] text-[#dc4343]"
-                          fontWeight="700">
+                          fontWeight="700"
+                          style={styles.shadow}>
                           LIVE
                         </CustomText>
                       </View>
                       <CustomText
                         className="text-[40px] text-white ml-[9] mb-2"
-                        fontWeight="700">
+                        fontWeight="700"
+                        style={styles.shadow}>
                         {52}
                       </CustomText>
                     </View>
@@ -142,6 +141,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                         className="w-[60] h-[60]"
                       />
                       <CustomText
+                        style={styles.shadow}
                         className="text-white text-base"
                         fontWeight="500">
                         {community.id === match.homeTeam.id
@@ -156,13 +156,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
               <TouchableOpacity
                 activeOpacity={0.7}
                 className="mb-5 p-1 flex-row self-end items-end"
-                style={{
-                  shadowColor: '#000',
-                  shadowOffset: {width: 2, height: 2},
-                  shadowOpacity: 0.5,
-                  shadowRadius: 8,
-                  elevation: 5,
-                }}
+                style={{}}
                 onPress={() =>
                   navigation.navigate('CommunityStack', {
                     screen: 'Schedule',
@@ -170,13 +164,20 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                   })
                 }>
                 <View className="items-center">
-                  <CustomText className="text-white text-[15px]">
+                  <CustomText
+                    className="text-white text-[15px]"
+                    style={styles.shadow}>
                     {match.location}
                   </CustomText>
-                  <CustomText className="text-4xl text-white" fontWeight="800">
+                  <CustomText
+                    className="text-4xl text-white"
+                    fontWeight="800"
+                    style={styles.shadow}>
                     VS
                   </CustomText>
-                  <CustomText className="text-base text-white">
+                  <CustomText
+                    className="text-base text-white"
+                    style={styles.shadow}>
                     11.02 14:00
                   </CustomText>
                 </View>
@@ -190,7 +191,10 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                     }}
                     className="w-[60] h-[60]"
                   />
-                  <CustomText className="text-white text-base" fontWeight="500">
+                  <CustomText
+                    className="text-white text-base"
+                    fontWeight="500"
+                    style={styles.shadow}>
                     {community.id === match.homeTeam.id
                       ? match.awayTeam.shortName
                       : match.homeTeam.shortName}
@@ -317,3 +321,13 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 };
 
 export default MyStarCard;
+
+const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {width: 2, height: 2},
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+});

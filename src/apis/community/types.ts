@@ -21,10 +21,15 @@ export interface Community {
 export interface JoinCommunityPayload {
   communityId: number;
   name: string;
-  image: ImagePayload;
 }
 
 export interface ChangeCommunityOrderPayload {
   communityId: number;
   communityOrder: number;
+}
+
+// 응답
+export interface CommunityListResponse {
+  title: 'teams' | 'players';
+  data: Community[];
 }

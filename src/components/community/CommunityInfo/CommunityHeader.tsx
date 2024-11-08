@@ -1,5 +1,5 @@
 import React from 'react';
-import {Animated, Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import CheveronLeft from '../../../assets/images/chevron-left-white.svg';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -8,29 +8,70 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {Community} from 'apis/community/types';
 import CalendarSvg from 'assets/images/calendar.svg';
+import Animated, {
+  Extrapolation,
+  interpolate,
+  interpolateColor,
+  SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
+import CustomText from 'components/common/CustomText';
+import {WINDOW_HEIGHT} from 'constants/dimension';
+
+const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
 
 interface CommunityHeaderProps {
   community: Community;
+  scrollY: SharedValue<number>;
 }
 
 const CommunityHeader = (props: CommunityHeaderProps) => {
-  const {community} = props;
+  const {community, scrollY} = props;
   const insets = useSafeAreaInsets();
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
+
+  const animatedBGStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        scrollY.value,
+        [HEADER_HEIGHT - insets.top - 110, HEADER_HEIGHT - insets.top - 45],
+        ['transparent', community.color],
+      ),
+    };
+  });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      scrollY.value,
+      [HEADER_HEIGHT - insets.top - 110, HEADER_HEIGHT - insets.top - 45],
+      [0, 1],
+      Extrapolation.CLAMP,
+    ),
+  }));
 
   return (
     <Animated.View
       style={[
         styles.headerContainer,
-        {paddingTop: insets.top, height: insets.top + 45},
+        {
+          paddingTop: insets.top,
+          height: insets.top + 45,
+        },
+        animatedBGStyle,
       ]}>
       <Pressable
         onPress={() => {
           navigation.goBack();
         }}>
-        <CheveronLeft width={20} height={20} />
+        <CheveronLeft width={18} height={18} />
       </Pressable>
+      <CustomText
+        className="text-white text-xl ml-3 flex-1"
+        type="titleCenter"
+        style={[animatedStyle]}>
+        {community.koreanName}
+      </CustomText>
 
       {community.curFan && (
         <View className="flex-row items-center">
@@ -70,7 +111,6 @@ const styles = StyleSheet.create({
     zIndex: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: 12,
   },
   communityUserAvatar: {borderWidth: 1.5, borderColor: 'white', marginRight: 3},

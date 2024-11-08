@@ -1,10 +1,4 @@
-import React, {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import React, {RefObject, useState} from 'react';
 import {ImageBackground, Pressable, StyleSheet, View} from 'react-native';
 import CustomText from '../../../common/CustomText';
 import Avatar from '../../../common/Avatar';
@@ -14,7 +8,6 @@ import {NAME_REGEX} from '../../../../constants/regex';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomBottomSheetTextInput from '../../../common/CustomBottomSheetTextInput';
 import {showTopToast} from 'utils/toast';
-import {Player} from 'apis/player/types';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
 import LoadingOverlay from 'components/common/LoadingOverlay';
@@ -33,45 +26,11 @@ const JoinProfile = (props: Props) => {
 
   const insets = useSafeAreaInsets();
 
-  const [imageData, setImageData] = useState<ImagePayload>({
-    uri: '',
-    name: '',
-    type: '',
-  });
-
   const [nickname, setNickname] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [nicknameInvalidMessage, setNicknameInvalidMessage] = useState('');
-  const [imageLoding, setImageLoding] = useState(false);
 
   const {mutateAsync: joinCommunity, isPending} = useJoinCommunity();
-
-  const imageUpload = async () => {
-    try {
-      setImageLoding(true);
-      const response = await openPicker({
-        usedCameraButton: true,
-        mediaType: 'image',
-        singleSelectedMode: true,
-        isCrop: true,
-        isCropCircle: true,
-        doneTitle: '추가',
-        cancelTitle: '취소',
-        emptyMessage: '사진이 하나도 없네요',
-        tapHereToChange: '앨범',
-        selectedColor: '#0988ff',
-      });
-      setImageData({
-        uri: response.path,
-        name: response.fileName || '',
-        type: response.mime,
-      });
-    } catch (e) {
-      //
-    } finally {
-      setImageLoding(false);
-    }
-  };
 
   const handleJoinCommunity = async () => {
     if (!NAME_REGEX.test(nickname)) {
@@ -82,19 +41,9 @@ const JoinProfile = (props: Props) => {
       return;
     }
     try {
-      let result = '';
-      if (imageData.uri) {
-        result = await Image.compress(imageData.uri, {
-          compressionMethod: 'manual',
-          maxWidth: 1600,
-          quality: 0.7,
-        });
-      }
-
       await joinCommunity({
         communityId: community.id,
         name: nickname,
-        image: {uri: result, name: imageData.name, type: imageData.type},
       });
       bottomSheetModalRef.current?.dismiss();
       showTopToast(insets.top + 20, '가입 완료');
@@ -111,31 +60,18 @@ const JoinProfile = (props: Props) => {
   };
 
   return (
-    <View className="flex-1 w-[90%] items-center mt-1">
-      <LoadingOverlay isLoading={imageLoding} type="LOADING" />
+    <View className="flex-1 w-[90%] mt-1 justify-between">
       <LoadingOverlay isLoading={isPending} type="OVERLAY" />
-      <View className="w-full items-center">
-        <CustomText fontWeight="600" style={styles.profileTitle}>
-          커뮤니티 가입
+
+      <View className="w-full">
+        <CustomText fontWeight="800" className="text-[22px] mt-2 mb-1 ml-[2]">
+          지금 바로 팬들과 함께
         </CustomText>
-        <CustomText fontWeight="400" style={styles.profileInfo}>
-          {`${community.koreanName}의 팬이 되신 걸 환영합니다!`}
+        <CustomText
+          fontWeight="500"
+          className="text-base text-gray-500 mb-3 ml-[2]">
+          정보를 공유하고 경기를 응원해보세요
         </CustomText>
-        <View style={styles.imageContainer}>
-          <Avatar uri={community.image} size={85} style={styles.playerImage} />
-          <Pressable onPress={imageUpload} style={styles.profileImageContainer}>
-            <ImageBackground
-              source={{
-                uri:
-                  imageData.uri ||
-                  'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/gray_background.png',
-              }}
-              style={styles.profileImage}
-              imageStyle={styles.profileImageRadius}>
-              <CameraSvg width={27} height={27} />
-            </ImageBackground>
-          </Pressable>
-        </View>
         <CustomBottomSheetTextInput
           label="닉네임"
           value={nickname}
@@ -150,38 +86,24 @@ const JoinProfile = (props: Props) => {
           }}
         />
       </View>
-      <CustomButton
-        text="시작하기"
-        type="normal"
-        disabled={nickname.length < 2}
-        onPress={handleJoinCommunity}
-        isLoading={isPending}
-      />
+      <View className="flex-row">
+        <Pressable
+          className="flex-1 justify-center items-center border py-[12] mr-1 rounded-lg"
+          onPress={() => bottomSheetModalRef.current?.close()}>
+          <CustomText fontWeight="600" className="text-base">
+            뒤로가기
+          </CustomText>
+        </Pressable>
+        <Pressable
+          className="flex-1 justify-center items-center border border-black bg-black py-[12] ml-1 rounded-lg"
+          onPress={handleJoinCommunity}>
+          <CustomText fontWeight="600" className="text-white text-base">
+            시작하기
+          </CustomText>
+        </Pressable>
+      </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  profileTitle: {fontSize: 21, color: '#000000'},
-  profileInfo: {fontSize: 15, color: '#515151', marginTop: 5},
-  imageContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginVertical: 25,
-  },
-  playerImage: {left: 8},
-  profileImageContainer: {
-    right: 8,
-    borderRadius: 85,
-    backgroundColor: '#7fb677',
-  },
-  profileImage: {
-    width: 85,
-    height: 85,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  profileImageRadius: {borderRadius: 85},
-});
 
 export default JoinProfile;

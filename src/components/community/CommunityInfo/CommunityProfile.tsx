@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {formatComma} from '../../../utils/format';
 import LinearGradient from 'react-native-linear-gradient';
-import StarOrangeSvg from '../../../assets/images/star-orange.svg';
+import StarOrangeSvg from 'assets/images/star-white.svg';
 import FastImage from 'react-native-fast-image';
 import TeamList from './TeamList';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -17,47 +17,53 @@ interface CommunityProfileProps {
 const CommunityProfile = (props: CommunityProfileProps) => {
   const {community} = props;
 
-  const insets = useSafeAreaInsets();
-
   return (
-    <View
-      style={[
-        styles.profileContainer,
-        {height: WINDOW_HEIGHT / 2, backgroundColor: community.color},
-      ]}>
-      <View style={[styles.infoContainer, {top: insets.top + 55}]}>
-        {community.type === 'TEAM' && (
-          <CustomText className="ml-5 text-white text-[13px]">{`${community.sportName} / ${community.leagueName}`}</CustomText>
-        )}
-        {community.type === 'PLAYER' && <TeamList playerId={community.id} />}
+    <View style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2}]}>
+      <View
+        style={[
+          styles.infoContainer,
+          {
+            bottom: 5,
+            flexDirection: 'row',
+            paddingLeft: 13,
+            alignItems: 'flex-end',
+          },
+        ]}>
+        <View className="flex-1">
+          <View className="flex-row items-center mb-[2] ml-[3]">
+            <StarOrangeSvg width={13} height={13} className="mb-[2]" />
+            <CustomText
+              className="text-white ml-1"
+              fontWeight="500">{`${community.fanCount}`}</CustomText>
+          </View>
 
-        <View style={{paddingLeft: 15}}>
-          {community.englishName && (
-            <CustomText fontWeight="500" style={styles.englishName}>
-              {community.englishName}
-            </CustomText>
+          {community.type === 'TEAM' && (
+            <CustomText
+              className="text-white text-[15px] ml-[2]"
+              fontWeight="500">{`${community.sportName} / ${community.leagueName}`}</CustomText>
           )}
 
-          <View className="flex-row">
-            <CustomText
-              fontWeight="600"
-              style={
-                community.koreanName.length > 10
-                  ? styles.koreanNameLong
-                  : styles.koreanName
-              }>
-              {community.koreanName}
-            </CustomText>
-          </View>
+          <View>
+            {community.englishName && (
+              <CustomText
+                fontWeight="500"
+                className="text-white text-[16px] mb-[1] ml-[1]">
+                {community.englishName}
+              </CustomText>
+            )}
 
-          <View style={styles.fanCountContainer}>
-            <StarOrangeSvg width={14} height={14} />
-            <CustomText style={styles.fanCount}>
-              {formatComma(community.fanCount)}
-            </CustomText>
+            <View className="flex-row">
+              <CustomText
+                type="titleCenter"
+                className="text-3xl text-white bottom-[2]">
+                {community.koreanName}
+              </CustomText>
+            </View>
           </View>
         </View>
+        {community.type === 'PLAYER' && <TeamList playerId={community.id} />}
       </View>
+
       {community.backgroundImage ? (
         <FastImage
           source={{
@@ -81,13 +87,13 @@ const CommunityProfile = (props: CommunityProfileProps) => {
       <LinearGradient
         start={{x: 1, y: 1}}
         end={{x: 0, y: 0}}
-        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.45)', 'rgba(0,0,0,0.6)']}
+        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.1)', 'rgba(0,0,0,0.2)']}
         style={{
           ...StyleSheet.absoluteFillObject,
         }}
       />
       <LinearGradient
-        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.05)', '#000000']}
+        colors={['rgba(0, 0, 0, 0)', community.color]}
         style={{
           ...StyleSheet.absoluteFillObject,
         }}
@@ -113,6 +119,7 @@ const styles = StyleSheet.create({
   backgroundImage: {
     height: '100%',
     width: '100%',
+    backgroundColor: 'white',
   },
 });
 

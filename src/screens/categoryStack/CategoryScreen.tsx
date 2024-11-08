@@ -59,7 +59,7 @@ const CategoryScreen = ({
         onPress={() => navigation.navigate('Search')}>
         <View className="flex-1 flex-row bg-[#f0f0f0] h-10 rounded justify-between items-center px-3">
           <CustomText fontWeight="400" className="text-base text-[#777777]">
-            선수 또는 팀을 입력해주세요.
+            선수 또는 팀을 입력해주세요
           </CustomText>
           <SearchSvg />
         </View>
@@ -118,13 +118,9 @@ const CategoryScreen = ({
             return (
               <TouchableOpacity
                 onPress={() => {
-                  if (selectedSport && selectedLeague) {
-                    navigation.navigate('PlayerList', {
-                      teamId: item.id,
-                      sportName: selectedSport?.name,
-                      leagueName: selectedLeague?.name,
-                    });
-                  }
+                  navigation.navigate('PlayerList', {
+                    teamId: item.id,
+                  });
                 }}
                 activeOpacity={0.6}
                 className="flex-row my-[1] mx-[2] items-center justify-end rounded-md"
@@ -136,16 +132,20 @@ const CategoryScreen = ({
                     marginRight: 40,
                     width: 85,
                     height: 50,
+                    shadowColor: '#000',
+                    shadowOffset: {width: 1, height: 1},
+                    shadowOpacity: 0.3,
+                    shadowRadius: 3,
                   }}
                 />
                 <View className="absolute flex-row justify-between w-full pl-4 pr-3 items-center">
                   <CustomText
                     className="text-[16px] text-white"
-                    fontWeight="600">
+                    type="titleCenter">
                     {item.shortName}
                   </CustomText>
                   <Pressable>
-                    <RightSvg />
+                    <RightSvg width={15} height={15} />
                   </Pressable>
                 </View>
               </TouchableOpacity>

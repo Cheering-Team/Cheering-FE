@@ -76,7 +76,7 @@ const HomeTabBar = ({state, descriptors, navigation, position}) => {
                   : {borderBottomWidth: 2, borderBlockColor: 'white'},
               ]}>
               <CustomText
-                fontWeight="600"
+                type="title"
                 style={{
                   fontSize: 26,
                   color: isFocused ? 'black' : 'rgb(190,190,190)',

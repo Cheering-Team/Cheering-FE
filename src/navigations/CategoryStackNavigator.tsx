@@ -11,7 +11,7 @@ import {NavigationPropType} from './types';
 export type CategoryStackParamList = {
   Category: {teamId: number};
   Search: undefined;
-  PlayerList: {teamId: number; sportName: string; leagueName: string};
+  PlayerList: {teamId: number};
   CommunityStack: NavigationPropType<CommunityStackParamList>;
 };
 

@@ -120,7 +120,7 @@ const ProfileScreen = () => {
           )}
         </View>
         <FlatList
-          showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={true}
           contentContainerStyle={{paddingBottom: 50}}
           ListHeaderComponent={
             <View

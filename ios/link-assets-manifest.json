@@ -36,6 +36,10 @@
     {
       "path": "src/assets/fonts/Pretendard-Thin.otf",
       "sha1": "72cf55b4d2ea4adc75123f33ca839c10cabfaab4"
+    },
+    {
+      "path": "src/assets/fonts/Tenada.ttf",
+      "sha1": "0134ece97e692354c8f42344646ee9cd5033c69e"
     }
   ]
 }

@@ -14,6 +14,7 @@ interface CustomTextProps extends TextProps {
     | '700'
     | '800'
     | '900';
+  type?: 'title' | 'titleCenter' | 'normal';
 }
 
 const CustomText = (props: CustomTextProps) => {
@@ -21,9 +22,30 @@ const CustomText = (props: CustomTextProps) => {
     fontWeight = '400',
     style,
     children,
+    type = 'normal',
     numberOfLines = 1,
     ...rest
   } = props;
+  if (type === 'titleCenter') {
+    return (
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.Title, style, {paddingTop: 5}]}
+        {...rest}>
+        {children}
+      </Animated.Text>
+    );
+  }
+  if (type === 'title') {
+    return (
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.Title, style]}
+        {...rest}>
+        {children}
+      </Animated.Text>
+    );
+  }
   if (fontWeight === '100') {
     return (
       <Animated.Text
@@ -143,6 +165,10 @@ const styles = StyleSheet.create({
   },
   Black: {
     fontFamily: 'Pretendard-Black',
+    includeFontPadding: false,
+  },
+  Title: {
+    fontFamily: 'Tenada',
     includeFontPadding: false,
   },
 });

@@ -4,6 +4,7 @@ import {communityKeys} from './queries';
 import {
   ChangeCommunityOrderPayload,
   Community,
+  CommunityListResponse,
   JoinCommunityPayload,
 } from './types';
 
@@ -20,40 +21,31 @@ export const getCommunityById = async ({
   return response.data.result;
 };
 
-// 특정 팀 소속 커뮤니티 목록 조회
-export const getCommunitiesByTeam = async ({
-  queryKey,
-}: {
-  queryKey: ReturnType<typeof communityKeys.listByTeam>;
-}) => {
-  const [, , {teamId}] = queryKey;
-  const response = await axiosInstance.get<ApiResponse<Community[]>>(
-    `/teams/${teamId}/communities`,
-  );
-  return response.data.result;
-};
-
 // 커뮤니티 검색
 export const getCommunities = async ({
   queryKey,
 }: {
   queryKey: ReturnType<typeof communityKeys.listBySearch>;
 }) => {
-  const [, , {name}] = queryKey;
-  const response = await axiosInstance.get<ApiResponse<Community[]>>(
-    `/communities?name=${name}`,
-  );
+  const [, , {teamId, name}] = queryKey;
+  let response;
+  if (!teamId) {
+    response = await axiosInstance.get<ApiResponse<CommunityListResponse[]>>(
+      `/communities?teamId=&name=${name}`,
+    );
+  } else {
+    response = await axiosInstance.get<ApiResponse<CommunityListResponse[]>>(
+      `/communities?teamId=${teamId}&name=${name}`,
+    );
+  }
   return response.data.result;
 };
 
 // 커뮤니티 가입
 export const joinCommunity = async (data: JoinCommunityPayload) => {
-  const {communityId, name, image} = data;
+  const {communityId, name} = data;
   const formData = new FormData();
   formData.append('name', name);
-  if (image.uri) {
-    formData.append('image', image);
-  }
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/communities/${communityId}/fans`,
     formData,

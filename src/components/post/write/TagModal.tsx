@@ -2,7 +2,7 @@ import React, {Dispatch, SetStateAction} from 'react';
 import {Platform, Pressable, View} from 'react-native';
 import CustomText from '../../common/CustomText';
 import {TagData} from './TagList';
-import {FilterType} from '../../../screens/Community/PostWriteScreen';
+import {FilterType} from '../../../screens/communityStack/PostWriteScreen';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface TagModalProps {

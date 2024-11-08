@@ -32,7 +32,7 @@ const StackHeader = (props: StackHeaderProps) => {
       )}
       {type === 'none' && <View className="w-8 h-8" />}
 
-      <CustomText fontWeight="500" className="text-lg pb-0">
+      <CustomText fontWeight="600" className="text-[19px] pb-0">
         {title}
       </CustomText>
       <View className="w-8 h-8" />

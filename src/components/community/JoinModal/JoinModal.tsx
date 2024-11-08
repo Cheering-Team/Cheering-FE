@@ -1,10 +1,4 @@
-import React, {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, {RefObject, useCallback, useMemo} from 'react';
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
@@ -13,7 +7,6 @@ import {
 import {StyleSheet} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import JoinProfile from './JoinProfile/JoinProfile';
-import {Player} from 'apis/player/types';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {Community} from 'apis/community/types';
 

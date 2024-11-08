@@ -27,6 +27,7 @@
 		F79C52D32C6CE55B00973EBD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F79C52D22C6CE55B00973EBD /* GoogleService-Info.plist */; };
 		F79E44C72CA2C6D900B1AC52 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F79E44C62CA2C6D900B1AC52 /* LaunchScreen.storyboard */; };
 		FCC3E6153DDF42AF86F795F2 /* Pretendard-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = FA5797B7455F4F609319217D /* Pretendard-Black.otf */; };
+		80399A58F87F473CB884488C /* Tenada.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 890F04743E654B938EB2CF98 /* Tenada.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,7 @@
 		F79E44C62CA2C6D900B1AC52 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Cheering/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FA5797B7455F4F609319217D /* Pretendard-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Black.otf"; path = "../src/assets/fonts/Pretendard-Black.otf"; sourceTree = "<group>"; };
 		FEA8449DC340481DB610A216 /* Pretendard-SemiBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-SemiBold.otf"; path = "../src/assets/fonts/Pretendard-SemiBold.otf"; sourceTree = "<group>"; };
+		890F04743E654B938EB2CF98 /* Tenada.ttf */ = {isa = PBXFileReference; name = "Tenada.ttf"; path = "../src/assets/fonts/Tenada.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 				773F754A7DB84AA2961CEBA1 /* Pretendard-Regular.otf */,
 				FEA8449DC340481DB610A216 /* Pretendard-SemiBold.otf */,
 				5D1FB1A1BE2D4C7D8249F089 /* Pretendard-Thin.otf */,
+				890F04743E654B938EB2CF98 /* Tenada.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 				C52E01CB17FB48F3A1036BC0 /* Pretendard-SemiBold.otf in Resources */,
 				971797F4872F4AA18A29FCA0 /* Pretendard-Thin.otf in Resources */,
 				CFAD95CB66ECBAC21269C6A6 /* PrivacyInfo.xcprivacy in Resources */,
+				80399A58F87F473CB884488C /* Tenada.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

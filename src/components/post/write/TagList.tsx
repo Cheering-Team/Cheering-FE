@@ -1,7 +1,7 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import {FlatList, Pressable} from 'react-native';
 import CustomText from '../../common/CustomText';
-import {FilterType} from '../../../screens/Community/PostWriteScreen';
+import {FilterType} from '../../../screens/communityStack/PostWriteScreen';
 
 interface FilterDataType {
   name: string;

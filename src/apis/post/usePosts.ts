@@ -17,7 +17,7 @@ import {
 } from './index';
 import {FilterType, Post} from './types';
 import {useNavigation} from '@react-navigation/native';
-import {PostWriteScreenNavigationProp} from '../../screens/Community/PostWriteScreen.tsx';
+import {PostWriteScreenNavigationProp} from '../../screens/communityStack/PostWriteScreen.tsx';
 import {hideToast, showBottomToast, showTopToast} from '../../utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {queryClient} from '../../../App';

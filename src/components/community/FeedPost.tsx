@@ -164,6 +164,7 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
               type="feed"
               location={type}
             />
+
             <CustomText
               style={{
                 color: '#282828',
