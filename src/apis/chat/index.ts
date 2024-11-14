@@ -32,26 +32,46 @@ export const createChatRoom = async (data: CreateChatRoomPayload) => {
   return response.data.result;
 };
 
-// 채팅방 목록 조회
-export const getChatRooms = async ({
+// 공식 채팅방 조회
+export const getOfficialChatRoom = async ({
   queryKey,
 }: {
   queryKey: ReturnType<typeof chatRoomKeys.list>;
 }) => {
   const [, , {communityId}] = queryKey;
-  const response = await axiosInstance.get<ApiResponse<ChatRoomListResponse[]>>(
-    `/communities/${communityId}/chatrooms`,
+  const response = await axiosInstance.get<ApiResponse<ChatRoom>>(
+    `/communities/${communityId}/chatrooms/official`,
   );
   return response.data.result;
 };
 
-// 참여중인 채팅방 목록 조회
-// (대표는 가입된 모두 커뮤니티)
+// 채팅방 목록 조회
+export const getChatRooms = async ({
+  queryKey,
+  pageParam = 0,
+}: {
+  queryKey: ReturnType<typeof chatRoomKeys.list>;
+  pageParam: number;
+}) => {
+  const [, , {communityId, sortBy, name}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<ChatRoomListResponse>>(
+    `/communities/${communityId}/chatrooms?sortBy=${sortBy}&name=${name}&page=${pageParam}&size=10`,
+  );
+  return response.data.result;
+};
+
+// 참여중인 대표 채팅방 목록 조회
+export const getMyOfficialChatRooms = async () => {
+  const response = await axiosInstance.get<ApiResponse<ChatRoom[]>>(
+    '/my/chatrooms/official',
+  );
+  return response.data.result;
+};
+
+// 참여중인 일반 채팅방 목록 조회
 export const getMyChatRooms = async () => {
   const response =
-    await axiosInstance.get<ApiResponse<ChatRoomListResponse[]>>(
-      '/my/chatrooms',
-    );
+    await axiosInstance.get<ApiResponse<ChatRoom[]>>('/my/chatrooms');
   return response.data.result;
 };
 

@@ -2,6 +2,7 @@ import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList} from 'react-native';
 import {
+  cancelAnimation,
   Extrapolation,
   interpolate,
   useAnimatedStyle,
@@ -43,7 +44,7 @@ export const useCommunity = () => {
           scrollY.value,
           [0, HEADER_HEIGHT - insets.top - 45],
           [0, -HEADER_HEIGHT + insets.top + 45],
-          Extrapolation.CLAMP,
+          {extrapolateRight: Extrapolation.CLAMP},
         ),
       },
     ],
@@ -140,6 +141,12 @@ export const useCommunity = () => {
       duration: 250,
     });
   }, [tabIndex]);
+
+  useEffect(() => {
+    return () => {
+      cancelAnimation(indicatorPosition);
+    };
+  }, [indicatorPosition]);
 
   return {
     tabBarTranslateY,

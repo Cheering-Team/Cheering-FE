@@ -15,6 +15,9 @@ export interface ChatRoom {
   community: Community;
   manager: Fan | null;
   isParticipating: boolean | null;
+  lastMessage: string | null;
+  lastMessageTime: string | null;
+  unreadCount: number | null;
 }
 
 export interface Chat {
@@ -43,9 +46,8 @@ export interface CreateChatRoomPayload {
 }
 
 // 응답
-export interface ChatRoomListResponse {
-  title: 'official' | 'public';
-  data: ChatRoom[];
+export interface ChatRoomListResponse extends Page {
+  chatRooms: ChatRoom[];
 }
 
 export interface GetChatsResponse extends Page {

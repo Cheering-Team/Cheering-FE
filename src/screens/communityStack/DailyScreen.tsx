@@ -22,22 +22,20 @@ import {
 } from 'react-native';
 import CustomText from 'components/common/CustomText';
 import CloseSvg from '../../assets/images/close-black.svg';
-import {showBottomToast, showTopToast} from 'utils/toast';
+import {showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetFlatList,
 } from '@gorhom/bottom-sheet';
-
 import AlertModal from 'components/common/AlertModal/AlertModal';
 import DailyTextInput from 'components/community/DailyTextInput';
 import {useGetComments} from 'apis/comment/useComments';
 import Daily from 'components/post/Daily';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import DownSvg from '../../assets/images/tri-down-gray.svg';
-// import {Calendar} from 'react-native-calendars';
-import {formatBarDate, formatMonthDay, formatXDate} from 'utils/format';
+import {formatBarDate, formatMonthDay} from 'utils/format';
 import DailySkeleton from 'components/skeleton/DailySkeleton';
 import DailyComment from 'components/comment/DailyComment';
 import CommentSkeleton from 'components/skeleton/CommentSkeleton';
@@ -105,7 +103,7 @@ const DailyScreen = ({navigation, route}) => {
   const handleWriteDaily = async () => {
     await writeDaily({communityId: communityId, content});
     setIsWriteOpen(false);
-    showTopToast(insets.top + 20, '작성 완료');
+    showTopToast({message: '작성 완료'});
     setContent('');
   };
 
@@ -113,7 +111,7 @@ const DailyScreen = ({navigation, route}) => {
     if (curId) {
       await editDaily({dailyId: curId, content});
       setIsWriteOpen(false);
-      showTopToast(insets.bottom + 20, '수정 완료');
+      showTopToast({message: '수정 완료'});
       setContent('');
     }
   };
@@ -121,7 +119,7 @@ const DailyScreen = ({navigation, route}) => {
   const handleDeleteDaily = async () => {
     if (curId) {
       await deleteDaily({dailyId: curId});
-      showTopToast(insets.top + 20, '삭제 완료');
+      showTopToast({message: '삭제 완료'});
     }
   };
 
@@ -151,7 +149,6 @@ const DailyScreen = ({navigation, route}) => {
   useEffect(() => {
     if (isError && error.message === '존재하지 않는 게시글') {
       bottomSheetRef.current?.close();
-      showTopToast(insets.top + 20, '글이 삭제되었어요');
       queryClient.invalidateQueries({
         queryKey: dailyKeys.list(communityId, date),
       });

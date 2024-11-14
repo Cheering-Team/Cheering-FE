@@ -1,6 +1,6 @@
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {useQuery} from '@tanstack/react-query';
 import {noticeKeys} from './queries';
-import {apply, getNoticeById, getNotices} from '.';
+import {getNoticeById, getNotices} from '.';
 
 export const useGetNotices = () => {
   return useQuery({
@@ -16,8 +16,4 @@ export const useGetNoticeById = (noticeId: number) => {
     queryFn: getNoticeById,
     retry: false,
   });
-};
-
-export const useApply = () => {
-  return useMutation({mutationFn: apply});
 };

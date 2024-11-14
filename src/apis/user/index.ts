@@ -166,3 +166,9 @@ export const reissuePlayerAccountPassword = async (
   );
   return response.data.result;
 };
+
+export const isFirstLogin = async () => {
+  const response =
+    await axiosInstance.get<ApiResponse<boolean>>(`/isFirstLogin`);
+  return response.data.result;
+};

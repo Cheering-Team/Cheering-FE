@@ -1,20 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import {PermissionsAndroid, Platform, Pressable, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
-import {saveFCMToken} from 'apis/user';
+import {isFirstLogin, saveFCMToken} from 'apis/user';
 import {
   useGetIsUnread,
   useReadNotification,
 } from 'apis/notification/useNotifications';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
-import {useGetMyCommunities} from 'apis/community/useCommunities';
 import MyStarCarousel from 'components/home/MyStarCarousel';
 import CustomText from 'components/common/CustomText';
 import ChageSvg from 'assets/images/change.svg';
-import {showTopToast} from 'utils/toast';
+import IntroModal from './components/IntroModal';
+import RegisterModal from 'components/common/RegisterModal';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {useGetMyCommunities} from 'apis/community/useCommunities';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {WINDOW_HEIGHT} from 'constants/dimension';
+import RandomCommunityCard from './components/RandomCommunityCard';
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -22,14 +26,13 @@ export type HomeScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 const HomeMyScreen = () => {
-  const insets = useSafeAreaInsets();
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
 
+  const [isRegisiterOpen, setIsRegisterOpen] = useState(false);
+  const [isIntroOpen, setIsIntroOpen] = useState(false);
+
   const {data: communities} = useGetMyCommunities();
-
-  const [curTab, setCurTab] = useState<'MY' | 'HOT'>('MY');
-
   const {refetch: refetchUnRead} = useGetIsUnread();
   const {mutateAsync: readNotificaiton} = useReadNotification();
 
@@ -120,21 +123,73 @@ const HomeMyScreen = () => {
       });
   }, [navigation, readNotificaiton]);
 
+  useEffect(() => {
+    const checkFirst = async () => {
+      try {
+        const isFirst = await EncryptedStorage.getItem('isFirstLogin');
+        if (isFirst === undefined) {
+          await EncryptedStorage.setItem('isFirstLogin', 'false');
+          const data = await isFirstLogin();
+          if (data) {
+            setIsIntroOpen(true);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkFirst();
+  }, []);
+
   return (
     <View className="flex-1">
-      <Pressable
-        onPress={() => {
-          navigation.navigate('ChangeOrder');
-        }}
-        className="self-end top-3 mr-4 z-10 flex-row items-center">
-        <ChageSvg width={12} height={12} />
-        <CustomText
-          className="text-gray-400 text-[15px] ml-[4]"
-          fontWeight="700">
-          순서 변경
-        </CustomText>
-      </Pressable>
-      <MyStarCarousel />
+      {communities?.length !== 0 ? (
+        <Pressable
+          onPress={() => {
+            navigation.navigate('ChangeOrder');
+          }}
+          className="self-end top-3 mr-4 z-10 flex-row items-center">
+          <ChageSvg width={12} height={12} />
+          <CustomText
+            className="text-gray-400 text-[15px] ml-[4]"
+            fontWeight="700">
+            순서 변경
+          </CustomText>
+        </Pressable>
+      ) : (
+        <View className="h-[18]" />
+      )}
+      {!communities ? (
+        <SkeletonPlaceholder
+          backgroundColor="#f4f4f4"
+          highlightColor="#ffffff"
+          speed={1500}>
+          <View
+            style={{
+              height: WINDOW_HEIGHT * 0.65,
+              marginBottom: 20,
+              marginHorizontal: 25,
+              marginTop: 43,
+              borderRadius: 20,
+            }}
+          />
+        </SkeletonPlaceholder>
+      ) : communities.length === 0 ? (
+        <RandomCommunityCard />
+      ) : (
+        <MyStarCarousel communities={communities} />
+      )}
+
+      {isIntroOpen && (
+        <IntroModal
+          setIsRegisterOpen={setIsRegisterOpen}
+          setIsIntroOpen={setIsIntroOpen}
+        />
+      )}
+      {isRegisiterOpen && (
+        <RegisterModal setIsRegisterOpen={setIsRegisterOpen} />
+      )}
     </View>
   );
 };

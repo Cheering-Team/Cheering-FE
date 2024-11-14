@@ -1,7 +1,7 @@
 import {axiosInstance} from 'apis';
 import {ApiResponse, IdName} from 'apis/types';
 import {leagueKeys, teamKeys} from './queries';
-import {Sport, Team} from './types';
+import {Sport, Team, TeamWithLeague} from './types';
 
 // 종목 불러오기
 export const getSports = async () => {
@@ -45,5 +45,25 @@ export const getTeamsByPlayer = async ({
   const response = await axiosInstance.get<ApiResponse<Team[]>>(
     `/players/${playerId}/teams`,
   );
+  return response.data.result;
+};
+
+// 팀 검색하기
+export const searchTeams = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof teamKeys.listByName>;
+}) => {
+  const [, , {name}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<TeamWithLeague[]>>(
+    `/teams?name=${name}`,
+  );
+  return response.data.result;
+};
+
+// 인기 팀 조회
+export const getPopularTeams = async () => {
+  const response =
+    await axiosInstance.get<ApiResponse<TeamWithLeague[]>>(`/teams/popular`);
   return response.data.result;
 };

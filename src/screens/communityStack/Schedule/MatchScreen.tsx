@@ -6,7 +6,6 @@ import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import React from 'react';
 import {KeyboardAvoidingView, Platform, Pressable, View} from 'react-native';
 import {Tabs} from 'react-native-collapsible-tab-view';
-import FastImage from 'react-native-fast-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BackSvg from 'assets/images/chevron-left.svg';
 import MatchInfo from './components/MatchInfo';
@@ -39,14 +38,11 @@ const MatchScreen = () => {
           <BackSvg width={32} height={32} />
         </Pressable>
 
-        <View className="flex-row items-center">
-          <FastImage
-            source={{
-              uri: community.image,
-            }}
-            className="w-[35] h-[35] rounded-full mr-1"
-          />
-          <CustomText fontWeight="500" className="text-lg pb-0 ml-1">
+        <View className="items-center">
+          <CustomText fontWeight="600" className="text-lg top-[1]">
+            경기 일정
+          </CustomText>
+          <CustomText className="text-gray-600">
             {community.koreanName}
           </CustomText>
         </View>
@@ -65,7 +61,7 @@ const MatchScreen = () => {
           />
         )}>
         <Tabs.Tab name="응원">
-          <CheerList matchId={matchId} communityId={community.id} />
+          <CheerList matchId={matchId} community={community} />
         </Tabs.Tab>
       </Tabs.Container>
     </KeyboardAvoidingView>

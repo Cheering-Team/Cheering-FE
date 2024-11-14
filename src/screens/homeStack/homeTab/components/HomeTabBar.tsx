@@ -1,15 +1,25 @@
 import CustomText from 'components/common/CustomText';
-import React, {View, TouchableOpacity, Pressable, Platform} from 'react-native';
+import React, {View, Pressable, Platform} from 'react-native';
 import AlertSvg from 'assets/images/alert-black.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
+import {useCallback} from 'react';
+import {useGetIsUnread} from 'apis/notification/useNotifications';
 
 const HomeTabBar = ({state, descriptors, navigation, position}) => {
   const insets = useSafeAreaInsets();
   const stackNavigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+
+  const {data, refetch} = useGetIsUnread();
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch]),
+  );
   return (
     <View
       style={{
@@ -95,6 +105,20 @@ const HomeTabBar = ({state, descriptors, navigation, position}) => {
           stackNavigation.navigate('Notification');
         }}>
         <AlertSvg />
+        {data && (
+          <View
+            style={{
+              position: 'absolute',
+              zIndex: 100,
+              width: 10,
+              height: 10,
+              backgroundColor: '#fc3b3b',
+              borderRadius: 100,
+              top: 7,
+              right: 7,
+            }}
+          />
+        )}
       </Pressable>
     </View>
   );

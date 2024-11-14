@@ -2,7 +2,6 @@ import React, {useContext, useState} from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
 import BackSvg from '../../assets/images/arrow-left.svg';
 import {AuthContext} from '../../navigations/AuthSwitch';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';
 import CustomButton from '../../components/common/CustomButton';
 import CheckBox from '../../components/common/CheckBox';
@@ -22,7 +21,6 @@ const DeleteUserScreen = ({
   navigation: DeleteUserNavigationProp;
 }) => {
   const signOut = useContext(AuthContext)?.signOut;
-  const insets = useSafeAreaInsets();
   const [isAgree, setIsAgree] = useState(false);
 
   const {mutateAsync: deleteUser, isPending} = useDeleteUser();
@@ -30,7 +28,7 @@ const DeleteUserScreen = ({
   const handleDeleteUser = async () => {
     await deleteUser();
     signOut?.();
-    showTopToast(insets.top + 20, '로그아웃 완료');
+    showTopToast({message: '탈퇴 완료'});
   };
 
   return (
@@ -49,10 +47,10 @@ const DeleteUserScreen = ({
         <CustomText fontWeight="500" className="text-xl mb-[10]">
           회원탈퇴 유의사항
         </CustomText>
-        <CustomText className="mb-[5] text-lg">
+        <CustomText className="mb-[5] text-lg" numberOfLines={999}>
           - 회원탈퇴 시, 가입된 모든 커뮤니티에서 자동으로 탈퇴됩니다.
         </CustomText>
-        <CustomText className="text-lg">
+        <CustomText className="text-lg" numberOfLines={999}>
           - 모든 커뮤니티에서의 활동들이 삭제됩니다.
         </CustomText>
       </View>

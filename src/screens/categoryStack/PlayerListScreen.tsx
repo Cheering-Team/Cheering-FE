@@ -6,7 +6,6 @@ import {
   Pressable,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import CustomText from '../../components/common/CustomText';
@@ -29,6 +28,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import {queryClient} from '../../../App';
 import {communityKeys} from 'apis/community/queries';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
+import PlusSvg from 'assets/images/plus-white.svg';
+import RegisterModal from 'components/common/RegisterModal';
 
 type PlayerListScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -52,6 +53,7 @@ const PlayerListScreen = ({
 
   const [name, setName] = useState('');
   const debouncedSetName = debounce(setName, 300);
+  const [isRegisiterOpen, setIsRegisterOpen] = useState(false);
 
   const {data: team} = useGetCommunityById(teamId);
   const {data: communities} = useGetCommunities(teamId, name);
@@ -124,13 +126,15 @@ const PlayerListScreen = ({
           paddingHorizontal: 12,
           justifyContent: 'space-between',
         }}>
-        <Pressable onPress={() => navigation.goBack()}>
+        <Pressable onPress={() => navigation.goBack()} className="p-1">
           <ChevronRightWhiteSvg width={18} height={18} />
         </Pressable>
         <CustomText className="text-white text-xl" type="titleCenter">
           {team.koreanName}
         </CustomText>
-        <View className="w-[18] h-[18]" />
+        <Pressable className="p-1" onPress={() => setIsRegisterOpen(true)}>
+          <PlusSvg width={19} height={19} />
+        </Pressable>
       </View>
 
       <View
@@ -252,6 +256,9 @@ const PlayerListScreen = ({
           }
         />
       </View>
+      {isRegisiterOpen && (
+        <RegisterModal setIsRegisterOpen={setIsRegisterOpen} />
+      )}
     </View>
   );
 };

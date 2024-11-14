@@ -34,18 +34,22 @@ const TagList = (props: TagListProps) => {
             <Pressable
               key={item.filter}
               style={{
+                height: 35,
                 borderWidth: 1,
                 backgroundColor: '#3a3a3a',
                 borderColor: '#3a3a3a',
-                paddingVertical: 6,
-                paddingHorizontal: 15,
                 borderRadius: 12,
                 marginRight: 6,
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingHorizontal: 12,
               }}
               onPress={() => {
                 setIsTagOpen(true);
               }}>
-              <CustomText fontWeight="500" style={{color: 'white'}}>
+              <CustomText
+                fontWeight="500"
+                style={{color: 'white', fontSize: 15}}>
                 {item.name}
               </CustomText>
             </Pressable>
@@ -56,10 +60,11 @@ const TagList = (props: TagListProps) => {
       ListHeaderComponent={
         <Pressable
           style={{
+            height: 35,
+            justifyContent: 'center',
             borderWidth: 1,
             borderColor: '#dcdcdc',
-            paddingVertical: 6,
-            paddingHorizontal: 15,
+            paddingHorizontal: 10,
             borderRadius: 12,
             marginRight: 6,
           }}
@@ -67,7 +72,9 @@ const TagList = (props: TagListProps) => {
             setIsTagOpen(true);
           }}>
           {Object.values(selectedTag).every(v => v === false) ? (
-            <CustomText>➕ 태그 추가</CustomText>
+            <CustomText fontWeight="500" style={{fontSize: 15}}>
+              ➕ 태그 추가
+            </CustomText>
           ) : (
             <CustomText>➕</CustomText>
           )}

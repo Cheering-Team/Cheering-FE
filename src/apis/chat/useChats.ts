@@ -1,4 +1,9 @@
-import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
 import {chatKeys, chatRoomKeys} from './queries';
 import {
   createChatRoom,
@@ -7,27 +12,60 @@ import {
   getChatRooms,
   getChats,
   getMyChatRooms,
+  getMyOfficialChatRooms,
+  getOfficialChatRoom,
   getParticipants,
 } from './index';
 import {queryClient} from '../../../App';
 
 // 채팅방 개설
-export const useCreateChatRoom = (communityId: number) => {
+export const useCreateChatRoom = () => {
   return useMutation({
     mutationFn: createChatRoom,
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: chatRoomKeys.list(communityId)});
-      queryClient.invalidateQueries({queryKey: chatRoomKeys.my()});
+      queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
+      queryClient.invalidateQueries({queryKey: chatRoomKeys.my('PUBLIC')});
     },
   });
 };
 
-// 채팅방 목록
-export const useGetChatRooms = (communityId: number, enabled: boolean) => {
+// 공식 채팅방 조회
+export const useGetOfficialChatRoom = (
+  communityId: number,
+  enabled: boolean,
+) => {
   return useQuery({
-    queryKey: chatRoomKeys.list(communityId),
-    queryFn: getChatRooms,
+    queryKey: chatRoomKeys.list(communityId, 'OFFICIAL', 'createdAt', ''),
+    queryFn: getOfficialChatRoom,
     enabled: enabled,
+    retry: false,
+  });
+};
+
+// 채팅방 목록 (무한 스크롤)
+export const useGetChatRooms = (
+  communityId: number,
+  sortBy: 'participants' | 'createdAt',
+  name: string,
+  enabled: boolean,
+) => {
+  return useInfiniteQuery({
+    queryKey: chatRoomKeys.list(communityId, 'PUBLIC', sortBy, name),
+    queryFn: getChatRooms,
+    initialPageParam: 0,
+    getNextPageParam: lastPage => {
+      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
+    },
+    enabled: enabled,
+    retry: false,
+  });
+};
+
+// 참여중인 대표 채팅방 목록 조회
+export const useGetMyOfficialChatRooms = () => {
+  return useQuery({
+    queryKey: chatRoomKeys.my('OFFICIAL'),
+    queryFn: getMyOfficialChatRooms,
     retry: false,
   });
 };
@@ -35,9 +73,10 @@ export const useGetChatRooms = (communityId: number, enabled: boolean) => {
 // 내 참여중인 채팅방 목록
 export const useGetMyChatRooms = () => {
   return useQuery({
-    queryKey: chatRoomKeys.my(),
+    queryKey: chatRoomKeys.my('PUBLIC'),
     queryFn: getMyChatRooms,
     retry: false,
+    enabled: false,
   });
 };
 

@@ -30,7 +30,6 @@ export const useGetFanInfo = (fanId: number) => {
 
 // 커뮤니티 유저 이미지 바꾸기
 export const useUpdateFanImage = () => {
-  const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: updateFanImage,
     onSuccess: (_, variable) => {
@@ -45,8 +44,12 @@ export const useUpdateFanImage = () => {
         queryKey: postKeys.lists(),
       });
       image
-        ? showTopToast(insets.top + 20, '수정이 완료되었습니다.')
-        : showTopToast(insets.top + 20, '삭제가 완료되었습니다.');
+        ? showTopToast({
+            message: '수정 완료',
+          })
+        : showTopToast({
+            message: '삭제 완료',
+          });
     },
   });
 };
@@ -66,15 +69,13 @@ export const useUpdateFanName = () => {
 
 // 커뮤니티 탈퇴하기
 export const useDeleteFan = () => {
-  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   return useMutation({
     mutationFn: deleteFan,
     onSuccess: () => {
-      showTopToast(insets.top + 20, '탈퇴 완료');
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'HomeStack'}],
+      showTopToast({message: '탈퇴 완료'});
+      navigation.navigate('HomeStack', {
+        screen: 'HomeTab',
       });
       queryClient.invalidateQueries();
     },
@@ -83,12 +84,11 @@ export const useDeleteFan = () => {
 
 // 커뮤니티 유저 차단하기
 export const useBlockUser = () => {
-  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   return useMutation({
     mutationFn: blockFan,
     onSuccess: () => {
-      showTopToast(insets.top + 20, '차단 완료');
+      showTopToast({message: '차단 완료'});
       navigation.goBack();
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
       queryClient.invalidateQueries({queryKey: commentKeys.lists()});
@@ -110,11 +110,10 @@ export const useGetBlockedUsers = (fanId: number) => {
 
 // 차단 해제하기
 export const useUnblockUser = (fanId: number) => {
-  const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: unblockFan,
     onSuccess: () => {
-      showTopToast(insets.top + 20, '차단 해제 완료');
+      showTopToast({message: '차단 해제 완료'});
       queryClient.invalidateQueries({
         queryKey: fanKeys.blockList(fanId),
       });

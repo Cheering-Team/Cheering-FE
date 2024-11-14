@@ -1,5 +1,12 @@
 import {useQuery} from '@tanstack/react-query';
-import {getLeagues, getSports, getTeams, getTeamsByPlayer} from './index';
+import {
+  getLeagues,
+  getPopularTeams,
+  getSports,
+  getTeams,
+  getTeamsByPlayer,
+  searchTeams,
+} from './index';
 import {leagueKeys, teamKeys} from './queries';
 
 // 종목 불러오기
@@ -38,4 +45,18 @@ export const useGetTeamsByPlayer = (playerId: number) => {
     queryFn: getTeamsByPlayer,
     retry: false,
   });
+};
+
+// 팀 검색하기
+export const useSearchTeams = (name: string) => {
+  return useQuery({
+    queryKey: teamKeys.listByName(name),
+    queryFn: searchTeams,
+    retry: false,
+  });
+};
+
+// 인기 팀 조회
+export const useGetPopularTeams = () => {
+  return useQuery({queryKey: teamKeys.popularList(), queryFn: getPopularTeams});
 };

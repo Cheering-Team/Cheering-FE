@@ -7,12 +7,11 @@ import {AuthStackParamList} from '../../navigations/AuthStackNavigator';
 import {RouteProp} from '@react-navigation/native';
 import {NAME_REGEX} from '../../constants/regex';
 import {AuthContext} from '../../navigations/AuthSwitch';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
 import CustomButton from '../../components/common/CustomButton';
 import {useSignUp} from 'apis/user/useUsers';
-import {showBottomToast, showTopToast} from 'utils/toast';
+import {showTopToast} from 'utils/toast';
 
 type SetNicknameScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -30,7 +29,6 @@ const SetNickNameScreen = ({
 }) => {
   Close(navigation);
   const signIn = useContext(AuthContext)?.signIn;
-  const insets = useSafeAreaInsets();
 
   const {phone} = route.params;
 
@@ -44,16 +42,10 @@ const SetNickNameScreen = ({
       setNicknameValid(false);
       return;
     }
-    try {
-      const {accessToken, refreshToken} = await signUp({phone, name: nickname});
-      showTopToast(insets.top + 20, '회원가입 완료');
-      signIn?.(accessToken, refreshToken);
-      return;
-    } catch (error: any) {
-      if (error.code === 2004) {
-        showTopToast(insets.top + 20, '부적절한 단어가 포함되어 있습니다');
-      }
-    }
+    const {accessToken, refreshToken} = await signUp({phone, name: nickname});
+    showTopToast({message: '회원가입 완료'});
+    signIn?.(accessToken, refreshToken);
+    return;
   };
 
   return (

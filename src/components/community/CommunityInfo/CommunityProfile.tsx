@@ -1,11 +1,9 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {formatComma} from '../../../utils/format';
 import LinearGradient from 'react-native-linear-gradient';
 import StarOrangeSvg from 'assets/images/star-white.svg';
 import FastImage from 'react-native-fast-image';
 import TeamList from './TeamList';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from '../../common/CustomText';
 import {WINDOW_HEIGHT} from '../../../constants/dimension';
 import {Community} from 'apis/community/types';
@@ -18,7 +16,9 @@ const CommunityProfile = (props: CommunityProfileProps) => {
   const {community} = props;
 
   return (
-    <View style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2}]}>
+    <View
+      style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2}]}
+      pointerEvents="box-none">
       <View
         style={[
           styles.infoContainer,
@@ -28,8 +28,9 @@ const CommunityProfile = (props: CommunityProfileProps) => {
             paddingLeft: 13,
             alignItems: 'flex-end',
           },
-        ]}>
-        <View className="flex-1">
+        ]}
+        pointerEvents="box-none">
+        <View className="flex-1" pointerEvents="none">
           <View className="flex-row items-center mb-[2] ml-[3]">
             <StarOrangeSvg width={13} height={13} className="mb-[2]" />
             <CustomText
@@ -64,25 +65,27 @@ const CommunityProfile = (props: CommunityProfileProps) => {
         {community.type === 'PLAYER' && <TeamList playerId={community.id} />}
       </View>
 
-      {community.backgroundImage ? (
-        <FastImage
-          source={{
-            uri: community.backgroundImage,
-            priority: FastImage.priority.high,
-          }}
-          resizeMode="cover"
-          style={styles.backgroundImage}
-        />
-      ) : (
-        <FastImage
-          source={{
-            uri: community.image,
-            priority: FastImage.priority.high,
-          }}
-          resizeMode="contain"
-          style={styles.backgroundImage}
-        />
-      )}
+      <View pointerEvents="none">
+        {community.backgroundImage ? (
+          <FastImage
+            source={{
+              uri: community.backgroundImage,
+              priority: FastImage.priority.high,
+            }}
+            resizeMode="cover"
+            style={styles.backgroundImage}
+          />
+        ) : (
+          <FastImage
+            source={{
+              uri: community.image,
+              priority: FastImage.priority.high,
+            }}
+            resizeMode="contain"
+            style={styles.backgroundImage}
+          />
+        )}
+      </View>
 
       <LinearGradient
         start={{x: 1, y: 1}}
@@ -91,12 +94,14 @@ const CommunityProfile = (props: CommunityProfileProps) => {
         style={{
           ...StyleSheet.absoluteFillObject,
         }}
+        pointerEvents="none"
       />
       <LinearGradient
         colors={['rgba(0, 0, 0, 0)', community.color]}
         style={{
           ...StyleSheet.absoluteFillObject,
         }}
+        pointerEvents="none"
       />
     </View>
   );

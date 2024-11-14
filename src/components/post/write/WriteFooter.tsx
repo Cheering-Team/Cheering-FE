@@ -38,7 +38,7 @@ const WriteFooter = (props: WriterFooterProps) => {
   return (
     <View
       style={{
-        height: 50,
+        height: 45,
         justifyContent: 'center',
         backgroundColor: 'yello',
         borderTopWidth: 1,
@@ -46,7 +46,7 @@ const WriteFooter = (props: WriterFooterProps) => {
         paddingHorizontal: 13,
       }}>
       <Pressable onPress={handleImageUpload}>
-        <ImagesSvg width={28} height={28} />
+        <ImagesSvg width={26} height={26} />
       </Pressable>
     </View>
   );

@@ -9,7 +9,7 @@ import ProfileScreen from 'screens/communityStack/ProfileScreen';
 import PostWriteScreen from 'screens/communityStack/PostWriteScreen';
 import PostScreen from 'screens/communityStack/PostScreen';
 import DailyScreen from 'screens/communityStack/DailyScreen';
-import ChatRoomScreen from 'screens/communityStack/ChatRoomScreen';
+import ChatRoomScreen from 'screens/communityStack/chatRoom/ChatRoomScreen';
 import CreateChatRoomScreen from 'screens/communityStack/CreateChatRoomScreen';
 import ChatRoomEnterScreen from 'screens/communityStack/ChatRoomEnterScreen';
 import ProfileEditScreen from 'screens/communityStack/ProfileEditScreen';
@@ -21,11 +21,11 @@ import ScheduleScreen from 'screens/communityStack/Schedule/ScheduleScreen';
 export type CommunityStackParamList = {
   Community: {communityId: number};
   Join: undefined;
-  PostWrite: {communityId: number; post?: Post};
+  PostWrite: {community: Community; post?: Post};
   Post: {postId: number};
   Daily: {communityId: number; date: string; write: boolean; user: Fan};
   ChatRoom: {chatRoomId: number};
-  CreateChatRoom: {communityId: number};
+  CreateChatRoom: {community: Community};
   ChatRoomEnter: {chatRoomId: number};
   Profile: {fanId: number};
   ProfileEdit: {fanId: number};
@@ -53,7 +53,11 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="PostWrite"
         component={PostWriteScreen}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          presentation: 'modal',
+          gestureEnabled: false,
+        }}
       />
       <CommunityStack.Screen
         name="Post"
@@ -73,7 +77,9 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="CreateChatRoom"
         component={CreateChatRoomScreen}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+        }}
       />
       <CommunityStack.Screen
         name="ChatRoomEnter"

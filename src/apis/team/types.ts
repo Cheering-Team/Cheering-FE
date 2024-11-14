@@ -11,3 +11,8 @@ export interface Team {
   shortName: string;
   color: string;
 }
+
+export interface TeamWithLeague extends Team {
+  sportName: string;
+  leagueName: string;
+}

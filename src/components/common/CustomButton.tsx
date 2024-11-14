@@ -2,7 +2,9 @@ import {
   ActivityIndicator,
   Pressable,
   PressableProps,
+  StyleProp,
   StyleSheet,
+  ViewStyle,
 } from 'react-native';
 import React from 'react';
 import CustomText from './CustomText';
@@ -13,7 +15,7 @@ interface CustomButtonProps extends PressableProps {
   type?: 'normal' | 'bottom';
   disabled?: boolean;
   isLoading?: boolean;
-  style?: any;
+  style?: StyleProp<ViewStyle>;
 }
 
 const CustomButton = (props: CustomButtonProps) => {

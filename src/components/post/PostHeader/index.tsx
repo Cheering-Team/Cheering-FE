@@ -4,9 +4,8 @@ import CustomText from '../../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import ChevronLeftSvg from '../../../assets/images/chevron-left.svg';
 import {Community} from 'apis/community/types';
-import RefreshSvg from 'assets/images/refresh.svg';
+import RefreshSvg from 'assets/images/refresh-black.svg';
 import Animated, {
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -66,22 +65,10 @@ const PostHeader = ({community, refetchPost, refetch}: PostHeaderProps) => {
         }}>
         <ChevronLeftSvg width={33} height={33} />
       </Pressable>
-      <View style={{alignItems: 'center'}}>
-        <CustomText
-          fontWeight="600"
-          style={{
-            fontSize: 16,
-            paddingBottom: 0,
-          }}>
+      <View className="items-center">
+        <CustomText fontWeight="600" className="text-lg top-[1]">
           {community.koreanName}
         </CustomText>
-        {community.englishName && (
-          <CustomText
-            fontWeight="400"
-            style={{fontSize: 12, paddingBottom: 0, color: '#979797'}}>
-            {community.englishName}
-          </CustomText>
-        )}
       </View>
       <Pressable onPress={handleRefresh}>
         <Animated.View style={animatedStyle}>

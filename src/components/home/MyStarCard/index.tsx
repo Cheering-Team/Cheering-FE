@@ -46,16 +46,16 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           bottomSheetModalRef.current?.present();
         }}>
         <View className="flex-row justify-between items-start z-10">
-          <View>
+          <View className="flex-1">
             {community.type === 'PLAYER' ? (
               <CustomText
-                className="text-white text-[18px] ml-[2] mb-[3]"
+                className="text-white text-[18px] ml-[2] mb-[5]"
                 fontWeight="600">
                 {community.englishName}
               </CustomText>
             ) : (
               <CustomText
-                className="text-white text-[18px] ml-[2] mb-[3]"
+                className="text-white text-[18px] ml-[2] mb-[5]"
                 fontWeight="600">
                 {`${community.sportName} / ${community.leagueName}`}
               </CustomText>
@@ -63,7 +63,8 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 
             <View className="flex-row items-center">
               <CustomText
-                className="text-white text-[30px] leading-[33px]"
+                numberOfLines={2}
+                className="text-white text-[28px] leading-[33px]"
                 type="title">
                 {community.koreanName}
               </CustomText>
@@ -209,11 +210,11 @@ const MyStarCard = ({community}: MyStarCardProps) => {
               onPress={() =>
                 navigation.navigate('CommunityStack', {
                   screen: 'PostWrite',
-                  params: {communityId: community.id},
+                  params: {community},
                 })
               }>
               <CustomText
-                className="text-white text-center text-[17px]"
+                className="text-white text-center text-lg"
                 fontWeight="500">
                 글 작성
               </CustomText>
@@ -223,15 +224,15 @@ const MyStarCard = ({community}: MyStarCardProps) => {
               className="p-1"
               activeOpacity={0.5}
               onPress={() => {
-                if (community.officalRoomId !== null) {
+                if (community.officialRoomId !== null) {
                   navigation.navigate('CommunityStack', {
                     screen: 'ChatRoom',
-                    params: {chatRoomId: community.officalRoomId},
+                    params: {chatRoomId: community.officialRoomId},
                   });
                 }
               }}>
               <CustomText
-                className="text-white text-center text-[17px]"
+                className="text-white text-center text-lg"
                 fontWeight="500">
                 대표 채팅
               </CustomText>
@@ -250,7 +251,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 }
               }}>
               <CustomText
-                className="text-white text-center text-[17px]"
+                className="text-white text-center text-lg"
                 fontWeight="500">
                 내 프로필
               </CustomText>

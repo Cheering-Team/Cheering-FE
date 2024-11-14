@@ -4,6 +4,9 @@ import {
   getCommunities,
   getCommunityById,
   getMyCommunities,
+  getPopularPlayers,
+  getRandomCommunity,
+  joinCommunities,
   joinCommunity,
 } from './index';
 import {communityKeys} from './queries';
@@ -55,13 +58,38 @@ export const useGetMyCommunities = () => {
 // 커뮤니티 순서 변경
 export const useChangeCommuniyOrder = () => {
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: changeCommunityOrder,
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: communityKeys.listByMy()});
       navigation.goBack();
-      showTopToast(insets.top + 10, '저장 완료');
+      showTopToast({message: '저장 완료'});
     },
+  });
+};
+
+// 커뮤니티 모두 가입 (신규 회원)
+export const useJoinCommunities = () => {
+  return useMutation({
+    mutationFn: joinCommunities,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: communityKeys.listByMy()});
+    },
+  });
+};
+
+// 랜덤 커뮤니티 조회
+export const useGetRandomCommunity = () => {
+  return useQuery({
+    queryKey: communityKeys.detailRandom(),
+    queryFn: getRandomCommunity,
+  });
+};
+
+// 인기 선수 조회
+export const useGetPopularPlayers = () => {
+  return useQuery({
+    queryKey: communityKeys.popularList(),
+    queryFn: getPopularPlayers,
   });
 };

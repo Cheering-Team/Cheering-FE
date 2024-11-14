@@ -80,7 +80,7 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
             <CalendarSvg width={23} height={23} />
           </Pressable>
           <Pressable
-            className="ml-5"
+            className="ml-4"
             onPress={() => {
               if (community.curFan) {
                 navigation.navigate('Profile', {

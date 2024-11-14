@@ -15,7 +15,6 @@ import {
   useWriteComment,
   useWriteReComment,
 } from '../../../apis/comment/useComments';
-import {showTopToast} from '../../../utils/toast';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
@@ -57,11 +56,7 @@ const CommentInput: FC<CommentInputProps> = props => {
         content: comment,
       });
     } catch (error: any) {
-      if (error.code === 2004) {
-        showTopToast(insets.top + 20, '부적절한 단어가 포함되어 있습니다');
-      }
       if (error.code === 404) {
-        showTopToast(insets.top + 20, '삭제된 글입니다');
         queryClient.invalidateQueries({queryKey: postKeys.lists()});
         navigation.goBack();
       }
@@ -81,16 +76,11 @@ const CommentInput: FC<CommentInputProps> = props => {
         toId: to.id,
       });
     } catch (error: any) {
-      if (error.code === 2004) {
-        showTopToast(insets.top + 20, '부적절한 단어가 포함되어 있습니다');
-      }
       if (error.message === '존재하지 않는 게시글') {
-        showTopToast(insets.top + 20, '삭제된 글입니다');
         queryClient.invalidateQueries({queryKey: postKeys.lists()});
         navigation.goBack();
       }
       if (error.message === '존재하지 않는 댓글') {
-        showTopToast(insets.top + 20, '삭제된 댓글입니다');
         queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
       }
     }

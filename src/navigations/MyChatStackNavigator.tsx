@@ -1,11 +1,14 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import CommunityStackNavigator from './CommunityStackNavigator';
+import CommunityStackNavigator, {
+  CommunityStackParamList,
+} from './CommunityStackNavigator';
 import MyChatScreen from '../screens/myChatStack/MyChatScreen';
+import {NavigationPropType} from './types';
 
 export type MyChatStackParamList = {
   MyChat: undefined;
-  CommunityStack: undefined;
+  CommunityStack: NavigationPropType<CommunityStackParamList>;
 };
 
 const MyChatStackNavigator = () => {

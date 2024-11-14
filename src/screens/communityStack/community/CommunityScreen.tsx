@@ -1,83 +1,4 @@
-// import React, {useRef} from 'react';
-// import {Tabs} from 'react-native-collapsible-tab-view';
-// import CommunityHeader from '../../components/community/CommunityInfo/CommunityHeader';
-// import {useSafeAreaInsets} from 'react-native-safe-area-context';
-// import CommunityProfile from '../../components/community/CommunityInfo/CommunityProfile';
-// import {CommunityTabBar} from '../../components/community/CommunityTabBar/CommunityTabBar';
-// import FeedList from '../../components/community/FeedList';
-// import ChatList from '../../components/community/ChatList/ChatList';
-// import {WINDOW_HEIGHT} from '../../constants/dimension';
-// import JoinModal from '../../components/community/JoinModal/JoinModal';
-// import {BottomSheetModal} from '@gorhom/bottom-sheet';
-// import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-// import {RouteProp} from '@react-navigation/native';
-// import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-// import NotJoin from 'components/community/NotJoin';
-// import {useGetCommunityById} from 'apis/community/useCommunities';
-
-// const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
-
-// export type CommunityScreenNavigationProp = NativeStackNavigationProp<
-//   CommunityStackParamList,
-//   'Community'
-// >;
-
-// type CommunityScreenRouteProp = RouteProp<CommunityStackParamList, 'Community'>;
-
-// const CommunityScreen = ({route}: {route: CommunityScreenRouteProp}) => {
-//   const {communityId} = route.params;
-
-//   const insets = useSafeAreaInsets();
-
-//   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-//   const {data: community} = useGetCommunityById(communityId);
-
-//   if (!community) {
-//     return null;
-//   }
-
-//   return (
-//     <>
-//       <CommunityHeader community={community} />
-//       <Tabs.Container
-//         renderHeader={() => <CommunityProfile community={community} />}
-//         headerHeight={HEADER_HEIGHT}
-//         minHeaderHeight={45 + insets.top}
-//         renderTabBar={props => (
-//           <CommunityTabBar
-//             {...props}
-//             labelStyle={{color: 'white'}}
-//             tabStyle={{backgroundColor: 'black'}}
-//             indicatorStyle={{backgroundColor: 'white'}}
-//             activeColor={community.color}
-//           />
-//         )}>
-//         <Tabs.Tab name="피드">
-//           <FeedList community={community} />
-//         </Tabs.Tab>
-//         <Tabs.Tab name="채팅">
-//           <ChatList community={community} />
-//         </Tabs.Tab>
-//       </Tabs.Container>
-//       {community.curFan == null && (
-//         <NotJoin
-//           community={community}
-//           bottomSheetModalRef={bottomSheetModalRef}
-//         />
-//       )}
-//       <JoinModal
-//         community={community}
-//         bottomSheetModalRef={bottomSheetModalRef}
-//       />
-//     </>
-//   );
-// };
-
-// export default CommunityScreen;
-
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useGetCommunityById} from 'apis/community/useCommunities';
 import CustomText from 'components/common/CustomText';
 import CommunityHeader from 'components/community/CommunityInfo/CommunityHeader';
@@ -85,15 +6,9 @@ import CommunityProfile from 'components/community/CommunityInfo/CommunityProfil
 import FeedList from 'components/community/FeedList';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {FlatList, TouchableOpacity, View} from 'react-native';
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import {TouchableOpacity, View} from 'react-native';
+import Animated from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   NavigationState,
@@ -108,6 +23,7 @@ import {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import JoinProfile from 'components/community/JoinModal/JoinProfile/JoinProfile';
+import ChatList from 'components/community/ChatList/ChatList';
 
 const CommunityScreen = () => {
   const {communityId} =
@@ -167,14 +83,28 @@ const CommunityScreen = () => {
               <TouchableOpacity
                 style={{flex: 1}}
                 key={idx}
-                onPress={() => onTabPress(idx)}>
+                onPress={() => {
+                  onTabPress(idx);
+                  if (idx === tabIndex) {
+                    listArrRef.current.forEach(item => {
+                      if (item.key === route.key) {
+                        item.value?.scrollToOffset({
+                          offset: WINDOW_HEIGHT / 2 - 45 - insets.top,
+                          animated: true,
+                        });
+                      }
+                    });
+                  }
+                }}>
                 <View
                   style={{
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: '100%',
                   }}>
-                  <CustomText style={{color: 'white', fontSize: 16.5}}>
+                  <CustomText
+                    fontWeight="600"
+                    style={{color: 'white', fontSize: 16.5}}>
                     {route.title}
                   </CustomText>
                 </View>
@@ -188,7 +118,7 @@ const CommunityScreen = () => {
         </Animated.View>
       );
     },
-    [community],
+    [community, tabIndex],
   );
 
   const renderScene = useCallback(
@@ -212,7 +142,7 @@ const CommunityScreen = () => {
             );
           case 'chat':
             return (
-              <FeedList
+              <ChatList
                 scrollY={scrollY}
                 isTabFocused={isFocused}
                 onMomentumScrollBegin={onMomentumScrollBegin}
@@ -226,7 +156,7 @@ const CommunityScreen = () => {
         }
       }
     },
-    [tabIndex],
+    [tabIndex, community],
   );
 
   useEffect(() => {
@@ -249,7 +179,8 @@ const CommunityScreen = () => {
         onIndexChange={onTabIndexChange}
       />
       <Animated.View
-        style={[{position: 'absolute', width: '100%'}, headerTranslateY]}>
+        style={[{position: 'absolute', width: '100%'}, headerTranslateY]}
+        pointerEvents="box-none">
         <CommunityProfile community={community} />
       </Animated.View>
       <BottomSheetModal

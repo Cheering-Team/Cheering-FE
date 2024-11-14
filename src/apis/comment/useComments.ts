@@ -93,7 +93,6 @@ export const useGetComments = (postId: number | null, enabled: boolean) => {
 
 // 댓글 삭제
 export const useDeleteComment = (postId: number | null) => {
-  const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: deleteComment,
     onMutate: async ({commentId}) => {
@@ -126,7 +125,7 @@ export const useDeleteComment = (postId: number | null) => {
       return {previousComments};
     },
     onSuccess: () => {
-      showTopToast(insets.top + 20, '삭제 완료');
+      showTopToast({message: '삭제 완료'});
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
       queryClient.invalidateQueries({queryKey: postKeys.details()});
@@ -137,7 +136,6 @@ export const useDeleteComment = (postId: number | null) => {
 
 // 댓글 신고
 export const useReportComment = (postId: number | null) => {
-  const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: reportComment,
     onMutate: async ({commentId}) => {
@@ -171,7 +169,7 @@ export const useReportComment = (postId: number | null) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
-      showTopToast(insets.top + 20, '신고 완료');
+      showTopToast({message: '신고 완료'});
     },
   });
 };

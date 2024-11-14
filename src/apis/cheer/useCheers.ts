@@ -30,11 +30,10 @@ export const useGetCheers = (matchId: number, communityId: number) => {
 };
 
 export const useDeleteCheer = (matchId: number, communityId: number) => {
-  const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: deleteCheer,
     onSuccess: () => {
-      showTopToast(insets.top + 20, '삭제 완료');
+      showTopToast({message: '삭제 완료'});
       queryClient.invalidateQueries({
         queryKey: cheerKeys.list(matchId, communityId),
       });

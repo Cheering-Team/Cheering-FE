@@ -1,5 +1,4 @@
 import {Fan} from 'apis/fan/types';
-import {ImagePayload} from 'apis/post/types';
 
 export interface Community {
   id: number;
@@ -13,7 +12,7 @@ export interface Community {
   sportName?: string;
   leagueName?: string;
   firstTeamName?: string;
-  officalRoomId: number | null;
+  officialRoomId: number | null;
   color: string;
 }
 
@@ -26,6 +25,10 @@ export interface JoinCommunityPayload {
 export interface ChangeCommunityOrderPayload {
   communityId: number;
   communityOrder: number;
+}
+
+export interface JoinCommunitiesPayload {
+  communityIds: number[];
 }
 
 // 응답

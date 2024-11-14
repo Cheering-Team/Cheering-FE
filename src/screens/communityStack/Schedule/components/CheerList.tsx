@@ -10,7 +10,6 @@ import {Tabs} from 'react-native-collapsible-tab-view';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ArrowSvg from 'assets/images/arrow_up.svg';
 import {useGetCheers, useWriteCheer} from 'apis/cheer/useCheers';
-import {showTopToast} from 'utils/toast';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
@@ -19,13 +18,16 @@ import {matchKeys} from 'apis/match/queries';
 import Cheer from './Cheer';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import CommentSkeleton from 'components/skeleton/CommentSkeleton';
+import CustomText from 'components/common/CustomText';
+import {Community} from 'apis/community/types';
+import FastImage from 'react-native-fast-image';
 
 interface CheerListProps {
   matchId: number;
-  communityId: number;
+  community: Community;
 }
 
-const CheerList = ({matchId, communityId}: CheerListProps) => {
+const CheerList = ({matchId, community}: CheerListProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
@@ -41,7 +43,7 @@ const CheerList = ({matchId, communityId}: CheerListProps) => {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useGetCheers(matchId, communityId);
+  } = useGetCheers(matchId, community.id);
 
   const handleWriteCheer = async () => {
     if (content.trim().length === 0) {
@@ -51,15 +53,11 @@ const CheerList = ({matchId, communityId}: CheerListProps) => {
     try {
       await writeCheer({
         matchId,
-        communityId,
+        communityId: community.id,
         content,
       });
     } catch (error: any) {
-      if (error.code === 2004) {
-        showTopToast(insets.top + 20, '부적절한 단어가 포함되어 있습니다');
-      }
       if (error.message === '존재하지 않는 경기') {
-        showTopToast(insets.top + 20, '취소된 경기입니다');
         navigation.goBack();
         queryClient.invalidateQueries({queryKey: matchKeys.lists()});
       }
@@ -86,12 +84,25 @@ const CheerList = ({matchId, communityId}: CheerListProps) => {
       <Tabs.FlashList
         data={isLoading ? [] : cheers?.pages.flatMap(page => page.cheers)}
         renderItem={({item}) => (
-          <Cheer cheer={item} matchId={matchId} communityId={communityId} />
+          <Cheer cheer={item} matchId={matchId} communityId={community.id} />
         )}
         contentContainerStyle={{paddingHorizontal: 10, paddingVertical: 10}}
         estimatedItemSize={100}
         onEndReached={loadCheers}
         onEndReachedThreshold={1}
+        ListHeaderComponent={
+          <View
+            className="p-2 rounded-md mb-3 items-center flex-row justify-center"
+            style={{backgroundColor: community.color}}>
+            <FastImage
+              source={{uri: community.image}}
+              className="w-[20] h-[20]"
+            />
+            <CustomText
+              className="text-white text-[15px] ml-1"
+              fontWeight="600">{`${community.koreanName}를 위한 응원 공간이에요`}</CustomText>
+          </View>
+        }
         ListFooterComponent={isFetchingNextPage ? <CommentSkeleton /> : null}
         ListEmptyComponent={
           isLoading ? <CommentSkeleton /> : <ListEmpty type="cheer" />

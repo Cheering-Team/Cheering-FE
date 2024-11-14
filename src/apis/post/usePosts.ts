@@ -8,6 +8,7 @@ import {
   getDailyExist,
   getDailys,
   getFanPosts,
+  getMyHotPosts,
   getPostById,
   getPosts,
   likePost,
@@ -18,16 +19,13 @@ import {
 import {FilterType, Post} from './types';
 import {useNavigation} from '@react-navigation/native';
 import {PostWriteScreenNavigationProp} from '../../screens/communityStack/PostWriteScreen.tsx';
-import {hideToast, showBottomToast, showTopToast} from '../../utils/toast';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {hideToast, showTopToast} from '../../utils/toast';
 import {queryClient} from '../../../App';
 import {LayoutAnimation} from 'react-native';
-import * as RootNavigation from 'navigations/RootNavigation.ts';
 
 // 게시글 작성
 export const useWritePost = () => {
   const navigaion = useNavigation<PostWriteScreenNavigationProp>();
-  const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: writePost,
     onSuccess: data => {
@@ -40,12 +38,7 @@ export const useWritePost = () => {
       navigaion.replace('Post', {
         postId: data.id,
       });
-      showTopToast(insets.top + 20, '작성 완료');
-    },
-    onError: () => {
-      if (error.code === 2004) {
-        showTopToast(insets.top + 20, '부적절한 단어가 포함되어있어요');
-      }
+      showTopToast({message: '작성 완료'});
     },
   });
 };
@@ -53,12 +46,11 @@ export const useWritePost = () => {
 // 게시글 목록 불러오기 (무한 스크롤)
 export const useGetPosts = (
   communityId: number,
-  type: string,
   filter: FilterType,
   enabled: boolean,
 ) => {
   return useInfiniteQuery({
-    queryKey: postKeys.list(communityId, filter, type),
+    queryKey: postKeys.list(communityId, filter),
     queryFn: getPosts,
     initialPageParam: 0,
     getNextPageParam: lastPage => {
@@ -93,7 +85,6 @@ export const useGetPostById = (postId: number) => {
 
 // 게시글 좋아요 토글
 export const useLikePost = (postId: number) => {
-  const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: likePost,
     onMutate: async () => {
@@ -145,7 +136,6 @@ export const useLikePost = (postId: number) => {
     },
     onError: error => {
       if (error.message === '존재하지 않는 게시글') {
-        showTopToast(insets.top + 20, '삭제된 글입니다');
         const previousPosts = queryClient.getQueriesData({
           queryKey: postKeys.lists(),
           exact: false,
@@ -195,17 +185,12 @@ export const useLikePost = (postId: number) => {
         };
       });
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({queryKey: postKeys.lists()});
-      queryClient.invalidateQueries({queryKey: postKeys.detail(postId)});
-    },
   });
 };
 
 // 게시글 수정
 export const useEditPost = () => {
   const navigaion = useNavigation<PostWriteScreenNavigationProp>();
-  const insets = useSafeAreaInsets();
   return useMutation({
     mutationFn: editPost,
     onSuccess: (data, variables) => {
@@ -216,19 +201,13 @@ export const useEditPost = () => {
       queryClient.invalidateQueries({queryKey: postKeys.lists()});
       hideToast();
       navigaion.goBack();
-      showBottomToast(insets.bottom + 20, '작성 완료');
-    },
-    onError: () => {
-      if (error.code === 2004) {
-        showTopToast(insets.top + 20, '부적절한 단어가 포함되어있어요');
-      }
+      showTopToast({message: '수정 완료'});
     },
   });
 };
 
 // 게시글 삭제
 export const useDeletePost = (postId: number, type: 'feed' | 'post') => {
-  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   return useMutation({
     mutationFn: deletePost,
@@ -289,14 +268,13 @@ export const useDeletePost = (postId: number, type: 'feed' | 'post') => {
         });
       });
 
-      showTopToast(insets.top + 20, '삭제 완료');
+      showTopToast({message: '삭제 완료'});
     },
   });
 };
 
 // 게시글 신고
 export const useReportPost = (type: 'feed' | 'post') => {
-  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   return useMutation({
     mutationFn: reportPost,
@@ -357,8 +335,21 @@ export const useReportPost = (type: 'feed' | 'post') => {
         });
       });
 
-      showTopToast(insets.top + 20, '신고 완료');
+      showTopToast({message: '신고 완료'});
     },
+  });
+};
+
+// 인기 게시글 조회
+export const useGetMyHotPosts = () => {
+  return useInfiniteQuery({
+    queryKey: postKeys.listMyHot(),
+    queryFn: getMyHotPosts,
+    initialPageParam: 0,
+    getNextPageParam: lastPage => {
+      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
+    },
+    retry: false,
   });
 };
 

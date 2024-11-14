@@ -98,9 +98,8 @@ const ScheduleList = ({community}: ScheduleListProps) => {
 
       return (
         <ScrollView style={{width: width}} className="">
-          <View className="flex-row items-center justify-center">
+          <View className="flex-row items-center justify-center py-1">
             {isLoading && <View className="w-5 h-5" />}
-
             <CustomText
               fontWeight="600"
               className="text-xl text-center text-slate-900 my-3 mx-2">

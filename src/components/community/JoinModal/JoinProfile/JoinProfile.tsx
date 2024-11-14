@@ -1,18 +1,11 @@
-import React, {RefObject, useState} from 'react';
-import {ImageBackground, Pressable, StyleSheet, View} from 'react-native';
+import React, {RefObject, useEffect, useState} from 'react';
+import {Pressable, View} from 'react-native';
 import CustomText from '../../../common/CustomText';
-import Avatar from '../../../common/Avatar';
-import CustomButton from '../../../common/CustomButton';
-import CameraSvg from '../../../../assets/images/camera-01.svg';
 import {NAME_REGEX} from '../../../../constants/regex';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomBottomSheetTextInput from '../../../common/CustomBottomSheetTextInput';
 import {showTopToast} from 'utils/toast';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
-import {openPicker} from '@baronha/react-native-multiple-image-picker';
 import LoadingOverlay from 'components/common/LoadingOverlay';
-import {Image} from 'react-native-compressor';
-import {ImagePayload} from 'apis/post/types';
 import {Community} from 'apis/community/types';
 import {useJoinCommunity} from 'apis/community/useCommunities';
 
@@ -24,8 +17,6 @@ interface Props {
 const JoinProfile = (props: Props) => {
   const {community, bottomSheetModalRef} = props;
 
-  const insets = useSafeAreaInsets();
-
   const [nickname, setNickname] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [nicknameInvalidMessage, setNicknameInvalidMessage] = useState('');
@@ -36,7 +27,7 @@ const JoinProfile = (props: Props) => {
     if (!NAME_REGEX.test(nickname)) {
       setIsValid(false);
       setNicknameInvalidMessage(
-        '2자~20자, 한글 영어 숫자 . _ 만 사용 가능합니다.',
+        '2자~10자, 한글 영어 숫자 . _ 만 사용 가능합니다.',
       );
       return;
     }
@@ -45,8 +36,7 @@ const JoinProfile = (props: Props) => {
         communityId: community.id,
         name: nickname,
       });
-      bottomSheetModalRef.current?.dismiss();
-      showTopToast(insets.top + 20, '가입 완료');
+      showTopToast({message: '가입 완료'});
     } catch (error: any) {
       if (error.code === 2004) {
         setIsValid(false);
@@ -58,6 +48,12 @@ const JoinProfile = (props: Props) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (community.curFan) {
+      bottomSheetModalRef.current?.dismiss();
+    }
+  }, [bottomSheetModalRef, community.curFan]);
 
   return (
     <View className="flex-1 w-[90%] mt-1 justify-between">
@@ -77,7 +73,7 @@ const JoinProfile = (props: Props) => {
           value={nickname}
           isValid={isValid}
           inValidMessage={nicknameInvalidMessage}
-          maxLength={20}
+          maxLength={10}
           length
           curLength={nickname.length}
           onChangeText={e => {

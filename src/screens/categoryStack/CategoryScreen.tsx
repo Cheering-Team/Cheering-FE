@@ -18,6 +18,8 @@ import FastImage from 'react-native-fast-image';
 import {useGetLeagues, useGetSports, useGetTeams} from 'apis/team/useTeams';
 import {Sport} from 'apis/team/types';
 import RightSvg from 'assets/images/chevron-right-white.svg';
+import RegisterModal from 'components/common/RegisterModal';
+import PlusSvg from 'assets/images/plus-black.svg';
 
 type CategoryScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -30,6 +32,7 @@ const CategoryScreen = ({
   navigation: CategoryScreenNavigationProp;
 }) => {
   const insets = useSafeAreaInsets();
+  const [isRegisiterOpen, setIsRegisterOpen] = useState(false);
   const [selectedSport, setSelectedSport] = useState<Sport | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<IdName | null>(null);
 
@@ -64,30 +67,36 @@ const CategoryScreen = ({
           <SearchSvg />
         </View>
       </Pressable>
-
-      <FlatList
-        horizontal={true}
-        className="flex-grow-0 bg-white border-b-gray-50 border-b"
-        contentContainerStyle={{paddingHorizontal: 5}}
-        data={sports || []}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => (
-          <Pressable
-            onPress={() => setSelectedSport(item)}
-            className="items-center px-[14] py-[10] justify-center"
-            style={{
-              borderBottomWidth: 3,
-              borderBlockColor: selectedSport === item ? 'black' : 'white',
-            }}>
-            <CustomText
-              fontWeight="600"
-              className="text-[18px]"
-              style={{color: selectedSport === item ? 'black' : 'gray'}}>
-              {item.name}
-            </CustomText>
-          </Pressable>
-        )}
-      />
+      <View className="flex-row items-center justify-between">
+        <FlatList
+          horizontal={true}
+          className="flex-grow-0 bg-white border-b-gray-50 border-b"
+          contentContainerStyle={{paddingHorizontal: 5}}
+          data={sports || []}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item}) => (
+            <Pressable
+              onPress={() => setSelectedSport(item)}
+              className="items-center px-[14] py-[10] justify-center"
+              style={{
+                borderBottomWidth: 3,
+                borderBlockColor: selectedSport === item ? 'black' : 'white',
+              }}>
+              <CustomText
+                fontWeight="600"
+                className="text-[18px]"
+                style={{color: selectedSport === item ? 'black' : 'gray'}}>
+                {item.name}
+              </CustomText>
+            </Pressable>
+          )}
+        />
+        <Pressable
+          className="px-3 pb-1"
+          onPress={() => setIsRegisterOpen(true)}>
+          <PlusSvg width={27} height={27} />
+        </Pressable>
+      </View>
       <View className="flex-row flex-1">
         <FlatList
           className="w-[120] bg-[#f4f4f4]"
@@ -172,6 +181,9 @@ const CategoryScreen = ({
           }
         />
       </View>
+      {isRegisiterOpen && (
+        <RegisterModal setIsRegisterOpen={setIsRegisterOpen} />
+      )}
     </SafeAreaView>
   );
 };

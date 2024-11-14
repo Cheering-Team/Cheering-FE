@@ -74,7 +74,7 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
   const handleRefresh = () => {
     setIsRefreshing(true);
     refetch();
-    postRefetch();
+    refetchPost();
 
     setTimeout(() => {
       setIsRefreshing(false);
@@ -136,14 +136,15 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                     <View
                       key={tag}
                       style={{
+                        height: 35,
                         borderWidth: 1,
                         borderColor: '#e1e1e1',
-                        paddingVertical: 4,
                         paddingHorizontal: 15,
                         borderRadius: 12,
                         marginRight: 6,
+                        justifyContent: 'center',
                       }}>
-                      <CustomText fontWeight="500">
+                      <CustomText fontWeight="500" style={{fontSize: 15}}>
                         {tag === 'photo'
                           ? '📸 직찍사'
                           : tag === 'viewing'
@@ -183,12 +184,13 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                 </View>
                 {/* 본문 */}
                 <CustomText
+                  numberOfLines={999}
                   style={{
                     marginTop: 5,
                     color: '#282828',
                     marginRight: 25,
                     lineHeight: 24,
-                    fontSize: 16,
+                    fontSize: 17,
                     paddingHorizontal: 15,
                     marginBottom: 10,
                   }}>
@@ -201,8 +203,8 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                 <CustomText
                   fontWeight="600"
                   style={{
-                    fontSize: 16,
-                    paddingHorizontal: 15,
+                    fontSize: 18,
+                    paddingHorizontal: 10,
                     paddingTop: 10,
                     marginBottom: 10,
                   }}>

@@ -7,10 +7,7 @@ import MoreSvg from '../../assets/images/three-dots.svg';
 import OptionModal from '../common/OptionModal';
 import AlertModal from '../common/AlertModal/AlertModal';
 import {useDeletePost, useReportPost} from '../../apis/post/usePosts';
-import {showTopToast} from 'utils/toast';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
-import OfficialSvg from 'assets/images/official.svg';
 import {Post} from 'apis/post/types';
 import {queryClient} from '../../../App';
 import {postKeys} from 'apis/post/queries';
@@ -31,7 +28,6 @@ const PostWriter = ({
   location = 'community',
 }: PostWriterProps) => {
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
 
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
@@ -49,7 +45,6 @@ const PostWriter = ({
     } catch (error: any) {
       if (error.message === '존재하지 않는 게시글') {
         queryClient.invalidateQueries({queryKey: postKeys.lists()});
-        showTopToast(insets.top + 20, '삭제된 글입니다');
         if (type === 'post') {
           navigation.goBack();
         }
@@ -64,28 +59,29 @@ const PostWriter = ({
           flex: 1,
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'space-between',
         }}>
-        <Pressable
-          style={{flexDirection: 'row', alignItems: 'center'}}
-          onPress={() => {
-            location === 'community'
-              ? navigation.navigate('Profile', {fanId: post.writer.id})
-              : navigation.navigate('CommunityStack', {
-                  screen: 'Profile',
-                  params: {fanId: post.writer.id},
-                });
-          }}>
-          <CustomText fontWeight="500" className="text-base">
-            {post.writer.name}
+        <View className="flex-row items-center flex-1">
+          <Pressable
+            style={{flexDirection: 'row', alignItems: 'center'}}
+            onPress={() => {
+              location === 'community'
+                ? navigation.navigate('Profile', {fanId: post.writer.id})
+                : navigation.navigate('CommunityStack', {
+                    screen: 'Profile',
+                    params: {fanId: post.writer.id},
+                  });
+            }}>
+            <CustomText fontWeight="600" className="text-base text-gray-800">
+              {post.writer.name}
+            </CustomText>
+          </Pressable>
+          <CustomText
+            style={{fontSize: 15, color: '#737373', marginLeft: 5}}
+            fontWeight="400">
+            {formatBeforeDate(post.createdAt)}
           </CustomText>
-          {post.writer.type === 'MANAGER' && (
-            <OfficialSvg width={14} height={14} className="ml-[2]" />
-          )}
-          <CustomText style={styles.createdAt}>
-            {formatBeforeDate(new Date(post.createdAt))}
-          </CustomText>
-        </Pressable>
+        </View>
+
         <TouchableOpacity
           activeOpacity={0.5}
           style={{padding: 2}}
@@ -101,7 +97,7 @@ const PostWriter = ({
           firstOnPress={() => {
             navigation.navigate('CommunityStack', {
               screen: 'PostWrite',
-              params: {communityId: post.community.id, post: post},
+              params: {community: post.community, post: post},
             });
           }}
           secondText="삭제"
@@ -151,7 +147,6 @@ const PostWriter = ({
 };
 
 const styles = StyleSheet.create({
-  createdAt: {fontSize: 14, color: '#a5a5a5', marginLeft: 5},
   writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
 });
 

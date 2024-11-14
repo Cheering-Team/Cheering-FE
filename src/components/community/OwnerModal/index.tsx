@@ -1,21 +1,19 @@
 import {useNavigation} from '@react-navigation/native';
-import {Player} from 'apis/player/types';
-import {useJoinCommunity} from 'apis/player/usePlayers';
+import {Community} from 'apis/community/types';
+import {useJoinCommunity} from 'apis/community/useCommunities';
 import CustomText from 'components/common/CustomText';
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import {Modal, Pressable, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {showTopToast} from 'utils/toast';
 
 interface OwnerModalProps {
-  community: Player;
+  community: Community;
   setRefreshKey: Dispatch<SetStateAction<number>>;
 }
 
 const OwnerModal = (props: OwnerModalProps) => {
   const {community, setRefreshKey} = props;
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
 
   const [isModalOpen, setIsModalOpen] = useState(true);
 
@@ -33,7 +31,7 @@ const OwnerModal = (props: OwnerModalProps) => {
     });
     setIsModalOpen(false);
     setRefreshKey((prev: number) => prev + 1);
-    showTopToast(insets.top + 20, '커뮤니티에 참여했어요.');
+    showTopToast({message: '커뮤니티에 참여했어요'});
   };
 
   return (

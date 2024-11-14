@@ -1,10 +1,10 @@
 import CustomText from 'components/common/CustomText';
 import React from 'react';
 import {FlatList, Pressable, SafeAreaView, View} from 'react-native';
-import {useGetNotices} from 'apis/notice/useNotices';
 import {formatBeforeDate} from 'utils/format';
 import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
 import StackHeader from 'components/common/StackHeader';
+import {useGetNotices} from 'apis/notice/useNotices';
 
 const NoticeListScreen = ({navigation}) => {
   const {data: noticies} = useGetNotices();

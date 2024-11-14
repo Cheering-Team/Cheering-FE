@@ -5,6 +5,7 @@ import {
   ChangeCommunityOrderPayload,
   Community,
   CommunityListResponse,
+  JoinCommunitiesPayload,
   JoinCommunityPayload,
 } from './types';
 
@@ -73,5 +74,26 @@ export const changeCommunityOrder = async (
     '/communities/order',
     data,
   );
+  return response.data.result;
+};
+
+// 커뮤니티 모두 가입 (신규 유저)
+export const joinCommunities = async (data: JoinCommunitiesPayload) => {
+  const response = await axiosInstance.post<ApiResponse<null>>('/fans', data);
+  return response.data.result;
+};
+
+// 랜덤 커뮤니티 조회
+export const getRandomCommunity = async () => {
+  const response = await axiosInstance.get<ApiResponse<Community>>(
+    '/communities/random',
+  );
+  return response.data.result;
+};
+
+// 인기 선수 조회
+export const getPopularPlayers = async () => {
+  const response =
+    await axiosInstance.get<ApiResponse<Community[]>>(`/players/popular`);
   return response.data.result;
 };

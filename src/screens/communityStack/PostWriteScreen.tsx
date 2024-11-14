@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   View,
   ScrollView,
+  useWindowDimensions,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -19,7 +20,7 @@ import {CommunityStackParamList} from '../../navigations/CommunityStackNavigator
 import {RouteProp} from '@react-navigation/native';
 import {TagType} from '../../apis/post/types';
 import {useEditPost, useWritePost} from '../../apis/post/usePosts';
-import {showBottomToast} from '../../utils/toast';
+import {showTopToast} from '../../utils/toast';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -30,6 +31,8 @@ import {Results as ImageSelectType} from '@baronha/react-native-multiple-image-p
 import PostImage from 'components/post/PostImage';
 import {Image, Video} from 'react-native-compressor';
 import uuid from 'react-native-uuid';
+import Toast from 'react-native-toast-message';
+import {toastConfig} from '../../../App';
 
 export type PostWriteScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
@@ -40,7 +43,10 @@ type PostWriteScreenRouteProp = RouteProp<CommunityStackParamList, 'PostWrite'>;
 
 const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
   const insets = useSafeAreaInsets();
-  const {communityId, post} = route.params;
+  const {community, post} = route.params;
+
+  const [viewHeight, setViewHeight] = useState(0);
+  const dim = useWindowDimensions();
 
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState<Record<TagType, boolean>>({
@@ -61,8 +67,8 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
     };
   });
 
-  const {mutate: writePost} = useWritePost();
-  const {mutate: editPost} = useEditPost();
+  const {mutateAsync: writePost} = useWritePost();
+  const {mutateAsync: editPost} = useEditPost();
 
   const handleDeleteImage = (path: string) => {
     const newImageData = [...imageData].filter(image => image.path !== path);
@@ -80,11 +86,17 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
 
   const handleWritePost = async () => {
     if (content.length === 0 && imageData.length === 0) {
-      showBottomToast(insets.bottom + 20, '글 또는 사진을 넣어주세요');
+      showTopToast({
+        type: 'fail',
+        message: '글 또는 사진을 넣어주세요',
+      });
       return;
     }
     if (content.length > 1990) {
-      showBottomToast(insets.bottom + 20, '최대 2,000자까지 작성 가능합니다.');
+      showTopToast({
+        type: 'fail',
+        message: '최대 2,000자까지 작성 가능합니다.',
+      });
       return;
     }
 
@@ -136,39 +148,47 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
       .map(([key]) => key as TagType);
 
     if (!post) {
-      writePost({
-        communityId: communityId,
-        content,
-        tags,
-        images,
-        handleProgress: progressEvent => {
-          if (progressEvent.total) {
-            const percentCompleted = Math.round(
-              50 + (progressEvent.loaded * 50) / progressEvent.total,
-            );
-            animatedProgress.value = withTiming(percentCompleted, {
-              duration: 500,
-            });
-          }
-        },
-      });
+      try {
+        await writePost({
+          communityId: community.id,
+          content,
+          tags,
+          images,
+          handleProgress: progressEvent => {
+            if (progressEvent.total) {
+              const percentCompleted = Math.round(
+                50 + (progressEvent.loaded * 50) / progressEvent.total,
+              );
+              animatedProgress.value = withTiming(percentCompleted, {
+                duration: 500,
+              });
+            }
+          },
+        });
+      } catch (error: any) {
+        setIsWriting(false);
+      }
     } else {
-      editPost({
-        postId: post.id,
-        content,
-        tags,
-        images,
-        handleProgress: progressEvent => {
-          if (progressEvent.total) {
-            const percentCompleted = Math.round(
-              50 + (progressEvent.loaded * 50) / progressEvent.total,
-            );
-            animatedProgress.value = withTiming(percentCompleted, {
-              duration: 500,
-            });
-          }
-        },
-      });
+      try {
+        await editPost({
+          postId: post.id,
+          content,
+          tags,
+          images,
+          handleProgress: progressEvent => {
+            if (progressEvent.total) {
+              const percentCompleted = Math.round(
+                50 + (progressEvent.loaded * 50) / progressEvent.total,
+              );
+              animatedProgress.value = withTiming(percentCompleted, {
+                duration: 500,
+              });
+            }
+          },
+        });
+      } catch (error: any) {
+        setIsWriting(false);
+      }
     }
   };
 
@@ -216,8 +236,10 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
               height: 100,
               borderRadius: 10,
             }}>
-            <CustomText className="text-gray-800 text-base mb-3">
-              글을 작성중입니다
+            <CustomText
+              fontWeight="500"
+              className="text-gray-700 text-[18px] mb-3">
+              열심히 저장하는 중...
             </CustomText>
             <View className="w-[200] bg-slate-200 rounded-md overflow-hidden">
               <Animated.View
@@ -228,9 +250,15 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
           </View>
         </View>
       )}
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView
+        style={{flex: 1}}
+        onLayout={event => {
+          const {x, y, width, height} = event.nativeEvent.layout;
+          setViewHeight(height);
+        }}>
         <KeyboardAvoidingView
           style={{flex: 1}}
+          keyboardVerticalOffset={dim.height - viewHeight}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           {isTagOpen && (
             <Pressable
@@ -254,6 +282,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
           <WriteHeader
             handleWritePost={handleWritePost}
             isWriting={isWriting}
+            community={community}
           />
           <ScrollView>
             <TagList selectedTag={selectedTag} setIsTagOpen={setIsTagOpen} />
@@ -286,6 +315,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
           )}
         </KeyboardAvoidingView>
       </SafeAreaView>
+      <Toast config={toastConfig} />
     </>
   );
 };

@@ -1,9 +1,5 @@
 import React from 'react';
 import {Platform, Pressable, ScrollView, StyleSheet, View} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import {useState} from 'react';
-import ChevronTopSvg from '../../assets/images/chevron-top-black.svg';
-import ChevronDownSvg from '../../assets/images/chevron-down-black.svg';
 import CustomText from '../common/CustomText';
 
 interface FilterDataType {
@@ -73,17 +69,18 @@ const styles = StyleSheet.create({
   scrollContainer: {paddingRight: 30},
   openedScrollContainer: {flexDirection: 'row', flexWrap: 'wrap'},
   filterItem: {
+    height: 35,
     borderWidth: 1,
     borderColor: '#dcdcdc',
-    paddingVertical: 5,
-    paddingHorizontal: 15,
+    paddingHorizontal: 12,
     borderRadius: 12,
     marginRight: 6,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   openedFilterItem: {marginBottom: 10},
   selectedFilterItem: {backgroundColor: '#3a3a3a', borderColor: '#3a3a3a'},
-  filterName: {fontSize: 14},
+  filterName: {fontSize: 15},
   selectedFilterNmae: {color: 'white'},
   blur: {
     right: 10,

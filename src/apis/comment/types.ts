@@ -5,7 +5,7 @@ import {Page} from '../types';
 export interface Comment {
   id: number;
   content: string;
-  createdAt: Date;
+  createdAt: string;
   reCount: number;
   writer: Fan;
   isWriter: boolean;
@@ -15,7 +15,7 @@ export interface Comment {
 export interface ReComment {
   id: number;
   content: string;
-  createdAt: Date;
+  createdAt: string;
   to: Fan;
   writer: Fan;
   isWriter: boolean;

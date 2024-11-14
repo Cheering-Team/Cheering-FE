@@ -11,12 +11,14 @@ import NoticeScreen from 'screens/moreStack/NoticeScreen';
 import PrivacyPolicyScreen from 'screens/moreStack/PrivacyPolicyScreen';
 import AdminScreen from 'screens/moreStack/AdminScreen';
 import PlayerAccountScreen from 'screens/moreStack/PlayerAccountScreen';
+import CommunityApplyListScreen from 'screens/moreStack/CommunityApplyList/CommunityApplyListScreen';
 
 export type MoreStackParamList = {
   More: undefined;
   MyProfile: undefined;
-  EditNickname: {nickname: string; playerUserId: null};
+  EditName: {name: string; playerUserId: null};
   DeleteUser: {playerUserId: null};
+  CommunityApplyList: undefined;
   NoticeList: undefined;
   Notice: {noticeId: number};
   SetNotification: undefined;
@@ -42,13 +44,18 @@ const MoreStackNavigator = () => {
         options={{headerShown: false}}
       />
       <MoreStack.Screen
-        name="EditNickname"
+        name="EditName"
         component={EditNameScreen}
         options={{headerShown: false}}
       />
       <MoreStack.Screen
         name="DeleteUser"
         component={DeleteUserScreen}
+        options={{headerShown: false}}
+      />
+      <MoreStack.Screen
+        name="CommunityApplyList"
+        component={CommunityApplyListScreen}
         options={{headerShown: false}}
       />
       <MoreStack.Screen

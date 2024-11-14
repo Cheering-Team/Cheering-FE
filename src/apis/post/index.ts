@@ -47,7 +47,7 @@ export const writePost = async (data: WritePostPayload) => {
   return response.data.result;
 };
 
-// 커뮤니티 게시글 조회 (무한 스크롤) (id = 0 -> 내가 모든 커뮤니티 게시글)
+// 커뮤니티 게시글 조회 (무한 스크롤)
 export const getPosts = async ({
   queryKey,
   pageParam = 0,
@@ -55,9 +55,9 @@ export const getPosts = async ({
   queryKey: ReturnType<typeof postKeys.list>;
   pageParam: number;
 }) => {
-  const [, , {communityId, filter, type}] = queryKey;
+  const [, , {communityId, filter}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<GetPostsResponse>>(
-    `/communities/${communityId}/posts?type=${type}&tag=${
+    `/communities/${communityId}/posts?&tag=${
       filter === 'all' ? '' : filter
     }&page=${pageParam}&size=20`,
   );
@@ -147,6 +147,14 @@ export const reportPost = async (data: PostIdPayload) => {
   const {postId} = data;
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/posts/${postId}/reports`,
+  );
+  return response.data.result;
+};
+
+// 인기 게시글 조회
+export const getMyHotPosts = async ({pageParam = 0}: {pageParam: number}) => {
+  const response = await axiosInstance.get<ApiResponse<GetPostsResponse>>(
+    `/posts?page=${pageParam}&size=20`,
   );
   return response.data.result;
 };

@@ -1,153 +1,33 @@
-// import React, {useState} from 'react';
-// import {Tabs} from 'react-native-collapsible-tab-view';
-// import FeedFilter from '../FeedFilter';
-// import {useFeedList} from './useFeedList';
-// import {ListRenderItem, Pressable, RefreshControl} from 'react-native';
-// import FeedPost from '../FeedPost';
-// import ListEmpty from '../../common/ListEmpty/ListEmpty';
-// import {useSafeAreaInsets} from 'react-native-safe-area-context';
-// import PlusSvg from '../../../assets/images/plus-gray.svg';
-// import {useNavigation} from '@react-navigation/native';
-// import {Post} from 'apis/post/types';
-// import {Player} from 'apis/player/types';
-// import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-// import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-// import FeedSkeleton from 'components/skeleton/FeedSkeleton';
-
-// interface Props {
-//   community: Player;
-// }
-
-// const FeedList = (props: Props) => {
-//   const {community} = props;
-
-//   const insets = useSafeAreaInsets();
-//   const navigation =
-//     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
-
-//   const [isRefreshing, setIsRefreshing] = useState(false);
-
-//   const {
-//     selectedFilter,
-//     setSelectedFilter,
-//     posts,
-//     isLoading,
-//     refetch,
-//     isFetchingNextPage,
-//     loadPosts,
-//   } = useFeedList(community);
-
-//   const renderFeed: ListRenderItem<Post> = ({item}) => (
-//     <FeedPost feed={item} type="community" />
-//   );
-
-//   const handleRefresh = () => {
-//     setIsRefreshing(true);
-//     refetch();
-
-//     setTimeout(() => {
-//       setIsRefreshing(false);
-//     }, 1000);
-//   };
-
-//   if (community.curFan == null) {
-//     return null;
-//   }
-
-//   return (
-//     <>
-//       <Tabs.FlatList
-//         data={isLoading ? [] : posts?.pages.flatMap(page => page.posts)}
-//         renderItem={renderFeed}
-//         ListHeaderComponent={
-//           community.curFan ? (
-//             <FeedFilter
-//               selectedFilter={selectedFilter}
-//               setSelectedFilter={setSelectedFilter}
-//             />
-//           ) : null
-//         }
-//         showsVerticalScrollIndicator={false}
-//         contentContainerStyle={{paddingBottom: 70}}
-//         onEndReached={community.curFan && loadPosts}
-//         onEndReachedThreshold={community.curFan && 1}
-//         ListFooterComponent={
-//           isFetchingNextPage && community.curFan ? (
-//             <FeedSkeleton type="Community" />
-//           ) : null
-//         }
-//         ListEmptyComponent={
-//           isLoading ? (
-//             <FeedSkeleton type="Community" />
-//           ) : (
-//             <ListEmpty type="feed" />
-//           )
-//         }
-//         refreshControl={
-//           community.curFan ? (
-//             <RefreshControl
-//               refreshing={isRefreshing}
-//               onRefresh={handleRefresh}
-//             />
-//           ) : undefined
-//         }
-//       />
-//       {community.curFan && (
-//         <Pressable
-//           style={{
-//             alignItems: 'center',
-//             position: 'absolute',
-//             bottom: insets.bottom + 67,
-//             right: 17,
-//             width: 42,
-//             height: 42,
-//             justifyContent: 'center',
-//             backgroundColor: '#ffffff',
-//             borderRadius: 100,
-//             shadowColor: '#000',
-//             shadowOffset: {
-//               width: 1,
-//               height: 1,
-//             },
-//             shadowOpacity: 0.2,
-//             shadowRadius: 2,
-//             elevation: 3,
-//           }}
-//           onPress={() => {
-//             navigation.navigate('PostWrite', {communityId: community.id});
-//           }}>
-//           <PlusSvg width={20} height={20} />
-//         </Pressable>
-//       )}
-//     </>
-//   );
-// };
-
-// export default FeedList;
-
-import CustomText from 'components/common/CustomText';
 import {WINDOW_HEIGHT} from 'constants/dimension';
-import React, {
-  forwardRef,
-  MutableRefObject,
-  RefObject,
-  useCallback,
-  useRef,
-} from 'react';
-import {FlatList, ListRenderItem, View} from 'react-native';
+import React, {MutableRefObject, useState} from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  ListRenderItem,
+  Pressable,
+  RefreshControl,
+  View,
+} from 'react-native';
 import Animated, {
   SharedValue,
   useAnimatedScrollHandler,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
 import {useFeedList} from './useFeedList';
 import {Community} from 'apis/community/types';
 import FeedPost from '../FeedPost';
 import {Post} from 'apis/post/types';
 import FeedFilter from '../FeedFilter';
+import PenSvg from 'assets/images/pencil-white.svg';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import FeedSkeleton from 'components/skeleton/FeedSkeleton';
+import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 
 const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
-
-const sampleData = new Array(20).fill(0);
 
 interface FeedListProps {
   scrollY: SharedValue<number>;
@@ -158,7 +38,7 @@ interface FeedListProps {
   listArrRef: MutableRefObject<
     {
       key: string;
-      value: FlatList<any> | null;
+      value: FlatList<Post> | null;
     }[]
   >;
   tabRoute: {
@@ -178,6 +58,13 @@ const FeedList = ({
   onScrollEndDrag,
   community,
 }: FeedListProps) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
+  const insets = useSafeAreaInsets();
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const buttonOpacity = useSharedValue(1);
+
   const {
     selectedFilter,
     setSelectedFilter,
@@ -197,6 +84,15 @@ const FeedList = ({
       scrollY.value = event.contentOffset.y;
     }
   });
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    refetch();
+
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -218,7 +114,6 @@ const FeedList = ({
             };
           }
         }}
-        scrollEnabled={!!community.curFan}
         data={posts?.pages.flatMap(page => page.posts) || []}
         renderItem={renderItem}
         contentContainerStyle={{
@@ -233,11 +128,52 @@ const FeedList = ({
         }
         scrollEventThrottle={16}
         onScroll={scrollHandler}
-        onMomentumScrollBegin={onMomentumScrollBegin}
-        onMomentumScrollEnd={onMomentumScrollEnd}
+        onMomentumScrollBegin={() => {
+          buttonOpacity.value = withTiming(0.2, {duration: 150});
+          onMomentumScrollBegin();
+        }}
+        onMomentumScrollEnd={() => {
+          buttonOpacity.value = withTiming(1, {duration: 300});
+          onMomentumScrollEnd();
+        }}
         onScrollEndDrag={onScrollEndDrag}
-        bounces={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            progressViewOffset={-20}
+            colors={['#787878']}
+          />
+        }
+        onEndReached={community.curFan && loadPosts}
+        onEndReachedThreshold={community.curFan && 1}
+        ListEmptyComponent={
+          isLoading ? (
+            <FeedSkeleton type="Community" />
+          ) : (
+            <ListEmpty type="feed" />
+          )
+        }
+        ListFooterComponent={
+          isFetchingNextPage && community.curFan ? <ActivityIndicator /> : null
+        }
       />
+      <Animated.View style={{opacity: buttonOpacity}}>
+        <Pressable
+          onPress={() => navigation.navigate('PostWrite', {community})}
+          className="absolute p-[11] rounded-full z-50"
+          style={{
+            backgroundColor: community.color,
+            bottom: insets.bottom + 57,
+            right: 12,
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 0},
+            shadowOpacity: 0.3,
+            shadowRadius: 2,
+          }}>
+          <PenSvg width={23} height={23} />
+        </Pressable>
+      </Animated.View>
     </View>
   );
 };
