@@ -147,6 +147,7 @@ const PlayerListScreen = ({
         pointerEvents="none">
         <FastImage
           source={{uri: team.image}}
+          resizeMode="contain"
           className="w-[140] h-[140] absolute z-10"
           style={{
             shadowColor: '#000',

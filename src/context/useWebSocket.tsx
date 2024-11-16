@@ -24,7 +24,7 @@ export const WebSocketProvider = ({children}: WebSocketProviderProps) => {
 
   const activateWebSocket = () => {
     if (!stompClient.current) {
-      const socket = new SockJS('http://192.168.0.16:8080/ws');
+      const socket = new SockJS('http://15.165.150.47/ws');
 
       stompClient.current = new Client({
         webSocketFactory: () => socket,

@@ -33,9 +33,9 @@ const CommunityProfile = (props: CommunityProfileProps) => {
         <View className="flex-1" pointerEvents="none">
           <View className="flex-row items-center mb-[2] ml-[3]">
             <StarOrangeSvg width={13} height={13} className="mb-[2]" />
-            <CustomText
-              className="text-white ml-1"
-              fontWeight="500">{`${community.fanCount}`}</CustomText>
+            <CustomText className="text-white ml-1" fontWeight="500">
+              {`${community.fanCount}`}
+            </CustomText>
           </View>
 
           {community.type === 'TEAM' && (

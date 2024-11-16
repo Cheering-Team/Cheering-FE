@@ -117,7 +117,7 @@ const HomeHotScreen = () => {
                     <FastImage
                       source={{uri: item.image}}
                       className="w-[80] h-[80] border border-slate-200 rounded-full"
-                      resizeMode="cover"
+                      resizeMode="contain"
                     />
                     <CustomText fontWeight="700" className="mt-4">
                       {item.koreanName}

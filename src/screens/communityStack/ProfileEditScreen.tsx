@@ -138,7 +138,7 @@ const ProfileEditScreen = ({route}) => {
           </Pressable>
         </View>
         {profile.fan.image ===
-        'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/default-profile.jpg' ? (
+        'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/profile-image.jpg' ? (
           <OptionModal
             modalRef={bottomSheetModalRef}
             firstText="내 사진 선택"
