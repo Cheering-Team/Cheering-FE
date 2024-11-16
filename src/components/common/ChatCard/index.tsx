@@ -25,6 +25,7 @@ const ChatCard = (props: ChatCardProps) => {
           shadowOffset: {width: 1, height: 3},
           shadowOpacity: 0.1,
           shadowRadius: 5,
+          elevation: 2,
         }}>
         <FastImage
           source={{uri: chatRoom.image}}

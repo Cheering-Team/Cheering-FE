@@ -78,9 +78,11 @@ const RegisterModal = ({setIsRegisterOpen}: RegisterModalProps) => {
               <TextInput
                 placeholder={'예시) 축구/EPL/토트넘/손흥민\n예시) 리버풀'}
                 multiline
+                placeholderTextColor={'#b4b4b4'}
                 value={content}
                 onChangeText={setContent}
-                className="px-2 py-1 border border-gray-300 h-[100] rounded-md text-base"
+                style={{includeFontPadding: false, textAlignVertical: 'top'}}
+                className="x-2 pl-2 py-1 border border-gray-300 h-[100] rounded-md text-base"
               />
               <CustomText className="text-gray-400 my-2" fontWeight="600">
                 신청 횟수에는 제한이 없습니다.

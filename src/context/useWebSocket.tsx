@@ -14,7 +14,7 @@ type WebSocketContextType = {
 } | null;
 
 type WebSocketProviderProps = {
-  children: ReactNode; // children 타입 명시적으로 정의
+  children: ReactNode;
 };
 
 const WebSocketContext = createContext<WebSocketContextType>(null);
@@ -24,7 +24,7 @@ export const WebSocketProvider = ({children}: WebSocketProviderProps) => {
 
   const activateWebSocket = () => {
     if (!stompClient.current) {
-      const socket = new SockJS('http://192.168.0.28:8080/ws');
+      const socket = new SockJS('http://192.168.0.16:8080/ws');
 
       stompClient.current = new Client({
         webSocketFactory: () => socket,

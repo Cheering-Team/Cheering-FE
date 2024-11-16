@@ -110,6 +110,7 @@ const ChatRoomHeader = ({
             },
             shadowOpacity: 0.1,
             shadowRadius: 10,
+            elevation: 3,
           }}>
           <MegaphoneSvg width={20} height={20} style={{marginTop: 2}} />
           <CustomText

@@ -127,7 +127,7 @@ const CreateChatRoomScreen = ({navigation, route}) => {
           paddingLeft: 7,
           borderBottomWidth: 1,
           borderBottomColor: '#e1e1e1',
-          paddingTop: Platform.OS === 'android' ? insets.top : undefined,
+          marginTop: Platform.OS === 'android' ? insets.top : undefined,
         }}>
         <Pressable
           className="w-[50]"

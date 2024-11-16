@@ -9,7 +9,6 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../../constants/dimension';
 import WriteHeader from '../../components/post/write/WriteHeader';
 import TagList from '../../components/post/write/TagList';
@@ -42,7 +41,6 @@ export type PostWriteScreenNavigationProp = NativeStackNavigationProp<
 type PostWriteScreenRouteProp = RouteProp<CommunityStackParamList, 'PostWrite'>;
 
 const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
-  const insets = useSafeAreaInsets();
   const {community, post} = route.params;
 
   const [viewHeight, setViewHeight] = useState(0);
@@ -113,16 +111,26 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
 
       if (image.mime) {
         if (image.mime.startsWith('video')) {
-          result = await Video.compress(image.path, {}, progress => {
-            const videoProgress = baseProgress + (progress * 50) / totalImages;
-            handleProgress({loaded: videoProgress, total: 100});
-          });
+          try {
+            result = await Video.compress(image.path, {}, progress => {
+              const videoProgress =
+                baseProgress + (progress * 50) / totalImages;
+              handleProgress({loaded: videoProgress, total: 100});
+            });
+          } catch (error) {
+            console.error(error);
+          }
         } else {
-          result = await Image.compress(image.path, {
-            compressionMethod: 'manual',
-            maxWidth: 1600,
-            quality: 0.7,
-          });
+          try {
+            result = await Image.compress(image.path, {
+              compressionMethod: 'manual',
+              maxWidth: 1600,
+              quality: 0.7,
+            });
+          } catch (error) {
+            console.error(error);
+          }
+
           compressionProgress = Math.round(((index + 1) / totalImages) * 50);
           handleProgress({loaded: compressionProgress, total: 100});
         }

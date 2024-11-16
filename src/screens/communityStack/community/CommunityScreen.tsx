@@ -24,6 +24,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import JoinProfile from 'components/community/JoinModal/JoinProfile/JoinProfile';
 import ChatList from 'components/community/ChatList/ChatList';
+import SignOutScreen from 'screens/moreStack/SignOutScreen';
 
 const CommunityScreen = () => {
   const {communityId} =
@@ -185,8 +186,6 @@ const CommunityScreen = () => {
       </Animated.View>
       <BottomSheetModal
         ref={bottomSheetModalRef}
-        index={0}
-        snapPoints={snapPoints}
         backdropComponent={renderBackdrop}
         onChange={index => {
           if (index === -1 && !community.curFan) {
