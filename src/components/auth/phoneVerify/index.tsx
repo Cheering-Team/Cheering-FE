@@ -1,5 +1,4 @@
 import {useNavigation} from '@react-navigation/native';
-import {ApiResponse} from 'apis/types';
 import {User} from 'apis/user/types';
 import {
   useCheckCode,
@@ -7,11 +6,9 @@ import {
   useSendSMS,
   useSignIn,
 } from 'apis/user/useUsers';
-import {AxiosError} from 'axios';
 import CustomButton from 'components/common/CustomButton';
 import CustomText from 'components/common/CustomText';
 import CustomTextInput from 'components/common/CustomTextInput';
-import {PHONE_REGEX} from 'constants/regex';
 
 import React, {
   Dispatch,
@@ -69,7 +66,6 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
   const invalidCode = useCallback(
     (errorCode: number) => {
       if (errorCode === 2002) {
-        showTopToast(insets.top + 20, '인증번호 만료');
         setStatus('phone');
       }
       if (errorCode === 2003) {
@@ -77,7 +73,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
         return;
       }
     },
-    [insets.top, setStatus],
+    [setStatus],
   );
 
   const handleSendCode = async (): Promise<void> => {
@@ -89,7 +85,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
       setCode('');
       setCodeValid(true);
       setUser(data);
-      showTopToast(insets.top + 20, '전송 완료');
+      showTopToast({message: '전송 완료'});
       customTextInputRef.current?.focus();
     } catch (error: any) {
       if (error.code === 2001) {
@@ -113,12 +109,12 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
         phone,
         code,
       });
-      showTopToast(insets.top + 20, '로그인 완료');
+      showTopToast({message: '로그인 완료'});
       signIn?.(sessionToken, refreshToken);
     } catch (error: any) {
       invalidCode(error.code);
     }
-  }, [code, insets.top, invalidCode, phone, signIn, signInApi]);
+  }, [code, invalidCode, phone, signIn, signInApi]);
 
   const handleCheckCodeSocial = useCallback(async () => {
     if (type === 'kakao' || type === 'naver' || type === 'apple') {
@@ -141,7 +137,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
         }
         if (data.message === '회원가입 완료' && 'accessToken' in data.result) {
           const {accessToken: sessionToken, refreshToken} = data.result;
-          showTopToast(insets.top + 20, data.message);
+          showTopToast({message: data.message});
           signIn?.(sessionToken, refreshToken);
         }
       } catch (error: any) {
@@ -152,7 +148,7 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
     accessToken,
     checkCodeSocial,
     code,
-    insets.top,
+
     invalidCode,
     navigation,
     phone,
@@ -194,7 +190,10 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
         if (limitTime > 0) {
           setLimitTime(prev => prev - 1);
         } else {
-          showTopToast(insets.top + 20, '인증번호가 만료되었습니다.');
+          showTopToast({
+            type: 'fail',
+            message: '인증번호가 만료되었습니다.',
+          });
           navigation.goBack();
         }
       }, 1000);

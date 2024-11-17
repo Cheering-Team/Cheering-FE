@@ -30,12 +30,10 @@ const PostVideo = (props: PostVideoProps) => {
       style={[
         {
           borderRadius: 5,
-          marginLeft: 10,
           borderWidth: 0.5,
           borderColor: '#d1d1d1',
           overflow: 'hidden',
         },
-        index === 0 && type === 'FEED' && {marginLeft: 53},
       ]}>
       <Video
         source={{uri: video.path}}

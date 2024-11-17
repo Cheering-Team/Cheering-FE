@@ -26,7 +26,10 @@ const NotFound = ({type}: NotFoundProps) => {
         <Pressable
           className="bg-black p-2 rounded-md mt-3"
           onPress={() => {
-            navigation.navigate('Home');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'HomeStack'}],
+            });
             queryClient.invalidateQueries();
           }}>
           <CustomText className="text-white text-base" fontWeight="500">

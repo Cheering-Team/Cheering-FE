@@ -8,7 +8,7 @@ interface AvatarProps extends FastImageProps {
 
 const Avatar = (props: AvatarProps) => {
   const {
-    uri = 'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
+    uri = 'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/profile-image.jpg',
     size,
     style,
     ...rest
@@ -18,7 +18,7 @@ const Avatar = (props: AvatarProps) => {
       source={{
         uri:
           uri ||
-          'https://mblogthumb-phinf.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg?type=w800',
+          'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/profile-image.jpg',
       }}
       style={[
         {

@@ -20,7 +20,6 @@ import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {queryClient} from '../../../App';
 import {commentKeys} from 'apis/comment/queries';
-import {showTopToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface Props {
@@ -48,7 +47,6 @@ const Comment = ({comment, setUnder, setTo, inputRef, postId}: Props) => {
 
   useEffect(() => {
     if (isError && error.message === '존재하지 않는 댓글') {
-      showTopToast(insets.top + 20, '삭제된 댓글입니다');
       queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
     }
   }, [error?.message, insets.top, isError, postId]);
@@ -57,8 +55,9 @@ const Comment = ({comment, setUnder, setTo, inputRef, postId}: Props) => {
     <Pressable
       style={[
         {
-          paddingHorizontal: 15,
-          paddingVertical: 10,
+          paddingTop: 10,
+          paddingBottom: 5,
+          paddingLeft: 10,
           flexDirection: 'row',
           borderTopWidth: 1,
           borderTopColor: '#eeeeee',
@@ -74,81 +73,92 @@ const Comment = ({comment, setUnder, setTo, inputRef, postId}: Props) => {
         <Avatar uri={comment.writer.image} size={33} style={{marginTop: 3}} />
       </Pressable>
 
-      <View style={{marginLeft: 10, flex: 1, alignItems: 'flex-start'}}>
-        <CommentWriter
-          bottomSheetModalRef={bottomSheetModalRef}
-          comment={comment}
-          type="comment"
-          postId={postId}
-          under={comment.id}
-        />
-        <CustomText className="text-[#282828] text-base">
-          {comment.content}
-        </CustomText>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => {
-            setUnder(comment.id);
-            setTo({id: comment.writer.id, name: comment.writer.name});
-            setIsReCommentOpen(true);
-            inputRef.current?.focus();
-          }}>
-          <CustomText
-            fontWeight="500"
-            style={{marginTop: 8, fontSize: 14, color: '#888888'}}>
-            답글 달기
+      <View style={{flex: 1}}>
+        <View style={{marginLeft: 10, paddingRight: 10}}>
+          <CommentWriter
+            bottomSheetModalRef={bottomSheetModalRef}
+            comment={comment}
+            type="comment"
+            postId={postId}
+            under={comment.id}
+          />
+          <CustomText className="text-[#282828] text-base">
+            {comment.content}
           </CustomText>
-        </TouchableOpacity>
-        {isReCommentOpen &&
-          recomments &&
-          recomments.map(reComment => (
-            <ReComment
-              key={reComment.id}
-              commentId={comment.id}
-              reComment={reComment}
-              setUnder={setUnder}
-              setTo={setTo}
-              inputRef={inputRef}
-              postId={postId}
-            />
-          ))}
-        {comment.reCount !== 0 && (
-          <Pressable
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 13,
-            }}
+          <TouchableOpacity
+            activeOpacity={0.5}
             onPress={() => {
-              setIsReCommentOpen(prev => !prev);
+              setUnder(comment.id);
+              setTo({id: comment.writer.id, name: comment.writer.name});
+              setIsReCommentOpen(true);
+              inputRef.current?.focus();
             }}>
-            <View
+            <CustomText
+              fontWeight="500"
               style={{
-                height: 0.5,
-                width: 30,
-                marginRight: 9,
-                backgroundColor: '#bababa',
+                marginTop: 8,
+                marginBottom: 5,
+                fontSize: 14,
+                color: '#888888',
+              }}>
+              답글 달기
+            </CustomText>
+          </TouchableOpacity>
+        </View>
+        <View>
+          {isReCommentOpen &&
+            recomments &&
+            recomments.map(reComment => (
+              <ReComment
+                key={reComment.id}
+                commentId={comment.id}
+                reComment={reComment}
+                setUnder={setUnder}
+                setTo={setTo}
+                inputRef={inputRef}
+                postId={postId}
+              />
+            ))}
+          {comment.reCount !== 0 && (
+            <Pressable
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 5,
+                marginBottom: 5,
               }}
-            />
-            {isReCommentOpen ? (
-              <CustomText
-                fontWeight="500"
+              onPress={() => {
+                setIsReCommentOpen(prev => !prev);
+              }}>
+              <View
                 style={{
-                  fontSize: 13,
-                  color: '#888888',
-                }}>
-                답글 숨기기
-              </CustomText>
-            ) : (
-              <CustomText
-                fontWeight="500"
-                style={{
-                  fontSize: 13,
-                  color: '#888888',
-                }}>{`답글 ${comment.reCount}개 더보기`}</CustomText>
-            )}
-          </Pressable>
-        )}
+                  height: 0.5,
+                  width: 30,
+                  marginRight: 9,
+                  marginLeft: 10,
+                  backgroundColor: '#bababa',
+                }}
+              />
+              {isReCommentOpen ? (
+                <CustomText
+                  fontWeight="500"
+                  style={{
+                    fontSize: 13,
+                    color: '#888888',
+                  }}>
+                  답글 숨기기
+                </CustomText>
+              ) : (
+                <CustomText
+                  fontWeight="500"
+                  style={{
+                    fontSize: 13,
+                    color: '#888888',
+                  }}>{`답글 ${comment.reCount}개 더보기`}</CustomText>
+              )}
+            </Pressable>
+          )}
+        </View>
       </View>
     </Pressable>
   );

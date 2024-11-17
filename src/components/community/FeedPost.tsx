@@ -13,7 +13,7 @@ import {WINDOW_WIDTH} from '../../constants/dimension';
 import PostWriter from '../post/PostWriter';
 import InteractBar from '../post/InteractBar';
 import FastImage from 'react-native-fast-image';
-import {ImageType, Post} from 'apis/post/types';
+import {Post, PostImageType} from 'apis/post/types';
 import PostVideo from 'components/common/PostVideo';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import Viewer from 'components/post/Viewer';
@@ -33,9 +33,10 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [viewIndex, setViewIndex] = useState(0);
 
-  const renderItem: ListRenderItem<ImageType> = ({item, index}) => {
+  const renderItem: ListRenderItem<PostImageType> = ({item, index}) => {
     return (
       <Pressable
+        style={{marginLeft: index === 0 ? 53 : 10}}
         onPress={() => {
           setViewIndex(index);
           setIsViewerOpen(true);
@@ -70,11 +71,9 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
                       ),
                 height: feed.images.length === 1 ? height : 220,
                 borderRadius: 5,
-                marginLeft: 10,
                 borderWidth: 0.5,
                 borderColor: '#d1d1d1',
               },
-              index === 0 && {marginLeft: 53},
             ]}
           />
         )}
@@ -164,13 +163,14 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
               type="feed"
               location={type}
             />
+
             <CustomText
               style={{
                 color: '#282828',
                 marginRight: 25,
-                lineHeight: 24,
-                fontSize: 16,
-              }}>
+              }}
+              numberOfLines={20}
+              className="text-base">
               {feed.content}
             </CustomText>
           </View>
@@ -198,8 +198,9 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderBottomWidth: 0.5,
-    borderColor: '#d9d9d9',
+    borderBottomWidth: 1,
+    borderColor: '#efefef',
+    paddingBottom: 2,
   },
   interactContainer: {
     flexDirection: 'row',

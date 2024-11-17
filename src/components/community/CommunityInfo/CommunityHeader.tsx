@@ -1,68 +1,95 @@
 import React from 'react';
-import {Animated, Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import CheveronLeft from '../../../assets/images/chevron-left-white.svg';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Avatar from '../../common/Avatar';
-import DailySvg from '../../../assets/images/comment-white.svg';
-import {Community} from 'apis/community/types';
-import {formatBarDate} from 'utils/format';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {Community} from 'apis/community/types';
+import CalendarSvg from 'assets/images/calendar.svg';
+import Animated, {
+  Extrapolation,
+  interpolate,
+  interpolateColor,
+  SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
+import CustomText from 'components/common/CustomText';
+import {WINDOW_HEIGHT} from 'constants/dimension';
+
+const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
 
 interface CommunityHeaderProps {
-  playerData: Community;
+  community: Community;
+  scrollY: SharedValue<number>;
 }
 
 const CommunityHeader = (props: CommunityHeaderProps) => {
-  const {playerData} = props;
+  const {community, scrollY} = props;
   const insets = useSafeAreaInsets();
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
+
+  const animatedBGStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        scrollY.value,
+        [HEADER_HEIGHT - insets.top - 110, HEADER_HEIGHT - insets.top - 45],
+        ['transparent', community.color],
+      ),
+    };
+  });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      scrollY.value,
+      [HEADER_HEIGHT - insets.top - 110, HEADER_HEIGHT - insets.top - 45],
+      [0, 1],
+      Extrapolation.CLAMP,
+    ),
+  }));
 
   return (
     <Animated.View
       style={[
         styles.headerContainer,
-
-        {paddingTop: insets.top, height: insets.top + 45},
+        {
+          paddingTop: insets.top,
+          height: insets.top + 45,
+        },
+        animatedBGStyle,
       ]}>
       <Pressable
         onPress={() => {
           navigation.goBack();
         }}>
-        <CheveronLeft width={20} height={20} />
+        <CheveronLeft width={18} height={18} />
       </Pressable>
+      <CustomText
+        className="text-white text-xl ml-3 flex-1"
+        type="titleCenter"
+        style={[animatedStyle]}>
+        {community.koreanName}
+      </CustomText>
 
-      {playerData.user && (
+      {community.curFan && (
         <View className="flex-row items-center">
-          {playerData.manager && (
-            <Pressable
-              onPress={() => {
-                if (playerData.user) {
-                  navigation.navigate('Daily', {
-                    communityId: playerData.id,
-                    date: formatBarDate(new Date()),
-                    write: false,
-                    user: playerData.user,
-                  });
-                }
-              }}>
-              <DailySvg width={20} height={20} />
-            </Pressable>
-          )}
-
           <Pressable
-            className="ml-5"
+            onPress={() => navigation.navigate('Schedule', {community})}>
+            <CalendarSvg width={23} height={23} />
+          </Pressable>
+          <Pressable
+            className="ml-4"
             onPress={() => {
-              if (playerData.user) {
+              if (community.curFan) {
                 navigation.navigate('Profile', {
-                  fanId: playerData.user.id,
+                  fanId: community.curFan.id,
                 });
               }
             }}>
             <Avatar
-              uri={playerData.user.image}
+              uri={community.curFan.image}
               size={25}
               style={styles.communityUserAvatar}
             />
@@ -84,7 +111,6 @@ const styles = StyleSheet.create({
     zIndex: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: 12,
   },
   communityUserAvatar: {borderWidth: 1.5, borderColor: 'white', marginRight: 3},

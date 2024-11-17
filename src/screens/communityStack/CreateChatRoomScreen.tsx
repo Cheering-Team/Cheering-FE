@@ -1,26 +1,29 @@
 import CustomText from 'components/common/CustomText';
 import React, {useState} from 'react';
-import {ImageBackground, Pressable, SafeAreaView, View} from 'react-native';
+import {
+  ImageBackground,
+  Platform,
+  Pressable,
+  SafeAreaView,
+  View,
+} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CloseSvg from '../../assets/images/close-black.svg';
 import CameraSvg from '../../assets/images/camera-01.svg';
 import CustomTextInput from 'components/common/CustomTextInput';
 import {Picker} from '@react-native-picker/picker';
 import {useCreateChatRoom} from 'apis/chat/useChats';
-import {NAME_REGEX} from 'constants/regex';
+import {CHATROOM_NAME_REGEX} from 'constants/regex';
 import {showTopToast} from 'utils/toast';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
 import {Image} from 'react-native-compressor';
 import LoadingOverlay from 'components/common/LoadingOverlay';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const CreateChatRoomScreen = ({navigation, route}) => {
-  const {communityId} = route.params;
+  const {community} = route.params;
 
   const insets = useSafeAreaInsets();
-
-  const {mutateAsync: createChatRoom, isPending} =
-    useCreateChatRoom(communityId);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -34,6 +37,8 @@ const CreateChatRoomScreen = ({navigation, route}) => {
   });
   const [isValid, setIsValid] = useState(true);
   const [imageLoding, setImageLoding] = useState(false);
+
+  const {mutateAsync: createChatRoom, isPending} = useCreateChatRoom();
 
   const handleChange = (key, value) => {
     if (key === 'name') {
@@ -74,12 +79,12 @@ const CreateChatRoomScreen = ({navigation, route}) => {
   };
 
   const handleCreateChatRoom = async () => {
-    if (!NAME_REGEX.test(formData.name)) {
+    if (!CHATROOM_NAME_REGEX.test(formData.name)) {
       setIsValid(false);
       return;
     }
     if (formData.max === 0) {
-      showTopToast(insets.top + 20, '최대 인원수를 선택해주세요.');
+      showTopToast({type: 'fail', message: '최대 인원수를 선택해주세요.'});
       return;
     }
 
@@ -99,34 +104,56 @@ const CreateChatRoomScreen = ({navigation, route}) => {
 
     try {
       const data = await createChatRoom({
-        communityId: communityId,
+        communityId: community.id,
         ...formData,
       });
-      showTopToast(insets.top + 20, '생성 완료');
+      showTopToast({message: '생성 완료'});
       navigation.replace('ChatRoom', {chatRoomId: data.id});
     } catch (error: any) {
-      if (error.code === 2004) {
-        showTopToast(insets.top + 20, '부적절한 단어가 포함되어있어요');
-        return;
-      }
+      //
     }
   };
 
   return (
     <SafeAreaView className="flex-1">
       <LoadingOverlay isLoading={imageLoding} type="LOADING" />
-      <View className="flex-row justify-between items-center h-[45] pr-4 pl-[10] border-b border-b-[#e1e1e1]">
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          height: 50,
+          paddingRight: 10,
+          paddingLeft: 7,
+          borderBottomWidth: 1,
+          borderBottomColor: '#e1e1e1',
+          marginTop: Platform.OS === 'android' ? insets.top : undefined,
+        }}>
         <Pressable
+          className="w-[50]"
           onPress={() => {
             navigation.goBack();
           }}>
           <CloseSvg width={30} height={30} />
         </Pressable>
+        <View className="items-center">
+          <CustomText fontWeight="600" className="text-lg top-[1]">
+            채팅방 생성
+          </CustomText>
+          <CustomText className="text-gray-600">
+            {community.koreanName}
+          </CustomText>
+        </View>
         <Pressable
           onPress={handleCreateChatRoom}
           disabled={isPending}
-          className="bg-black py-[6] px-[14] rounded-[20px]">
-          <CustomText fontWeight="600" className="text-sm text-white">
+          style={{
+            backgroundColor: community.color,
+            paddingVertical: 6,
+            paddingHorizontal: 11,
+            borderRadius: 10,
+          }}>
+          <CustomText fontWeight="600" style={{fontSize: 17, color: 'white'}}>
             생성
           </CustomText>
         </Pressable>
@@ -154,6 +181,8 @@ const CreateChatRoomScreen = ({navigation, route}) => {
           label="채팅방 이름"
           className="mt-10"
           value={formData.name}
+          maxLength={20}
+          curLength={formData.name.length}
           onChangeText={text => handleChange('name', text)}
           isValid={isValid}
           inValidMessage="2자~20자, 한글과 영어만 사용 가능합니다."
@@ -163,6 +192,7 @@ const CreateChatRoomScreen = ({navigation, route}) => {
           multiline
           height={75}
           value={formData.description}
+          maxLength={200}
           onChangeText={text => handleChange('description', text)}
         />
         <Picker

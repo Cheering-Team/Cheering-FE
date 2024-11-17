@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import AuthSwitch from './src/navigations/AuthSwitch';
 import {StatusBar} from 'react-native';
 import {navigationRef} from './src/navigations/RootNavigation';
-import Toast, {BaseToast} from 'react-native-toast-message';
+import Toast, {ToastConfigParams} from 'react-native-toast-message';
 import {QueryClientProvider, QueryClient} from '@tanstack/react-query';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import NaverLogin from '@react-native-seoul/naver-login';
@@ -15,30 +15,13 @@ import messaging from '@react-native-firebase/messaging';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {deleteFCMToken, saveFCMToken} from 'apis/user';
 import {DevToolsBubble} from 'react-native-react-query-devtools';
+import SuccessToast from 'components/common/toast/SuccessToast';
+import FailToast from 'components/common/toast/FailToast';
+import {WebSocketProvider} from 'context/useWebSocket';
 
 export const toastConfig = {
-  default: props => (
-    <BaseToast
-      {...props}
-      style={{
-        borderLeftColor: '#2d2d2d',
-        backgroundColor: '#2d2d2d',
-      }}
-      contentContainerStyle={{paddingHorizontal: 10}}
-      text1Style={{
-        fontWeight: 'normal',
-        fontFamily: 'NotoSansKR-Medium',
-        fontSize: 15,
-        color: 'white',
-      }}
-      text2Style={{
-        fontWeight: 'normal',
-        fontFamily: 'NotoSansKR-Medium',
-        fontSize: 15,
-        color: 'white',
-      }}
-    />
-  ),
+  success: (params: ToastConfigParams<any>) => <SuccessToast {...params} />,
+  fail: (params: ToastConfigParams<any>) => <FailToast {...params} />,
 };
 
 const consumerKey = 'T40q4ZLAbDGZCa5v50tK';
@@ -98,14 +81,16 @@ function App(): React.JSX.Element {
       <QueryClientProvider client={queryClient}>
         <GestureHandlerRootView style={{flex: 1}}>
           <BottomSheetModalProvider>
-            <NavigationContainer theme={navTheme} ref={navigationRef}>
-              <StatusBar
-                barStyle="dark-content"
-                translucent={true}
-                backgroundColor="transparent"
-              />
-              <AuthSwitch />
-            </NavigationContainer>
+            <WebSocketProvider>
+              <NavigationContainer theme={navTheme} ref={navigationRef}>
+                <StatusBar
+                  barStyle="dark-content"
+                  translucent={true}
+                  backgroundColor="transparent"
+                />
+                <AuthSwitch />
+              </NavigationContainer>
+            </WebSocketProvider>
             <Toast config={toastConfig} />
           </BottomSheetModalProvider>
         </GestureHandlerRootView>

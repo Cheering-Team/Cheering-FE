@@ -30,8 +30,8 @@ const MyProfileScreen = ({
         <Pressable
           className="border border-slate-200 p-[18] flex-row items-center justify-between rounded-lg"
           onPress={() =>
-            navigation.navigate('EditNickname', {
-              nickname: data.name,
+            navigation.navigate('EditName', {
+              name: data.name,
               playerUserId: null,
             })
           }>

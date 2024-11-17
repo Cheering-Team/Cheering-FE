@@ -3,14 +3,12 @@ import Close from '../../hooks/Close';
 import {SafeAreaView, View} from 'react-native';
 import CustomText from '../../components/common/CustomText';
 import CustomButton from '../../components/common/CustomButton';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {AuthContext} from '../../navigations/AuthSwitch';
 import {useConnectSocial} from 'apis/user/useUsers';
 import {showTopToast} from 'utils/toast';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AuthStackParamList} from 'navigations/AuthStackNavigator';
 import {RouteProp} from '@react-navigation/native';
-import messaging from '@react-native-firebase/messaging';
 
 type SocialConnectScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -32,7 +30,6 @@ const SocialConnectScreen = ({
   Close(navigation);
   const {accessToken, user, type} = route.params;
 
-  const insets = useSafeAreaInsets();
   const signIn = useContext(AuthContext)?.signIn;
 
   const {mutateAsync: connectSocial} = useConnectSocial();
@@ -44,7 +41,7 @@ const SocialConnectScreen = ({
       userId: user.id,
     });
     const {accessToken: sessionToken, refreshToken} = data;
-    showTopToast(insets.top + 20, '로그인 완료');
+    showTopToast({message: '로그인 완료'});
     signIn?.(sessionToken, refreshToken);
   };
 

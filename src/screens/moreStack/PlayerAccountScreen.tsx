@@ -52,7 +52,7 @@ const PlayerAccountScreen = ({navigation}) => {
     setPhone('');
     await registerPlayerAccount({communityId: playerId, phone});
     bottomSheetModalRef.current?.close();
-    showTopToast(insets.top + 20, '등록 완료');
+    showTopToast({message: '등록 완료'});
   };
 
   const handleReissuePlayerAccountPassword = async () => {
@@ -61,7 +61,7 @@ const PlayerAccountScreen = ({navigation}) => {
       phone,
     });
     bottomSheetModalRef.current?.close();
-    showTopToast(insets.top + 20, '재발급 완료');
+    showTopToast({message: '재발급 완료'});
     setPhone('');
   };
 

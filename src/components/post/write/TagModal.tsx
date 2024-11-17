@@ -44,13 +44,15 @@ const TagModal = (props: TagModalProps) => {
           key={tag.filter}
           style={[
             {
+              height: 35,
+              justifyContent: 'center',
               borderWidth: 1,
               borderColor: '#dcdcdc',
-              paddingVertical: 6,
-              paddingHorizontal: 15,
+              paddingHorizontal: 12,
               borderRadius: 12,
               marginRight: 6,
               marginBottom: 10,
+              marginTop: 5,
             },
             selectedTag[tag.filter] && {
               backgroundColor: '#3a3a3a',
@@ -62,7 +64,10 @@ const TagModal = (props: TagModalProps) => {
           }}>
           <CustomText
             fontWeight="500"
-            style={[selectedTag[tag.filter] && {color: 'white'}]}>
+            style={[
+              {fontSize: 15},
+              selectedTag[tag.filter] && {color: 'white'},
+            ]}>
             {tag.name}
           </CustomText>
         </Pressable>

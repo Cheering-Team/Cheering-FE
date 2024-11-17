@@ -1,11 +1,11 @@
+import {Fan} from 'apis/fan/types';
 import {Page} from '../types';
-import {Fan} from '../user/types';
 
 // 엔티티
 export interface Comment {
   id: number;
   content: string;
-  createdAt: Date;
+  createdAt: string;
   reCount: number;
   writer: Fan;
   isWriter: boolean;
@@ -15,7 +15,7 @@ export interface Comment {
 export interface ReComment {
   id: number;
   content: string;
-  createdAt: Date;
+  createdAt: string;
   to: Fan;
   writer: Fan;
   isWriter: boolean;

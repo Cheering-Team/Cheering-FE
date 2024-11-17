@@ -4,14 +4,16 @@ import CustomText from '../../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import CloseSvg from '../../../assets/images/close-black.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Community} from 'apis/community/types';
 
 interface WriterHeaderProps {
   handleWritePost: () => void;
   isWriting: boolean;
+  community: Community;
 }
 
 const WriteHeader = (props: WriterHeaderProps) => {
-  const {handleWritePost, isWriting} = props;
+  const {handleWritePost, isWriting, community} = props;
   const insets = useSafeAreaInsets();
 
   const navigation = useNavigation();
@@ -22,31 +24,40 @@ const WriteHeader = (props: WriterHeaderProps) => {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: Platform.OS === 'android' ? 45 + insets.top : 45,
-        paddingRight: 17,
-        paddingLeft: 10,
+        height: 50,
+        paddingRight: 10,
+        paddingLeft: 7,
         borderBottomWidth: 1,
         borderBottomColor: '#e1e1e1',
-        paddingTop: Platform.OS === 'android' ? insets.top : undefined,
+        marginTop: Platform.OS === 'android' ? insets.top : undefined,
       }}>
       <Pressable
+        className="w-[50]"
         onPress={() => {
           navigation.goBack();
         }}>
         <CloseSvg width={30} height={30} />
       </Pressable>
+      <View className="items-center">
+        <CustomText fontWeight="600" className="text-lg top-[1]">
+          글작성
+        </CustomText>
+        <CustomText className="text-gray-600">
+          {community.koreanName}
+        </CustomText>
+      </View>
       <Pressable
         onPress={() => {
           handleWritePost();
         }}
         disabled={isWriting}
         style={{
-          backgroundColor: 'black',
+          backgroundColor: community.color,
           paddingVertical: 6,
-          paddingHorizontal: 14,
-          borderRadius: 20,
+          paddingHorizontal: 11,
+          borderRadius: 10,
         }}>
-        <CustomText fontWeight="600" style={{fontSize: 14, color: 'white'}}>
+        <CustomText fontWeight="600" style={{fontSize: 17, color: 'white'}}>
           등록
         </CustomText>
       </Pressable>

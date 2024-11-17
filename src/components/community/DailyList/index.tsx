@@ -1,4 +1,4 @@
-import {Community} from 'apis/community/types';
+import {Player} from 'apis/player/types';
 import {useGetDailys} from 'apis/post/usePosts';
 import DailyCard from 'components/post/DailyCard';
 import {WINDOW_WIDTH} from 'constants/dimension';
@@ -8,7 +8,7 @@ import Carousel from 'react-native-reanimated-carousel';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 interface DailyListProps {
-  community: Community;
+  community: Player;
 }
 
 const DailyList = ({community}: DailyListProps) => {

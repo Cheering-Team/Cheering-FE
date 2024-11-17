@@ -2,21 +2,16 @@ import CustomText from 'components/common/CustomText';
 import React, {useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import OfficialSvg from '../../../assets/images/official.svg';
-import MegaphoneSvg from 'assets/images/megaphone-white.svg';
 import MoreSvg from '../../../assets/images/three-dots-vertical-white.svg';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-import {Community} from 'apis/community/types';
-import Avatar from 'components/common/Avatar';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from 'components/common/OptionModal';
-import {useGetDailys} from 'apis/post/usePosts';
-import {formatBarDate} from 'utils/format';
-
+import {useGetNextMatch} from 'apis/match/useMatches';
+import {Community} from 'apis/community/types';
 interface MyStarCardProps {
   community: Community;
 }
@@ -27,52 +22,52 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {data: dailys} = useGetDailys(
-    community.id,
-    formatBarDate(new Date()),
-    community.manager !== null,
-  );
+  const {data: match} = useGetNextMatch(community.id);
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      className="w-full h-[220] bg-white rounded-2xl"
-      style={{
-        shadowColor: '#464646',
-        shadowOffset: {width: 2, height: 2},
-        shadowOpacity: 0.7,
-        shadowRadius: 4,
-        elevation: 5,
-      }}
-      onPress={() =>
-        navigation.navigate('CommunityStack', {
-          screen: 'Community',
-          params: {communityId: community.id},
-        })
-      }
-      onLongPress={() => {
-        bottomSheetModalRef.current?.present();
-      }}>
-      <View className="absolute z-10 w-full h-full p-5 justify-between">
-        <View className="flex-row justify-between">
-          <View>
-            {community.englishName && (
+    <>
+      <TouchableOpacity
+        activeOpacity={1}
+        className="bg-white rounded-2xl p-5 w-full h-full justify-between"
+        style={{
+          shadowColor: '#464646',
+          shadowOffset: {width: 2, height: 2},
+          shadowOpacity: 0.7,
+          shadowRadius: 4,
+          elevation: 5,
+        }}
+        onPress={() =>
+          navigation.navigate('CommunityStack', {
+            screen: 'Community',
+            params: {communityId: community.id},
+          })
+        }
+        onLongPress={() => {
+          bottomSheetModalRef.current?.present();
+        }}>
+        <View className="flex-row justify-between items-start z-10">
+          <View className="flex-1">
+            {community.type === 'PLAYER' ? (
               <CustomText
-                className="text-white text-[15px] ml-[2] pb-0"
-                fontWeight="500">
+                className="text-white text-[18px] ml-[2] mb-[5]"
+                fontWeight="600">
                 {community.englishName}
+              </CustomText>
+            ) : (
+              <CustomText
+                className="text-white text-[18px] ml-[2] mb-[5]"
+                fontWeight="600">
+                {`${community.sportName} / ${community.leagueName}`}
               </CustomText>
             )}
 
             <View className="flex-row items-center">
               <CustomText
-                className="text-white text-[26px] leading-[33px]"
-                fontWeight="500">
+                numberOfLines={2}
+                className="text-white text-[28px] leading-[33px]"
+                type="title">
                 {community.koreanName}
               </CustomText>
-              {community.manager && (
-                <OfficialSvg width={18} height={18} style={{marginLeft: 3}} />
-              )}
             </View>
           </View>
           <TouchableOpacity
@@ -84,152 +79,221 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           </TouchableOpacity>
         </View>
 
-        <View>
-          {community.type === 'PLAYER' &&
-            dailys &&
-            dailys.pages[0].dailys.length !== 0 && (
+        <View className="z-10 items-end">
+          {match &&
+            (match.status === 'live' ||
+            match.status === 'delayed' ||
+            match.status === 'started' ? (
               <TouchableOpacity
-                activeOpacity={1}
-                className="mb-4 flex-row items-center"
-                onPress={() => {
-                  if (community.user) {
-                    navigation.navigate('CommunityStack', {
-                      screen: 'Daily',
-                      params: {
-                        communityId: community.id,
-                        date: formatBarDate(new Date()),
-                        user: community.user,
-                      },
-                    });
-                  }
-                }}>
-                <Avatar uri={community.image} size={27} />
-                <CustomText
-                  numberOfLines={1}
-                  fontWeight="600"
-                  className="ml-3 text-white text-[16px] flex-1">
-                  {dailys?.pages[0].dailys[0].content}
-                </CustomText>
-              </TouchableOpacity>
-            )}
-          {community.type === 'PLAYER' &&
-            dailys?.pages[0].dailys.length === 0 &&
-            community.user?.type === 'MANAGER' && (
-              <TouchableOpacity
-                activeOpacity={1}
-                className="mb-4 flex-row items-center"
-                onPress={() => {
-                  if (community.user) {
-                    navigation.navigate('CommunityStack', {
-                      screen: 'Daily',
-                      params: {
-                        communityId: community.id,
-                        date: formatBarDate(new Date()),
-                        write: true,
-                        user: community.user,
-                      },
-                    });
-                  }
-                }}>
-                <Avatar uri={community.image} size={27} />
-                <CustomText
-                  numberOfLines={1}
-                  fontWeight="600"
-                  className="ml-3 text-orange-100 text-[15px] flex-1">
-                  오늘의 한마디를 남겨주세요
-                </CustomText>
-              </TouchableOpacity>
-            )}
-          {/* {community.type === 'TEAM' && (
-            <TouchableOpacity
-              activeOpacity={1}
-              className="mb-4 flex-row items-center ml-1">
-              <MegaphoneSvg width={18} height={18} />
-              <CustomText
-                numberOfLines={1}
-                fontWeight="600"
-                className="ml-3 text-white text-[15px] flex-1">
-                {'[공지사항]  9/21일 경기안내'}
-              </CustomText>
-            </TouchableOpacity>
-          )} */}
+                activeOpacity={0.7}
+                onPress={() =>
+                  navigation.navigate('CommunityStack', {
+                    screen: 'Match',
+                    params: {community, matchId: match.id},
+                  })
+                }
+                className="mb-5 p-1">
+                <View>
+                  <View
+                    key={match.id}
+                    className="flex-row items-end justify-end">
+                    <CustomText
+                      className="text-[85px] text-white mr-4"
+                      style={styles.shadow}
+                      fontWeight="700">
+                      {48}
+                    </CustomText>
+                    <View className="flex-row items-center">
+                      <View className="items-center">
+                        <CustomText
+                          className="text-white text-[15px]"
+                          style={styles.shadow}>
+                          {match.location}
+                        </CustomText>
+                        <CustomText
+                          className="text-4xl text-white"
+                          fontWeight="800"
+                          style={styles.shadow}>
+                          VS
+                        </CustomText>
+                        <CustomText
+                          className="text-[20px] text-[#dc4343]"
+                          fontWeight="700"
+                          style={styles.shadow}>
+                          LIVE
+                        </CustomText>
+                      </View>
+                      <CustomText
+                        className="text-[40px] text-white ml-[9] mb-2"
+                        fontWeight="700"
+                        style={styles.shadow}>
+                        {52}
+                      </CustomText>
+                    </View>
 
-          <View className="flex-row justify-evenly items-center">
+                    <View className="items-center ml-2 w-[65]">
+                      <FastImage
+                        source={{
+                          uri:
+                            community.id === match.homeTeam.id
+                              ? match.awayTeam.image
+                              : match.homeTeam.image,
+                        }}
+                        className="w-[60] h-[60]"
+                      />
+                      <CustomText
+                        style={styles.shadow}
+                        className="text-white text-base"
+                        fontWeight="500">
+                        {community.id === match.homeTeam.id
+                          ? match.awayTeam.shortName
+                          : match.homeTeam.shortName}
+                      </CustomText>
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                className="mb-5 p-1 flex-row self-end items-end"
+                style={{}}
+                onPress={() =>
+                  navigation.navigate('CommunityStack', {
+                    screen: 'Schedule',
+                    params: {community},
+                  })
+                }>
+                <View className="items-center">
+                  <CustomText
+                    className="text-white text-[15px]"
+                    style={styles.shadow}>
+                    {match.location}
+                  </CustomText>
+                  <CustomText
+                    className="text-4xl text-white"
+                    fontWeight="800"
+                    style={styles.shadow}>
+                    VS
+                  </CustomText>
+                  <CustomText
+                    className="text-base text-white"
+                    style={styles.shadow}>
+                    11.02 14:00
+                  </CustomText>
+                </View>
+                <View className="items-center ml-3">
+                  <FastImage
+                    source={{
+                      uri:
+                        community.id === match.homeTeam.id
+                          ? match.awayTeam.image
+                          : match.homeTeam.image,
+                    }}
+                    className="w-[60] h-[60]"
+                  />
+                  <CustomText
+                    className="text-white text-base"
+                    fontWeight="500"
+                    style={styles.shadow}>
+                    {community.id === match.homeTeam.id
+                      ? match.awayTeam.shortName
+                      : match.homeTeam.shortName}
+                  </CustomText>
+                </View>
+              </TouchableOpacity>
+            ))}
+          <View className="w-full flex-row justify-evenly items-center">
             <TouchableOpacity
               className="p-1"
               activeOpacity={0.5}
               onPress={() =>
                 navigation.navigate('CommunityStack', {
                   screen: 'PostWrite',
-                  params: {communityId: community.id},
+                  params: {community},
                 })
               }>
               <CustomText
-                className="text-white text-center text-base"
+                className="text-white text-center text-lg"
                 fontWeight="500">
                 글 작성
               </CustomText>
             </TouchableOpacity>
-            <View className="h-5 bg-white w-[2]" />
+            <CustomText className="text-lg text-white">|</CustomText>
             <TouchableOpacity
               className="p-1"
               activeOpacity={0.5}
-              onPress={() =>
-                navigation.navigate('CommunityStack', {
-                  screen: 'ChatRoom',
-                  params: {chatRoomId: community.officialChatRoomId},
-                })
-              }>
+              onPress={() => {
+                if (community.officialRoomId !== null) {
+                  navigation.navigate('CommunityStack', {
+                    screen: 'ChatRoom',
+                    params: {chatRoomId: community.officialRoomId},
+                  });
+                }
+              }}>
               <CustomText
-                className="text-white text-center text-base"
+                className="text-white text-center text-lg"
                 fontWeight="500">
                 대표 채팅
               </CustomText>
             </TouchableOpacity>
-            <View className="h-5 bg-white w-[2]" />
+            <CustomText className="text-lg text-white">|</CustomText>
 
             <TouchableOpacity
               className="p-1"
               activeOpacity={0.5}
               onPress={() => {
-                if (community.user) {
+                if (community.curFan) {
                   navigation.navigate('CommunityStack', {
                     screen: 'Profile',
-                    params: {fanId: community.user.id},
+                    params: {fanId: community.curFan.id},
                   });
                 }
               }}>
               <CustomText
-                className="text-white text-center text-base"
+                className="text-white text-center text-lg"
                 fontWeight="500">
                 내 프로필
               </CustomText>
             </TouchableOpacity>
           </View>
         </View>
-      </View>
 
-      <FastImage
-        source={{uri: community.backgroundImage || community.image}}
-        resizeMode="cover"
-        className="w-full h-full rounded-2xl"
-      />
-      <LinearGradient
-        colors={['rgba(0, 0, 0, 0.65)', 'rgba(0, 0, 0, 0.65)']}
-        className="rounded-2xl"
-        style={{
-          ...StyleSheet.absoluteFillObject,
-        }}
-      />
+        {community.backgroundImage ? (
+          <FastImage
+            source={{
+              uri: community.backgroundImage,
+              priority: FastImage.priority.high,
+            }}
+            style={{...StyleSheet.absoluteFillObject}}
+            resizeMode="cover"
+            className="rounded-2xl"
+          />
+        ) : (
+          <FastImage
+            source={{uri: community.image, priority: FastImage.priority.high}}
+            style={{...StyleSheet.absoluteFillObject}}
+            resizeMode="contain"
+            className="rounded-2xl"
+          />
+        )}
+        <LinearGradient
+          colors={['rgba(0, 0, 0, 0.6)', 'rgba(0, 0, 0, 0.6)']}
+          className="rounded-2xl"
+          style={{
+            ...StyleSheet.absoluteFillObject,
+          }}
+        />
+      </TouchableOpacity>
       <OptionModal
         modalRef={bottomSheetModalRef}
-        firstText={community.user?.name}
-        firstAvatar={community.user?.image}
+        firstText={community.curFan?.name}
+        firstAvatar={community.curFan?.image}
         firstOnPress={() => {
-          if (community.user) {
+          if (community.curFan) {
             navigation.navigate('CommunityStack', {
               screen: 'Profile',
-              params: {fanId: community.user.id},
+              params: {fanId: community.curFan.id},
             });
           }
         }}
@@ -245,16 +309,26 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         thirdColor="#ff2626"
         thirdSvg="exit"
         thirdOnPress={() => {
-          if (community.user) {
+          if (community.curFan) {
             navigation.navigate('CommunityStack', {
               screen: 'DeleteFan',
-              params: {fanId: community.user.id},
+              params: {fanId: community.curFan.id},
             });
           }
         }}
       />
-    </TouchableOpacity>
+    </>
   );
 };
 
 export default MyStarCard;
+
+const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {width: 2, height: 2},
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+});

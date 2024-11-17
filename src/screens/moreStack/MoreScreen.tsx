@@ -9,6 +9,7 @@ import BellSvg from '../../assets/images/bell-line.svg';
 import NoticeSvg from '../../assets/images/megaphone-black.svg';
 import LockSvg from '../../assets/images/lock.svg';
 import StackHeader from 'components/common/StackHeader';
+import ApplySvg from 'assets/images/apply-black.svg';
 
 type MoreScreenNavigationProp = NativeStackNavigationProp<
   MoreStackParamList,
@@ -27,24 +28,41 @@ const MoreScreen = ({navigation}: {navigation: MoreScreenNavigationProp}) => {
       <StackHeader title="계정 및 설정" type="none" />
       <ScrollView className="flex-1">
         <View className="pt-3 px-3 bg-white">
-          <CustomText fontWeight="500" className="color-[#5c5c5c] text-[13px]">
+          <CustomText
+            fontWeight="500"
+            className="color-[#5c5c5c] text-[13px] py-2">
             내 계정
           </CustomText>
           <Pressable
-            className="flex-row justify-between items-center py-2"
+            className="flex-row justify-between items-center py-[10]"
             onPress={() => navigation.navigate('MyProfile')}>
             <CustomText fontWeight="500" className="text-lg mr-1 pb-[1]">
               {data?.name}
             </CustomText>
             <ChevronRightSvg width={16} height={16} />
           </Pressable>
+          <Pressable
+            className="flex-row justify-between items-center py-[10]"
+            onPress={() => {
+              navigation.navigate('CommunityApplyList');
+            }}>
+            <View className="flex-row items-center">
+              <ApplySvg width={20} height={20} />
+              <CustomText fontWeight="400" className="text-base pb-[1] ml-3">
+                커뮤니티 신청 내역
+              </CustomText>
+            </View>
+            <ChevronRightSvg width={16} height={16} />
+          </Pressable>
         </View>
         <View className="mt-[6] pt-3 px-3 bg-white">
-          <CustomText fontWeight="500" className="color-[#5c5c5c] text-[13px]">
+          <CustomText
+            fontWeight="500"
+            className="color-[#5c5c5c] text-[13px] py-2">
             소식
           </CustomText>
           <Pressable
-            className="flex-row justify-between items-center py-[14]"
+            className="flex-row justify-between items-center py-[10]"
             onPress={() => {
               navigation.navigate('NoticeList');
             }}>
@@ -58,11 +76,13 @@ const MoreScreen = ({navigation}: {navigation: MoreScreenNavigationProp}) => {
           </Pressable>
         </View>
         <View className="mt-[6] pt-3 px-3 bg-white">
-          <CustomText fontWeight="500" className="color-[#5c5c5c] text-[13px]">
+          <CustomText
+            fontWeight="500"
+            className="color-[#5c5c5c] text-[13px] py-2">
             설정
           </CustomText>
           <Pressable
-            className="flex-row justify-between items-center py-[14]"
+            className="flex-row justify-between items-center py-[10]"
             onPress={() => {
               navigation.navigate('SetNotification');
             }}>
@@ -76,11 +96,13 @@ const MoreScreen = ({navigation}: {navigation: MoreScreenNavigationProp}) => {
           </Pressable>
         </View>
         <View className="mt-[6] pt-3 px-3 bg-white">
-          <CustomText fontWeight="500" className="color-[#5c5c5c] text-[13px]">
+          <CustomText
+            fontWeight="500"
+            className="color-[#5c5c5c] text-[13px] py-2">
             정보 및 지원
           </CustomText>
           <Pressable
-            className="flex-row justify-between items-center py-[14]"
+            className="flex-row justify-between items-center py-[10]"
             onPress={() => {
               navigation.navigate('PrivacyPolicy');
             }}>

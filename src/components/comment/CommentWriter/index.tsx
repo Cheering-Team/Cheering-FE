@@ -14,14 +14,9 @@ import {
 } from '../../../apis/comment/useComments';
 import {Comment, ReComment} from '../../../apis/comment/types';
 import {showTopToast} from 'utils/toast';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import OfficialSvg from 'assets/images/official.svg';
-import {queryClient} from '../../../../App';
-import {postKeys} from 'apis/post/queries';
-import {commentKeys, reCommentKeys} from 'apis/comment/queries';
 
 interface CommentWriterProps {
   bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
@@ -38,7 +33,6 @@ const CommentWriter = ({
   postId,
   under,
 }: CommentWriterProps) => {
-  const insets = useSafeAreaInsets();
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
 
@@ -46,8 +40,8 @@ const CommentWriter = ({
 
   const {mutate: deleteComment} = useDeleteComment(postId);
   const {mutate: deleteReComment} = useDeleteReComment(comment.id);
-  const {mutateAsync: reportComment} = useReportComment(postId);
-  const {mutateAsync: reportReComment} = useReportReComment(under);
+  const {mutate: reportComment} = useReportComment(postId);
+  const {mutate: reportReComment} = useReportReComment(under);
 
   const handleDeleteComment = () => {
     deleteComment({commentId: comment.id});
@@ -55,40 +49,14 @@ const CommentWriter = ({
 
   const handleDeleteReComment = () => {
     deleteReComment({reCommentId: comment.id});
-    showTopToast(insets.top + 20, '삭제 완료');
+    showTopToast({message: '삭제 완료'});
   };
 
-  const handleReportComment = async () => {
-    try {
-      await reportComment({postId, commentId: comment.id});
-    } catch (error: any) {
-      if (error.message === '존재하지 않는 게시글') {
-        showTopToast(insets.top + 20, '삭제된 글입니다');
-        navigation.goBack();
-        queryClient.invalidateQueries({queryKey: postKeys.lists()});
-      }
-      if (error.message === '존재하지 않는 댓글') {
-        showTopToast(insets.top + 20, '삭제된 댓글입니다');
-        queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
-      }
-    }
+  const handleReportComment = () => {
+    reportComment({postId, commentId: comment.id});
   };
-  const handleReportReComment = async () => {
-    try {
-      await reportReComment({postId, reCommentId: comment.id});
-    } catch (error: any) {
-      if (error.message === '존재하지 않는 게시글') {
-        showTopToast(insets.top + 20, '삭제된 글입니다');
-        navigation.goBack();
-        queryClient.invalidateQueries({queryKey: postKeys.lists()});
-      }
-      if (error.message === '존재하지 않는 댓글') {
-        showTopToast(insets.top + 20, '삭제된 댓글입니다');
-        queryClient.invalidateQueries({
-          queryKey: reCommentKeys.list(comment.id),
-        });
-      }
-    }
+  const handleReportReComment = () => {
+    reportReComment({postId, reCommentId: comment.id});
   };
 
   return (
@@ -110,10 +78,7 @@ const CommentWriter = ({
         <CustomText fontWeight="500" className="text-base">
           {comment.writer.name}
         </CustomText>
-        {comment.writer.type === 'MANAGER' && (
-          <OfficialSvg width={13} height={13} className="ml-[2]" />
-        )}
-        <CustomText style={{color: '#a5a5a5', marginLeft: 5}}>
+        <CustomText style={{color: '#737373', marginLeft: 5}}>
           {formatBeforeDate(comment.createdAt)}
         </CustomText>
       </Pressable>

@@ -35,14 +35,14 @@ const AlertModal = (props: AlertModalProps) => {
         style={{
           width: '100%',
           height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.2)',
+          backgroundColor: 'rgba(0,0,0,0.4)',
           position: 'absolute',
           alignItems: 'center',
           justifyContent: 'center',
         }}>
         <View
           style={{
-            width: '65%',
+            width: '70%',
             backgroundColor: 'white',
             borderRadius: 15,
           }}>
@@ -56,13 +56,16 @@ const AlertModal = (props: AlertModalProps) => {
             {title && (
               <CustomText
                 fontWeight="600"
-                style={{marginBottom: 10, fontSize: 16}}>
+                className="text-slate-800"
+                style={{marginBottom: 10, fontSize: 19}}>
                 {title}
               </CustomText>
             )}
             {content && (
               <CustomText
-                style={{color: '#757575', fontSize: 14, textAlign: 'center'}}>
+                numberOfLines={999}
+                className="text-[17px] leading-[24px]"
+                style={{color: '#606060', textAlign: 'center'}}>
                 {content}
               </CustomText>
             )}
@@ -78,7 +81,10 @@ const AlertModal = (props: AlertModalProps) => {
               setIsModalOpen(false);
               button1Press?.();
             }}>
-            <CustomText fontWeight="600" style={[{color: button1Color}]}>
+            <CustomText
+              fontWeight="600"
+              className="text-[17px]"
+              style={[{color: button1Color}]}>
               {button1Text}
             </CustomText>
           </Pressable>
@@ -94,7 +100,10 @@ const AlertModal = (props: AlertModalProps) => {
                 setIsModalOpen(false);
                 button2Press?.();
               }}>
-              <CustomText fontWeight="600" style={[{color: button2Color}]}>
+              <CustomText
+                fontWeight="600"
+                className="text-[17px]"
+                style={[{color: button2Color}]}>
                 {button2Text}
               </CustomText>
             </Pressable>

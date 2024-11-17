@@ -3,19 +3,13 @@ import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import React, {RefObject, useRef, useState} from 'react';
 import {Pressable, TouchableOpacity, View} from 'react-native';
-import OfficialSvg from 'assets/images/official.svg';
 import MoreSvg from 'assets/images/three-dots.svg';
 import AlertModal from 'components/common/AlertModal/AlertModal';
 import OptionModal from 'components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useDeleteComment, useReportComment} from 'apis/comment/useComments';
-import {showTopToast} from 'utils/toast';
 import {dailyKeys} from 'apis/post/queries';
 import {queryClient} from '../../../../App';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {commentKeys} from 'apis/comment/queries';
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
@@ -26,8 +20,6 @@ interface DailyCommentProps {
 }
 
 const DailyComment = ({comment, postId, bottomSheetRef}: DailyCommentProps) => {
-  const insets = useSafeAreaInsets();
-
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
@@ -45,12 +37,10 @@ const DailyComment = ({comment, postId, bottomSheetRef}: DailyCommentProps) => {
         await reportComment({postId, commentId: comment.id});
       } catch (error: any) {
         if (error.message === '존재하지 않는 게시글') {
-          showTopToast(insets.top + 20, '삭제된 글입니다');
           queryClient.invalidateQueries({queryKey: dailyKeys.lists()});
           bottomSheetRef.current?.close();
         }
         if (error.message === '존재하지 않는 댓글') {
-          showTopToast(insets.top + 20, '삭제된 댓글입니다');
           queryClient.invalidateQueries({queryKey: commentKeys.list(postId)});
         }
       }
@@ -67,9 +57,6 @@ const DailyComment = ({comment, postId, bottomSheetRef}: DailyCommentProps) => {
           <CustomText fontWeight="500" className="text-[15px]">
             {comment.writer.name}
           </CustomText>
-          {comment.writer.type === 'MANAGER' && (
-            <OfficialSvg width={13} height={13} className="ml-[2]" />
-          )}
         </View>
         <CustomText fontWeight="400" className="text-base text-gray-900">
           {comment.content}

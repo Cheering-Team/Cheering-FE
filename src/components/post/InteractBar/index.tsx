@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Pressable, TouchableOpacity, View} from 'react-native';
 import CustomText from '../../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import Avatar from '../../common/Avatar';
 import {Post} from '../../../apis/post/types';
-import CommentSvg from '../../../assets/images/comment.svg';
-import HeartSvg from '../../../assets/images/heart.svg';
-import HeartFillSvg from '../../../assets/images/heart_fill.svg';
+import CommentSvg from '../../../assets/images/comment-line.svg';
+import HeartSvg from '../../../assets/images/heart-line.svg';
+import HeartFillSvg from '../../../assets/images/heart-fill-pink.svg';
 import {useLikePost} from '../../../apis/post/usePosts';
+import {formatComma} from 'utils/format';
 
 interface InteractBarProps {
   post: Post;
@@ -18,64 +19,74 @@ const InteractBar = (props: InteractBarProps) => {
   const {post, type} = props;
   const navigation = useNavigation();
 
-  const {mutate: likePost} = useLikePost(post.id);
+  const {mutate: likePost, isPending} = useLikePost(post.id);
 
   const handleLikePost = () => {
-    likePost({postId: post.id});
+    if (!isPending) {
+      likePost({postId: post.id});
+    }
   };
 
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginHorizontal: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eeeeee',
-        marginLeft: type === 'post' ? undefined : 53,
-      }}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      style={[
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginHorizontal: 10,
+          marginLeft: type === 'post' ? undefined : 53,
+        },
+        type === 'post' && {borderBottomWidth: 1, borderBlockColor: '#eeeeee'},
+      ]}>
+      <View style={{flexDirection: 'row', alignItems: 'center', width: '60%'}}>
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={handleLikePost}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            marginRight: 20,
-            paddingRight: 20,
-            paddingTop: 10,
-            paddingBottom: 12,
+            flex: 1,
+            paddingVertical: 10,
           }}>
           {post.isLike ? (
-            <HeartFillSvg width={18} height={18} />
+            <HeartFillSvg width={23} height={23} />
           ) : (
-            <HeartSvg width={18} height={18} />
+            <HeartSvg width={23} height={23} />
           )}
-          <CustomText
-            style={{
-              color: '#6a6a6a',
-              marginLeft: 6,
-            }}>
-            {post.likeCount}
-          </CustomText>
+          {post.likeCount !== 0 && (
+            <CustomText
+              fontWeight={post.isLike ? '600' : '500'}
+              style={{
+                fontSize: 16,
+                color: post.isLike ? '#fa4b4b' : '#333333',
+                marginLeft: 4,
+              }}>
+              {formatComma(post.likeCount)}
+            </CustomText>
+          )}
         </TouchableOpacity>
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            marginRight: 40,
+            flex: 1,
           }}>
-          <CommentSvg width={18} height={18} />
-          <CustomText
-            style={{
-              color: '#6a6a6a',
-              marginLeft: 6,
-            }}>{`${post.commentCount}`}</CustomText>
+          <CommentSvg width={23} height={23} />
+          {post.commentCount !== 0 && (
+            <CustomText
+              fontWeight="500"
+              style={{
+                fontSize: 16,
+                color: '#333333',
+                marginLeft: 6,
+              }}>
+              {formatComma(post.commentCount)}
+            </CustomText>
+          )}
         </View>
       </View>
 
-      {type !== 'community' && (
+      {type === 'home' ? (
         <Pressable
           onPress={() =>
             navigation.navigate('CommunityStack', {
@@ -84,10 +95,10 @@ const InteractBar = (props: InteractBarProps) => {
             })
           }
           style={{
+            flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
-            alignSelf: 'flex-end',
-            marginBottom: 13,
+            paddingRight: 20,
           }}>
           <Avatar
             uri={post.community.image}
@@ -98,6 +109,8 @@ const InteractBar = (props: InteractBarProps) => {
             {post.community.koreanName}
           </CustomText>
         </Pressable>
+      ) : (
+        <View className="h-full flex-1" />
       )}
     </View>
   );

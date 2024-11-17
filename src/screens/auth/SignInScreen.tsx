@@ -1,9 +1,8 @@
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useContext, useRef, useState} from 'react';
-import {Platform, Pressable, TextInput, View} from 'react-native';
+import {Platform, Pressable, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {login} from '@react-native-seoul/kakao-login';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import NaverLogin from '@react-native-seoul/naver-login';
 import {AuthStackParamList} from 'navigations/AuthStackNavigator';
 import Close from 'hooks/Close';
@@ -32,7 +31,6 @@ const SignInScreen = ({
   navigation: SignInScreenNavigationProp;
 }): JSX.Element => {
   Close(navigation);
-  const insets = useSafeAreaInsets();
   const signIn = useContext(AuthContext)?.signIn;
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -51,7 +49,7 @@ const SignInScreen = ({
         accessToken: token.accessToken,
       });
       const {accessToken, refreshToken} = data;
-      showTopToast(insets.top + 20, '로그인 완료');
+      showTopToast({message: '로그인 완료'});
       signIn?.(accessToken, refreshToken);
     } catch (error: any) {
       if (error.code === 2005) {
@@ -77,7 +75,7 @@ const SignInScreen = ({
           accessToken: token.successResponse.accessToken,
         });
         const {accessToken, refreshToken} = data;
-        showTopToast(insets.top + 20, '로그인 완료');
+        showTopToast({message: '로그인 완료'});
         signIn?.(accessToken, refreshToken);
       } catch (error: any) {
         if (error.code === 2005) {
@@ -108,7 +106,7 @@ const SignInScreen = ({
           name: `${appleAuthRequestResponse.fullName?.familyName}${appleAuthRequestResponse.fullName?.givenName}`,
         });
         const {accessToken, refreshToken} = data;
-        showTopToast(insets.top + 20, '로그인 완료');
+        showTopToast({message: '로그인 완료'});
         signIn?.(accessToken, refreshToken);
       } catch (error: any) {
         if (error.code === 2005) {

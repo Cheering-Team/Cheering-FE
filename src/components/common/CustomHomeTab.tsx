@@ -1,26 +1,22 @@
 import React from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import CategoryGraySvg from '../../assets/images/category-gray.svg';
-import CategorBlackSvg from '../../assets/images/category-black.svg';
+import CategoryBlackSvg from '../../assets/images/category-black.svg';
 import HomeGraySvg from '../../assets/images/home-gray.svg';
 import HomeBlackSvg from '../../assets/images/home-black.svg';
 import ChatGraySvg from '../../assets/images/chat-gray.svg';
 import ChatBlackSvg from '../../assets/images/chat-black.svg';
 import MoreGraySvg from '../../assets/images/more-gray.svg';
 import MoreBlackSvg from '../../assets/images/more-black.svg';
-import AlertSvg from '../../assets/images/alert.svg';
-import AlertGraySvg from '../../assets/images/alert-gray.svg';
+
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from './CustomText';
 import {getActiveRouteName} from '../../utils/getActiveRouteName';
-import {useGetIsUnread} from '../../apis/notification/useNotifications';
 
 function CustomTabBar({state, descriptors, navigation}) {
   // 탭 애니메이션 상태
   const [modeValue, setModeValue] = React.useState(false);
   const mode = React.useRef(new Animated.Value(0)).current;
-
-  const {data} = useGetIsUnread();
 
   // 현재 화면 이름
   let routeName = getActiveRouteName(state);
@@ -61,7 +57,9 @@ function CustomTabBar({state, descriptors, navigation}) {
           routeName === 'ChatRoom' ||
           routeName === 'CreateChatRoom' ||
           routeName === 'ChatRoomEnter' ||
-          routeName === 'Daily'
+          routeName === 'Daily' ||
+          routeName === 'Schedule' ||
+          routeName === 'Match'
             ? {display: 'none'}
             : styles.TabContainer,
           {paddingBottom: useSafeAreaInsets().bottom},
@@ -101,10 +99,10 @@ function CustomTabBar({state, descriptors, navigation}) {
               onPress={onPress}
               onLongPress={onLongPress}
               style={styles.Tab}>
-              {index === 0 ? (
+              {index === 1 ? (
                 isFocused ? (
                   <>
-                    <CategorBlackSvg width={20} height={20} />
+                    <CategoryBlackSvg width={20} height={20} />
                     <CustomText fontWeight="600" style={styles.TabLabelFocused}>
                       카테고리
                     </CustomText>
@@ -117,38 +115,39 @@ function CustomTabBar({state, descriptors, navigation}) {
                     </CustomText>
                   </>
                 )
-              ) : index === 1 ? (
-                isFocused ? (
-                  <>
-                    <AlertSvg width={20} height={20} />
-                    <CustomText fontWeight="600" style={styles.TabLabelFocused}>
-                      알림
-                    </CustomText>
-                  </>
-                ) : (
-                  <>
-                    {data && (
-                      <View
-                        style={{
-                          position: 'absolute',
-                          zIndex: 100,
-                          width: 10,
-                          height: 10,
-                          backgroundColor: 'red',
-                          borderRadius: 100,
-                          top: 4,
-                          left: 40,
-                        }}
-                      />
-                    )}
+              ) : // index === 1 ? (
+              //   isFocused ? (
+              //     <>
+              //       <AlertSvg width={20} height={20} />
+              //       <CustomText fontWeight="600" style={styles.TabLabelFocused}>
+              //         알림
+              //       </CustomText>
+              //     </>
+              //   ) : (
+              //     <>
+              //       {data && (
+              //         <View
+              //           style={{
+              //             position: 'absolute',
+              //             zIndex: 100,
+              //             width: 10,
+              //             height: 10,
+              //             backgroundColor: 'red',
+              //             borderRadius: 100,
+              //             top: 4,
+              //             left: 40,
+              //           }}
+              //         />
+              //       )}
 
-                    <AlertGraySvg width={20} height={20} />
-                    <CustomText fontWeight="600" style={styles.TabLabel}>
-                      알림
-                    </CustomText>
-                  </>
-                )
-              ) : index === 2 ? (
+              //       <AlertGraySvg width={20} height={20} />
+              //       <CustomText fontWeight="600" style={styles.TabLabel}>
+              //         알림
+              //       </CustomText>
+              //     </>
+              //   )
+              // ) :
+              index === 0 ? (
                 isFocused ? (
                   <>
                     <HomeBlackSvg width={20} height={20} />
@@ -164,7 +163,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                     </CustomText>
                   </>
                 )
-              ) : index === 3 ? (
+              ) : index === 2 ? (
                 isFocused ? (
                   <>
                     <ChatBlackSvg width={20} height={20} />
@@ -218,8 +217,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 7,
-    paddingBottom: 3,
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   TabLabel: {fontSize: 10, color: '#B7B7B7', marginTop: 3},
   TabLabelFocused: {fontSize: 10, color: '#323232', marginTop: 3},

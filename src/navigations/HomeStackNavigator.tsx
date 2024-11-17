@@ -1,16 +1,18 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from '../screens/homeStack/HomeScreen';
+import NotificationScreen from 'screens/homeStack/NotificaitonScreen';
+import HomeTabNavigator from './HomeTabNavigator';
 import CommunityStackNavigator, {
   CommunityStackParamList,
 } from './CommunityStackNavigator';
-import NoticeScreen from 'screens/moreStack/NoticeScreen';
 import {NavigationPropType} from './types';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 export type HomeStackParamList = {
-  Home: undefined;
-  CommunityStack: NavigationPropType<CommunityStackParamList>;
+  HomeTab: undefined;
   Notice: {noticeId: number};
+  Notification: undefined;
+  CommunityStack: NavigationPropType<CommunityStackParamList>;
+  ChangeOrder: undefined;
 };
 
 const HomeStackNavigator = () => {
@@ -19,8 +21,15 @@ const HomeStackNavigator = () => {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
-        name="Home"
-        component={HomeScreen}
+        name="HomeTab"
+        component={HomeTabNavigator}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <HomeStack.Screen
+        name="Notification"
+        component={NotificationScreen}
         options={{
           headerShown: false,
         }}
@@ -28,12 +37,9 @@ const HomeStackNavigator = () => {
       <HomeStack.Screen
         name="CommunityStack"
         component={CommunityStackNavigator}
-        options={{headerShown: false}}
-      />
-      <HomeStack.Screen
-        name="Notice"
-        component={NoticeScreen}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+        }}
       />
     </HomeStack.Navigator>
   );

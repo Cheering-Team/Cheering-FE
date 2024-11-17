@@ -30,8 +30,12 @@ const ReComment = (props: Props) => {
     <Pressable
       style={[
         {
-          paddingTop: 10,
+          marginTop: 5,
+          paddingTop: 5,
+          paddingBottom: 8,
           flexDirection: 'row',
+          borderRadius: 5,
+          paddingHorizontal: 10,
         },
         reComment.status === 'temp' && {
           backgroundColor: '#e2e8f0',
@@ -61,7 +65,7 @@ const ReComment = (props: Props) => {
           <CustomText fontWeight="500" style={{color: '#939393', fontSize: 15}}>
             {`@${reComment.to.name} `}
           </CustomText>
-          <CustomText style={{color: '#282828', fontSize: 16}}>
+          <CustomText className="text-[#282828] text-base">
             {reComment.content}
           </CustomText>
         </View>

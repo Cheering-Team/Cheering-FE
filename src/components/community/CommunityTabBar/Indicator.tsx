@@ -31,8 +31,8 @@ const Indicator: React.FC<IndicatorProps> = ({
                 itemsLayout.map(v => (isRTL ? -1 * v.x : v.x)),
               )
             : isRTL
-            ? -1 * firstItemX
-            : firstItemX,
+              ? -1 * firstItemX
+              : firstItemX,
       },
     ];
 

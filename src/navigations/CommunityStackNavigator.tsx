@@ -1,33 +1,39 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import CommunityScreen from '../screens/communityStack/CommunityScreen';
-import ProfileScreen from '../screens/communityStack/ProfileScreen';
-import PostWriteScreen from '../screens/communityStack/PostWriteScreen';
-import PostScreen from '../screens/communityStack/PostScreen';
-import ProfileEditScreen from '../screens/communityStack/ProfileEditScreen';
-import EditNameScreen from '../screens/moreStack/EditNameScreen';
-import DeletePlayerUserScreen from '../screens/communityStack/DeleteFanScreen';
-import ChatRoomScreen from '../screens/communityStack/ChatRoomScreen';
+import {Post} from 'apis/post/types';
+import {Fan} from 'apis/fan/types';
+import {Community} from 'apis/community/types';
+import MatchScreen from 'screens/communityStack/Schedule/MatchScreen';
+import CommunityScreen from 'screens/communityStack/community/CommunityScreen';
+import ProfileScreen from 'screens/communityStack/ProfileScreen';
+import PostWriteScreen from 'screens/communityStack/PostWriteScreen';
+import PostScreen from 'screens/communityStack/PostScreen';
+import DailyScreen from 'screens/communityStack/DailyScreen';
+import ChatRoomScreen from 'screens/communityStack/chatRoom/ChatRoomScreen';
 import CreateChatRoomScreen from 'screens/communityStack/CreateChatRoomScreen';
 import ChatRoomEnterScreen from 'screens/communityStack/ChatRoomEnterScreen';
+import ProfileEditScreen from 'screens/communityStack/ProfileEditScreen';
+import EditNameScreen from 'screens/moreStack/EditNameScreen';
+import DeletePlayerUserScreen from 'screens/communityStack/DeleteFanScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
-import DailyScreen from 'screens/communityStack/DailyScreen';
-import {Post} from 'apis/post/types';
-import {Fan} from 'apis/user/types';
+import ScheduleScreen from 'screens/communityStack/Schedule/ScheduleScreen';
 
 export type CommunityStackParamList = {
   Community: {communityId: number};
-  PostWrite: {communityId: number; post?: Post};
+  Join: undefined;
+  PostWrite: {community: Community; post?: Post};
   Post: {postId: number};
   Daily: {communityId: number; date: string; write: boolean; user: Fan};
   ChatRoom: {chatRoomId: number};
-  CreateChatRoom: {communityId: number};
+  CreateChatRoom: {community: Community};
   ChatRoomEnter: {chatRoomId: number};
   Profile: {fanId: number};
   ProfileEdit: {fanId: number};
   EditName: {name: string; fanId: number | null};
   DeleteFan: {fanId: number};
   BlockList: {playerUserId: number};
+  Schedule: {community: Community};
+  Match: {matchId: number; community: Community};
 };
 
 const CommunityStackNavigator = () => {
@@ -47,7 +53,11 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="PostWrite"
         component={PostWriteScreen}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          presentation: 'modal',
+          gestureEnabled: false,
+        }}
       />
       <CommunityStack.Screen
         name="Post"
@@ -67,7 +77,9 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="CreateChatRoom"
         component={CreateChatRoomScreen}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+        }}
       />
       <CommunityStack.Screen
         name="ChatRoomEnter"
@@ -92,6 +104,16 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="BlockList"
         component={BlockListScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="Schedule"
+        component={ScheduleScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="Match"
+        component={MatchScreen}
         options={{headerShown: false}}
       />
     </CommunityStack.Navigator>

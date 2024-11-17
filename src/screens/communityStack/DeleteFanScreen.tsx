@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-
 import {Pressable, View} from 'react-native';
 import BackSvg from '../../assets/images/arrow-left.svg';
 import CustomText from '../../components/common/CustomText';
 import CheckBox from '../../components/common/CheckBox';
 import CustomButton from '../../components/common/CustomButton';
-import {useDeleteFan} from '../../apis/community/useCommunities';
 import LoadingOverlay from 'components/common/LoadingOverlay';
+import {useDeleteFan} from 'apis/fan/useFans';
 
 const DeletePlayerUserScreen = ({navigation, route}) => {
   const {fanId} = route.params;

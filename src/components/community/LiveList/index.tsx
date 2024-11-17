@@ -1,4 +1,4 @@
-import {Community} from 'apis/community/types';
+import {Player} from 'apis/player/types';
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_HEIGHT} from 'constants/dimension';
@@ -8,7 +8,7 @@ import {Tabs} from 'react-native-collapsible-tab-view';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface LiveListProps {
-  community: Community;
+  community: Player;
 }
 
 const LiveList = ({community}: LiveListProps) => {

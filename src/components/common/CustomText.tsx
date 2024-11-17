@@ -3,6 +3,7 @@ import React from 'react';
 import Animated from 'react-native-reanimated';
 
 interface CustomTextProps extends TextProps {
+  numberOfLines?: number;
   fontWeight?:
     | '100'
     | '200'
@@ -13,61 +14,116 @@ interface CustomTextProps extends TextProps {
     | '700'
     | '800'
     | '900';
+  type?: 'title' | 'titleCenter' | 'normal';
 }
 
 const CustomText = (props: CustomTextProps) => {
-  const {fontWeight = '400', style, children, ...rest} = props;
+  const {
+    fontWeight = '400',
+    style,
+    children,
+    type = 'normal',
+    numberOfLines = 1,
+    ...rest
+  } = props;
+  if (type === 'titleCenter') {
+    return (
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.Title, style, {paddingTop: 5}]}
+        {...rest}>
+        {children}
+      </Animated.Text>
+    );
+  }
+  if (type === 'title') {
+    return (
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.Title, style]}
+        {...rest}>
+        {children}
+      </Animated.Text>
+    );
+  }
   if (fontWeight === '100') {
     return (
-      <Animated.Text style={[styles.Thin, style]} {...rest}>
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.Thin, style]}
+        {...rest}>
         {children}
       </Animated.Text>
     );
   } else if (fontWeight === '200') {
     return (
-      <Animated.Text style={[styles.ExtraLight, style]} {...rest}>
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.ExtraLight, style]}
+        {...rest}>
         {children}
       </Animated.Text>
     );
   } else if (fontWeight === '300') {
     return (
-      <Animated.Text style={[styles.Light, style]} {...rest}>
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.Light, style]}
+        {...rest}>
         {children}
       </Animated.Text>
     );
   } else if (fontWeight === '400') {
     return (
-      <Animated.Text style={[styles.Regular, style]} {...rest}>
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.Regular, style]}
+        {...rest}>
         {children}
       </Animated.Text>
     );
   } else if (fontWeight === '500') {
     return (
-      <Animated.Text style={[styles.Medium, style]} {...rest}>
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.Medium, style]}
+        {...rest}>
         {children}
       </Animated.Text>
     );
   } else if (fontWeight === '600') {
     return (
-      <Animated.Text style={[styles.SemiBold, style]} {...rest}>
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.SemiBold, style]}
+        {...rest}>
         {children}
       </Animated.Text>
     );
   } else if (fontWeight === '700') {
     return (
-      <Animated.Text style={[styles.Bold, style]} {...rest}>
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.Bold, style]}
+        {...rest}>
         {children}
       </Animated.Text>
     );
   } else if (fontWeight === '800') {
     return (
-      <Animated.Text style={[styles.ExtraBold, style]} {...rest}>
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.ExtraBold, style]}
+        {...rest}>
         {children}
       </Animated.Text>
     );
   } else if (fontWeight === '900') {
     return (
-      <Animated.Text style={[styles.Black, style]} {...rest}>
+      <Animated.Text
+        numberOfLines={numberOfLines}
+        style={[styles.Black, style]}
+        {...rest}>
         {children}
       </Animated.Text>
     );
@@ -109,6 +165,10 @@ const styles = StyleSheet.create({
   },
   Black: {
     fontFamily: 'Pretendard-Black',
+    includeFontPadding: false,
+  },
+  Title: {
+    fontFamily: 'Tenada',
     includeFontPadding: false,
   },
 });

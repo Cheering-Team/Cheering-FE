@@ -1,7 +1,4 @@
-import {
-  useGetBlockedUsers,
-  useUnblockUser,
-} from 'apis/community/useCommunities';
+import {useGetBlockedUsers, useUnblockUser} from 'apis/fan/useFans';
 import AlertModal from 'components/common/AlertModal/AlertModal';
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';

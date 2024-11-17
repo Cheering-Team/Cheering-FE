@@ -1,4 +1,4 @@
-import {PlayerIdPayload} from 'apis/community/types';
+import {PlayerIdPayload} from 'apis/player/types';
 import {axiosInstance} from '../index';
 import {ApiResponse} from '../types';
 import {
@@ -164,5 +164,11 @@ export const reissuePlayerAccountPassword = async (
     `/users/manager/${playerId}`,
     {phone},
   );
+  return response.data.result;
+};
+
+export const isFirstLogin = async () => {
+  const response =
+    await axiosInstance.get<ApiResponse<boolean>>(`/isFirstLogin`);
   return response.data.result;
 };
