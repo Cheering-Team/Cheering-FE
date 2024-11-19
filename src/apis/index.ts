@@ -3,13 +3,10 @@ import * as RootNavigation from '../navigations/RootNavigation';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {queryClient} from '../../App';
 import {showTopToast} from '../utils/toast';
-import {Platform} from 'react-native';
+import config from 'react-native-config';
 
 export const axiosInstance = axios.create({
-  baseURL:
-    Platform.OS === 'ios'
-      ? 'http://15.165.150.47/api'
-      : 'http://15.165.150.47/api',
+  baseURL: `${config.API_URL}/api`,
 });
 
 axiosInstance.interceptors.request.use(async config => {

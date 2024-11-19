@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --mode=localdebug",
+    "android:staging": "react-native run-android --mode=stagingrelease",
+    "android:production": "react-native run-android --mode=production",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
@@ -48,6 +50,7 @@
     "react-native-calendars": "1.1307.0",
     "react-native-collapsible-tab-view": "^8.0.0",
     "react-native-compressor": "^1.9.0",
+    "react-native-config": "^1.5.3",
     "react-native-drawer-layout": "^3.3.2",
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-fast-image": "^8.6.3",
