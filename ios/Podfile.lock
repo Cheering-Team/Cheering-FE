@@ -1091,6 +1091,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-config (1.5.3):
+    - react-native-config/App (= 1.5.3)
+  - react-native-config/App (1.5.3):
+    - React-Core
   - react-native-encrypted-storage (4.0.3):
     - React-Core
   - react-native-multiple-image-picker (1.1.9):
@@ -1703,6 +1707,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-compressor (from `../node_modules/react-native-compressor`)
+  - react-native-config (from `../node_modules/react-native-config`)
   - react-native-encrypted-storage (from `../node_modules/react-native-encrypted-storage`)
   - "react-native-multiple-image-picker (from `../node_modules/@baronha/react-native-multiple-image-picker`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -1843,6 +1848,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/blur"
   react-native-compressor:
     :path: "../node_modules/react-native-compressor"
+  react-native-config:
+    :path: "../node_modules/react-native-config"
   react-native-encrypted-storage:
     :path: "../node_modules/react-native-encrypted-storage"
   react-native-multiple-image-picker:
@@ -1986,6 +1993,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: d8adf69e5f42c7419d6594384f8a56e641141c8e
   react-native-blur: 68eda7d27e86b53ec96445fc59fe9e84f0921fea
   react-native-compressor: ce9cf955b8075fb736197a9b7079685c47cc66af
+  react-native-config: 8f7283449bbb048902f4e764affbbf24504454af
   react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
   react-native-multiple-image-picker: bfbdaa54e18ba98ca205f5fa7f141976d89247a9
   react-native-pager-view: bbf004cea40547a7076c59e432a738b5c413d78f

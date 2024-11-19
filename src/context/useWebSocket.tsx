@@ -7,6 +7,7 @@ import React, {
   useRef,
 } from 'react';
 import SockJS from 'sockjs-client';
+import config from 'react-native-config';
 
 type WebSocketContextType = {
   stompClient: MutableRefObject<Client | null>;
@@ -24,7 +25,7 @@ export const WebSocketProvider = ({children}: WebSocketProviderProps) => {
 
   const activateWebSocket = () => {
     if (!stompClient.current) {
-      const socket = new SockJS('http://15.165.150.47/ws');
+      const socket = new SockJS(`${config.API_URL}/ws`);
 
       stompClient.current = new Client({
         webSocketFactory: () => socket,

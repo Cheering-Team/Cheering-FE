@@ -96,6 +96,7 @@ const IntroScreen = ({navigation}: {navigation: IntroScreenNavigationProp}) => {
           };
         }}
       />
+
       <CustomButton
         text="시작하기"
         type="normal"

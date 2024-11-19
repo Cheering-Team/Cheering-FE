@@ -4768,6 +4768,7 @@ __metadata:
     react-native-calendars: "npm:1.1307.0"
     react-native-collapsible-tab-view: "npm:^8.0.0"
     react-native-compressor: "npm:^1.9.0"
+    react-native-config: "npm:^1.5.3"
     react-native-drawer-layout: "npm:^3.3.2"
     react-native-encrypted-storage: "npm:^4.0.3"
     react-native-fast-image: "npm:^8.6.3"
@@ -11931,6 +11932,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/5758ec0696fb91043f10306ab745d264eb0dd5ddeb948cd9cc6f514882c598e579c578def7991f00231997bf7085c0130a8b46bbf2c644a6669aba0cce9e42f6
+  languageName: node
+  linkType: hard
+
+"react-native-config@npm:^1.5.3":
+  version: 1.5.3
+  resolution: "react-native-config@npm:1.5.3"
+  peerDependencies:
+    react-native-windows: ">=0.61"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: 10c0/98e4659191881a72bf756efa469debe90b84ba5f366489dbdebabd45b4f9ec5b05f116db5bdf181c5c688b759c5bc60365b675ff7446b10216056cef15b5ce3b
   languageName: node
   linkType: hard
 
