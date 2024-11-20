@@ -144,7 +144,6 @@ const ChatRoomScreen = () => {
 
       const subscribeToChatRoom = async () => {
         const accessToken = await EncryptedStorage.getItem('accessToken');
-
         if (client && client.connected && accessToken) {
           const participantsSubscription = client.subscribe(
             `/topic/chatRoom/${chatRoomId}/participants`,
@@ -185,13 +184,7 @@ const ChatRoomScreen = () => {
           subscriptionRefs.current = {participants: null, chatRoom: null};
         }
       };
-    }, [
-      activateWebSocket,
-      chatRoomId,
-      chatRoom,
-      handleNewMessage,
-      stompClient,
-    ]),
+    }, [activateWebSocket, chatRoomId, handleNewMessage, stompClient]),
   );
 
   useFocusEffect(
