@@ -1,23 +1,18 @@
 import React from 'react';
-import HomeScreen from '../screens/HomeScreen';
-import SearchScreen from '../screens/SearchScreen';
-import SignOutScreen from '../screens/SignOutScreen';
-import CommunityScreen from '../screens/CommunityScreen';
-import WriteScreen from '../screens/WriteScreen';
+import NotificationScreen from 'screens/homeStack/NotificaitonScreen';
+import HomeTabNavigator from './HomeTabNavigator';
+import CommunityStackNavigator, {
+  CommunityStackParamList,
+} from './CommunityStackNavigator';
+import {NavigationPropType} from './types';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import PostScreen from '../screens/PostScreen';
-import ChatRoomScreen from '../screens/ChatRoomScreen';
-import SettingScreen from '../screens/SettingScreen';
 
 export type HomeStackParamList = {
-  Home: undefined;
-  Search: undefined;
-  Community: {communityId: number};
-  Post: {communityId: number; postId: number; type: 'To' | 'From'};
-  SignOut: undefined;
-  Write: {communityId: number};
-  ChatRoom: undefined;
-  Setting: undefined;
+  HomeTab: undefined;
+  Notice: {noticeId: number};
+  Notification: undefined;
+  CommunityStack: NavigationPropType<CommunityStackParamList>;
+  ChangeOrder: undefined;
 };
 
 const HomeStackNavigator = () => {
@@ -26,53 +21,24 @@ const HomeStackNavigator = () => {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
-        name="Home"
-        component={HomeScreen}
+        name="HomeTab"
+        component={HomeTabNavigator}
         options={{
           headerShown: false,
         }}
       />
       <HomeStack.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{headerShown: false}}
-      />
-      <HomeStack.Screen
-        name="Community"
-        component={CommunityScreen}
+        name="Notification"
+        component={NotificationScreen}
         options={{
-          headerTransparent: true,
+          headerShown: false,
         }}
       />
       <HomeStack.Screen
-        name="Post"
-        component={PostScreen}
-        options={{headerStyle: {backgroundColor: 'red'}}}
-      />
-      <HomeStack.Screen
-        name="Write"
-        component={WriteScreen}
+        name="CommunityStack"
+        component={CommunityStackNavigator}
         options={{
-          headerShadowVisible: false,
-          headerTitleAlign: 'center',
-        }}
-      />
-      <HomeStack.Screen
-        name="ChatRoom"
-        component={ChatRoomScreen}
-        options={{
-          headerShadowVisible: false,
-          headerTitleAlign: 'center',
-        }}
-      />
-      <HomeStack.Screen name="Setting" component={SettingScreen} />
-      <HomeStack.Screen
-        name="SignOut"
-        component={SignOutScreen}
-        options={{
-          headerTitle: '',
-          headerBackVisible: false,
-          headerTransparent: true,
+          headerShown: false,
         }}
       />
     </HomeStack.Navigator>

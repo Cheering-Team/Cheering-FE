@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "logo-text.svg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "logo-text 1.svg",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "logo-text 2.svg",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

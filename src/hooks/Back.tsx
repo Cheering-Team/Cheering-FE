@@ -1,6 +1,6 @@
 import React from 'react';
 import {Pressable} from 'react-native';
-import BackBtnSvg from '../../assets/images/chevron-left.svg';
+import BackBtnSvg from '../assets/images/chevron-left.svg';
 
 const Back = navigation => {
   React.useLayoutEffect(() => {

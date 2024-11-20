@@ -3,11 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>Korea</string>
 	<key>CFBundleDisplayName</key>
-	<string>Cheering</string>
+	<string>스타디움</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -20,8 +22,41 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kakaoaa063a0d137770a4b50cd61824fa0e36</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>naver</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>org.reactjs.native.example.Cheering</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>KAKAO_APP_KEY</key>
+	<string>aa063a0d137770a4b50cd61824fa0e36</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakaokompassauth</string>
+		<string>kakaolink</string>
+		<string>kakaoplus</string>
+		<string>naversearchapp</string>
+		<string>naversearchthirdlogin</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -32,7 +67,14 @@
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>3.37.244.109</key>
+			<key>15.165.150.47</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
@@ -42,15 +84,15 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use your camera</string>
+	<string>게시글 작성을 위해 카메라 접근권한이 필요합니다.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use your microphone (for videos)</string>
+	<string>게시글 작성을 위해 마이크 접근권한이 필요합니다.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
+	<string>게시글 작성을 위해 사진 라이브러리 접근권한이 필요합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+	<string>게시글 작성을 위해 사진 라이브러리 접근권한이 필요합니다.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Fonts/NotoSansKR-Bold.ttf</string>
@@ -58,9 +100,24 @@
 		<string>Fonts/NotoSansKR-Medium.ttf</string>
 		<string>Fonts/NotoSansKR-Regular.ttf</string>
 		<string>Fonts/NotoSansKR-SemiBold.ttf</string>
+		<string>Pretendard-Black.otf</string>
+		<string>Pretendard-Bold.otf</string>
+		<string>Pretendard-ExtraBold.otf</string>
+		<string>Pretendard-ExtraLight.otf</string>
+		<string>Pretendard-Light.otf</string>
+		<string>Pretendard-Medium.otf</string>
+		<string>Pretendard-Regular.otf</string>
+		<string>Pretendard-SemiBold.otf</string>
+		<string>Pretendard-Thin.otf</string>
+		<string>Tenada.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
+	<string>LaunchScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
@@ -68,8 +125,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

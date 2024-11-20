@@ -1,16 +1,35 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import AuthSwitch from './src/navigations/AuthSwitch';
 import {StatusBar} from 'react-native';
 import {navigationRef} from './src/navigations/RootNavigation';
-import Toast, {BaseToast} from 'react-native-toast-message';
+import Toast, {ToastConfigParams} from 'react-native-toast-message';
+import {QueryClientProvider, QueryClient} from '@tanstack/react-query';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import NaverLogin from '@react-native-seoul/naver-login';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import './gesture-handler';
+import SplashScreen from 'react-native-splash-screen';
+import messaging from '@react-native-firebase/messaging';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {deleteFCMToken, saveFCMToken} from 'apis/user';
+import {DevToolsBubble} from 'react-native-react-query-devtools';
+import SuccessToast from 'components/common/toast/SuccessToast';
+import FailToast from 'components/common/toast/FailToast';
+import {WebSocketProvider} from 'context/useWebSocket';
+
+export const toastConfig = {
+  success: (params: ToastConfigParams<any>) => <SuccessToast {...params} />,
+  fail: (params: ToastConfigParams<any>) => <FailToast {...params} />,
+};
+
+const consumerKey = 'T40q4ZLAbDGZCa5v50tK';
+const consumerSecret = 'Tk2ggobTof';
+const appName = '치어링';
+const serviceUrlScheme = 'org.reactjs.native.example.Cheering';
+
+export const queryClient = new QueryClient();
 
 function App(): React.JSX.Element {
   const navTheme = {
@@ -21,32 +40,63 @@ function App(): React.JSX.Element {
     },
   };
 
-  const toastConfig = {
-    /*
-      Overwrite 'success' type,
-      by modifying the existing `BaseToast` component
-    */
-    default: props => (
-      <BaseToast
-        {...props}
-        style={{borderLeftColor: '#4a4a4a', backgroundColor: '#4a4a4a'}}
-        contentContainerStyle={{paddingHorizontal: 15}}
-        text1Style={{
-          fontWeight: 'normal',
-          fontFamily: 'NotoSansKR-Medium',
-          fontSize: 15,
-          color: 'white',
-        }}
-      />
-    ),
-  };
+  useEffect(() => {
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 1000);
+  });
+
+  useEffect(() => {
+    NaverLogin.initialize({
+      appName,
+      consumerKey,
+      consumerSecret,
+      serviceUrlSchemeIOS: serviceUrlScheme,
+      disableNaverAppAuthIOS: true,
+    });
+  }, []);
+
+  useEffect(() => {
+    const checkPermission = async () => {
+      const accessToken = await EncryptedStorage.getItem('accessToken');
+
+      if (accessToken) {
+        const authorizationStatus = await messaging().requestPermission();
+
+        if (authorizationStatus === messaging.AuthorizationStatus.DENIED) {
+          await deleteFCMToken();
+        }
+        if (authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED) {
+          const fcmToken = await messaging().getToken();
+          await saveFCMToken({token: fcmToken});
+        }
+      }
+    };
+
+    checkPermission();
+  }, []);
 
   return (
-    <NavigationContainer theme={navTheme} ref={navigationRef}>
-      <StatusBar barStyle="dark-content" />
-      <AuthSwitch />
-      <Toast config={toastConfig} />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView style={{flex: 1}}>
+          <BottomSheetModalProvider>
+            <WebSocketProvider>
+              <NavigationContainer theme={navTheme} ref={navigationRef}>
+                <StatusBar
+                  barStyle="dark-content"
+                  translucent={true}
+                  backgroundColor="transparent"
+                />
+                <AuthSwitch />
+              </NavigationContainer>
+            </WebSocketProvider>
+            <Toast config={toastConfig} />
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
+        {/* <DevToolsBubble /> */}
+      </QueryClientProvider>
+    </SafeAreaProvider>
   );
 }
 

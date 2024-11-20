@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Cheering</string>
+    <string name="app_name">스타디움</string>
+    <string name="kakao_app_key">aa063a0d137770a4b50cd61824fa0e36</string>
 </resources>
