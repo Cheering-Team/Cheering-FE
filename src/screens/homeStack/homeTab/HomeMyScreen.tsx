@@ -130,7 +130,7 @@ const HomeMyScreen = () => {
     const checkFirst = async () => {
       try {
         const isFirst = await EncryptedStorage.getItem('isFirstLogin');
-        if (isFirst === undefined) {
+        if (!isFirst) {
           await EncryptedStorage.setItem('isFirstLogin', 'false');
           const data = await isFirstLogin();
           if (data) {

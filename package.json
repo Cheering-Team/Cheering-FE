@@ -5,6 +5,7 @@
   "scripts": {
     "android": "react-native run-android --mode=localdebug",
     "android:staging": "react-native run-android --mode=stagingrelease",
+    "android:productionRun": "react-native run-android --mode=productionrelease",
     "android:production": "react-native build-android --mode=productionrelease",
     "ios": "react-native run-ios",
     "lint": "eslint .",

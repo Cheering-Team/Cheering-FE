@@ -6,7 +6,7 @@ import CommunityProfile from 'components/community/CommunityInfo/CommunityProfil
 import FeedList from 'components/community/FeedList';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import Animated from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -24,7 +24,6 @@ import {
 } from '@gorhom/bottom-sheet';
 import JoinProfile from 'components/community/JoinModal/JoinProfile/JoinProfile';
 import ChatList from 'components/community/ChatList/ChatList';
-import SignOutScreen from 'screens/moreStack/SignOutScreen';
 
 const CommunityScreen = () => {
   const {communityId} =
@@ -32,7 +31,6 @@ const CommunityScreen = () => {
   const navigation = useNavigation();
 
   const insets = useSafeAreaInsets();
-  const snapPoints = useMemo(() => [260 + insets.bottom], [insets.bottom]);
 
   const renderBackdrop = useCallback(
     (props: any) => (
@@ -192,6 +190,7 @@ const CommunityScreen = () => {
             navigation.goBack();
           }
         }}
+        enableDynamicSizing={true}
         keyboardBlurBehavior="restore"
         keyboardBehavior="interactive"
         android_keyboardInputMode="adjustResize">

@@ -256,6 +256,7 @@ web_modules/
 
 # dotenv environment variable files
 .env*
+/ios/tmp.xcconfig
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
