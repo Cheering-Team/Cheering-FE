@@ -1657,6 +1657,29 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNSentry (6.2.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Sentry/HybridSDK (= 8.40.1)
+    - Yoga
   - RNSVG (15.9.0):
     - React-Core
   - SDWebImage (5.11.1):
@@ -1665,6 +1688,7 @@ PODS:
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
+  - Sentry/HybridSDK (8.40.1)
   - SocketRocket (0.7.0)
   - TLPhotoPicker (2.1.9)
   - Yoga (0.0.0)
@@ -1751,6 +1775,7 @@ DEPENDENCIES:
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -1775,6 +1800,7 @@ SPEC REPOS:
     - PromisesObjC
     - SDWebImage
     - SDWebImageWebPCoder
+    - Sentry
     - SocketRocket
     - TLPhotoPicker
 
@@ -1936,6 +1962,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   Yoga:
@@ -2037,9 +2065,11 @@ SPEC CHECKSUMS:
   RNReactNativeHapticFeedback: dd1df8ab143dfd0ac79fe483cd08822d7a86fc85
   RNReanimated: 414b345db8bd8cf0767b9decd71c21558a26e669
   RNScreens: 62ee76dc52f65afddfa6821b01965dc79d69c35b
+  RNSentry: f6318a7f89353ac575feab7f78c497629f6234a5
   RNSVG: 3d2bdcaef51c8071880a9c0072fe324f4423a3ba
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
+  Sentry: e9215d7b17f7902692b4f8700e061e4f853e3521
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   TLPhotoPicker: 939c40eaad130b69f9571e61e021e8120fa76329
   Yoga: dbb1bd5faecc60d38ed0a2f2a75db536c759b334
