@@ -32,7 +32,6 @@ const SignInScreen = ({
 }): JSX.Element => {
   Close(navigation);
   const signIn = useContext(AuthContext)?.signIn;
-
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const [status, setStatus] = useState<'phone' | 'code'>('phone');
@@ -43,36 +42,11 @@ const SignInScreen = ({
   const {mutateAsync: appleSignIn} = useAppleSignIn();
 
   const handleKakaoSignIn = async (): Promise<void> => {
-    const token = await login();
     try {
-      const data = await kakaoSignIn({
-        accessToken: token.accessToken,
-      });
-      const {accessToken, refreshToken} = data;
-      showTopToast({message: '로그인 완료'});
-      signIn?.(accessToken, refreshToken);
-    } catch (error: any) {
-      if (error.code === 2005) {
-        setStatus('phone');
-        setPhone('');
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-        }
-        navigation.navigate('AgreeTerm', {
-          accessToken: token.accessToken,
-          type: 'kakao',
-        });
-      }
-    }
-  };
-
-  const handleNaverSignIn = async (): Promise<void> => {
-    const token = await NaverLogin.login();
-
-    if (token.isSuccess && token.successResponse) {
+      const token = await login();
       try {
-        const data = await naverSignIn({
-          accessToken: token.successResponse.accessToken,
+        const data = await kakaoSignIn({
+          accessToken: token.accessToken,
         });
         const {accessToken, refreshToken} = data;
         showTopToast({message: '로그인 완료'});
@@ -85,11 +59,43 @@ const SignInScreen = ({
             clearInterval(timerRef.current);
           }
           navigation.navigate('AgreeTerm', {
-            accessToken: token.successResponse.accessToken,
-            type: 'naver',
+            accessToken: token.accessToken,
+            type: 'kakao',
           });
         }
       }
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
+
+  const handleNaverSignIn = async (): Promise<void> => {
+    try {
+      const token = await NaverLogin.login();
+      if (token.isSuccess && token.successResponse) {
+        try {
+          const data = await naverSignIn({
+            accessToken: token.successResponse.accessToken,
+          });
+          const {accessToken, refreshToken} = data;
+          showTopToast({message: '로그인 완료'});
+          signIn?.(accessToken, refreshToken);
+        } catch (error: any) {
+          if (error.code === 2005) {
+            setStatus('phone');
+            setPhone('');
+            if (timerRef.current) {
+              clearInterval(timerRef.current);
+            }
+            navigation.navigate('AgreeTerm', {
+              accessToken: token.successResponse.accessToken,
+              type: 'naver',
+            });
+          }
+        }
+      }
+    } catch (error: any) {
+      console.error(error);
     }
   };
 
