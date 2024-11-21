@@ -18,6 +18,17 @@ import {DevToolsBubble} from 'react-native-react-query-devtools';
 import SuccessToast from 'components/common/toast/SuccessToast';
 import FailToast from 'components/common/toast/FailToast';
 import {WebSocketProvider} from 'context/useWebSocket';
+import * as Sentry from '@sentry/react-native';
+import config from 'react-native-config';
+
+if (config.ENV === 'production') {
+  Sentry.init({
+    dsn: 'https://86c8cfe00233ff2bd6a83f0d10a29a77@o4508335068807168.ingest.us.sentry.io/4508335071428608',
+    tracesSampleRate: 0.2,
+    profilesSampleRate: 0.2,
+    environment: `${config.ENV}`,
+  });
+}
 
 export const toastConfig = {
   success: (params: ToastConfigParams<any>) => <SuccessToast {...params} />,
