@@ -3356,7 +3356,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-seoul/naver-login@npm:^4.0.1":
+"@react-native-seoul/naver-login@npm:^4.0.4":
   version: 4.0.4
   resolution: "@react-native-seoul/naver-login@npm:4.0.4"
   dependencies:
@@ -4942,7 +4942,7 @@ __metadata:
     "@react-native-masked-view/masked-view": "npm:^0.3.0"
     "@react-native-picker/picker": "npm:^2.8.1"
     "@react-native-seoul/kakao-login": "npm:^5.4.1"
-    "@react-native-seoul/naver-login": "npm:^4.0.1"
+    "@react-native-seoul/naver-login": "npm:^4.0.4"
     "@react-native/babel-preset": "npm:^0.74.0"
     "@react-native/eslint-config": "npm:^0.73.1"
     "@react-native/metro-config": "npm:^0.74.0"
