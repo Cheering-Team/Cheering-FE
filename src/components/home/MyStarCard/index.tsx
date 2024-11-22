@@ -49,13 +49,13 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           <View className="flex-1">
             {community.type === 'PLAYER' ? (
               <CustomText
-                className="text-white text-[18px] ml-[2] mb-[5]"
+                className="text-white text-[18px] ml-[2] mb-[1]"
                 fontWeight="600">
                 {community.englishName}
               </CustomText>
             ) : (
               <CustomText
-                className="text-white text-[18px] ml-[2] mb-[5]"
+                className="text-white text-[18px] ml-[2] mb-[1]"
                 fontWeight="600">
                 {`${community.sportName} / ${community.leagueName}`}
               </CustomText>
@@ -65,7 +65,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
               <CustomText
                 numberOfLines={2}
                 className="text-white text-[28px] leading-[33px]"
-                type="title">
+                type="titleCenter">
                 {community.koreanName}
               </CustomText>
             </View>
