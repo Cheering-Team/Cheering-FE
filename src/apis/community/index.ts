@@ -7,6 +7,7 @@ import {
   CommunityListResponse,
   JoinCommunitiesPayload,
   JoinCommunityPayload,
+  SearchPlayersResponse,
 } from './types';
 
 // 커뮤니티 조회
@@ -22,21 +23,23 @@ export const getCommunityById = async ({
   return response.data.result;
 };
 
-// 커뮤니티 검색
-export const getCommunities = async ({
+// 선수 검색
+export const searchPlayers = async ({
   queryKey,
+  pageParam,
 }: {
   queryKey: ReturnType<typeof communityKeys.listBySearch>;
+  pageParam: number;
 }) => {
   const [, , {teamId, name}] = queryKey;
   let response;
   if (!teamId) {
-    response = await axiosInstance.get<ApiResponse<CommunityListResponse[]>>(
-      `/communities?teamId=&name=${name}`,
+    response = await axiosInstance.get<ApiResponse<SearchPlayersResponse>>(
+      `/players?teamId=&name=${name}&page=${pageParam}&size=12`,
     );
   } else {
-    response = await axiosInstance.get<ApiResponse<CommunityListResponse[]>>(
-      `/communities?teamId=${teamId}&name=${name}`,
+    response = await axiosInstance.get<ApiResponse<SearchPlayersResponse>>(
+      `/players?teamId=${teamId}&name=${name}&page=${pageParam}&size=12`,
     );
   }
   return response.data.result;

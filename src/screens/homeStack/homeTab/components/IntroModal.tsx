@@ -16,6 +16,7 @@ import {useSearchTeams} from 'apis/team/useTeams';
 import FastImage from 'react-native-fast-image';
 import CheckSvg from 'assets/images/check-black.svg';
 import {useJoinCommunities} from 'apis/community/useCommunities';
+import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 
 interface IntroModalProps {
   setIsRegisterOpen: Dispatch<SetStateAction<boolean>>;
@@ -28,7 +29,7 @@ const IntroModal = ({setIsRegisterOpen, setIsIntroOpen}: IntroModalProps) => {
   const debouncedSetName = debounce(setName, 300);
   const [selectedId, setSelectedId] = useState<number[]>([]);
 
-  const {data: teams} = useSearchTeams(name);
+  const {data: teams, isLoading} = useSearchTeams(name, true);
   const {mutateAsync: joinCommunities, isPending} = useJoinCommunities();
 
   const handleJoincommunities = async () => {
@@ -139,9 +140,13 @@ const IntroModal = ({setIsRegisterOpen, setIsIntroOpen}: IntroModalProps) => {
                     );
                   }}
                   ListEmptyComponent={
-                    <View className="h-[300] justify-center">
-                      <ActivityIndicator size={'small'} />
-                    </View>
+                    isLoading ? (
+                      <View className="h-[300] justify-center">
+                        <ActivityIndicator size={'small'} />
+                      </View>
+                    ) : (
+                      <ListEmpty type="team" />
+                    )
                   }
                 />
                 <CustomText className="mb-1 text-gray-600">{`${selectedId.length}개 선택됨`}</CustomText>
