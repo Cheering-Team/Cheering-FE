@@ -20,6 +20,7 @@ import FailToast from 'components/common/toast/FailToast';
 import {WebSocketProvider} from 'context/useWebSocket';
 import * as Sentry from '@sentry/react-native';
 import config from 'react-native-config';
+import codePush from 'react-native-code-push';
 
 if (config.ENV === 'production') {
   Sentry.init({
@@ -41,6 +42,7 @@ const appName = '치어링';
 const serviceUrlScheme = 'org.reactjs.native.example.Cheering';
 
 export const queryClient = new QueryClient();
+let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME};
 
 function App(): React.JSX.Element {
   const navTheme = {
@@ -111,4 +113,4 @@ function App(): React.JSX.Element {
   );
 }
 
-export default App;
+export default codePush(codePushOptions)(App);
