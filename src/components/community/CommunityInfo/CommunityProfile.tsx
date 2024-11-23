@@ -81,7 +81,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
               uri: community.image,
               priority: FastImage.priority.high,
             }}
-            resizeMode="contain"
+            resizeMode={community.type === 'TEAM' ? 'contain' : 'cover'}
             style={styles.backgroundImage}
           />
         )}

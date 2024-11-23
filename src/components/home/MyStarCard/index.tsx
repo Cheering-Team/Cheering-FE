@@ -273,7 +273,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           <FastImage
             source={{uri: community.image, priority: FastImage.priority.high}}
             style={{...StyleSheet.absoluteFillObject}}
-            resizeMode="contain"
+            resizeMode={community.type === 'TEAM' ? 'contain' : 'cover'}
             className="rounded-2xl"
           />
         )}

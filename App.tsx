@@ -42,7 +42,7 @@ const appName = '치어링';
 const serviceUrlScheme = 'org.reactjs.native.example.Cheering';
 
 export const queryClient = new QueryClient();
-let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME};
+const codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME};
 
 function App(): React.JSX.Element {
   const navTheme = {
