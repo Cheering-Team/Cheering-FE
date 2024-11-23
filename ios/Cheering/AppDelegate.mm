@@ -1,7 +1,7 @@
 #import "AppDelegate.h"
 #import "RNSplashScreen.h"
 #import <Firebase.h>
-
+#import <CodePush/CodePush.h>
 #import <React/RCTBundleURLProvider.h>
 #import <RNKakaoLogins.h>
 #import <NaverThirdPartyLogin/NaverThirdPartyLoginConnection.h>
@@ -46,7 +46,7 @@
 #if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
 #else
-  return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  return [CodePush bundleURL];
 #endif
 }
 

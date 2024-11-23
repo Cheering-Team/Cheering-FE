@@ -590,6 +590,7 @@
 					"RCT_ENV_FILE=.env.local",
 				);
 				INFOPLIST_FILE = Cheering/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -638,6 +639,7 @@
 					"PB_ENABLE_MALLOC=1",
 				);
 				INFOPLIST_FILE = Cheering/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
