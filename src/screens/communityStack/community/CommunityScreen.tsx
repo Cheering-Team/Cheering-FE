@@ -195,9 +195,7 @@ const CommunityScreen = () => {
         keyboardBehavior="interactive"
         android_keyboardInputMode="adjustResize">
         <BottomSheetView
-          style={[
-            {paddingBottom: insets.bottom + 20, flex: 1, alignItems: 'center'},
-          ]}>
+          style={[{paddingBottom: insets.bottom + 20, alignItems: 'center'}]}>
           <JoinProfile
             community={community}
             bottomSheetModalRef={bottomSheetModalRef}
