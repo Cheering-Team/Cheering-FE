@@ -56,7 +56,7 @@ const JoinProfile = (props: Props) => {
   }, [bottomSheetModalRef, community.curFan]);
 
   return (
-    <View className="flex-1 w-[90%] mt-1 justify-between">
+    <View className="w-[90%] mt-1">
       <LoadingOverlay isLoading={isPending} type="OVERLAY" />
 
       <View className="w-full">

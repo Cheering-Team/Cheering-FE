@@ -48,11 +48,12 @@ export const useGetTeamsByPlayer = (playerId: number) => {
 };
 
 // 팀 검색하기
-export const useSearchTeams = (name: string) => {
+export const useSearchTeams = (name: string, enabled: boolean) => {
   return useQuery({
     queryKey: teamKeys.listByName(name),
     queryFn: searchTeams,
     retry: false,
+    enabled,
   });
 };
 

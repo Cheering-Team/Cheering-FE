@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   ListRenderItem,
   Platform,
@@ -17,8 +18,8 @@ import StarSvg from 'assets/images/star-white.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import FastImage from 'react-native-fast-image';
 import {
-  useGetCommunities,
   useGetCommunityById,
+  useSearchPlayers,
 } from 'apis/community/useCommunities';
 import ChevronRight from 'assets/images/chevron-right-white.svg';
 import SearchSvg from 'assets/images/search-sm.svg';
@@ -56,13 +57,29 @@ const PlayerListScreen = ({
   const [isRegisiterOpen, setIsRegisterOpen] = useState(false);
 
   const {data: team} = useGetCommunityById(teamId);
-  const {data: communities} = useGetCommunities(teamId, name);
+  const {
+    data: communities,
+    isLoading,
+    hasNextPage,
+    fetchNextPage,
+  } = useSearchPlayers(teamId, name);
+
+  const loadCommunities = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
 
   useEffect(() => {
     if (communities) {
-      communities[1].data.forEach(community => {
-        queryClient.setQueryData(communityKeys.detail(community.id), community);
-      });
+      communities.pages
+        .flatMap(page => page.players)
+        .forEach(community => {
+          queryClient.setQueryData(
+            communityKeys.detail(community.id),
+            community,
+          );
+        });
     }
   });
 
@@ -213,8 +230,11 @@ const PlayerListScreen = ({
           }}
           data={
             (communities && [
-              ...communities[1].data,
-              ...new Array(3 - (communities[1].data.length % 3)).fill({
+              ...communities.pages.flatMap(page => page.players),
+              ...new Array(
+                3 -
+                  (communities.pages.flatMap(page => page.players).length % 3),
+              ).fill({
                 id: null,
               }),
             ]) ||
@@ -248,8 +268,15 @@ const PlayerListScreen = ({
             paddingBottom: insets.bottom + 120,
           }}
           renderItem={renderItem}
+          onEndReached={loadCommunities}
+          onEndReachedThreshold={1}
           ListFooterComponent={
-            communities && communities[1].data.length > 0 ? (
+            isLoading ? (
+              <View className="mt-[100]">
+                <ActivityIndicator size={'small'} color={'#1e1e1e'} />
+              </View>
+            ) : communities &&
+              communities.pages.flatMap(page => page.players).length > 0 ? (
               <></>
             ) : (
               <ListEmpty type="player" />

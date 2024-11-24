@@ -1,19 +1,18 @@
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import {
   changeCommunityOrder,
-  getCommunities,
   getCommunityById,
   getMyCommunities,
   getPopularPlayers,
   getRandomCommunity,
   joinCommunities,
   joinCommunity,
+  searchPlayers,
 } from './index';
 import {communityKeys} from './queries';
 import {queryClient} from '../../../App';
 import {useNavigation} from '@react-navigation/native';
 import {showTopToast} from 'utils/toast';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 // 커뮤니티 조회
 export const useGetCommunityById = (communityId: number) => {
@@ -24,11 +23,15 @@ export const useGetCommunityById = (communityId: number) => {
   });
 };
 
-// 커뮤니티 검색
-export const useGetCommunities = (teamId: number | null, name: string) => {
-  return useQuery({
+// 선수 검색
+export const useSearchPlayers = (teamId: number | null, name: string) => {
+  return useInfiniteQuery({
     queryKey: communityKeys.listBySearch(teamId, name),
-    queryFn: getCommunities,
+    queryFn: searchPlayers,
+    initialPageParam: 0,
+    getNextPageParam: lastPage => {
+      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
+    },
     retry: false,
   });
 };

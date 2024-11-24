@@ -1,4 +1,5 @@
 import {Fan} from 'apis/fan/types';
+import {Page} from 'apis/types';
 
 export interface Community {
   id: number;
@@ -32,7 +33,6 @@ export interface JoinCommunitiesPayload {
 }
 
 // 응답
-export interface CommunityListResponse {
-  title: 'teams' | 'players';
-  data: Community[];
+export interface SearchPlayersResponse extends Page {
+  players: Community[];
 }
