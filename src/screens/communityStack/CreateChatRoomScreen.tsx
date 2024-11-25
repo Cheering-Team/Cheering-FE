@@ -105,7 +105,10 @@ const CreateChatRoomScreen = ({navigation, route}) => {
     try {
       const data = await createChatRoom({
         communityId: community.id,
-        ...formData,
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        image: formData.image,
+        max: formData.max,
       });
       showTopToast({message: '생성 완료'});
       navigation.replace('ChatRoom', {chatRoomId: data.id});
