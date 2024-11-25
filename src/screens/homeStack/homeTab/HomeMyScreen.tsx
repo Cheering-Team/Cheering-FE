@@ -19,7 +19,6 @@ import {useGetMyCommunities} from 'apis/community/useCommunities';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {WINDOW_HEIGHT} from 'constants/dimension';
 import RandomCommunityCard from './components/RandomCommunityCard';
-import {useWebSocket} from 'context/useWebSocket';
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -29,8 +28,6 @@ export type HomeScreenNavigationProp = NativeStackNavigationProp<
 const HomeMyScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
-
-  const {stompClient, activateWebSocket} = useWebSocket();
 
   const [isRegisiterOpen, setIsRegisterOpen] = useState(false);
   const [isIntroOpen, setIsIntroOpen] = useState(false);
@@ -144,14 +141,6 @@ const HomeMyScreen = () => {
 
     checkFirst();
   }, []);
-
-  useEffect(() => {
-    const client = stompClient.current;
-
-    if (!client || !client.connected) {
-      activateWebSocket();
-    }
-  }, [activateWebSocket, stompClient]);
 
   return (
     <View className="flex-1">
