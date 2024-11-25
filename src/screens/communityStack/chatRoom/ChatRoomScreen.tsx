@@ -41,7 +41,7 @@ const ChatRoomScreen = () => {
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
-  const {stompClient, activateWebSocket} = useWebSocket();
+  const {stompClient, activateWebSocket, isConnected} = useWebSocket();
   const subscriptionRefs = useRef<{
     participants: StompSubscription | null;
     chatRoom: StompSubscription | null;
@@ -57,6 +57,7 @@ const ChatRoomScreen = () => {
   const {data: chatRoom, isError, error} = useGetChatRoomById(chatRoomId, true);
   const {
     data: chats,
+    refetch,
     hasNextPage,
     fetchNextPage,
     isError: chatIsError,
@@ -134,44 +135,50 @@ const ChatRoomScreen = () => {
     }
   }, [chatRoom]);
 
+  useEffect(() => {
+    const client = stompClient.current;
+
+    const subscribeToChatRoom = async () => {
+      const accessToken = await EncryptedStorage.getItem('accessToken');
+      if (client && isConnected && accessToken) {
+        const participantsSubscription = client.subscribe(
+          `/topic/chatRoom/${chatRoomId}/participants`,
+          message => {
+            const updatedCount = JSON.parse(message.body);
+            setParticipantCount(updatedCount);
+          },
+        );
+        subscriptionRefs.current.participants = participantsSubscription;
+
+        const chatRoomSubscription = client.subscribe(
+          `/topic/chatRoom/${chatRoomId}`,
+          message => {
+            handleNewMessage(JSON.parse(message.body));
+          },
+          {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        );
+        subscriptionRefs.current.chatRoom = chatRoomSubscription;
+      }
+    };
+
+    if (isConnected) {
+      subscribeToChatRoom();
+    }
+  }, [chatRoomId, handleNewMessage, isConnected, stompClient]);
+
+  // focus시 소켓 연결 확인
+  // blur시 구독 해제
   useFocusEffect(
     useCallback(() => {
-      const client = stompClient.current;
-
-      if (!client || !client.connected) {
+      if (!stompClient || !isConnected) {
         activateWebSocket();
       }
 
-      const subscribeToChatRoom = async () => {
-        const accessToken = await EncryptedStorage.getItem('accessToken');
-        if (client && client.connected && accessToken) {
-          const participantsSubscription = client.subscribe(
-            `/topic/chatRoom/${chatRoomId}/participants`,
-            message => {
-              const updatedCount = JSON.parse(message.body);
-              setParticipantCount(updatedCount);
-            },
-          );
-          subscriptionRefs.current.participants = participantsSubscription;
-
-          const chatRoomSubscription = client.subscribe(
-            `/topic/chatRoom/${chatRoomId}`,
-            message => {
-              handleNewMessage(JSON.parse(message.body));
-            },
-            {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          );
-          subscriptionRefs.current.chatRoom = chatRoomSubscription;
-        }
-      };
-
-      subscribeToChatRoom();
-
       return () => {
-        if (client) {
-          client.publish({
+        if (stompClient.current && isConnected) {
+          stompClient.current.publish({
             destination: `/app/chatRooms/exit`,
             body: JSON.stringify({chatRoomId}),
           });
@@ -179,12 +186,10 @@ const ChatRoomScreen = () => {
             subscriptionRefs.current;
           if (participants) participants.unsubscribe();
           if (chatRoomSub) chatRoomSub.unsubscribe();
-
-          // 구독 객체 초기화
           subscriptionRefs.current = {participants: null, chatRoom: null};
         }
       };
-    }, [activateWebSocket, chatRoomId, handleNewMessage, stompClient]),
+    }, [activateWebSocket, chatRoomId, isConnected, stompClient]),
   );
 
   useFocusEffect(
@@ -204,9 +209,17 @@ const ChatRoomScreen = () => {
     }, [chatRoom?.type, chatRoomId, stompClient]),
   );
 
+  // 채팅 불러오기 및 표시
   useEffect(() => {
     setMessages(chats?.pages.flatMap(page => page.chats) || []);
   }, [chats]);
+
+  // Focus시 채팅 다시 불러오기
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch]),
+  );
 
   useEffect(() => {
     if (
