@@ -19,7 +19,7 @@ const HomeStackNavigator = () => {
   const HomeStack = createNativeStackNavigator<HomeStackParamList>();
 
   return (
-    <HomeStack.Navigator>
+    <HomeStack.Navigator screenOptions={{animation: 'ios_from_right'}}>
       <HomeStack.Screen
         name="HomeTab"
         component={HomeTabNavigator}

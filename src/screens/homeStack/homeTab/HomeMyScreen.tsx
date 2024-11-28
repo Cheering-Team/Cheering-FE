@@ -36,6 +36,7 @@ const HomeMyScreen = () => {
   const {refetch: refetchUnRead} = useGetIsUnread();
   const {mutateAsync: readNotificaiton} = useReadNotification();
 
+  // 알림 firebase 관련 요청
   useEffect(() => {
     const getToken = async () => {
       const fcmToken = await messaging().getToken();
@@ -74,7 +75,6 @@ const HomeMyScreen = () => {
       onTokenRefreshListener();
     };
   }, []);
-
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async () => {
       refetchUnRead();
@@ -82,7 +82,6 @@ const HomeMyScreen = () => {
 
     return unsubscribe;
   }, []);
-
   useEffect(() => {
     messaging().onNotificationOpenedApp(async remoteMessage => {
       if (remoteMessage && remoteMessage.data) {
@@ -123,6 +122,7 @@ const HomeMyScreen = () => {
       });
   }, [navigation, readNotificaiton]);
 
+  // 최초 로그인 확인
   useEffect(() => {
     const checkFirst = async () => {
       try {

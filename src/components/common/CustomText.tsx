@@ -1,4 +1,4 @@
-import {StyleSheet, TextProps} from 'react-native';
+import {Platform, StyleSheet, TextProps} from 'react-native';
 import React from 'react';
 import Animated from 'react-native-reanimated';
 
@@ -30,7 +30,11 @@ const CustomText = (props: CustomTextProps) => {
     return (
       <Animated.Text
         numberOfLines={numberOfLines}
-        style={[styles.Title, style, {paddingTop: 5}]}
+        style={[
+          styles.Title,
+          style,
+          {paddingTop: Platform.OS === 'android' ? 8 : 5},
+        ]}
         {...rest}>
         {children}
       </Animated.Text>

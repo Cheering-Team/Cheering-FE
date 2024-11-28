@@ -13,7 +13,7 @@ export const formatDate = (inputDateString: string) => {
 };
 
 // 오후 9:11
-export const formatTime = (inputTimeString: string) => {
+export const formatAmPmTime = (inputTimeString: string) => {
   const date = new Date(inputTimeString);
   let hours = date.getHours();
   const minutes = date.getMinutes();
@@ -26,6 +26,17 @@ export const formatTime = (inputTimeString: string) => {
   const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
 
   return `${ampm} ${hours}:${formattedMinutes}`;
+};
+
+// 오후 9:11
+export const formatTime = (inputTimeString: string) => {
+  const date = new Date(inputTimeString);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+  return `${hours}:${formattedMinutes}`;
 };
 
 // 몇분전 or 12.25 09:11
@@ -82,6 +93,45 @@ export const formatDay = (dateString: string) => {
   const dayOfWeek = daysOfWeek[dayOfWeekIndex];
 
   return `${year}년 ${month}월 ${day}일 ${dayOfWeek}`;
+};
+
+// 12월 25일 (화)
+export const formatMonthDayDay = (dateString: string) => {
+  const date = new Date(dateString);
+
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  const dayOfWeekIndex = date.getDay();
+  const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+  const dayOfWeek = daysOfWeek[dayOfWeekIndex];
+
+  return `${month}월 ${day}일 (${dayOfWeek})`;
+};
+
+// 2024. 11. 29. (금) 오후 8:05
+export const formatDateTime = (dateString: string) => {
+  const date = new Date(dateString);
+
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  const dayOfWeekIndex = date.getDay();
+  const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+  const dayOfWeek = daysOfWeek[dayOfWeekIndex];
+
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  const ampm = hours >= 12 ? '오후' : '오전';
+
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+  return `${year}. ${month}. ${day}. (${dayOfWeek}) ${ampm} ${hours}:${formattedMinutes}`;
 };
 
 // 오늘이면 시간, 어제, 몇월몇일

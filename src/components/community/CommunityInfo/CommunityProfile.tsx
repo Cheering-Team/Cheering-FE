@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import StarOrangeSvg from 'assets/images/star-white.svg';
 import FastImage from 'react-native-fast-image';

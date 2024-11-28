@@ -48,7 +48,7 @@ const SearchScreen = ({
     isLoading,
     hasNextPage,
     fetchNextPage,
-  } = useSearchPlayers(null, name);
+  } = useSearchPlayers(null, name, true);
 
   useEffect(() => {
     if (communities) {

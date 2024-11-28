@@ -1,7 +1,8 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import {FlatList, Pressable} from 'react-native';
 import CustomText from '../../common/CustomText';
-import {FilterType} from '../../../screens/communityStack/PostWriteScreen';
+import {FilterType} from '../../../screens/communityStack/postWrite/PostWriteScreen';
+import PlusSvg from 'assets/images/plus-black.svg';
 
 interface FilterDataType {
   name: string;
@@ -67,16 +68,23 @@ const TagList = (props: TagListProps) => {
             paddingHorizontal: 10,
             borderRadius: 12,
             marginRight: 6,
+            flexDirection: 'row',
+            alignItems: 'center',
           }}
           onPress={() => {
             setIsTagOpen(true);
           }}>
           {Object.values(selectedTag).every(v => v === false) ? (
-            <CustomText fontWeight="500" style={{fontSize: 15}}>
-              ➕ 태그 추가
-            </CustomText>
+            <>
+              <PlusSvg width={20} height={20} />
+              <CustomText
+                fontWeight="500"
+                style={{fontSize: 15, marginLeft: 3}}>
+                태그 추가
+              </CustomText>
+            </>
           ) : (
-            <CustomText>➕</CustomText>
+            <PlusSvg width={20} height={20} />
           )}
         </Pressable>
       }

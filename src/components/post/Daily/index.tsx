@@ -4,7 +4,7 @@ import React, {Dispatch, RefObject, SetStateAction, useRef} from 'react';
 import {Pressable, View} from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import MoreSvg from '../../../assets/images/three-dots-black.svg';
-import {formatTime} from 'utils/format';
+import {formatAmPmTime} from 'utils/format';
 import OptionModal from 'components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {GetDailysResponse, Post} from 'apis/post/types';
@@ -75,7 +75,7 @@ const Daily = ({
           </Pressable>
 
           <CustomText className="ml-2 text-[12px] text-gray-500">
-            {formatTime(post.createdAt)}
+            {formatAmPmTime(post.createdAt)}
           </CustomText>
         </View>
         <OptionModal

@@ -18,7 +18,7 @@ import {
 } from './index';
 import {FilterType, Post} from './types';
 import {useNavigation} from '@react-navigation/native';
-import {PostWriteScreenNavigationProp} from '../../screens/communityStack/PostWriteScreen.tsx';
+import {PostWriteScreenNavigationProp} from '../../screens/communityStack/postWrite/PostWriteScreen.tsx';
 import {hideToast, showTopToast} from '../../utils/toast';
 import {queryClient} from '../../../App';
 import {LayoutAnimation} from 'react-native';

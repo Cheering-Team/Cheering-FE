@@ -3103,6 +3103,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-camera-roll/camera-roll@npm:^7.8.4":
+  version: 7.8.4
+  resolution: "@react-native-camera-roll/camera-roll@npm:7.8.4"
+  peerDependencies:
+    react-native: ">=0.59"
+  checksum: 10c0/f4a70ff7595b114e0397d4bc050bc349a022cad354758a2c494834d3deb4ddd4e6bf1aeb9228ecc67802531844785ba0848fe2280fec9a5fd0ac1c98939b8c00
+  languageName: node
+  linkType: hard
+
 "@react-native-community/blur@npm:^4.4.1":
   version: 4.4.1
   resolution: "@react-native-community/blur@npm:4.4.1"
@@ -4950,6 +4959,7 @@ __metadata:
     "@gorhom/bottom-sheet": "npm:^5.0.2"
     "@invertase/react-native-apple-authentication": "npm:^2.4.0"
     "@likashefqet/react-native-image-zoom": "npm:^4.2.0"
+    "@react-native-camera-roll/camera-roll": "npm:^7.8.4"
     "@react-native-community/blur": "npm:^4.4.1"
     "@react-native-firebase/app": "npm:^20.4.0"
     "@react-native-firebase/messaging": "npm:^20.4.0"
@@ -5004,6 +5014,7 @@ __metadata:
     react-native-collapsible-tab-view: "npm:^8.0.0"
     react-native-compressor: "npm:^1.9.0"
     react-native-config: "npm:^1.5.3"
+    react-native-date-picker: "npm:^5.0.7"
     react-native-drawer-layout: "npm:^3.3.2"
     react-native-encrypted-storage: "npm:^4.0.3"
     react-native-fast-image: "npm:^8.6.3"
@@ -5017,7 +5028,7 @@ __metadata:
     react-native-reanimated: "npm:^3.9.0"
     react-native-reanimated-carousel: "npm:4.0.0-canary.13"
     react-native-safe-area-context: "npm:^4.10.5"
-    react-native-screens: "npm:^3.31.0"
+    react-native-screens: "npm:^4.3.0"
     react-native-skeleton-placeholder: "npm:^5.2.4"
     react-native-splash-screen: "npm:^3.3.0"
     react-native-sticky-parallax-header: "npm:1.0.0-rc.9"
@@ -5027,6 +5038,7 @@ __metadata:
     react-native-toast-message: "npm:^2.2.0"
     react-native-uuid: "npm:^2.0.2"
     react-native-video: "npm:^6.6.3"
+    react-native-view-shot: "npm:^4.0.2"
     react-native-webview: "npm:^13.10.5"
     react-test-renderer: "npm:18.2.0"
     sockjs-client: "npm:^1.6.1"
@@ -5633,6 +5645,13 @@ __metadata:
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
   checksum: 10c0/9308baf0a7e4838a82bbfd11e01b1cb0f0cf2893bc1676c27c2a8c0e70cbae1c59120c3268517a8ae7fb6376b4639ef81ca22582611dbee4ed28df945134aaee
+  languageName: node
+  linkType: hard
+
+"base64-arraybuffer@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "base64-arraybuffer@npm:1.0.2"
+  checksum: 10c0/3acac95c70f9406e87a41073558ba85b6be9dbffb013a3d2a710e3f2d534d506c911847d5d9be4de458af6362c676de0a5c4c2d7bdf4def502d00b313368e72f
   languageName: node
   linkType: hard
 
@@ -6445,6 +6464,15 @@ __metadata:
   version: 1.0.0
   resolution: "css-color-keywords@npm:1.0.0"
   checksum: 10c0/af205a86c68e0051846ed91eb3e30b4517e1904aac040013ff1d742019b3f9369ba5658ba40901dbbc121186fc4bf0e75a814321cc3e3182fbb2feb81c6d9cb7
+  languageName: node
+  linkType: hard
+
+"css-line-break@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "css-line-break@npm:2.1.0"
+  dependencies:
+    utrie: "npm:^1.0.2"
+  checksum: 10c0/b2222d99d5daf7861ecddc050244fdce296fad74b000dcff6bdfb1eb16dc2ef0b9ffe2c1c965e3239bd05ebe9eadb6d5438a91592fa8648d27a338e827cf9048
   languageName: node
   linkType: hard
 
@@ -8375,6 +8403,16 @@ __metadata:
   version: 2.0.2
   resolution: "html-escaper@npm:2.0.2"
   checksum: 10c0/208e8a12de1a6569edbb14544f4567e6ce8ecc30b9394fcaa4e7bb1e60c12a7c9a1ed27e31290817157e8626f3a4f29e76c8747030822eb84a6abb15c255f0a0
+  languageName: node
+  linkType: hard
+
+"html2canvas@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "html2canvas@npm:1.4.1"
+  dependencies:
+    css-line-break: "npm:^2.1.0"
+    text-segmentation: "npm:^1.0.3"
+  checksum: 10c0/6de86f75762b00948edf2ea559f16da0a1ec3facc4a8a7d3f35fcec59bb0c5970463478988ae3d9082152e0173690d46ebf4082e7ac803dd4817bae1d355c0db
   languageName: node
   linkType: hard
 
@@ -12587,6 +12625,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-date-picker@npm:^5.0.7":
+  version: 5.0.7
+  resolution: "react-native-date-picker@npm:5.0.7"
+  peerDependencies:
+    react: ">= 17.0.1"
+    react-native: ">= 0.64.3"
+  checksum: 10c0/c148e130b0680159e4eac9aa1dd3f1fce03657ae6ad59a9b67641be6bdef7fc50153a15482c4a0be6d53e2a9394917e6f029fd2b544a4ebc82e41a918f3d6c58
+  languageName: node
+  linkType: hard
+
 "react-native-drawer-layout@npm:^3.3.2":
   version: 3.3.2
   resolution: "react-native-drawer-layout@npm:3.3.2"
@@ -12761,16 +12809,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^3.31.0":
-  version: 3.35.0
-  resolution: "react-native-screens@npm:3.35.0"
+"react-native-screens@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "react-native-screens@npm:4.3.0"
   dependencies:
     react-freeze: "npm:^1.0.0"
     warn-once: "npm:^0.1.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/51b4ae9a5432dc980d560ac07baaddda12a78f56f2106e0e9498f6b46d4928c26d8288c4818627903675cc8c4d3643f14358d3ae448a3de2cb962a16270c201d
+  checksum: 10c0/ff7847c95382e9c224940256100205d95a9d2ab698668701544c132a589761bac4fb1db2d30440997c67c89bcf41a0c77063a59ebb1ff1d39c548d60022bd813
   languageName: node
   linkType: hard
 
@@ -12880,6 +12928,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/797de9a88490327eb215ce6846c8dd9c69ba12a7cf2eb6337abb1f5491146fad20a1a6a9ecab18dcef582159209add47d95714f29dee093170ff6bda78c6b38f
+  languageName: node
+  linkType: hard
+
+"react-native-view-shot@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "react-native-view-shot@npm:4.0.2"
+  dependencies:
+    html2canvas: "npm:^1.4.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/842e9587a19c4e33328ec19f839bfd557b8c89df6f980e593d3aae25edad834f18146fdde51612e7be6ad349c30f441a7d852726b6c69e1fdd59f14cc215f500
   languageName: node
   linkType: hard
 
@@ -14496,6 +14556,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"text-segmentation@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "text-segmentation@npm:1.0.3"
+  dependencies:
+    utrie: "npm:^1.0.2"
+  checksum: 10c0/8b9ae8524e3a332371060d0ca62f10ad49a13e954719ea689a6c3a8b8c15c8a56365ede2bb91c322fb0d44b6533785f0da603e066b7554d052999967fb72d600
+  languageName: node
+  linkType: hard
+
 "text-table@npm:^0.2.0, text-table@npm:~0.2.0":
   version: 0.2.0
   resolution: "text-table@npm:0.2.0"
@@ -14994,6 +15063,15 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: 10c0/02ba649de1b7ca8854bfe20a82f1dfbdda3fb57a22ab4a8972a63a34553cf7aa51bc9081cf7e001b035b88186d23689d69e71b510e610a09a4c66f68aa95b672
+  languageName: node
+  linkType: hard
+
+"utrie@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "utrie@npm:1.0.2"
+  dependencies:
+    base64-arraybuffer: "npm:^1.0.2"
+  checksum: 10c0/eaffe645bd81a39e4bc3abb23df5895e9961dbdd49748ef3b173529e8b06ce9dd1163e9705d5309a1c61ee41ffcb825e2043bc0fd1659845ffbdf4b1515dfdb4
   languageName: node
   linkType: hard
 

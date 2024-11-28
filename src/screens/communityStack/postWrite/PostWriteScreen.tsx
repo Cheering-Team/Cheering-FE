@@ -9,17 +9,17 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../../constants/dimension';
-import WriteHeader from '../../components/post/write/WriteHeader';
-import TagList from '../../components/post/write/TagList';
-import WriteFooter from '../../components/post/write/WriteFooter';
-import TagModal from '../../components/post/write/TagModal';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../../../constants/dimension';
+import WriteHeader from '../../../components/post/write/WriteHeader';
+import TagList from '../../../components/post/write/TagList';
+import WriteFooter from '../../../components/post/write/WriteFooter';
+import TagModal from '../../../components/post/write/TagModal';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from '../../navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from '../../../navigations/CommunityStackNavigator';
 import {RouteProp} from '@react-navigation/native';
-import {TagType} from '../../apis/post/types';
-import {useEditPost, useWritePost} from '../../apis/post/usePosts';
-import {showTopToast} from '../../utils/toast';
+import {TagType, Vote} from '../../../apis/post/types';
+import {useEditPost, useWritePost} from '../../../apis/post/usePosts';
+import {showTopToast} from '../../../utils/toast';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -31,7 +31,8 @@ import PostImage from 'components/post/PostImage';
 import {Image, Video} from 'react-native-compressor';
 import uuid from 'react-native-uuid';
 import Toast from 'react-native-toast-message';
-import {toastConfig} from '../../../App';
+import {toastConfig} from '../../../../App';
+import MakeVote from './components/MakeVote';
 
 export type PostWriteScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
@@ -56,6 +57,16 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
   const [content, setContent] = useState<string>('');
   const [imageData, setImageData] = useState<ImageSelectType[]>([]);
   const [isWriting, setIsWriting] = useState<boolean>(false);
+  const [vote, setVote] = useState<Vote>({
+    title: '',
+    endTime: new Date(new Date().getTime() + 60 * 60 * 1000),
+    matchId: null,
+    options: [
+      {name: '', image: null, communityId: null},
+      {name: '', image: null, communityId: null},
+    ],
+  });
+  const [isVote, setIsVote] = useState<boolean>(false);
 
   const animatedProgress = useSharedValue(0);
 
@@ -93,9 +104,34 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
     if (content.length > 1990) {
       showTopToast({
         type: 'fail',
-        message: '최대 2,000자까지 작성 가능합니다.',
+        message: '최대 2,000자까지 작성 가능합니다',
       });
       return;
+    }
+    if (isVote) {
+      if (vote.title.trim().length === 0) {
+        showTopToast({
+          type: 'fail',
+          message: '투표 제목을 입력해주세요',
+        });
+        return;
+      }
+      if (
+        vote.options.filter(option => option.name.trim().length > 0).length < 2
+      ) {
+        showTopToast({
+          type: 'fail',
+          message: '최소 2개의 투표 항목을 완성해주세요',
+        });
+        return;
+      }
+      if (vote.endTime <= new Date()) {
+        showTopToast({
+          type: 'fail',
+          message: '종료시간은 현재 시간 이후여야 합니다',
+        });
+        return;
+      }
     }
 
     setIsWriting(true);
@@ -162,6 +198,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
           content,
           tags,
           images,
+          vote: isVote ? vote : null,
           handleProgress: progressEvent => {
             if (progressEvent.total) {
               const percentCompleted = Math.round(
@@ -292,7 +329,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
             isWriting={isWriting}
             community={community}
           />
-          <ScrollView>
+          <ScrollView keyboardShouldPersistTaps="always">
             <TagList selectedTag={selectedTag} setIsTagOpen={setIsTagOpen} />
             <TextInput
               placeholder="글을 작성해보세요"
@@ -312,9 +349,21 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
               type="WRITE"
               handleDeleteImage={handleDeleteImage}
             />
+            {isVote && (
+              <MakeVote
+                community={community}
+                setIsVote={setIsVote}
+                vote={vote}
+                setVote={setVote}
+              />
+            )}
           </ScrollView>
 
-          <WriteFooter imageData={imageData} setImageData={setImageData} />
+          <WriteFooter
+            imageData={imageData}
+            setImageData={setImageData}
+            setIsVote={setIsVote}
+          />
           {isTagOpen && (
             <TagModal
               selectedTag={selectedTag}

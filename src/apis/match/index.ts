@@ -38,3 +38,15 @@ export const getNextMatch = async ({
   );
   return response.data.result;
 };
+
+export const getNearMatch = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof matchKeys.nearList>;
+}) => {
+  const [, , , {communityId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<MatchDetail[]>>(
+    `/communities/${communityId}/matches/near`,
+  );
+  return response.data.result;
+};

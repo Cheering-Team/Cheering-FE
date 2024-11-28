@@ -1,18 +1,37 @@
-import React, {Dispatch, SetStateAction} from 'react';
-import {Pressable, View} from 'react-native';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {Keyboard, Pressable, View} from 'react-native';
 import {
   openPicker,
   Results as ImageSelectType,
 } from '@baronha/react-native-multiple-image-picker';
 import ImagesSvg from 'assets/images/images.svg';
+import VoteSvg from 'assets/images/vote-black.svg';
+import CustomText from 'components/common/CustomText';
 
 interface WriterFooterProps {
   imageData: ImageSelectType[];
   setImageData: Dispatch<SetStateAction<ImageSelectType[]>>;
+  setIsVote: Dispatch<SetStateAction<boolean>>;
 }
 
 const WriteFooter = (props: WriterFooterProps) => {
-  const {imageData, setImageData} = props;
+  const {imageData, setImageData, setIsVote} = props;
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const showListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true);
+    });
+
+    const hideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false);
+    });
+
+    return () => {
+      showListener.remove();
+      hideListener.remove();
+    };
+  }, []);
 
   const handleImageUpload = async () => {
     try {
@@ -39,15 +58,35 @@ const WriteFooter = (props: WriterFooterProps) => {
     <View
       style={{
         height: 45,
-        justifyContent: 'center',
         backgroundColor: 'yello',
         borderTopWidth: 1,
         borderColor: '#e1e1e1',
-        paddingHorizontal: 13,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingLeft: 8,
+        paddingRight: 16,
       }}>
-      <Pressable onPress={handleImageUpload}>
-        <ImagesSvg width={26} height={26} />
-      </Pressable>
+      <View className="flex-row items-center">
+        <Pressable onPress={handleImageUpload} className="px-2">
+          <ImagesSvg width={26} height={26} />
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            setIsVote(true);
+          }}
+          className="px-3">
+          <VoteSvg width={23} height={23} />
+        </Pressable>
+      </View>
+
+      {isKeyboardVisible && (
+        <Pressable onPress={() => Keyboard.dismiss()}>
+          <CustomText className="text-[19px]" fontWeight="600">
+            닫기
+          </CustomText>
+        </Pressable>
+      )}
     </View>
   );
 };

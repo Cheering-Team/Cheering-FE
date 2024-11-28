@@ -4,7 +4,7 @@ import CustomText from 'components/common/CustomText';
 import {WINDOW_WIDTH} from 'constants/dimension';
 import React, {memo} from 'react';
 import {View} from 'react-native';
-import {formatDay, formatTime} from 'utils/format';
+import {formatDay, formatAmPmTime} from 'utils/format';
 
 interface ChatMessageProps {
   isMy: boolean;
@@ -35,7 +35,7 @@ const ChatMessage = ({isMy, chat, isFirst}: ChatMessageProps) => {
                     marginBottom: 2,
                     color: '#575757',
                   }}>
-                  {formatTime(chat.createdAt)}
+                  {formatAmPmTime(chat.createdAt)}
                 </CustomText>
               )}
               <View
@@ -99,7 +99,7 @@ const ChatMessage = ({isMy, chat, isFirst}: ChatMessageProps) => {
                       marginBottom: 2,
                       color: '#575757',
                     }}>
-                    {formatTime(chat.createdAt)}
+                    {formatAmPmTime(chat.createdAt)}
                   </CustomText>
                 )}
               </View>
