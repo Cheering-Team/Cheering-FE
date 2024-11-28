@@ -184,6 +184,16 @@ export const formatMonthDay = (dateString: string) => {
   return `${month}월 ${day}일`;
 };
 
+// 12/25
+export const formatMonthDaySlash = (dateString: string) => {
+  const date = new Date(dateString);
+
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return `${month}/${day}`;
+};
+
 export const formatXDate = date => {
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
@@ -212,4 +222,25 @@ export const formatComma = inputNumber => {
   }
 
   return inputNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+// 남은 시간
+export const formatRemainingTime = (dateString: string) => {
+  const targetDate = new Date(dateString);
+  const now = new Date();
+  const diff = targetDate.getTime() - now.getTime();
+
+  if (diff <= 0) {
+    return '마감되었습니다';
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24)); // 남은 일수
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // 남은 시간
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)); // 남은 분
+
+  if (days > 0) {
+    return `${days}일 후 마감`;
+  } else {
+    return `${String(hours).padStart(2, '0')}시간 ${String(minutes).padStart(2, '0')}분 후 마감`;
+  }
 };

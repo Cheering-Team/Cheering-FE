@@ -119,6 +119,7 @@ const FeedList = ({
         contentContainerStyle={{
           paddingTop: HEADER_HEIGHT,
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 45,
+          paddingBottom: insets.bottom + 100,
         }}
         ListHeaderComponent={
           <FeedFilter

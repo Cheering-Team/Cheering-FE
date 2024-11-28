@@ -185,8 +185,8 @@ const CommunityScreen = () => {
       <BottomSheetModal
         ref={bottomSheetModalRef}
         backdropComponent={renderBackdrop}
-        onChange={index => {
-          if (index === -1 && !community.curFan) {
+        onDismiss={() => {
+          if (!community.curFan) {
             navigation.goBack();
           }
         }}

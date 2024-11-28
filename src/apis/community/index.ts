@@ -49,7 +49,7 @@ export const searchPlayers = async ({
 export const joinCommunity = async (data: JoinCommunityPayload) => {
   const {communityId, name} = data;
   const formData = new FormData();
-  formData.append('name', name);
+  formData.append('name', JSON.stringify(name));
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/communities/${communityId}/fans`,
     formData,

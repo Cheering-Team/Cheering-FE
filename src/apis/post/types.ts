@@ -2,7 +2,6 @@ import {AxiosProgressEvent} from 'axios';
 import {Page} from '../types';
 import {Community} from 'apis/community/types';
 import {Fan} from 'apis/fan/types';
-import {MatchDetail} from 'apis/match/types';
 
 // 엔티티
 export interface Post {
@@ -42,19 +41,6 @@ export interface PostImageType {
   type: string;
 }
 
-export interface Vote {
-  title: string;
-  endTime: Date;
-  matchId: number | null;
-  options: VoteOption[];
-}
-
-export interface VoteOption {
-  name: string;
-  image: string | null;
-  communityId: number | null;
-}
-
 export type FilterType = 'all' | 'hot' | 'photo' | 'viewing' | 'information';
 export type TagType = 'photo' | 'viewing' | 'information';
 
@@ -75,12 +61,26 @@ export interface ImagePayload {
   height?: number;
 }
 
+export interface VotePayload {
+  id?: number;
+  title: string;
+  endTime: Date;
+  matchId: number | null;
+  options: VoteOptionPayload[];
+}
+
+export interface VoteOptionPayload {
+  name: string;
+  image: string | null;
+  communityId: number | null;
+}
+
 export interface WritePostPayload {
   communityId: number;
   content: string;
   tags: TagType[];
   images: ImagePayload[];
-  vote: Vote | null;
+  vote: VotePayload | null;
   handleProgress: (progressEvent: AxiosProgressEvent) => void;
 }
 

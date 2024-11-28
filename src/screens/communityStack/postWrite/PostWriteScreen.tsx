@@ -17,7 +17,7 @@ import TagModal from '../../../components/post/write/TagModal';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from '../../../navigations/CommunityStackNavigator';
 import {RouteProp} from '@react-navigation/native';
-import {TagType, Vote} from '../../../apis/post/types';
+import {TagType, VotePayload} from '../../../apis/post/types';
 import {useEditPost, useWritePost} from '../../../apis/post/usePosts';
 import {showTopToast} from '../../../utils/toast';
 import Animated, {
@@ -57,7 +57,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
   const [content, setContent] = useState<string>('');
   const [imageData, setImageData] = useState<ImageSelectType[]>([]);
   const [isWriting, setIsWriting] = useState<boolean>(false);
-  const [vote, setVote] = useState<Vote>({
+  const [vote, setVote] = useState<VotePayload>({
     title: '',
     endTime: new Date(new Date().getTime() + 60 * 60 * 1000),
     matchId: null,

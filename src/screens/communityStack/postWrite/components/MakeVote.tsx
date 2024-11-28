@@ -36,18 +36,19 @@ import {
 } from 'utils/format';
 import FastImage from 'react-native-fast-image';
 import {MatchDetail} from 'apis/match/types';
-import {Vote} from 'apis/post/types';
+import {VotePayload} from 'apis/post/types';
 import {useSearchPlayers} from 'apis/community/useCommunities';
 import {debounce} from 'lodash';
 import SearchSvg from 'assets/images/search-sm.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import DatePicker from 'react-native-date-picker';
+import {showTopToast} from 'utils/toast';
 
 interface MakeVoteProps {
   community: Community;
   setIsVote: Dispatch<SetStateAction<boolean>>;
-  vote: Vote;
-  setVote: Dispatch<SetStateAction<Vote>>;
+  vote: VotePayload;
+  setVote: Dispatch<SetStateAction<VotePayload>>;
 }
 
 const MakeVote = ({community, setIsVote, vote, setVote}: MakeVoteProps) => {
@@ -251,13 +252,20 @@ const MakeVote = ({community, setIsVote, vote, setVote}: MakeVoteProps) => {
       <Pressable
         className="py-[10] items-center my-[2] bg-white flex-row justify-center"
         onPress={() => {
-          setVote(prev => {
-            const nextOptions = [
-              ...prev.options,
-              {name: '', image: null, communityId: null},
-            ];
-            return {...prev, options: nextOptions};
-          });
+          if (vote.options.length < 20) {
+            setVote(prev => {
+              const nextOptions = [
+                ...prev.options,
+                {name: '', image: null, communityId: null},
+              ];
+              return {...prev, options: nextOptions};
+            });
+          } else {
+            showTopToast({
+              type: 'fail',
+              message: '항목은 최대 20개입니다',
+            });
+          }
         }}>
         <PlusGraySvg width={12} height={12} />
         <CustomText className="text-base text-gray-500 ml-[6]">
