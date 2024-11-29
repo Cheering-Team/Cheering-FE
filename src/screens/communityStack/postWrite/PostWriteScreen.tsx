@@ -62,8 +62,8 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
     endTime: new Date(new Date().getTime() + 60 * 60 * 1000),
     matchId: null,
     options: [
-      {name: '', image: null, communityId: null},
-      {name: '', image: null, communityId: null},
+      {name: '', image: null, backgroundImage: null, communityId: null},
+      {name: '', image: null, backgroundImage: null, communityId: null},
     ],
   });
   const [isVote, setIsVote] = useState<boolean>(false);

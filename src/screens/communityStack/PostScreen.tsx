@@ -266,7 +266,7 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                   }}>
                   {post.content}
                 </CustomText>
-                {/* <View
+                <View
                   ref={viewRef}
                   className="h-10 bg-yellow-100 justify-center items-center">
                   <CustomText className="text-lg">hello</CustomText>
@@ -275,7 +275,7 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                   className="m-5 p-5 bg-gray-100 items-center"
                   onPress={captureView}>
                   <CustomText>캡처</CustomText>
-                </Pressable> */}
+                </Pressable>
                 {/* 이미지 */}
                 <PostImage images={post.images} type="POST" />
                 {vote && <Vote vote={vote} post={post} />}

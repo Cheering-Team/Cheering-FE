@@ -14,6 +14,7 @@ export interface VoteOption {
   id: number;
   name: string;
   image: string;
+  backgroundImage: string;
   communityId: number;
   percent: number;
   isVoted: boolean;

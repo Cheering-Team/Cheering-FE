@@ -102,6 +102,7 @@ const MakeVote = ({community, setIsVote, vote, setVote}: MakeVoteProps) => {
               const nextOptions = [...prev.options];
               nextOptions[curOption].name = item.koreanName;
               nextOptions[curOption].image = item.image;
+              nextOptions[curOption].backgroundImage = item.backgroundImage;
               nextOptions[curOption].communityId = item.id;
               return {...prev, options: nextOptions};
             });
@@ -224,6 +225,7 @@ const MakeVote = ({community, setIsVote, vote, setVote}: MakeVoteProps) => {
                     const nextOptions = [...prev.options];
                     nextOptions[index].communityId = null;
                     nextOptions[index].name = '';
+                    nextOptions[index].backgroundImage = null;
                     nextOptions[index].image = null;
                     return {...prev, options: nextOptions};
                   });
@@ -256,7 +258,12 @@ const MakeVote = ({community, setIsVote, vote, setVote}: MakeVoteProps) => {
             setVote(prev => {
               const nextOptions = [
                 ...prev.options,
-                {name: '', image: null, communityId: null},
+                {
+                  name: '',
+                  image: null,
+                  backgroundImage: null,
+                  communityId: null,
+                },
               ];
               return {...prev, options: nextOptions};
             });

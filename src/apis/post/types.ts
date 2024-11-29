@@ -72,6 +72,7 @@ export interface VotePayload {
 export interface VoteOptionPayload {
   name: string;
   image: string | null;
+  backgroundImage: string | null;
   communityId: number | null;
 }
 
