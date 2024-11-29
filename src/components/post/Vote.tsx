@@ -2,15 +2,17 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import CustomText from 'components/common/CustomText';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
-import React, {useState} from 'react';
-import {Pressable, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Modal, Pressable, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {formatMonthDaySlash, formatRemainingTime} from 'utils/format';
 import DownSvg from 'assets/images/chevron-down-gray.svg';
 import UpSvg from 'assets/images/chevron-up-gray.svg';
-import {Vote as VoteType} from 'apis/vote/types';
+import {VoteOption, Vote as VoteType} from 'apis/vote/types';
 import {useVote} from 'apis/vote/useVotes';
 import {Post} from 'apis/post/types';
+import RankingSvg from 'assets/images/fullscreen-black.svg';
+import {WINDOW_WIDTH} from 'constants/dimension';
 
 interface VoteProps {
   vote: VoteType;
@@ -22,6 +24,8 @@ const Vote = ({vote, post}: VoteProps) => {
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isRanking, setIsRanking] = useState(false);
+  const [first, setFirst] = useState<VoteOption>();
 
   const {mutate: postVote} = useVote(post.id);
 
@@ -29,11 +33,20 @@ const Vote = ({vote, post}: VoteProps) => {
     postVote({voteOptionId});
   };
 
+  useEffect(() => {
+    setFirst([...vote.options].sort((a, b) => b.percent - a.percent)[0]);
+  }, [vote]);
+
   return (
     <View className="my-2 py-1 px-1 rounded-x items-start">
-      <CustomText className="text-[17px] my-1 ml-2" fontWeight="500">
-        {vote.title}
-      </CustomText>
+      <Pressable
+        className="flex-row items-center pr-3"
+        onPress={() => setIsRanking(true)}>
+        <CustomText className="text-[17px] my-1 ml-2 flex-1" fontWeight="500">
+          {vote.title}
+        </CustomText>
+        <RankingSvg width={20} height={20} />
+      </Pressable>
       {vote.match && (
         <Pressable
           onPress={() =>
@@ -55,7 +68,7 @@ const Vote = ({vote, post}: VoteProps) => {
           />
         </Pressable>
       )}
-      <View className="w-full">
+      <View className="w-full bg-white">
         {vote.options.slice(0, isOpen ? 20 : 5).map(option => (
           <Pressable
             key={option.id}
@@ -78,7 +91,7 @@ const Vote = ({vote, post}: VoteProps) => {
                 <View
                   style={{
                     width: `${option.percent}%`,
-                    backgroundColor: `${post.community.color}30`,
+                    backgroundColor: `${post.community.color}28`,
                     height: '100%',
                     position: 'absolute',
                     left: 0,
@@ -98,6 +111,18 @@ const Vote = ({vote, post}: VoteProps) => {
                 fontWeight={option.isVoted ? '500' : '400'}>
                 {option.name}
               </CustomText>
+              {vote.isVoted && option.isVoted && (
+                <Pressable
+                  className="mr-3 px-3 py-1"
+                  onPress={() => setIsRanking(true)}>
+                  <CustomText
+                    fontWeight="600"
+                    className="text-base"
+                    style={{color: post.community.color}}>
+                    결과보기
+                  </CustomText>
+                </Pressable>
+              )}
               {vote.isVoted && (
                 <CustomText
                   fontWeight={
@@ -108,61 +133,26 @@ const Vote = ({vote, post}: VoteProps) => {
           </Pressable>
         ))}
 
-        <View className="flex-row">
-          {vote.options.length > 5 &&
-            (!isOpen ? (
-              <Pressable
-                className="justify-center h-[35] border border-slate-300 my-1 flex-1 mx-1 flex-row items-center pr-2 rounded-md"
-                onPress={() => setIsOpen(true)}>
-                <DownSvg width={13} height={13} />
-                <CustomText
-                  className="text-slate-500 text-base ml-1"
-                  fontWeight="500">
-                  항목 전체보기
-                </CustomText>
-              </Pressable>
-            ) : (
-              <Pressable
-                className="justify-center h-[35] border border-slate-300 my-1 flex-1 mx-1 flex-row items-center pr-2 rounded-md"
-                onPress={() => setIsOpen(false)}>
-                <UpSvg width={13} height={13} />
-                <CustomText
-                  className="text-slate-500 text-base ml-1"
-                  fontWeight="500">
-                  닫기
-                </CustomText>
-              </Pressable>
-            ))}
-
-          {vote.isVoted && (
+        {vote.options.length > 5 &&
+          (!isOpen ? (
             <Pressable
-              className="justify-center h-[35] my-1 mx-1 flex-1 flex-row items-center pr-2 rounded-md"
-              style={{backgroundColor: post.community.color}}>
+              className="justify-center h-[31] border border-slate-300 my-1 flex-1 mx-1 flex-row items-center pr-2 rounded-[5px]"
+              onPress={() => {
+                setIsOpen(true);
+              }}>
+              <DownSvg width={13} height={13} />
               <CustomText
-                className="text-white text-base ml-1"
+                className="text-slate-500 text-base ml-1"
                 fontWeight="500">
-                결과보기
+                항목 전체보기
               </CustomText>
             </Pressable>
-          )}
-        </View>
-
-        {/* {isOpen && (
-          <View className="flex-row">
-            {vote.isVoted && (
-              <Pressable
-                className="justify-center h-[32] my-1 mr-1 flex-1 flex-row items-center pr-2 rounded-md"
-                style={{backgroundColor: post.community.color}}>
-                <CustomText
-                  className="text-white text-base ml-1"
-                  fontWeight="500">
-                  순위보기
-                </CustomText>
-              </Pressable>
-            )}
+          ) : (
             <Pressable
-              className="justify-center h-[32] border border-slate-300 my-1 ml-1 flex-1 flex-row items-center pr-2 rounded-md"
-              onPress={() => setIsOpen(false)}>
+              className="justify-center h-[31] border border-slate-300 my-1 flex-1 mx-1 flex-row items-center pr-2 rounded-[5px]"
+              onPress={() => {
+                setIsOpen(false);
+              }}>
               <UpSvg width={13} height={13} />
               <CustomText
                 className="text-slate-500 text-base ml-1"
@@ -170,8 +160,7 @@ const Vote = ({vote, post}: VoteProps) => {
                 닫기
               </CustomText>
             </Pressable>
-          </View>
-        )} */}
+          ))}
       </View>
       <View className="flex-row mt-[2] mx-3">
         <CustomText
@@ -183,6 +172,77 @@ const Vote = ({vote, post}: VoteProps) => {
           {`${vote.totalCount}명 참여`}
         </CustomText>
       </View>
+      {isRanking && (
+        <Modal transparent={true} animationType="fade">
+          <Pressable
+            className="w-full h-full justify-center items-center bg-black/90"
+            onPress={() => setIsRanking(false)}>
+            <Pressable
+              onPress={() => {
+                //
+              }}
+              className="flex-row"
+              style={{
+                width: WINDOW_WIDTH,
+                height: WINDOW_WIDTH,
+                backgroundColor: '#f7f7f7',
+              }}>
+              <View className="w-[30%]">
+                <FastImage
+                  source={{uri: first?.image}}
+                  className="h-full w-full"
+                  resizeMode="cover"
+                />
+              </View>
+              <View className="py-3 px-4 flex-1">
+                <CustomText
+                  className="text-gray-900 text-2xl"
+                  type="titleCenter"
+                  numberOfLines={2}>
+                  {vote.title}
+                </CustomText>
+                <View className="flex-1">
+                  {[...vote.options]
+                    .sort((a, b) => b.percent - a.percent)
+                    .slice(0, 5)
+                    .map((option, index) => (
+                      <View className="flex-row items-center mb-2">
+                        <FastImage
+                          source={{uri: option.image}}
+                          className="w-[25] h-[25] rounded-full border border-gray-50 mr-1"
+                        />
+                        <CustomText
+                          className="text-[17px] text-gray-900"
+                          fontWeight="700">
+                          {option.name}
+                        </CustomText>
+                        <View className="flex-1 ml-2">
+                          <View
+                            className="justify-center"
+                            style={{
+                              width: `${option.percent}%`,
+                              height: 35,
+                              backgroundColor:
+                                index === 0 ? post.community.color : '#959595',
+                            }}>
+                            <CustomText
+                              className="self-end text-lg text-white mr-1"
+                              fontWeight="700">{`${option.percent}%`}</CustomText>
+                          </View>
+                        </View>
+                      </View>
+                    ))}
+                </View>
+                <FastImage
+                  source={require('assets/images/logo-store.png')}
+                  className="w-[150] h-6 self-end"
+                  resizeMode="contain"
+                />
+              </View>
+            </Pressable>
+          </Pressable>
+        </Modal>
+      )}
     </View>
   );
 };
