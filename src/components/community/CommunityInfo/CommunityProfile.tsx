@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import StarOrangeSvg from 'assets/images/star-white.svg';
 import FastImage from 'react-native-fast-image';
@@ -56,7 +56,8 @@ const CommunityProfile = (props: CommunityProfileProps) => {
             <View className="flex-row">
               <CustomText
                 type="titleCenter"
-                className="text-3xl text-white bottom-[2]">
+                className="text-3xl text-white bottom-[2]"
+                style={{lineHeight: Platform.OS === 'android' ? 39 : 35}}>
                 {community.koreanName}
               </CustomText>
             </View>

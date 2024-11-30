@@ -35,7 +35,7 @@ const AuthStack = () => {
   const Stack = createNativeStackNavigator<AuthStackParamList>();
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{animation: 'ios_from_right'}}>
       <Stack.Screen
         name="Intro"
         component={IntroScreen}

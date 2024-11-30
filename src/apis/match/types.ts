@@ -29,6 +29,13 @@ export interface MatchDetail {
   sportName: string;
 }
 
+export interface VoteMatch {
+  id: number;
+  opponentImage: string;
+  shortName: string;
+  time: string;
+}
+
 export interface MatchSchedule {
   [date: string]: Match[];
 }

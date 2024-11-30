@@ -62,7 +62,7 @@ const PlayerListScreen = ({
     isLoading,
     hasNextPage,
     fetchNextPage,
-  } = useSearchPlayers(teamId, name);
+  } = useSearchPlayers(teamId, name, true);
 
   const loadCommunities = () => {
     if (hasNextPage) {

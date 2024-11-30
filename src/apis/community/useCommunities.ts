@@ -24,7 +24,11 @@ export const useGetCommunityById = (communityId: number) => {
 };
 
 // 선수 검색
-export const useSearchPlayers = (teamId: number | null, name: string) => {
+export const useSearchPlayers = (
+  teamId: number | null,
+  name: string,
+  enabled: boolean,
+) => {
   return useInfiniteQuery({
     queryKey: communityKeys.listBySearch(teamId, name),
     queryFn: searchPlayers,
@@ -33,6 +37,7 @@ export const useSearchPlayers = (teamId: number | null, name: string) => {
       return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
     },
     retry: false,
+    enabled,
   });
 };
 

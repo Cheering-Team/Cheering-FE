@@ -18,7 +18,7 @@ export type CategoryStackParamList = {
 const CategoryStackNavigator = () => {
   const CategoryStack = createNativeStackNavigator<CategoryStackParamList>();
   return (
-    <CategoryStack.Navigator>
+    <CategoryStack.Navigator screenOptions={{animation: 'ios_from_right'}}>
       <CategoryStack.Screen
         name="Category"
         component={CategoryScreen}
