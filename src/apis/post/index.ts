@@ -48,7 +48,7 @@ export const writePost = async (data: WritePostPayload) => {
   }
 
   const response = await axiosInstance.post<ApiResponse<Id>>(
-    `/communities/${communityId}/posts`,
+    `v2/communities/${communityId}/posts`,
     formData,
     {
       headers: {
