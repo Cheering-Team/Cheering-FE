@@ -13,7 +13,7 @@ export const formatDate = (inputDateString: string) => {
 };
 
 // 오후 9:11
-export const formatTime = (inputTimeString: string) => {
+export const formatAmPmTime = (inputTimeString: string) => {
   const date = new Date(inputTimeString);
   let hours = date.getHours();
   const minutes = date.getMinutes();
@@ -26,6 +26,17 @@ export const formatTime = (inputTimeString: string) => {
   const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
 
   return `${ampm} ${hours}:${formattedMinutes}`;
+};
+
+// 오후 9:11
+export const formatTime = (inputTimeString: string) => {
+  const date = new Date(inputTimeString);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+  return `${hours}:${formattedMinutes}`;
 };
 
 // 몇분전 or 12.25 09:11
@@ -84,6 +95,45 @@ export const formatDay = (dateString: string) => {
   return `${year}년 ${month}월 ${day}일 ${dayOfWeek}`;
 };
 
+// 12월 25일 (화)
+export const formatMonthDayDay = (dateString: string) => {
+  const date = new Date(dateString);
+
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  const dayOfWeekIndex = date.getDay();
+  const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+  const dayOfWeek = daysOfWeek[dayOfWeekIndex];
+
+  return `${month}월 ${day}일 (${dayOfWeek})`;
+};
+
+// 2024. 11. 29. (금) 오후 8:05
+export const formatDateTime = (dateString: string) => {
+  const date = new Date(dateString);
+
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  const dayOfWeekIndex = date.getDay();
+  const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+  const dayOfWeek = daysOfWeek[dayOfWeekIndex];
+
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  const ampm = hours >= 12 ? '오후' : '오전';
+
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+  return `${year}. ${month}. ${day}. (${dayOfWeek}) ${ampm} ${hours}:${formattedMinutes}`;
+};
+
 // 오늘이면 시간, 어제, 몇월몇일
 export const formatTodayOr = (dateString: string) => {
   const date = new Date(dateString);
@@ -134,6 +184,16 @@ export const formatMonthDay = (dateString: string) => {
   return `${month}월 ${day}일`;
 };
 
+// 12/25
+export const formatMonthDaySlash = (dateString: string) => {
+  const date = new Date(dateString);
+
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return `${month}/${day}`;
+};
+
 export const formatXDate = date => {
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
@@ -162,4 +222,25 @@ export const formatComma = inputNumber => {
   }
 
   return inputNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+// 남은 시간
+export const formatRemainingTime = (dateString: string) => {
+  const targetDate = new Date(dateString);
+  const now = new Date();
+  const diff = targetDate.getTime() - now.getTime();
+
+  if (diff <= 0) {
+    return '마감되었습니다';
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24)); // 남은 일수
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)); // 남은 시간
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)); // 남은 분
+
+  if (days > 0) {
+    return `${days}일 후 마감`;
+  } else {
+    return `${String(hours).padStart(2, '0')}시간 ${String(minutes).padStart(2, '0')}분 후 마감`;
+  }
 };

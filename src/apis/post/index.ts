@@ -16,24 +16,39 @@ import {
 
 // 게시글 작성
 export const writePost = async (data: WritePostPayload) => {
-  const {communityId, content, tags, images, handleProgress} = data;
+  const {communityId, content, tags, images, vote, handleProgress} = data;
 
   const formData = new FormData();
-  formData.append('content', content);
-  tags.forEach(tag => formData.append('tags', tag));
+  formData.append('content', JSON.stringify(content));
+  formData.append('tags', JSON.stringify(tags));
+
+  const widths: number[] = [];
+  const heights: number[] = [];
 
   images.forEach(image => {
     formData.append('images', {
-      uri: image.uri,
-      type: image.type,
       name: image.name,
+      type: image.type,
+      uri: 'file://' + image.uri,
     });
-    formData.append('widthDatas', image.width);
-    formData.append(`heightDatas`, image.height);
+    if (image.width && image.height) {
+      widths.push(image.width);
+      heights.push(image.height);
+    }
   });
 
+  formData.append('widthDatas', JSON.stringify(widths));
+  formData.append('heightDatas', JSON.stringify(heights));
+
+  if (vote) {
+    vote.endTime = new Date(
+      vote.endTime.getTime() - vote.endTime.getTimezoneOffset() * 60000,
+    );
+    formData.append('vote', JSON.stringify(vote));
+  }
+
   const response = await axiosInstance.post<ApiResponse<Id>>(
-    `/communities/${communityId}/posts`,
+    `v2/communities/${communityId}/posts`,
     formData,
     {
       headers: {

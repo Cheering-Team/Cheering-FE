@@ -69,7 +69,7 @@ const FailToast = (params: ToastConfigParams<any>) => {
         <View
           style={{
             padding: 3,
-            backgroundColor: '#0ea5e9',
+            backgroundColor: '#e90e5b',
             borderRadius: 999,
             marginLeft: 20,
             marginRight: 15,

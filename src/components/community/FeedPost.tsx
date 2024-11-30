@@ -17,6 +17,10 @@ import {Post, PostImageType} from 'apis/post/types';
 import PostVideo from 'components/common/PostVideo';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import Viewer from 'components/post/Viewer';
+import Vote from 'components/post/Vote';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {HomeStackParamList} from 'navigations/HomeStackNavigator';
+import {useGetVote} from 'apis/vote/useVotes';
 
 interface FeedPostProps {
   feed: Post;
@@ -24,7 +28,8 @@ interface FeedPostProps {
 }
 
 const FeedPost = ({feed, type}: FeedPostProps) => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -32,6 +37,8 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
   const [height, setHeight] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [viewIndex, setViewIndex] = useState(0);
+
+  const {data: vote} = useGetVote(feed.id);
 
   const renderItem: ListRenderItem<PostImageType> = ({item, index}) => {
     return (
@@ -106,18 +113,12 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
       <Pressable
         style={styles.container}
         onPress={() => {
-          if (type === 'community') {
-            navigation.navigate('Post', {
+          navigation.navigate('CommunityStack', {
+            screen: 'Post',
+            params: {
               postId: feed.id,
-            });
-          } else {
-            navigation.navigate('CommunityStack', {
-              screen: 'Post',
-              params: {
-                postId: feed.id,
-              },
-            });
-          }
+            },
+          });
         }}
         onLongPress={() => {
           bottomSheetModalRef.current?.present();
@@ -141,16 +142,15 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
         <View
           style={{
             flexDirection: 'row',
+            alignItems: 'flex-start',
             padding: 10,
           }}>
           <Pressable
             onPress={() => {
-              type === 'community'
-                ? navigation.navigate('Profile', {fanId: feed.writer.id})
-                : navigation.navigate('CommunityStack', {
-                    screen: 'Profile',
-                    params: {fanId: feed.writer.id},
-                  });
+              navigation.navigate('CommunityStack', {
+                screen: 'Profile',
+                params: {fanId: feed.writer.id},
+              });
             }}>
             <Avatar uri={feed.writer.image} size={33} style={{marginTop: 3}} />
           </Pressable>
@@ -182,6 +182,9 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
           horizontal={true}
           renderItem={renderItem}
         />
+        <View className="ml-[40]">
+          {vote && <Vote vote={vote} post={feed} />}
+        </View>
         {/* 상호작용 */}
         <InteractBar post={feed} type={type} />
       </Pressable>

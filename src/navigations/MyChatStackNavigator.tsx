@@ -15,7 +15,7 @@ const MyChatStackNavigator = () => {
   const MyChatStack = createNativeStackNavigator<MyChatStackParamList>();
 
   return (
-    <MyChatStack.Navigator>
+    <MyChatStack.Navigator screenOptions={{animation: 'ios_from_right'}}>
       <MyChatStack.Screen
         name="MyChat"
         component={MyChatScreen}

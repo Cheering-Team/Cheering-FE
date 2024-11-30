@@ -6,7 +6,7 @@ import {Community} from 'apis/community/types';
 import MatchScreen from 'screens/communityStack/Schedule/MatchScreen';
 import CommunityScreen from 'screens/communityStack/community/CommunityScreen';
 import ProfileScreen from 'screens/communityStack/ProfileScreen';
-import PostWriteScreen from 'screens/communityStack/PostWriteScreen';
+import PostWriteScreen from 'screens/communityStack/postWrite/PostWriteScreen';
 import PostScreen from 'screens/communityStack/PostScreen';
 import DailyScreen from 'screens/communityStack/DailyScreen';
 import ChatRoomScreen from 'screens/communityStack/chatRoom/ChatRoomScreen';
@@ -17,6 +17,7 @@ import EditNameScreen from 'screens/moreStack/EditNameScreen';
 import DeletePlayerUserScreen from 'screens/communityStack/DeleteFanScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
 import ScheduleScreen from 'screens/communityStack/Schedule/ScheduleScreen';
+import {Platform} from 'react-native';
 
 export type CommunityStackParamList = {
   Community: {communityId: number};
@@ -39,7 +40,7 @@ export type CommunityStackParamList = {
 const CommunityStackNavigator = () => {
   const CommunityStack = createNativeStackNavigator<CommunityStackParamList>();
   return (
-    <CommunityStack.Navigator>
+    <CommunityStack.Navigator screenOptions={{animation: 'ios_from_right'}}>
       <CommunityStack.Screen
         name="Community"
         component={CommunityScreen}
@@ -55,8 +56,6 @@ const CommunityStackNavigator = () => {
         component={PostWriteScreen}
         options={{
           headerShown: false,
-          presentation: 'modal',
-          gestureEnabled: false,
         }}
       />
       <CommunityStack.Screen

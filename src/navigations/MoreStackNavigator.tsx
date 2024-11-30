@@ -32,7 +32,7 @@ const MoreStackNavigator = () => {
   const MoreStack = createNativeStackNavigator<MoreStackParamList>();
 
   return (
-    <MoreStack.Navigator>
+    <MoreStack.Navigator screenOptions={{animation: 'ios_from_right'}}>
       <MoreStack.Screen
         name="More"
         component={MoreScreen}

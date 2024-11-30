@@ -19,6 +19,7 @@ import {useGetMyCommunities} from 'apis/community/useCommunities';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {WINDOW_HEIGHT} from 'constants/dimension';
 import RandomCommunityCard from './components/RandomCommunityCard';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -28,6 +29,7 @@ export type HomeScreenNavigationProp = NativeStackNavigationProp<
 const HomeMyScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+  const insets = useSafeAreaInsets();
 
   const [isRegisiterOpen, setIsRegisterOpen] = useState(false);
   const [isIntroOpen, setIsIntroOpen] = useState(false);
@@ -36,6 +38,7 @@ const HomeMyScreen = () => {
   const {refetch: refetchUnRead} = useGetIsUnread();
   const {mutateAsync: readNotificaiton} = useReadNotification();
 
+  // 알림 firebase 관련 요청
   useEffect(() => {
     const getToken = async () => {
       const fcmToken = await messaging().getToken();
@@ -74,7 +77,6 @@ const HomeMyScreen = () => {
       onTokenRefreshListener();
     };
   }, []);
-
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async () => {
       refetchUnRead();
@@ -82,7 +84,6 @@ const HomeMyScreen = () => {
 
     return unsubscribe;
   }, []);
-
   useEffect(() => {
     messaging().onNotificationOpenedApp(async remoteMessage => {
       if (remoteMessage && remoteMessage.data) {
@@ -123,6 +124,7 @@ const HomeMyScreen = () => {
       });
   }, [navigation, readNotificaiton]);
 
+  // 최초 로그인 확인
   useEffect(() => {
     const checkFirst = async () => {
       try {
@@ -149,7 +151,12 @@ const HomeMyScreen = () => {
           onPress={() => {
             navigation.navigate('ChangeOrder');
           }}
-          className="self-end top-3 mr-4 z-10 flex-row items-center">
+          className="flex-row items-center h-[20] self-end absolute right-6"
+          style={{
+            top:
+              (WINDOW_HEIGHT - 50 - insets.top - insets.bottom - 45) * 0.0325 -
+              13,
+          }}>
           <ChageSvg width={12} height={12} />
           <CustomText
             className="text-gray-400 text-[15px] ml-[4]"
@@ -190,6 +197,13 @@ const HomeMyScreen = () => {
       {isRegisiterOpen && (
         <RegisterModal setIsRegisterOpen={setIsRegisterOpen} />
       )}
+      {/* <View
+        style={{
+          width: '100%',
+          backgroundColor: 'red',
+          height: (WINDOW_HEIGHT - 50 - insets.top - insets.bottom - 45) * 0.5,
+        }}
+      /> */}
     </View>
   );
 };
