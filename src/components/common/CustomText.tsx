@@ -33,7 +33,7 @@ const CustomText = (props: CustomTextProps) => {
         style={[
           styles.Title,
           style,
-          {paddingTop: Platform.OS === 'android' ? 8 : 5},
+          {paddingTop: Platform.OS === 'ios' ? 5 : 0},
         ]}
         {...rest}>
         {children}

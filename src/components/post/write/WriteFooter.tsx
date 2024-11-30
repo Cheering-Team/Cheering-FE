@@ -71,6 +71,7 @@ const WriteFooter = (props: WriterFooterProps) => {
         <Pressable onPress={handleImageUpload} className="px-2">
           <ImagesSvg width={26} height={26} />
         </Pressable>
+
         <Pressable
           onPress={() => {
             setIsVote(true);

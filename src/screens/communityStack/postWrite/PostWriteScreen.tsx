@@ -44,6 +44,7 @@ type PostWriteScreenRouteProp = RouteProp<CommunityStackParamList, 'PostWrite'>;
 const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
   const {community, post} = route.params;
 
+  const isEdit = !!post;
   const [viewHeight, setViewHeight] = useState(0);
   const dim = useWindowDimensions();
 
@@ -359,11 +360,14 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
             )}
           </ScrollView>
 
-          <WriteFooter
-            imageData={imageData}
-            setImageData={setImageData}
-            setIsVote={setIsVote}
-          />
+          {!isEdit && (
+            <WriteFooter
+              imageData={imageData}
+              setImageData={setImageData}
+              setIsVote={setIsVote}
+            />
+          )}
+
           {isTagOpen && (
             <TagModal
               selectedTag={selectedTag}

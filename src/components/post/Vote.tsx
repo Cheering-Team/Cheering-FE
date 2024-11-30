@@ -32,7 +32,9 @@ import {captureRef} from 'react-native-view-shot';
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import {showBottomToast, showTopToast} from 'utils/toast';
 import Toast from 'react-native-toast-message';
-import {toastConfig} from '../../../App';
+import {queryClient, toastConfig} from '../../../App';
+import Share from 'react-native-share';
+import {voteKeys} from 'apis/vote/queries';
 
 interface VoteProps {
   vote: VoteType;
@@ -50,10 +52,17 @@ const Vote = ({vote, post}: VoteProps) => {
   const [isRanking, setIsRanking] = useState(false);
   const [first, setFirst] = useState<VoteOption | null>();
 
-  const {mutate: postVote} = useVote(post.id);
+  const {mutateAsync: postVote} = useVote(post.id);
 
-  const handleVote = (voteOptionId: number) => {
-    postVote({voteOptionId});
+  const handleVote = async (voteOptionId: number) => {
+    try {
+      await postVote({voteOptionId});
+    } catch (error: any) {
+      if (error.code === 2009) {
+        showTopToast({type: 'fail', message: '이미 마감된 투표입니다'});
+        queryClient.invalidateQueries({queryKey: voteKeys.detail(post.id)});
+      }
+    }
   };
 
   const hasAndroidPermission = async () => {
@@ -119,20 +128,38 @@ const Vote = ({vote, post}: VoteProps) => {
     }
   };
 
+  const shareRanking = async () => {
+    try {
+      const uri = await captureRef(viewRef, {
+        format: 'png', // 이미지 포맷 (png, jpg 가능)
+        quality: 0.8, // 품질 (0~1)
+      });
+
+      await Share.open({
+        title: '공유하기',
+        url: `file://${uri}`,
+        type: 'image/png',
+        message: vote.title,
+      });
+    } catch (error) {
+      //
+    }
+  };
+
   useEffect(() => {
     setFirst([...vote.options].sort((a, b) => b.percent - a.percent)[0]);
   }, [vote]);
 
   return (
     <View className="my-2 py-1 px-1 rounded-x items-start">
-      <Pressable
-        className="flex-row items-center pr-3"
-        onPress={() => setIsRanking(true)}>
+      <View className="flex-row items-center pr-3">
         <CustomText className="text-[17px] my-1 ml-2 flex-1" fontWeight="500">
           {vote.title}
         </CustomText>
-        <RankingSvg width={20} height={20} />
-      </Pressable>
+        <Pressable onPress={() => setIsRanking(true)} className="pl-2 py-1">
+          <RankingSvg width={20} height={20} />
+        </Pressable>
+      </View>
       {vote.match && (
         <Pressable
           onPress={() =>
@@ -155,15 +182,17 @@ const Vote = ({vote, post}: VoteProps) => {
         </Pressable>
       )}
       <View className="w-full bg-white">
-        {vote.options.slice(0, isOpen ? 20 : 5).map(option => (
+        {vote.options.slice(0, isOpen ? 20 : 5).map((option, index) => (
           <Pressable
             key={option.id}
             onPress={() => {
-              if (!vote.isVoted) {
-                handleVote(option.id);
-                setIsOpen(true);
-              } else if (option.isVoted) {
-                handleVote(option.id);
+              if (!vote.isClosed) {
+                if (!vote.isVoted) {
+                  handleVote(option.id);
+                  setIsOpen(true);
+                } else if (option.isVoted) {
+                  handleVote(option.id);
+                }
               }
             }}
             className="flex-row items-center my-1">
@@ -173,7 +202,7 @@ const Vote = ({vote, post}: VoteProps) => {
                 borderWidth: 1,
                 borderColor: option.isVoted ? post.community.color : 'white',
               }}>
-              {vote.isVoted && (
+              {(vote.isVoted || vote.isClosed) && (
                 <View
                   style={{
                     width: `${option.percent}%`,
@@ -189,15 +218,17 @@ const Vote = ({vote, post}: VoteProps) => {
               {option.communityId && (
                 <FastImage
                   source={{uri: option.image}}
+                  style={{opacity: vote.isClosed ? 0.5 : 1}}
                   className="w-7 h-7 rounded-full border border-gray-50 bg-white"
                 />
               )}
               <CustomText
                 className="text-[17px] ml-[6] flex-1"
-                fontWeight={option.isVoted ? '500' : '400'}>
+                fontWeight={option.isVoted ? '500' : '400'}
+                style={{opacity: vote.isClosed ? 0.5 : 1}}>
                 {option.name}
               </CustomText>
-              {vote.isVoted && option.isVoted && (
+              {!vote.isClosed && vote.isVoted && option.isVoted && (
                 <Pressable
                   className="mr-3 px-3 py-1"
                   onPress={() => setIsRanking(true)}>
@@ -209,8 +240,21 @@ const Vote = ({vote, post}: VoteProps) => {
                   </CustomText>
                 </Pressable>
               )}
-              {vote.isVoted && (
+              {vote.isClosed && index === 0 && (
+                <Pressable
+                  className="mr-3 px-3 py-1"
+                  onPress={() => setIsRanking(true)}>
+                  <CustomText
+                    fontWeight="600"
+                    className="text-base"
+                    style={{color: post.community.color}}>
+                    결과보기
+                  </CustomText>
+                </Pressable>
+              )}
+              {(vote.isVoted || vote.isClosed) && (
                 <CustomText
+                  style={{opacity: vote.isClosed ? 0.5 : 1}}
                   fontWeight={
                     option.isVoted ? '500' : '400'
                   }>{`${option.percent}%`}</CustomText>
@@ -222,7 +266,7 @@ const Vote = ({vote, post}: VoteProps) => {
         {vote.options.length > 5 &&
           (!isOpen ? (
             <Pressable
-              className="justify-center py-1 border border-slate-300 my-1 flex-1 mx-1 flex-row items-center pr-2 rounded-[5px]"
+              className="justify-center py-1 border border-slate-300 my-1 mx-1 flex-row items-center pr-2 rounded-[5px]"
               onPress={() => {
                 setIsOpen(true);
               }}>
@@ -235,7 +279,7 @@ const Vote = ({vote, post}: VoteProps) => {
             </Pressable>
           ) : (
             <Pressable
-              className="justify-center py-1 border border-slate-300 my-1 flex-1 mx-1 flex-row items-center pr-2 rounded-[5px]"
+              className="justify-center py-1 border border-slate-300 my-1 mx-1 flex-row items-center pr-2 rounded-[5px]"
               onPress={() => {
                 setIsOpen(false);
               }}>
@@ -407,7 +451,7 @@ const Vote = ({vote, post}: VoteProps) => {
                   저장
                 </CustomText>
               </Pressable>
-              <Pressable className="ml-3 items-center">
+              <Pressable className="ml-3 items-center" onPress={shareRanking}>
                 <View className="bg-white rounded-full p-[10]">
                   <ShareSvg width={25} height={25} />
                 </View>

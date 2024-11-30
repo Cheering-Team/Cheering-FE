@@ -1,6 +1,6 @@
 import CustomText from 'components/common/CustomText';
 import React, {useRef} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MoreSvg from '../../../assets/images/three-dots-vertical-white.svg';
 import FastImage from 'react-native-fast-image';
@@ -64,7 +64,8 @@ const MyStarCard = ({community}: MyStarCardProps) => {
             <View className="flex-row items-center">
               <CustomText
                 numberOfLines={2}
-                className="text-white text-[28px] leading-[33px]"
+                className="text-white text-[28px]"
+                style={{lineHeight: Platform.OS === 'android' ? 36 : 31}}
                 type="titleCenter">
                 {community.koreanName}
               </CustomText>

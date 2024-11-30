@@ -8,6 +8,7 @@ export interface Vote {
   options: VoteOption[];
   isVoted: boolean;
   totalCount: number;
+  isClosed: boolean;
 }
 
 export interface VoteOption {

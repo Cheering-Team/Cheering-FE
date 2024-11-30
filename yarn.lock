@@ -5029,6 +5029,7 @@ __metadata:
     react-native-reanimated-carousel: "npm:4.0.0-canary.13"
     react-native-safe-area-context: "npm:^4.10.5"
     react-native-screens: "npm:^4.3.0"
+    react-native-share: "npm:^12.0.3"
     react-native-skeleton-placeholder: "npm:^5.2.4"
     react-native-splash-screen: "npm:^3.3.0"
     react-native-sticky-parallax-header: "npm:1.0.0-rc.9"
@@ -12819,6 +12820,13 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/ff7847c95382e9c224940256100205d95a9d2ab698668701544c132a589761bac4fb1db2d30440997c67c89bcf41a0c77063a59ebb1ff1d39c548d60022bd813
+  languageName: node
+  linkType: hard
+
+"react-native-share@npm:^12.0.3":
+  version: 12.0.3
+  resolution: "react-native-share@npm:12.0.3"
+  checksum: 10c0/38ebf9b9f8c0b7e6d1bc37a86042c283cc985b7034fe3ba91f95d5ca49054c23145b4e90a7a839b6b906f0db32a453297657d9d906909899670934716fab45fc
   languageName: node
   linkType: hard
 

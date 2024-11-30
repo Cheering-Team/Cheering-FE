@@ -2,7 +2,6 @@ import React, {useRef, useState} from 'react';
 import {
   FlatList,
   KeyboardAvoidingView,
-  PermissionsAndroid,
   Platform,
   Pressable,
   RefreshControl,
@@ -28,8 +27,6 @@ import {useGetPostById} from 'apis/post/usePosts';
 import CommentSkeleton from 'components/skeleton/CommentSkeleton';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import NotFound from 'components/notfound';
-import {captureRef} from 'react-native-view-shot';
-import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import Vote from 'components/post/Vote';
 import {useGetVote} from 'apis/vote/useVotes';
 
@@ -85,70 +82,6 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
     setTimeout(() => {
       setIsRefreshing(false);
     }, 1000);
-  };
-
-  const hasAndroidPermission = async () => {
-    const getCheckPermissionPromise = () => {
-      if (Number(Platform.Version) >= 33) {
-        return Promise.all([
-          PermissionsAndroid.check(
-            PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-          ),
-          PermissionsAndroid.check(
-            PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
-          ),
-        ]).then(
-          ([hasReadMediaImagesPermission, hasReadMediaVideoPermission]) =>
-            hasReadMediaImagesPermission && hasReadMediaVideoPermission,
-        );
-      } else {
-        return PermissionsAndroid.check(
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        );
-      }
-    };
-    const hasPermission = await getCheckPermissionPromise();
-    if (hasPermission) {
-      return true;
-    }
-    const getRequestPermissionPromise = () => {
-      if (Number(Platform.Version) >= 33) {
-        return PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-          PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
-        ]).then(
-          statuses =>
-            statuses[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ===
-              PermissionsAndroid.RESULTS.GRANTED &&
-            statuses[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO] ===
-              PermissionsAndroid.RESULTS.GRANTED,
-        );
-      } else {
-        return PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        ).then(status => status === PermissionsAndroid.RESULTS.GRANTED);
-      }
-    };
-
-    return await getRequestPermissionPromise();
-  };
-
-  const viewRef = useRef(null);
-
-  const captureView = async () => {
-    if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
-      return;
-    }
-
-    try {
-      const uri = await captureRef(viewRef, {
-        format: 'png', // 이미지 포맷 (png, jpg 가능)
-        quality: 0.8, // 품질 (0~1)
-      });
-      CameraRoll.saveAsset(uri, {type: 'photo'});
-    } catch (error) {
-      console.error('Error capturing view:', error);
-    }
   };
 
   if (postIsLoading) {
@@ -266,16 +199,6 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                   }}>
                   {post.content}
                 </CustomText>
-                <View
-                  ref={viewRef}
-                  className="h-10 bg-yellow-100 justify-center items-center">
-                  <CustomText className="text-lg">hello</CustomText>
-                </View>
-                <Pressable
-                  className="m-5 p-5 bg-gray-100 items-center"
-                  onPress={captureView}>
-                  <CustomText>캡처</CustomText>
-                </Pressable>
                 {/* 이미지 */}
                 <PostImage images={post.images} type="POST" />
                 {vote && <Vote vote={vote} post={post} />}
