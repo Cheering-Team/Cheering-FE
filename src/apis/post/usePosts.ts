@@ -11,6 +11,7 @@ import {
   getMyHotPosts,
   getPostById,
   getPosts,
+  getVotes,
   likePost,
   reportPost,
   writeDaily,
@@ -66,6 +67,23 @@ export const useGetFanPosts = (fanId: number) => {
   return useInfiniteQuery({
     queryKey: postKeys.listByFan(fanId),
     queryFn: getFanPosts,
+    initialPageParam: 0,
+    getNextPageParam: lastPage => {
+      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
+    },
+    retry: false,
+  });
+};
+
+// 경기 게시글 불러오기 (무한 스크롤)
+export const useGetVotes = (
+  matchId: number,
+  communityId: number,
+  orderBy: string,
+) => {
+  return useInfiniteQuery({
+    queryKey: postKeys.listByMatch(matchId, communityId, orderBy),
+    queryFn: getVotes,
     initialPageParam: 0,
     getNextPageParam: lastPage => {
       return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;

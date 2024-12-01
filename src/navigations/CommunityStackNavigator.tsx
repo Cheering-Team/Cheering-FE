@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Post} from 'apis/post/types';
 import {Fan} from 'apis/fan/types';
 import {Community} from 'apis/community/types';
-import MatchScreen from 'screens/communityStack/Schedule/MatchScreen';
+import MatchScreen from 'screens/communityStack/schedule/match/MatchScreen';
 import CommunityScreen from 'screens/communityStack/community/CommunityScreen';
 import ProfileScreen from 'screens/communityStack/ProfileScreen';
 import PostWriteScreen from 'screens/communityStack/postWrite/PostWriteScreen';
@@ -16,8 +16,7 @@ import ProfileEditScreen from 'screens/communityStack/ProfileEditScreen';
 import EditNameScreen from 'screens/moreStack/EditNameScreen';
 import DeletePlayerUserScreen from 'screens/communityStack/DeleteFanScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
-import ScheduleScreen from 'screens/communityStack/Schedule/ScheduleScreen';
-import {Platform} from 'react-native';
+import ScheduleScreen from 'screens/communityStack/schedule/ScheduleScreen';
 
 export type CommunityStackParamList = {
   Community: {communityId: number};

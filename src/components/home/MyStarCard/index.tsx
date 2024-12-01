@@ -161,8 +161,8 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 style={{}}
                 onPress={() =>
                   navigation.navigate('CommunityStack', {
-                    screen: 'Schedule',
-                    params: {community},
+                    screen: 'Match',
+                    params: {matchId: match.id, community: community},
                   })
                 }>
                 <View className="items-center">
@@ -246,15 +246,15 @@ const MyStarCard = ({community}: MyStarCardProps) => {
               onPress={() => {
                 if (community.curFan) {
                   navigation.navigate('CommunityStack', {
-                    screen: 'Profile',
-                    params: {fanId: community.curFan.id},
+                    screen: 'Schedule',
+                    params: {community: community},
                   });
                 }
               }}>
               <CustomText
                 className="text-white text-center text-lg"
                 fontWeight="500">
-                내 프로필
+                경기 일정
               </CustomText>
             </TouchableOpacity>
           </View>

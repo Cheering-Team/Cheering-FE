@@ -94,6 +94,21 @@ export const getFanPosts = async ({
   return response.data.result;
 };
 
+// 경기 게시글 조회 (무한 스크롤)
+export const getVotes = async ({
+  queryKey,
+  pageParam,
+}: {
+  queryKey: ReturnType<typeof postKeys.listByMatch>;
+  pageParam: number;
+}) => {
+  const [, , {matchId, communityId, orderBy}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<GetPostsResponse>>(
+    `/matches/${matchId}/communities/${communityId}/votes?orderBy=${orderBy}&page=${pageParam}&size=10`,
+  );
+  return response.data.result;
+};
+
 // 게시글 조회
 export const getPostById = async ({
   queryKey,

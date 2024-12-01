@@ -6,7 +6,7 @@ import React from 'react';
 import {Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CloseSvg from 'assets/images/close-black.svg';
-import ScheduleList from './components/ScheduleList';
+import ScheduleList from 'screens/communityStack/schedule/components/ScheduleList';
 
 const ScheduleScreen = () => {
   const navigation =

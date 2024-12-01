@@ -13,7 +13,7 @@ import {useGetCheers, useWriteCheer} from 'apis/cheer/useCheers';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import {queryClient} from '../../../../../App';
+import {queryClient} from '../../../../../../App';
 import {matchKeys} from 'apis/match/queries';
 import Cheer from './Cheer';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
@@ -81,18 +81,17 @@ const CheerList = ({matchId, community}: CheerListProps) => {
 
   return (
     <>
-      <Tabs.FlashList
+      <Tabs.FlatList
         data={isLoading ? [] : cheers?.pages.flatMap(page => page.cheers)}
         renderItem={({item}) => (
           <Cheer cheer={item} matchId={matchId} communityId={community.id} />
         )}
         contentContainerStyle={{paddingHorizontal: 10, paddingVertical: 10}}
-        estimatedItemSize={100}
         onEndReached={loadCheers}
         onEndReachedThreshold={1}
         ListHeaderComponent={
           <View
-            className="p-2 rounded-md mb-3 items-center flex-row justify-center"
+            className="p-2 rounded-md mb-3 my-2 items-center flex-row justify-center"
             style={{backgroundColor: community.color}}>
             <FastImage
               source={{uri: community.image}}

@@ -11,6 +11,7 @@ import BackSvg from 'assets/images/chevron-left.svg';
 import MatchInfo from './components/MatchInfo';
 import CheerList from './components/CheerList';
 import {CommunityTabBar} from 'components/community/CommunityTabBar/CommunityTabBar';
+import VoteList from './components/VoteList';
 
 const MatchScreen = () => {
   const navigation =
@@ -62,6 +63,9 @@ const MatchScreen = () => {
         )}>
         <Tabs.Tab name="응원">
           <CheerList matchId={matchId} community={community} />
+        </Tabs.Tab>
+        <Tabs.Tab name="투표">
+          <VoteList matchId={matchId} community={community} />
         </Tabs.Tab>
       </Tabs.Container>
     </KeyboardAvoidingView>
