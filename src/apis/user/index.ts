@@ -1,10 +1,10 @@
-import {PlayerIdPayload} from 'apis/player/types';
 import {axiosInstance} from '../index';
 import {ApiResponse} from '../types';
 import {
   CheckCodePayload,
   CheckCodeSocialPayload,
   ConnectSocialPayload,
+  DeleteFCMTokenPayload,
   RegisterManagerAccountPayload,
   SaveFCMTokenPayload,
   SendSMSPayload,
@@ -120,16 +120,18 @@ export const deleteUser = async () => {
 };
 
 export const saveFCMToken = async (data: SaveFCMTokenPayload) => {
-  const {token} = data;
   const response = await axiosInstance.post<ApiResponse<null>>(
-    `/fcm-token?token=${encodeURIComponent(token)}`,
+    '/fcm-token',
     data,
   );
   return response.data;
 };
 
-export const deleteFCMToken = async () => {
-  const response = await axiosInstance.delete<ApiResponse<null>>('/fcm-token');
+export const deleteFCMToken = async (data: DeleteFCMTokenPayload) => {
+  const {deviceId} = data;
+  const response = await axiosInstance.delete<ApiResponse<null>>(
+    `/fcm-token?deviceId=${deviceId}`,
+  );
   return response.data;
 };
 

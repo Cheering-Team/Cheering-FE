@@ -76,7 +76,9 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
       {community.curFan && (
         <View className="flex-row items-center">
           <Pressable
-            onPress={() => navigation.navigate('Schedule', {community})}>
+            onPress={() =>
+              navigation.navigate('Schedule', {communityId: community.id})
+            }>
             <CalendarSvg width={23} height={23} />
           </Pressable>
           <Pressable

@@ -20,6 +20,8 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {WINDOW_HEIGHT} from 'constants/dimension';
 import RandomCommunityCard from './components/RandomCommunityCard';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {checkNotificationPermission} from 'utils/fcmUtils';
+import DeviceInfo from 'react-native-device-info';
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -40,41 +42,13 @@ const HomeMyScreen = () => {
 
   // 알림 firebase 관련 요청
   useEffect(() => {
-    const getToken = async () => {
-      const fcmToken = await messaging().getToken();
-      if (fcmToken) {
-        await saveFCMToken({token: fcmToken});
-      }
-    };
-
-    const onTokenRefreshListener = messaging().onTokenRefresh(
-      async newToken => {
-        await saveFCMToken({token: newToken});
-      },
-    );
-
-    const requestPermission = async () => {
-      if (Platform.OS === 'ios') {
-        const authorizationStatus = await messaging().requestPermission();
-
-        if (authorizationStatus) {
-          getToken();
-        }
-      } else {
-        const authorizationStatus = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-        );
-
-        if (authorizationStatus === PermissionsAndroid.RESULTS.GRANTED) {
-          getToken();
-        }
-      }
-    };
-
-    requestPermission();
-
+    checkNotificationPermission();
+    const unsubscribe = messaging().onTokenRefresh(async token => {
+      const deviceId = await DeviceInfo.getUniqueId();
+      await saveFCMToken({deviceId, token});
+    });
     return () => {
-      onTokenRefreshListener();
+      unsubscribe();
     };
   }, []);
   useEffect(() => {
@@ -83,30 +57,13 @@ const HomeMyScreen = () => {
     });
 
     return unsubscribe;
-  }, []);
+  }, [refetchUnRead]);
+  // 백그라운드, 종료 알림 클릭 처리
   useEffect(() => {
     messaging().onNotificationOpenedApp(async remoteMessage => {
       if (remoteMessage && remoteMessage.data) {
-        const {postId, notificationId} = remoteMessage.data;
-        try {
-          await readNotificaiton({notificationId: Number(notificationId)});
-
-          navigation.navigate('CommunityStack', {
-            screen: 'Post',
-            params: {postId: Number(postId)},
-          });
-        } catch (error: any) {
-          if (error.message === '존재하지 않는 알림') {
-            navigation.navigate('HomeTab');
-          }
-        }
-      }
-    });
-
-    messaging()
-      .getInitialNotification()
-      .then(async remoteMessage => {
-        if (remoteMessage && remoteMessage.data) {
+        const {type} = remoteMessage.data;
+        if (type === 'POST') {
           const {postId, notificationId} = remoteMessage.data;
           try {
             await readNotificaiton({notificationId: Number(notificationId)});
@@ -121,9 +78,52 @@ const HomeMyScreen = () => {
             }
           }
         }
+        if (type === 'MATCH') {
+          const {matchId, communityId} = remoteMessage.data;
+          navigation.navigate('CommunityStack', {
+            screen: 'Match',
+            params: {
+              matchId: Number(matchId),
+              communityId: Number(communityId),
+            },
+          });
+        }
+      }
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then(async remoteMessage => {
+        if (remoteMessage && remoteMessage.data) {
+          const {type} = remoteMessage.data;
+          if (type === 'POST') {
+            const {postId, notificationId} = remoteMessage.data;
+            try {
+              await readNotificaiton({notificationId: Number(notificationId)});
+
+              navigation.navigate('CommunityStack', {
+                screen: 'Post',
+                params: {postId: Number(postId)},
+              });
+            } catch (error: any) {
+              if (error.message === '존재하지 않는 알림') {
+                navigation.navigate('HomeTab');
+              }
+            }
+          }
+          if (type === 'MATCH') {
+            const {matchId, communityId} = remoteMessage.data;
+            navigation.navigate('CommunityStack', {
+              screen: 'Match',
+              params: {
+                matchId: Number(matchId),
+                communityId: Number(communityId),
+              },
+            });
+          }
+        }
       });
   }, [navigation, readNotificaiton]);
-
   // 최초 로그인 확인
   useEffect(() => {
     const checkFirst = async () => {

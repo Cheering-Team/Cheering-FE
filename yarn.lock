@@ -5015,6 +5015,7 @@ __metadata:
     react-native-compressor: "npm:^1.9.0"
     react-native-config: "npm:^1.5.3"
     react-native-date-picker: "npm:^5.0.7"
+    react-native-device-info: "npm:^14.0.1"
     react-native-drawer-layout: "npm:^3.3.2"
     react-native-encrypted-storage: "npm:^4.0.3"
     react-native-fast-image: "npm:^8.6.3"
@@ -12633,6 +12634,15 @@ __metadata:
     react: ">= 17.0.1"
     react-native: ">= 0.64.3"
   checksum: 10c0/c148e130b0680159e4eac9aa1dd3f1fce03657ae6ad59a9b67641be6bdef7fc50153a15482c4a0be6d53e2a9394917e6f029fd2b544a4ebc82e41a918f3d6c58
+  languageName: node
+  linkType: hard
+
+"react-native-device-info@npm:^14.0.1":
+  version: 14.0.1
+  resolution: "react-native-device-info@npm:14.0.1"
+  peerDependencies:
+    react-native: "*"
+  checksum: 10c0/5894d4106dcc43b9bb132171db31462c39fecf1395602b80df6831d6c77d98dd8be9fa974eeb4d0fd657d5d6fde022131530a5c8490ed3b14d385cc6d89de664
   languageName: node
   linkType: hard
 

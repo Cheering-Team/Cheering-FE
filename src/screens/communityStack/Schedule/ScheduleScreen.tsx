@@ -7,13 +7,20 @@ import {Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CloseSvg from 'assets/images/close-black.svg';
 import ScheduleList from 'screens/communityStack/schedule/components/ScheduleList';
+import {useGetCommunityById} from 'apis/community/useCommunities';
 
 const ScheduleScreen = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
-  const {community} =
+  const {communityId} =
     useRoute<RouteProp<CommunityStackParamList, 'Schedule'>>().params;
   const insets = useSafeAreaInsets();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
+
+  const {data: community} = useGetCommunityById(communityId);
+
+  if (!community) {
+    return null;
+  }
 
   return (
     <>

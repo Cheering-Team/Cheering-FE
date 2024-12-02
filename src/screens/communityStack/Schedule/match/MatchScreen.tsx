@@ -12,18 +12,20 @@ import MatchInfo from './components/MatchInfo';
 import CheerList from './components/CheerList';
 import {CommunityTabBar} from 'components/community/CommunityTabBar/CommunityTabBar';
 import VoteList from './components/VoteList';
+import {useGetCommunityById} from 'apis/community/useCommunities';
 
 const MatchScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
-  const {matchId, community} =
+  const {matchId, communityId} =
     useRoute<RouteProp<CommunityStackParamList, 'Match'>>().params;
 
   const insets = useSafeAreaInsets();
 
   const {data: match, isLoading} = useGetMatchDetail(matchId);
+  const {data: community} = useGetCommunityById(communityId);
 
-  if (isLoading || !match) {
+  if (isLoading || !match || !community) {
     return null;
   }
 

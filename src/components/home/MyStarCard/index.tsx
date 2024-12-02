@@ -12,6 +12,7 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from 'components/common/OptionModal';
 import {useGetNextMatch} from 'apis/match/useMatches';
 import {Community} from 'apis/community/types';
+import {formatDate} from 'utils/format';
 interface MyStarCardProps {
   community: Community;
 }
@@ -90,7 +91,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 onPress={() =>
                   navigation.navigate('CommunityStack', {
                     screen: 'Match',
-                    params: {community, matchId: match.id},
+                    params: {communityId: community.id, matchId: match.id},
                   })
                 }
                 className="mb-5 p-1">
@@ -162,7 +163,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 onPress={() =>
                   navigation.navigate('CommunityStack', {
                     screen: 'Match',
-                    params: {matchId: match.id, community: community},
+                    params: {matchId: match.id, communityId: community.id},
                   })
                 }>
                 <View className="items-center">
@@ -180,7 +181,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                   <CustomText
                     className="text-base text-white"
                     style={styles.shadow}>
-                    11.02 14:00
+                    {formatDate(match.time)}
                   </CustomText>
                 </View>
                 <View className="items-center ml-3">
@@ -247,7 +248,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 if (community.curFan) {
                   navigation.navigate('CommunityStack', {
                     screen: 'Schedule',
-                    params: {community: community},
+                    params: {communityId: community.id},
                   });
                 }
               }}>

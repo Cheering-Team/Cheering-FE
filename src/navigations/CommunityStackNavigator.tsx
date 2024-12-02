@@ -32,8 +32,8 @@ export type CommunityStackParamList = {
   EditName: {name: string; fanId: number | null};
   DeleteFan: {fanId: number};
   BlockList: {playerUserId: number};
-  Schedule: {community: Community};
-  Match: {matchId: number; community: Community};
+  Schedule: {communityId: number};
+  Match: {matchId: number; communityId: number};
 };
 
 const CommunityStackNavigator = () => {
