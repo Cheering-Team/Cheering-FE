@@ -7,6 +7,8 @@ export const postKeys = {
     [...postKeys.lists(), {communityId, filter}] as const,
   listByFan: (fanId: number) => [...postKeys.lists(), {fanId}] as const,
   listMyHot: () => [...postKeys.lists(), 'my', 'hot'] as const,
+  listByMatch: (matchId: number, communityId: number, orderBy: string) =>
+    [...postKeys.lists(), {matchId, communityId, orderBy}] as const,
   details: () => [...postKeys.all, 'detail'] as const,
   detail: (postId: number) => [...postKeys.details(), postId] as const,
 };

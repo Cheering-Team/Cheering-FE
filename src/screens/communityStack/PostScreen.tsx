@@ -167,9 +167,10 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                   }}>
                   <Pressable
                     onPress={() => {
-                      navigation.navigate('Profile', {
-                        fanId: post.writer.id,
-                      });
+                      if (post.writer.type !== 'ADMIN')
+                        navigation.navigate('Profile', {
+                          fanId: post.writer.id,
+                        });
                     }}>
                     <Avatar
                       uri={post.writer.image}

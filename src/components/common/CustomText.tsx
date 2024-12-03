@@ -30,11 +30,7 @@ const CustomText = (props: CustomTextProps) => {
     return (
       <Animated.Text
         numberOfLines={numberOfLines}
-        style={[
-          styles.Title,
-          style,
-          {paddingTop: Platform.OS === 'ios' ? 5 : 0},
-        ]}
+        style={[styles.Title, style, {paddingTop: 5}]}
         {...rest}>
         {children}
       </Animated.Text>

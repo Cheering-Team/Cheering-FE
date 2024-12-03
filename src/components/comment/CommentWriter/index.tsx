@@ -17,6 +17,7 @@ import {showTopToast} from 'utils/toast';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import CrownSvg from 'assets/images/crown.svg';
 
 interface CommentWriterProps {
   bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
@@ -71,13 +72,17 @@ const CommentWriter = ({
       <Pressable
         style={{flexDirection: 'row', alignItems: 'center'}}
         onPress={() => {
-          navigation.navigate('Profile', {
-            fanId: comment.writer.id,
-          });
+          if (comment.writer.type !== 'ADMIN')
+            navigation.navigate('Profile', {
+              fanId: comment.writer.id,
+            });
         }}>
         <CustomText fontWeight="500" className="text-base">
           {comment.writer.name}
         </CustomText>
+        {comment.writer.type === 'ADMIN' && (
+          <CrownSvg width={20} height={20} className="ml-[2]" />
+        )}
         <CustomText style={{color: '#737373', marginLeft: 5}}>
           {formatBeforeDate(comment.createdAt)}
         </CustomText>
@@ -85,7 +90,10 @@ const CommentWriter = ({
       <TouchableOpacity
         activeOpacity={0.5}
         style={{padding: 2}}
-        onPress={() => bottomSheetModalRef.current?.present()}>
+        onPress={() => {
+          if (comment.writer.type !== 'ADMIN')
+            bottomSheetModalRef.current?.present();
+        }}>
         <MoreSvg width={18} height={18} />
       </TouchableOpacity>
       {comment.isWriter ? (

@@ -12,6 +12,7 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from 'components/common/OptionModal';
 import {useGetNextMatch} from 'apis/match/useMatches';
 import {Community} from 'apis/community/types';
+import {formatDate} from 'utils/format';
 interface MyStarCardProps {
   community: Community;
 }
@@ -49,13 +50,13 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           <View className="flex-1">
             {community.type === 'PLAYER' ? (
               <CustomText
-                className="text-white text-[18px] ml-[2] mb-[1]"
+                className="text-white text-[18px] ml-[2] mb-[5]"
                 fontWeight="600">
                 {community.englishName}
               </CustomText>
             ) : (
               <CustomText
-                className="text-white text-[18px] ml-[2] mb-[1]"
+                className="text-white text-[18px] ml-[2] mb-[5]"
                 fontWeight="600">
                 {`${community.sportName} / ${community.leagueName}`}
               </CustomText>
@@ -65,7 +66,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
               <CustomText
                 numberOfLines={2}
                 className="text-white text-[28px]"
-                style={{lineHeight: Platform.OS === 'android' ? 36 : 31}}
+                style={{bottom: 3}}
                 type="titleCenter">
                 {community.koreanName}
               </CustomText>
@@ -90,7 +91,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 onPress={() =>
                   navigation.navigate('CommunityStack', {
                     screen: 'Match',
-                    params: {community, matchId: match.id},
+                    params: {communityId: community.id, matchId: match.id},
                   })
                 }
                 className="mb-5 p-1">
@@ -102,7 +103,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                       className="text-[85px] text-white mr-4"
                       style={styles.shadow}
                       fontWeight="700">
-                      {48}
+                      {match.homeScore}
                     </CustomText>
                     <View className="flex-row items-center">
                       <View className="items-center">
@@ -128,7 +129,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                         className="text-[40px] text-white ml-[9] mb-2"
                         fontWeight="700"
                         style={styles.shadow}>
-                        {52}
+                        {match.awayScore}
                       </CustomText>
                     </View>
 
@@ -161,8 +162,8 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 style={{}}
                 onPress={() =>
                   navigation.navigate('CommunityStack', {
-                    screen: 'Schedule',
-                    params: {community},
+                    screen: 'Match',
+                    params: {matchId: match.id, communityId: community.id},
                   })
                 }>
                 <View className="items-center">
@@ -180,7 +181,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                   <CustomText
                     className="text-base text-white"
                     style={styles.shadow}>
-                    11.02 14:00
+                    {formatDate(match.time)}
                   </CustomText>
                 </View>
                 <View className="items-center ml-3">
@@ -246,15 +247,15 @@ const MyStarCard = ({community}: MyStarCardProps) => {
               onPress={() => {
                 if (community.curFan) {
                   navigation.navigate('CommunityStack', {
-                    screen: 'Profile',
-                    params: {fanId: community.curFan.id},
+                    screen: 'Schedule',
+                    params: {communityId: community.id},
                   });
                 }
               }}>
               <CustomText
                 className="text-white text-center text-lg"
                 fontWeight="500">
-                내 프로필
+                경기 일정
               </CustomText>
             </TouchableOpacity>
           </View>
@@ -292,10 +293,11 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         firstAvatar={community.curFan?.image}
         firstOnPress={() => {
           if (community.curFan) {
-            navigation.navigate('CommunityStack', {
-              screen: 'Profile',
-              params: {fanId: community.curFan.id},
-            });
+            if (community.curFan.type !== 'ADMIN')
+              navigation.navigate('CommunityStack', {
+                screen: 'Profile',
+                params: {fanId: community.curFan.id},
+              });
           }
         }}
         secondText="커뮤니티 바로가기"

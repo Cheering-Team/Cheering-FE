@@ -7,7 +7,6 @@ import {
   deleteUser,
   getPlayerAccount,
   getUserInfo,
-  isFirstLogin,
   kakaoSignIn,
   naverSignIn,
   registerManagerAccount,

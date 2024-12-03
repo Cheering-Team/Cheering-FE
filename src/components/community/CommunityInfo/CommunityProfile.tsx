@@ -56,8 +56,8 @@ const CommunityProfile = (props: CommunityProfileProps) => {
             <View className="flex-row">
               <CustomText
                 type="titleCenter"
-                className="text-3xl text-white bottom-[2]"
-                style={{lineHeight: Platform.OS === 'android' ? 39 : 35}}>
+                className="text-3xl text-white"
+                style={{bottom: Platform.OS === 'ios' ? 1 : 0}}>
                 {community.koreanName}
               </CustomText>
             </View>

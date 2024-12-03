@@ -46,7 +46,10 @@ const CustomDay = ({data, dateString, day, community}: CustomDayProps) => {
           <TouchableOpacity
             activeOpacity={0.3}
             onPress={() => {
-              navigation.navigate('Match', {matchId: match.id, community});
+              navigation.navigate('Match', {
+                matchId: match.id,
+                communityId: community.id,
+              });
             }}
             key={match.id}
             className="rounded-lg"

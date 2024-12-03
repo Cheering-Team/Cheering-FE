@@ -22,7 +22,7 @@ const MatchInfo = ({match}: MatchInfoProps) => {
               {match?.awayTeam.shortName}
             </CustomText>
           </View>
-          {match?.status === 'closed' ? (
+          {match?.status !== 'not_started' ? (
             <View className="items-center">
               <CustomText
                 className="text-[33px] mt-4"
@@ -74,7 +74,7 @@ const MatchInfo = ({match}: MatchInfoProps) => {
               {match?.homeTeam.shortName}
             </CustomText>
           </View>
-          {match?.status === 'closed' ? (
+          {match?.status !== 'not_started' ? (
             <View className="items-center">
               <CustomText
                 className="text-[33px] mt-4"

@@ -1,6 +1,19 @@
-import {keepPreviousData, useQuery} from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
 import {matchKeys} from './queries';
-import {getMatchDetail, getMatchSchedule, getNearMatch, getNextMatch} from '.';
+import {
+  editMatch,
+  getMatchDetail,
+  getMatchSchedule,
+  getNearMatch,
+  getNextMatch,
+  getUnfinishedMatches,
+} from '.';
+import {queryClient} from '../../../App';
 
 export const useGetMatchSchedule = (
   communityId: number,
@@ -37,5 +50,26 @@ export const useGetNearMatch = (communityId: number) => {
     queryKey: matchKeys.nearList(communityId),
     queryFn: getNearMatch,
     retry: false,
+  });
+};
+
+export const useGetUnfinishedMatches = () => {
+  return useInfiniteQuery({
+    queryKey: matchKeys.unfinishedList(),
+    queryFn: getUnfinishedMatches,
+    initialPageParam: 0,
+    getNextPageParam: lastPage => {
+      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
+    },
+    retry: false,
+  });
+};
+
+export const useEditMatch = () => {
+  return useMutation({
+    mutationFn: editMatch,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: matchKeys.unfinishedList()});
+    },
   });
 };

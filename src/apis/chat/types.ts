@@ -17,7 +17,6 @@ export interface ChatRoom {
   isParticipating: boolean | null;
   lastMessage: string | null;
   lastMessageTime: string | null;
-  unreadCount: number | null;
 }
 
 export interface Chat {
