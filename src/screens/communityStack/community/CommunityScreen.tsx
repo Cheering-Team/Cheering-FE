@@ -159,7 +159,7 @@ const CommunityScreen = () => {
   );
 
   useEffect(() => {
-    if (community && !community.curFan && community.role === 'USER') {
+    if (community && !community.curFan) {
       bottomSheetModalRef.current?.present();
     }
   }, [community]);

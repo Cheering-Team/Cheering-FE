@@ -72,22 +72,18 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
         style={[animatedStyle, {bottom: Platform.OS === 'android' ? 3 : 0}]}>
         {community.koreanName}
       </CustomText>
-
-      <View className="flex-row items-center">
-        {(community.curFan || community.role === 'ADMIN') && (
+      {community.curFan && (
+        <View className="flex-row items-center">
           <Pressable
             onPress={() =>
               navigation.navigate('Schedule', {communityId: community.id})
             }>
             <CalendarSvg width={23} height={23} />
           </Pressable>
-        )}
-
-        {community.curFan && (
           <Pressable
             className="ml-4"
             onPress={() => {
-              if (community.curFan) {
+              if (community.curFan && community.curFan.type !== 'ADMIN') {
                 navigation.navigate('Profile', {
                   fanId: community.curFan.id,
                 });
@@ -99,8 +95,8 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
               style={styles.communityUserAvatar}
             />
           </Pressable>
-        )}
-      </View>
+        </View>
+      )}
     </Animated.View>
   );
 };

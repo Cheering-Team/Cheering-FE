@@ -1,6 +1,10 @@
 import {axiosInstance} from '../index';
 import {ApiResponse} from '../types';
-import {GetNotificationsResponse, ReadNotificationPayload} from './types';
+import {
+  GetNotificationsResponse,
+  IsUnreadResponse,
+  ReadNotificationPayload,
+} from './types';
 
 // 알림 불러오기
 export const getNotifications = async ({
@@ -16,7 +20,7 @@ export const getNotifications = async ({
 
 // 알림 여부 확인
 export const getIsUnread = async () => {
-  const response = await axiosInstance.get<ApiResponse<boolean>>(
+  const response = await axiosInstance.get<ApiResponse<IsUnreadResponse>>(
     '/notifications/is-unread',
   );
   return response.data.result;

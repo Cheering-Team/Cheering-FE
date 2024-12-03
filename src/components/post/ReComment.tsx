@@ -46,9 +46,10 @@ const ReComment = (props: Props) => {
       <Pressable
         style={{height: 33}}
         onPress={() => {
-          navigation.navigate('Profile', {
-            fanId: reComment.writer.id,
-          });
+          if (reComment.writer.type !== 'ADMIN')
+            navigation.navigate('Profile', {
+              fanId: reComment.writer.id,
+            });
         }}>
         <Avatar uri={reComment.writer.image} size={33} />
       </Pressable>

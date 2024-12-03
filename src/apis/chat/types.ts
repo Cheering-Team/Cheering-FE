@@ -17,8 +17,6 @@ export interface ChatRoom {
   isParticipating: boolean | null;
   lastMessage: string | null;
   lastMessageTime: string | null;
-  unreadCount: number | null;
-  role: 'USER' | 'ADMIN';
 }
 
 export interface Chat {

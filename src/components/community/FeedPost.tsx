@@ -147,10 +147,11 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
           }}>
           <Pressable
             onPress={() => {
-              navigation.navigate('CommunityStack', {
-                screen: 'Profile',
-                params: {fanId: feed.writer.id},
-              });
+              if (feed.writer.type !== 'ADMIN')
+                navigation.navigate('CommunityStack', {
+                  screen: 'Profile',
+                  params: {fanId: feed.writer.id},
+                });
             }}>
             <Avatar uri={feed.writer.image} size={33} style={{marginTop: 3}} />
           </Pressable>
@@ -159,11 +160,8 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
             <PostWriter
               bottomSheetModalRef={bottomSheetModalRef}
               post={feed}
-              isWriter={
-                feed.role === 'ADMIN' || feed.user.id === feed.writer.id
-              }
+              isWriter={feed.user.id === feed.writer.id}
               type="feed"
-              location={type}
             />
 
             <CustomText

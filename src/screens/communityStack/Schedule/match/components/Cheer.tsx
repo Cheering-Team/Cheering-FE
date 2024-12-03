@@ -8,6 +8,7 @@ import {Cheer as CheerType} from 'apis/cheer/types';
 import OptionModal from 'components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useDeleteCheer} from 'apis/cheer/useCheers';
+import CrownSvg from 'assets/images/crown.svg';
 
 interface CheerProps {
   cheer: CheerType;
@@ -40,6 +41,9 @@ const Cheer = ({cheer, matchId, communityId}: CheerProps) => {
             <CustomText fontWeight="500" className="mb-1 mr-1 text-base">
               {cheer.writer.name}
             </CustomText>
+            {cheer.writer.type === 'ADMIN' && (
+              <CrownSvg width={20} height={20} className="ml-[2]" />
+            )}
             <CustomText className="text-gray-600 text-[13px]">
               {formatBeforeDate(cheer.createdAt)}
             </CustomText>

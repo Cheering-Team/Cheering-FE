@@ -1,15 +1,13 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import AdminScreen from 'screens/homeStack/AdminScreen';
-import ChangeOrderScreen from 'screens/homeStack/ChangeOrderScreen';
-import HomeMyScreen from 'screens/homeStack/homeTab/HomeMyScreen';
+import ChangeOrderScreen from 'screens/homeStack/homeTab/homeMyStack/ChangeOrderScreen';
+import HomeMyScreen from 'screens/homeStack/homeTab/homeMyStack/HomeMyScreen';
 
 const HomeMyStack = createNativeStackNavigator<HomeMyStackParamList>();
 
 export type HomeMyStackParamList = {
   HomeMy: undefined;
   ChangeOrder: undefined;
-  Admin: undefined;
 };
 
 const HomeMyStackNavigator = () => {
@@ -29,13 +27,6 @@ const HomeMyStackNavigator = () => {
           headerShown: false,
           animation: 'slide_from_bottom',
           animationDuration: 400,
-        }}
-      />
-      <HomeMyStack.Screen
-        name="Admin"
-        component={AdminScreen}
-        options={{
-          headerShown: false,
         }}
       />
     </HomeMyStack.Navigator>

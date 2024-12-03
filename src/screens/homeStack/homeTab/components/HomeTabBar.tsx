@@ -7,6 +7,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import {useCallback} from 'react';
 import {useGetIsUnread} from 'apis/notification/useNotifications';
+import AdminSvg from 'assets/images/admin.svg';
 
 const HomeTabBar = ({state, descriptors, navigation, position}) => {
   const insets = useSafeAreaInsets();
@@ -32,7 +33,16 @@ const HomeTabBar = ({state, descriptors, navigation, position}) => {
         paddingHorizontal: 10,
         width: '100%',
       }}>
-      <Pressable className="w-10 h-10" />
+      {data?.role === 'ADMIN' ? (
+        <Pressable
+          className="w-10 h-10 items-center justify-center"
+          onPress={() => navigation.navigate('AdminStack')}>
+          <AdminSvg width={26} height={26} />
+        </Pressable>
+      ) : (
+        <View className="w-10 h-10" />
+      )}
+
       <View
         style={{
           width: '34%',
@@ -105,7 +115,7 @@ const HomeTabBar = ({state, descriptors, navigation, position}) => {
           stackNavigation.navigate('Notification');
         }}>
         <AlertSvg />
-        {data && (
+        {data?.isUnread && (
           <View
             style={{
               position: 'absolute',

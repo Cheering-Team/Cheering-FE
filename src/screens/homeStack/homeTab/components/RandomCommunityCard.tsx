@@ -29,7 +29,7 @@ const RandomCommunityCard = () => {
           shadowRadius: 4,
           elevation: 5,
           width: WINDOW_WIDTH,
-          height: WINDOW_HEIGHT - 50 - insets.top - insets.bottom - 45,
+          height: WINDOW_HEIGHT - 90 - insets.top - insets.bottom - 45,
           transform: [{scale: 0.87}],
         }}
         onPress={() =>

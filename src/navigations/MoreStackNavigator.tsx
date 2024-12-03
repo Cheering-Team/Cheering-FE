@@ -81,11 +81,6 @@ const MoreStackNavigator = () => {
         component={SignOutScreen}
         options={{headerShown: false}}
       />
-      <MoreStack.Screen
-        name="PlayerAccount"
-        component={PlayerAccountScreen}
-        options={{headerShown: false}}
-      />
     </MoreStack.Navigator>
   );
 };

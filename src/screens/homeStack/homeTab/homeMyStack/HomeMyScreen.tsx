@@ -11,20 +11,20 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import MyStarCarousel from 'components/home/MyStarCarousel';
 import CustomText from 'components/common/CustomText';
 import ChageSvg from 'assets/images/change.svg';
-import IntroModal from './components/IntroModal';
+import IntroModal from '../components/IntroModal';
 import RegisterModal from 'components/common/RegisterModal';
 import {useGetMyCommunities} from 'apis/community/useCommunities';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {WINDOW_HEIGHT} from 'constants/dimension';
-import RandomCommunityCard from './components/RandomCommunityCard';
+import RandomCommunityCard from '../components/RandomCommunityCard';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {checkNotificationPermission} from 'utils/fcmUtils';
 import DeviceInfo from 'react-native-device-info';
-import {HomeMyStackParamList} from 'navigations/HomeMyStackNavigator';
+import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 
 const HomeMyScreen = () => {
   const navigation =
-    useNavigation<NativeStackNavigationProp<HomeMyStackParamList>>();
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const insets = useSafeAreaInsets();
 
   const [isRegisiterOpen, setIsRegisterOpen] = useState(false);
@@ -68,7 +68,7 @@ const HomeMyScreen = () => {
             });
           } catch (error: any) {
             if (error.message === '존재하지 않는 알림') {
-              navigation.navigate('HomeTab');
+              navigation.navigate('HomeTab', {screen: 'MY'});
             }
           }
         }
@@ -80,6 +80,20 @@ const HomeMyScreen = () => {
               matchId: Number(matchId),
               communityId: Number(communityId),
             },
+          });
+        }
+        if (type === 'MATCH_END_POST') {
+          const {postId} = remoteMessage.data;
+          navigation.navigate('CommunityStack', {
+            screen: 'Post',
+            params: {postId: Number(postId)},
+          });
+        }
+        if (type === 'MATCH_END_COMMUNITY') {
+          const {communityId} = remoteMessage.data;
+          navigation.navigate('CommunityStack', {
+            screen: 'Community',
+            params: {communityId: Number(communityId)},
           });
         }
       }
@@ -101,7 +115,7 @@ const HomeMyScreen = () => {
               });
             } catch (error: any) {
               if (error.message === '존재하지 않는 알림') {
-                navigation.navigate('HomeTab');
+                navigation.navigate('HomeTab', {screen: 'MY'});
               }
             }
           }
@@ -123,11 +137,8 @@ const HomeMyScreen = () => {
     const checkFirst = async () => {
       try {
         const data = await isFirstLogin();
-        if (data.isFirstLogin) {
+        if (data) {
           setIsIntroOpen(true);
-        }
-        if (data.role === 'ADMIN') {
-          navigation.navigate('Admin');
         }
       } catch (error) {
         console.error(error);
@@ -142,7 +153,10 @@ const HomeMyScreen = () => {
       {communities?.length !== 0 ? (
         <Pressable
           onPress={() => {
-            navigation.navigate('ChangeOrder');
+            navigation.navigate('HomeTab', {
+              screen: 'MY',
+              params: {screen: 'ChangeOrder'},
+            });
           }}
           className="flex-row items-center h-[20] z-10 self-end absolute right-6"
           style={{

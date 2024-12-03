@@ -103,7 +103,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                       className="text-[85px] text-white mr-4"
                       style={styles.shadow}
                       fontWeight="700">
-                      {48}
+                      {match.homeScore}
                     </CustomText>
                     <View className="flex-row items-center">
                       <View className="items-center">
@@ -129,7 +129,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                         className="text-[40px] text-white ml-[9] mb-2"
                         fontWeight="700"
                         style={styles.shadow}>
-                        {52}
+                        {match.awayScore}
                       </CustomText>
                     </View>
 
@@ -293,10 +293,11 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         firstAvatar={community.curFan?.image}
         firstOnPress={() => {
           if (community.curFan) {
-            navigation.navigate('CommunityStack', {
-              screen: 'Profile',
-              params: {fanId: community.curFan.id},
-            });
+            if (community.curFan.type !== 'ADMIN')
+              navigation.navigate('CommunityStack', {
+                screen: 'Profile',
+                params: {fanId: community.curFan.id},
+              });
           }
         }}
         secondText="커뮤니티 바로가기"

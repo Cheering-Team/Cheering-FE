@@ -7,6 +7,7 @@ export const matchKeys = {
     [...matchKeys.lists(), 'next', {communityId}] as const,
   nearList: (communityId: number) =>
     [...matchKeys.lists(), 'near', {communityId}] as const,
+  unfinishedList: () => [...matchKeys.lists(), 'unfinished'] as const,
   details: () => [...matchKeys.all, 'detail'] as const,
   detail: (matchId: number | null) =>
     [...matchKeys.details(), matchId] as const,

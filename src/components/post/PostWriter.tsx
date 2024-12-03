@@ -11,13 +11,15 @@ import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types
 import {Post} from 'apis/post/types';
 import {queryClient} from '../../../App';
 import {postKeys} from 'apis/post/queries';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {HomeStackParamList} from 'navigations/HomeStackNavigator';
+import CrownSvg from 'assets/images/crown.svg';
 
 interface PostWriterProps {
   bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
   post: Post;
   isWriter: boolean;
   type: 'post' | 'feed';
-  location?: 'community' | 'home';
 }
 
 const PostWriter = ({
@@ -25,9 +27,9 @@ const PostWriter = ({
   post,
   isWriter,
   type,
-  location = 'community',
 }: PostWriterProps) => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
 
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isReportAlertOpen, setIsReportAlertOpen] = useState(false);
@@ -64,16 +66,18 @@ const PostWriter = ({
           <Pressable
             style={{flexDirection: 'row', alignItems: 'center'}}
             onPress={() => {
-              location === 'community'
-                ? navigation.navigate('Profile', {fanId: post.writer.id})
-                : navigation.navigate('CommunityStack', {
-                    screen: 'Profile',
-                    params: {fanId: post.writer.id},
-                  });
+              if (post.writer.type !== 'ADMIN')
+                navigation.navigate('CommunityStack', {
+                  screen: 'Profile',
+                  params: {fanId: post.writer.id},
+                });
             }}>
             <CustomText fontWeight="600" className="text-base text-gray-800">
               {post.writer.name}
             </CustomText>
+            {post.writer.type === 'ADMIN' && (
+              <CrownSvg width={20} height={20} className="ml-[2]" />
+            )}
           </Pressable>
           <CustomText
             style={{fontSize: 15, color: '#737373', marginLeft: 5}}
@@ -85,7 +89,10 @@ const PostWriter = ({
         <TouchableOpacity
           activeOpacity={0.5}
           style={{padding: 2}}
-          onPress={() => bottomSheetModalRef.current?.present()}>
+          onPress={() => {
+            if (post.writer.type !== 'ADMIN')
+              bottomSheetModalRef.current?.present();
+          }}>
           <MoreSvg width={18} height={18} />
         </TouchableOpacity>
       </View>

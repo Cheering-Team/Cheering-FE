@@ -61,8 +61,3 @@ export interface RegisterManagerAccountPayload {
   communityId: number;
   phone: string;
 }
-
-export interface RoleResponse {
-  role: 'USER' | 'ADMIN';
-  isFirstLogin: boolean;
-}

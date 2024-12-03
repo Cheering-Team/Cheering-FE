@@ -17,7 +17,6 @@ export interface Post {
   images: PostImageType[];
   writer: Fan;
   user: Fan;
-  role: 'USER' | 'ADMIN';
 }
 
 export interface ImageType {

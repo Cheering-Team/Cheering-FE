@@ -1,6 +1,6 @@
-import {ImageSizeType} from '../post/types';
+import {Fan} from 'apis/fan/types';
 import {Page} from '../types';
-import {Fan} from '../user/types';
+import {PostImageType} from 'apis/post/types';
 
 // 엔티티
 export interface Notification {
@@ -17,7 +17,7 @@ export interface Notification {
 
 export interface NotificationPost {
   id: number;
-  image: ImageSizeType;
+  image: PostImageType;
 }
 
 // 요청
@@ -28,4 +28,9 @@ export interface ReadNotificationPayload {
 // 응답
 export interface GetNotificationsResponse extends Page {
   notifications: Notification[];
+}
+
+export interface IsUnreadResponse {
+  isUnread: boolean;
+  role: 'USER' | 'ADMIN';
 }

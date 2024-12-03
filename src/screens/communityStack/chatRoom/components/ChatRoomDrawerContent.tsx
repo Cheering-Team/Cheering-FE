@@ -130,11 +130,12 @@ const ChatRoomDrawerContent = ({
           renderItem={({item}) => (
             <Pressable
               className="flex-row items-center py-2 ml-4"
-              onPress={() =>
-                navigation.navigate('Profile', {
-                  fanId: item.id,
-                })
-              }>
+              onPress={() => {
+                if (item.type !== 'ADMIN')
+                  navigation.navigate('Profile', {
+                    fanId: item.id,
+                  });
+              }}>
               <Avatar uri={item.image} size={35} />
               <CustomText
                 className="ml-2 text-base text-slate-600"
