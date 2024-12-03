@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {Platform, Pressable, StyleSheet, View} from 'react-native';
 import CheveronLeft from '../../../assets/images/chevron-left-white.svg';
 import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -69,18 +69,21 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
       <CustomText
         className="text-white text-xl ml-3 flex-1"
         type="titleCenter"
-        style={[animatedStyle]}>
+        style={[animatedStyle, {bottom: Platform.OS === 'android' ? 3 : 0}]}>
         {community.koreanName}
       </CustomText>
 
-      {community.curFan && (
-        <View className="flex-row items-center">
+      <View className="flex-row items-center">
+        {(community.curFan || community.role === 'ADMIN') && (
           <Pressable
             onPress={() =>
               navigation.navigate('Schedule', {communityId: community.id})
             }>
             <CalendarSvg width={23} height={23} />
           </Pressable>
+        )}
+
+        {community.curFan && (
           <Pressable
             className="ml-4"
             onPress={() => {
@@ -96,8 +99,8 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
               style={styles.communityUserAvatar}
             />
           </Pressable>
-        </View>
-      )}
+        )}
+      </View>
     </Animated.View>
   );
 };

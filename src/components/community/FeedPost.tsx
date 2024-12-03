@@ -159,7 +159,9 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
             <PostWriter
               bottomSheetModalRef={bottomSheetModalRef}
               post={feed}
-              isWriter={feed.user.id === feed.writer.id}
+              isWriter={
+                feed.role === 'ADMIN' || feed.user.id === feed.writer.id
+              }
               type="feed"
               location={type}
             />

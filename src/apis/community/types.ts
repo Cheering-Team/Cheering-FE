@@ -15,6 +15,7 @@ export interface Community {
   firstTeamName?: string;
   officialRoomId: number | null;
   color: string;
+  role: 'USER' | 'ADMIN';
 }
 
 // 요청

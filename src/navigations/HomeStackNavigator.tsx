@@ -9,10 +9,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 export type HomeStackParamList = {
   HomeTab: undefined;
-  Notice: {noticeId: number};
   Notification: undefined;
   CommunityStack: NavigationPropType<CommunityStackParamList>;
-  ChangeOrder: undefined;
 };
 
 const HomeStackNavigator = () => {

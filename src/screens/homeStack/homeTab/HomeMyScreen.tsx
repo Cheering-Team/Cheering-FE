@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {PermissionsAndroid, Platform, Pressable, View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
 import {isFirstLogin, saveFCMToken} from 'apis/user';
@@ -8,13 +8,11 @@ import {
   useReadNotification,
 } from 'apis/notification/useNotifications';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import MyStarCarousel from 'components/home/MyStarCarousel';
 import CustomText from 'components/common/CustomText';
 import ChageSvg from 'assets/images/change.svg';
 import IntroModal from './components/IntroModal';
 import RegisterModal from 'components/common/RegisterModal';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import {useGetMyCommunities} from 'apis/community/useCommunities';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {WINDOW_HEIGHT} from 'constants/dimension';
@@ -22,15 +20,11 @@ import RandomCommunityCard from './components/RandomCommunityCard';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {checkNotificationPermission} from 'utils/fcmUtils';
 import DeviceInfo from 'react-native-device-info';
-
-export type HomeScreenNavigationProp = NativeStackNavigationProp<
-  HomeStackParamList,
-  'HomeTab'
->;
+import {HomeMyStackParamList} from 'navigations/HomeMyStackNavigator';
 
 const HomeMyScreen = () => {
   const navigation =
-    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+    useNavigation<NativeStackNavigationProp<HomeMyStackParamList>>();
   const insets = useSafeAreaInsets();
 
   const [isRegisiterOpen, setIsRegisterOpen] = useState(false);
@@ -128,13 +122,12 @@ const HomeMyScreen = () => {
   useEffect(() => {
     const checkFirst = async () => {
       try {
-        const isFirst = await EncryptedStorage.getItem('isFirstLogin');
-        if (!isFirst) {
-          await EncryptedStorage.setItem('isFirstLogin', 'false');
-          const data = await isFirstLogin();
-          if (data) {
-            setIsIntroOpen(true);
-          }
+        const data = await isFirstLogin();
+        if (data.isFirstLogin) {
+          setIsIntroOpen(true);
+        }
+        if (data.role === 'ADMIN') {
+          navigation.navigate('Admin');
         }
       } catch (error) {
         console.error(error);
@@ -142,7 +135,7 @@ const HomeMyScreen = () => {
     };
 
     checkFirst();
-  }, []);
+  }, [navigation]);
 
   return (
     <View className="flex-1">
@@ -151,7 +144,7 @@ const HomeMyScreen = () => {
           onPress={() => {
             navigation.navigate('ChangeOrder');
           }}
-          className="flex-row items-center h-[20] self-end absolute right-6"
+          className="flex-row items-center h-[20] z-10 self-end absolute right-6"
           style={{
             top:
               (WINDOW_HEIGHT - 50 - insets.top - insets.bottom - 45) * 0.0325 -
@@ -187,7 +180,6 @@ const HomeMyScreen = () => {
       ) : (
         <MyStarCarousel communities={communities} />
       )}
-
       {isIntroOpen && (
         <IntroModal
           setIsRegisterOpen={setIsRegisterOpen}
@@ -197,13 +189,6 @@ const HomeMyScreen = () => {
       {isRegisiterOpen && (
         <RegisterModal setIsRegisterOpen={setIsRegisterOpen} />
       )}
-      {/* <View
-        style={{
-          width: '100%',
-          backgroundColor: 'red',
-          height: (WINDOW_HEIGHT - 50 - insets.top - insets.bottom - 45) * 0.5,
-        }}
-      /> */}
     </View>
   );
 };

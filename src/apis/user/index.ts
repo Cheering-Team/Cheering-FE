@@ -6,6 +6,7 @@ import {
   ConnectSocialPayload,
   DeleteFCMTokenPayload,
   RegisterManagerAccountPayload,
+  RoleResponse,
   SaveFCMTokenPayload,
   SendSMSPayload,
   SignUpPayload,
@@ -171,6 +172,6 @@ export const reissuePlayerAccountPassword = async (
 
 export const isFirstLogin = async () => {
   const response =
-    await axiosInstance.get<ApiResponse<boolean>>(`/isFirstLogin`);
+    await axiosInstance.get<ApiResponse<RoleResponse>>(`/isFirstLogin`);
   return response.data.result;
 };

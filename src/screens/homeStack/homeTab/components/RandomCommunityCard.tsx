@@ -5,14 +5,16 @@ import CustomText from 'components/common/CustomText';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import React from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {Platform, Pressable, StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import RefreshSvg from 'assets/images/refresh-white.svg';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const RandomCommunityCard = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+  const insets = useSafeAreaInsets();
 
   const {data: community, refetch} = useGetRandomCommunity();
 
@@ -27,7 +29,7 @@ const RandomCommunityCard = () => {
           shadowRadius: 4,
           elevation: 5,
           width: WINDOW_WIDTH,
-          height: WINDOW_HEIGHT * 0.75,
+          height: WINDOW_HEIGHT - 50 - insets.top - insets.bottom - 45,
           transform: [{scale: 0.87}],
         }}
         onPress={() =>
@@ -55,8 +57,9 @@ const RandomCommunityCard = () => {
             <View className="flex-row items-center">
               <CustomText
                 numberOfLines={2}
-                className="text-white text-[28px] leading-[33px]"
-                type="title">
+                className="text-white text-[28px]"
+                style={{bottom: 3}}
+                type="titleCenter">
                 {community.koreanName}
               </CustomText>
             </View>
@@ -67,12 +70,16 @@ const RandomCommunityCard = () => {
             아직 가입한 커뮤니티가 없으시네요
           </CustomText>
           {community.type === 'PLAYER' && (
-            <CustomText type="titleCenter" className="text-3xl text-white">
+            <CustomText
+              type="titleCenter"
+              className="text-[30px] text-white bottom-[2]">
               이런 선수는 어떠신가요?
             </CustomText>
           )}
           {community.type === 'TEAM' && (
-            <CustomText type="titleCenter" className="text-3xl text-white">
+            <CustomText
+              type="titleCenter"
+              className="text-[30px] text-white bottom-[2]">
               이런 팀은 어떠신가요?
             </CustomText>
           )}
