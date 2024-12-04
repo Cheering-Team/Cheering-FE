@@ -1,18 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  AppState,
-  Linking,
-  PermissionsAndroid,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  View,
-} from 'react-native';
+import {AppState, Linking, SafeAreaView, ScrollView, View} from 'react-native';
 import CustomText from '../../components/common/CustomText';
 import Switch from 'components/common/Switch';
 import messaging from '@react-native-firebase/messaging';
 import {deleteFCMToken, saveFCMToken} from 'apis/user';
 import StackHeader from 'components/common/StackHeader';
+import DeviceInfo from 'react-native-device-info';
 
 const SetNotificationScreen = ({navigation}) => {
   const [isOn, setIsOn] = useState(true);
@@ -23,21 +16,16 @@ const SetNotificationScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    const requestPermission = async () => {
-      if (Platform.OS === 'ios') {
-        const authorizationStatus = await messaging().requestPermission();
-
-        setIsOn(!!authorizationStatus);
+    const checkPermission = async () => {
+      const authStatus = await messaging().hasPermission();
+      if (authStatus !== messaging.AuthorizationStatus.AUTHORIZED) {
+        setIsOn(false);
       } else {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-        );
-
-        setIsOn(granted === PermissionsAndroid.RESULTS.GRANTED);
+        setIsOn(true);
       }
     };
 
-    requestPermission();
+    checkPermission();
   }, []);
 
   useEffect(() => {
@@ -48,34 +36,15 @@ const SetNotificationScreen = ({navigation}) => {
           appState.current.match(/inactive|background/) &&
           nextAppState === 'active'
         ) {
-          if (Platform.OS === 'ios') {
-            const authorizationStatus = await messaging().requestPermission();
-
-            setIsOn(!!authorizationStatus);
-
-            if (authorizationStatus === messaging.AuthorizationStatus.DENIED) {
-              await deleteFCMToken();
-            }
-            if (
-              authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED
-            ) {
-              const fcmToken = await messaging().getToken();
-              await saveFCMToken({token: fcmToken});
-            }
+          const deviceId = await DeviceInfo.getUniqueId();
+          const authStatus = await messaging().hasPermission();
+          if (authStatus !== messaging.AuthorizationStatus.AUTHORIZED) {
+            setIsOn(false);
+            await deleteFCMToken({deviceId});
           } else {
-            const granted = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-            );
-
-            setIsOn(granted === PermissionsAndroid.RESULTS.GRANTED);
-
-            if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-              await deleteFCMToken();
-            }
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-              const fcmToken = await messaging().getToken();
-              await saveFCMToken({token: fcmToken});
-            }
+            setIsOn(true);
+            const token = await messaging().getToken();
+            await saveFCMToken({deviceId, token});
           }
         }
         appState.current = nextAppState;

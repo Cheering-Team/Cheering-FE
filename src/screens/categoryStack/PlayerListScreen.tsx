@@ -146,7 +146,10 @@ const PlayerListScreen = ({
         <Pressable onPress={() => navigation.goBack()} className="p-1">
           <ChevronRightWhiteSvg width={18} height={18} />
         </Pressable>
-        <CustomText className="text-white text-xl" type="titleCenter">
+        <CustomText
+          className="text-white text-xl"
+          type="titleCenter"
+          style={{bottom: Platform.OS === 'android' ? 3 : 0}}>
           {team.koreanName}
         </CustomText>
         <Pressable className="p-1" onPress={() => setIsRegisterOpen(true)}>

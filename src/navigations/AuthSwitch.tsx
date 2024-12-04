@@ -1,12 +1,10 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import SplashScreen from '../screens/auth/SplashScreen';
 import AuthStackNavigator from './AuthStackNavigator';
 import MainTabNavigator from './MainTabNavigator';
-import messaging from '@react-native-firebase/messaging';
-import {deleteFCMToken, saveFCMToken} from 'apis/user';
+import {deleteFCMToken} from 'apis/user';
 import {queryClient} from '../../App';
+import DeviceInfo from 'react-native-device-info';
 
 interface AuthState {
   isLoading: boolean;
@@ -93,10 +91,6 @@ const AuthSwitch = () => {
         try {
           await EncryptedStorage.setItem('accessToken', access);
           await EncryptedStorage.setItem('refreshToken', refresh);
-          const fcmToken = await messaging().getToken();
-          if (fcmToken) {
-            await saveFCMToken({token: fcmToken});
-          }
         } catch (e) {
           // 에러 처리
         }
@@ -104,10 +98,11 @@ const AuthSwitch = () => {
       },
       signOut: async () => {
         try {
+          const deviceId = await DeviceInfo.getUniqueId();
+          await deleteFCMToken({deviceId});
           queryClient.removeQueries();
           await EncryptedStorage.removeItem('accessToken');
           await EncryptedStorage.removeItem('refreshToken');
-          await deleteFCMToken();
         } catch (e) {
           // 에러 처리
         }

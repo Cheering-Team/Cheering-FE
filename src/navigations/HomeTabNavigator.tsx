@@ -3,9 +3,17 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import HomeHotScreen from 'screens/homeStack/homeTab/HomeHotScreen';
 import {SafeAreaView} from 'react-native';
 import HomeTabBar from 'screens/homeStack/homeTab/components/HomeTabBar';
-import HomeMyStackNavigator from './HomeMyStackNavigator';
+import HomeMyStackNavigator, {
+  HomeMyStackParamList,
+} from './HomeMyStackNavigator';
+import {NavigationPropType} from './types';
 
-const Tab = createMaterialTopTabNavigator();
+export type HomeTabParamList = {
+  MY: NavigationPropType<HomeMyStackParamList>;
+  HOT: undefined;
+};
+
+const Tab = createMaterialTopTabNavigator<HomeTabParamList>();
 
 const HomeTabNavigator = () => {
   return (

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {PermissionsAndroid, Platform, Pressable, View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
 import {isFirstLogin, saveFCMToken} from 'apis/user';
@@ -8,23 +8,19 @@ import {
   useReadNotification,
 } from 'apis/notification/useNotifications';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import MyStarCarousel from 'components/home/MyStarCarousel';
 import CustomText from 'components/common/CustomText';
 import ChageSvg from 'assets/images/change.svg';
-import IntroModal from './components/IntroModal';
+import IntroModal from '../components/IntroModal';
 import RegisterModal from 'components/common/RegisterModal';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import {useGetMyCommunities} from 'apis/community/useCommunities';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {WINDOW_HEIGHT} from 'constants/dimension';
-import RandomCommunityCard from './components/RandomCommunityCard';
+import RandomCommunityCard from '../components/RandomCommunityCard';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-export type HomeScreenNavigationProp = NativeStackNavigationProp<
-  HomeStackParamList,
-  'HomeTab'
->;
+import {checkNotificationPermission} from 'utils/fcmUtils';
+import DeviceInfo from 'react-native-device-info';
+import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 
 const HomeMyScreen = () => {
   const navigation =
@@ -40,41 +36,13 @@ const HomeMyScreen = () => {
 
   // 알림 firebase 관련 요청
   useEffect(() => {
-    const getToken = async () => {
-      const fcmToken = await messaging().getToken();
-      if (fcmToken) {
-        await saveFCMToken({token: fcmToken});
-      }
-    };
-
-    const onTokenRefreshListener = messaging().onTokenRefresh(
-      async newToken => {
-        await saveFCMToken({token: newToken});
-      },
-    );
-
-    const requestPermission = async () => {
-      if (Platform.OS === 'ios') {
-        const authorizationStatus = await messaging().requestPermission();
-
-        if (authorizationStatus) {
-          getToken();
-        }
-      } else {
-        const authorizationStatus = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-        );
-
-        if (authorizationStatus === PermissionsAndroid.RESULTS.GRANTED) {
-          getToken();
-        }
-      }
-    };
-
-    requestPermission();
-
+    checkNotificationPermission();
+    const unsubscribe = messaging().onTokenRefresh(async token => {
+      const deviceId = await DeviceInfo.getUniqueId();
+      await saveFCMToken({deviceId, token});
+    });
     return () => {
-      onTokenRefreshListener();
+      unsubscribe();
     };
   }, []);
   useEffect(() => {
@@ -83,30 +51,13 @@ const HomeMyScreen = () => {
     });
 
     return unsubscribe;
-  }, []);
+  }, [refetchUnRead]);
+  // 백그라운드, 종료 알림 클릭 처리
   useEffect(() => {
     messaging().onNotificationOpenedApp(async remoteMessage => {
       if (remoteMessage && remoteMessage.data) {
-        const {postId, notificationId} = remoteMessage.data;
-        try {
-          await readNotificaiton({notificationId: Number(notificationId)});
-
-          navigation.navigate('CommunityStack', {
-            screen: 'Post',
-            params: {postId: Number(postId)},
-          });
-        } catch (error: any) {
-          if (error.message === '존재하지 않는 알림') {
-            navigation.navigate('HomeTab');
-          }
-        }
-      }
-    });
-
-    messaging()
-      .getInitialNotification()
-      .then(async remoteMessage => {
-        if (remoteMessage && remoteMessage.data) {
+        const {type} = remoteMessage.data;
+        if (type === 'POST') {
           const {postId, notificationId} = remoteMessage.data;
           try {
             await readNotificaiton({notificationId: Number(notificationId)});
@@ -117,24 +68,77 @@ const HomeMyScreen = () => {
             });
           } catch (error: any) {
             if (error.message === '존재하지 않는 알림') {
-              navigation.navigate('HomeTab');
+              navigation.navigate('HomeTab', {screen: 'MY'});
             }
+          }
+        }
+        if (type === 'MATCH') {
+          const {matchId, communityId} = remoteMessage.data;
+          navigation.navigate('CommunityStack', {
+            screen: 'Match',
+            params: {
+              matchId: Number(matchId),
+              communityId: Number(communityId),
+            },
+          });
+        }
+        if (type === 'MATCH_END_POST') {
+          const {postId} = remoteMessage.data;
+          navigation.navigate('CommunityStack', {
+            screen: 'Post',
+            params: {postId: Number(postId)},
+          });
+        }
+        if (type === 'MATCH_END_COMMUNITY') {
+          const {communityId} = remoteMessage.data;
+          navigation.navigate('CommunityStack', {
+            screen: 'Community',
+            params: {communityId: Number(communityId)},
+          });
+        }
+      }
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then(async remoteMessage => {
+        if (remoteMessage && remoteMessage.data) {
+          const {type} = remoteMessage.data;
+          if (type === 'POST') {
+            const {postId, notificationId} = remoteMessage.data;
+            try {
+              await readNotificaiton({notificationId: Number(notificationId)});
+
+              navigation.navigate('CommunityStack', {
+                screen: 'Post',
+                params: {postId: Number(postId)},
+              });
+            } catch (error: any) {
+              if (error.message === '존재하지 않는 알림') {
+                navigation.navigate('HomeTab', {screen: 'MY'});
+              }
+            }
+          }
+          if (type === 'MATCH') {
+            const {matchId, communityId} = remoteMessage.data;
+            navigation.navigate('CommunityStack', {
+              screen: 'Match',
+              params: {
+                matchId: Number(matchId),
+                communityId: Number(communityId),
+              },
+            });
           }
         }
       });
   }, [navigation, readNotificaiton]);
-
   // 최초 로그인 확인
   useEffect(() => {
     const checkFirst = async () => {
       try {
-        const isFirst = await EncryptedStorage.getItem('isFirstLogin');
-        if (!isFirst) {
-          await EncryptedStorage.setItem('isFirstLogin', 'false');
-          const data = await isFirstLogin();
-          if (data) {
-            setIsIntroOpen(true);
-          }
+        const data = await isFirstLogin();
+        if (data) {
+          setIsIntroOpen(true);
         }
       } catch (error) {
         console.error(error);
@@ -142,16 +146,19 @@ const HomeMyScreen = () => {
     };
 
     checkFirst();
-  }, []);
+  }, [navigation]);
 
   return (
     <View className="flex-1">
       {communities?.length !== 0 ? (
         <Pressable
           onPress={() => {
-            navigation.navigate('ChangeOrder');
+            navigation.navigate('HomeTab', {
+              screen: 'MY',
+              params: {screen: 'ChangeOrder'},
+            });
           }}
-          className="flex-row items-center h-[20] self-end absolute right-6"
+          className="flex-row items-center h-[20] z-10 self-end absolute right-6"
           style={{
             top:
               (WINDOW_HEIGHT - 50 - insets.top - insets.bottom - 45) * 0.0325 -
@@ -187,7 +194,6 @@ const HomeMyScreen = () => {
       ) : (
         <MyStarCarousel communities={communities} />
       )}
-
       {isIntroOpen && (
         <IntroModal
           setIsRegisterOpen={setIsRegisterOpen}
@@ -197,13 +203,6 @@ const HomeMyScreen = () => {
       {isRegisiterOpen && (
         <RegisterModal setIsRegisterOpen={setIsRegisterOpen} />
       )}
-      {/* <View
-        style={{
-          width: '100%',
-          backgroundColor: 'red',
-          height: (WINDOW_HEIGHT - 50 - insets.top - insets.bottom - 45) * 0.5,
-        }}
-      /> */}
     </View>
   );
 };

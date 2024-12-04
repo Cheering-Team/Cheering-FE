@@ -13,7 +13,11 @@ export const useFeedList = (community: Community) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetPosts(community.id, selectedFilter, community.curFan !== null);
+  } = useGetPosts(
+    community.id,
+    selectedFilter,
+    community.curFan !== null || community.role === 'ADMIN',
+  );
 
   const loadPosts = () => {
     if (hasNextPage) {

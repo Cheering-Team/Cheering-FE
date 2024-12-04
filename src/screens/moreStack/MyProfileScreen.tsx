@@ -47,18 +47,6 @@ const MyProfileScreen = ({
             <ChevronRightSvg width={13} height={13} />
           </View>
         </Pressable>
-        {data.role === 'ADMIN' && (
-          <Pressable
-            className="border border-slate-200 p-[18] flex-row items-center justify-between rounded-lg mt-4"
-            onPress={() => navigation.navigate('Admin')}>
-            <CustomText fontWeight="600" className="text-lg">
-              관리자
-            </CustomText>
-            <View className="flex-row items-center">
-              <ChevronRightSvg width={13} height={13} />
-            </View>
-          </Pressable>
-        )}
         <View className="flex-row justify-center mt-7">
           <Pressable onPress={() => navigation.replace('SignOut')}>
             <CustomText className="text-gray-400 text-base">

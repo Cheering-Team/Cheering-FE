@@ -1,7 +1,12 @@
 import {axiosInstance} from 'apis';
 import {ApiResponse} from 'apis/types';
 import {matchKeys} from './queries';
-import {MatchDetail, MatchSchedule} from './types';
+import {
+  EditMatchPayload,
+  GetUnfinishedMatchesResponse,
+  MatchDetail,
+  MatchSchedule,
+} from './types';
 
 export const getMatchSchedule = async ({
   queryKey,
@@ -47,6 +52,26 @@ export const getNearMatch = async ({
   const [, , , {communityId}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<MatchDetail[]>>(
     `/communities/${communityId}/matches/near`,
+  );
+  return response.data.result;
+};
+
+export const getUnfinishedMatches = async ({
+  pageParam,
+}: {
+  pageParam: number;
+}) => {
+  const response = await axiosInstance.get<
+    ApiResponse<GetUnfinishedMatchesResponse>
+  >(`/matches/unfinished?page=${pageParam}&size=10`);
+  return response.data.result;
+};
+
+export const editMatch = async (data: EditMatchPayload) => {
+  const {matchId, ...rest} = data;
+  const response = await axiosInstance.put<ApiResponse<null>>(
+    `/matches/${matchId}`,
+    rest,
   );
   return response.data.result;
 };

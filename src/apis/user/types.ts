@@ -49,7 +49,12 @@ export interface UpdateUserNamePayload {
 }
 
 export interface SaveFCMTokenPayload {
+  deviceId: string;
   token: string;
+}
+
+export interface DeleteFCMTokenPayload {
+  deviceId: string;
 }
 
 export interface RegisterManagerAccountPayload {

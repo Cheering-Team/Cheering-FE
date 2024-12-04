@@ -68,7 +68,8 @@ const Comment = ({comment, setUnder, setTo, inputRef, postId}: Props) => {
       <Pressable
         style={{height: 33}}
         onPress={() => {
-          navigation.navigate('Profile', {fanId: comment.writer.id});
+          if (comment.writer.type !== 'ADMIN')
+            navigation.navigate('Profile', {fanId: comment.writer.id});
         }}>
         <Avatar uri={comment.writer.image} size={33} style={{marginTop: 3}} />
       </Pressable>

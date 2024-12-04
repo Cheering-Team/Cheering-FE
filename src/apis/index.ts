@@ -4,6 +4,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {queryClient} from '../../App';
 import {showTopToast} from '../utils/toast';
 import config from 'react-native-config';
+import {CommonActions} from '@react-navigation/native';
 
 export const axiosInstance = axios.create({
   baseURL: `${config.API_URL}/api`,
@@ -59,7 +60,7 @@ axiosInstance.interceptors.response.use(
         }
       } else if (statusCode === 404) {
         if (message === '커뮤니티로부터 제재') {
-          RootNavigation.navigate('HomeStack', {screen: 'Home'});
+          RootNavigation.reset([{name: 'HomeStack', params: {screen: 'Home'}}]);
           queryClient.removeQueries();
           showTopToast({type: 'fail', message: '부적절한 사용자'});
         }

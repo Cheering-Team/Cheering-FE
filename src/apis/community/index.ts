@@ -4,7 +4,6 @@ import {communityKeys} from './queries';
 import {
   ChangeCommunityOrderPayload,
   Community,
-  CommunityListResponse,
   JoinCommunitiesPayload,
   JoinCommunityPayload,
   SearchPlayersResponse,

@@ -240,7 +240,9 @@ export const formatRemainingTime = (dateString: string) => {
 
   if (days > 0) {
     return `${days}일 후 마감`;
-  } else {
+  } else if (hours) {
     return `${String(hours).padStart(2, '0')}시간 ${String(minutes).padStart(2, '0')}분 후 마감`;
+  } else {
+    return `${String(minutes).padStart(2, '0')}분 후 마감`;
   }
 };

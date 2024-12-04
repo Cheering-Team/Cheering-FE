@@ -167,7 +167,7 @@ const Vote = ({vote, post}: VoteProps) => {
               screen: 'Match',
               params: {
                 matchId: vote.match.id,
-                community: post.community,
+                communityId: post.community.id,
               },
             })
           }

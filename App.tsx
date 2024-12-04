@@ -11,9 +11,6 @@ import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import './gesture-handler';
 import SplashScreen from 'react-native-splash-screen';
-import messaging from '@react-native-firebase/messaging';
-import EncryptedStorage from 'react-native-encrypted-storage';
-import {deleteFCMToken, saveFCMToken} from 'apis/user';
 import {DevToolsBubble} from 'react-native-react-query-devtools';
 import SuccessToast from 'components/common/toast/SuccessToast';
 import FailToast from 'components/common/toast/FailToast';
@@ -67,26 +64,6 @@ function App(): React.JSX.Element {
       serviceUrlSchemeIOS: serviceUrlScheme,
       disableNaverAppAuthIOS: true,
     });
-  }, []);
-
-  useEffect(() => {
-    const checkPermission = async () => {
-      const accessToken = await EncryptedStorage.getItem('accessToken');
-
-      if (accessToken) {
-        const authorizationStatus = await messaging().requestPermission();
-
-        if (authorizationStatus === messaging.AuthorizationStatus.DENIED) {
-          await deleteFCMToken();
-        }
-        if (authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED) {
-          const fcmToken = await messaging().getToken();
-          await saveFCMToken({token: fcmToken});
-        }
-      }
-    };
-
-    checkPermission();
   }, []);
 
   return (
