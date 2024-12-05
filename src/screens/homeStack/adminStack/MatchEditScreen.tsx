@@ -238,35 +238,35 @@ const MatchEditScreen = () => {
               </CustomText>
               <DownSvg width={20} height={20} />
             </Pressable>
-            {isStatus && (
-              <View className="absolute top-10 z-10 bg-white border border-black rounded-lg">
-                <Pressable
-                  className="items-center py-2 px-3 bg-white"
-                  onPress={() => {
-                    setStatus('not_started');
-                    setIsStatus(false);
-                  }}>
-                  <CustomText className="text-xl">경기전</CustomText>
-                </Pressable>
-                <Pressable
-                  className="items-center py-2 px-3 bg-white"
-                  onPress={() => {
-                    setStatus('live');
-                    setIsStatus(false);
-                  }}>
-                  <CustomText className="text-xl">경기중</CustomText>
-                </Pressable>
-                <Pressable
-                  className="items-center py-2 px-3 bg-white"
-                  onPress={() => {
-                    setStatus('closed');
-                    setIsStatus(false);
-                  }}>
-                  <CustomText className="text-xl">경기종료</CustomText>
-                </Pressable>
-              </View>
-            )}
           </View>
+          {isStatus && (
+            <View className="absolute top-[10] z-10 bg-white border border-black rounded-lg">
+              <Pressable
+                className="items-center py-2 px-3 bg-white"
+                onPress={() => {
+                  setStatus('not_started');
+                  setIsStatus(false);
+                }}>
+                <CustomText className="text-xl">경기전</CustomText>
+              </Pressable>
+              <Pressable
+                className="items-center py-2 px-3 bg-white"
+                onPress={() => {
+                  setStatus('live');
+                  setIsStatus(false);
+                }}>
+                <CustomText className="text-xl">경기중</CustomText>
+              </Pressable>
+              <Pressable
+                className="items-center py-2 px-3 bg-white"
+                onPress={() => {
+                  setStatus('closed');
+                  setIsStatus(false);
+                }}>
+                <CustomText className="text-xl">경기종료</CustomText>
+              </Pressable>
+            </View>
+          )}
 
           <View className="flex-row items-center mt-5">
             <View className="flex-1 items-center">
