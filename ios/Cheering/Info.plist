@@ -130,5 +130,7 @@
 	<false/>
 	<key>CodePushDeploymentKey</key>
 	<string>3nGMCqs8ahJSOkuV-WHxpeNijXqV2uZ0FGEbAp</string>
+	<key>UIUserInterfaceStyle</key>
+ 	<string>Light</string>
 </dict>
 </plist>
