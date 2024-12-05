@@ -234,7 +234,7 @@ const MatchEditScreen = () => {
             style={{width: '60%'}}>
             <Picker.Item label="경기전" value={'not_started'} />
             <Picker.Item label="경기중" value={'live'} />
-            <Picker.Item label="경기종료" value={'closes'} />
+            <Picker.Item label="경기종료" value={'closed'} />
           </Picker>
 
           <View className="flex-row items-center mt-5">
