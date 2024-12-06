@@ -21,6 +21,7 @@ const HomeTabNavigator = () => {
       <Tab.Navigator
         tabBar={HomeTabBar}
         screenOptions={{
+          swipeEnabled: false,
           tabBarStyle: {
             width: '50%',
             alignSelf: 'center',

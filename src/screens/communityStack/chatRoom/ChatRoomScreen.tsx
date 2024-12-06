@@ -237,7 +237,7 @@ const ChatRoomScreen = () => {
     navigation,
   ]);
 
-  if (!chatRoom) {
+  if (!chatRoom || !isConnected) {
     return <ChatRoomEnterLoading />;
   }
 

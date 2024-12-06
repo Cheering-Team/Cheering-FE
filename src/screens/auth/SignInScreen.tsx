@@ -162,7 +162,7 @@ const SignInScreen = ({
           카카오로 계속하기
         </CustomText>
       </Pressable>
-      <Pressable
+      {/* <Pressable
         className="flex-row items-center bg-[#03c75a] py-3 px-4 rounded mt-5"
         onPress={handleNaverSignIn}>
         <NaverSvg width={17} height={17} />
@@ -171,7 +171,7 @@ const SignInScreen = ({
           className="text-[17px] text-center flex-1 text-white">
           네이버로 계속하기
         </CustomText>
-      </Pressable>
+      </Pressable> */}
       {Platform.OS === 'ios' && (
         <Pressable
           className="flex-row items-center bg-white py-[11] px-3 rounded mt-5 border-black border"

@@ -37,6 +37,7 @@ import SearchSvg from 'assets/images/search-sm.svg';
 import {debounce} from 'lodash';
 import LinearGradient from 'react-native-linear-gradient';
 import {Community} from 'apis/community/types';
+import {Picker} from '@react-native-picker/picker';
 
 const MatchEditScreen = () => {
   const {matchId} =
@@ -224,49 +225,17 @@ const MatchEditScreen = () => {
           <TextInput
             value={location}
             onChangeText={setLocation}
-            className="p-0 m-0 border border-gray-200 rounded-sm px-3 py-1 text-xl mb-5"
+            className="p-0 m-0 border border-gray-200 rounded-sm px-3 py-1 text-xl mb-2"
             style={{includeFontPadding: false}}
           />
-          <View>
-            <Pressable
-              className="py-1 border border-gray-700 px-3 flex-row items-center rounded-md"
-              onPress={() => setIsStatus(prev => !prev)}>
-              <CustomText className="text-xl mr-3">
-                {status === 'not_started' && '경기전'}
-                {status === 'live' && '경기중'}
-                {status === 'closed' && '경기종료'}
-              </CustomText>
-              <DownSvg width={20} height={20} />
-            </Pressable>
-            {isStatus && (
-              <View className="absolute top-10 z-10 bg-white border border-black rounded-lg">
-                <Pressable
-                  className="items-center py-2 px-3 bg-white"
-                  onPress={() => {
-                    setStatus('not_started');
-                    setIsStatus(false);
-                  }}>
-                  <CustomText className="text-xl">경기전</CustomText>
-                </Pressable>
-                <Pressable
-                  className="items-center py-2 px-3 bg-white"
-                  onPress={() => {
-                    setStatus('live');
-                    setIsStatus(false);
-                  }}>
-                  <CustomText className="text-xl">경기중</CustomText>
-                </Pressable>
-                <Pressable
-                  className="items-center py-2 px-3 bg-white"
-                  onPress={() => {
-                    setStatus('closed');
-                    setIsStatus(false);
-                  }}>
-                  <CustomText className="text-xl">경기종료</CustomText>
-                </Pressable>
-              </View>
-            )}
-          </View>
+          <Picker
+            selectedValue={status}
+            onValueChange={itemValue => setStatus(itemValue)}
+            style={{width: '60%'}}>
+            <Picker.Item label="경기전" value={'not_started'} />
+            <Picker.Item label="경기중" value={'live'} />
+            <Picker.Item label="경기종료" value={'closed'} />
+          </Picker>
 
           <View className="flex-row items-center mt-5">
             <View className="flex-1 items-center">
