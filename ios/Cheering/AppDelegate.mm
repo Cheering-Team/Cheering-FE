@@ -11,6 +11,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [FIRApp configure];
+  [application registerForRemoteNotifications];
   self.moduleName = @"Cheering";
   self.initialProps = @{};
 
@@ -20,6 +21,10 @@
   return YES;
 }
 
+- (void)application:(UIApplication *)application
+ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+ [FIRMessaging messaging].APNSToken = deviceToken;
+}
 
 - (BOOL)application:(UIApplication *)app
      openURL:(NSURL *)url
