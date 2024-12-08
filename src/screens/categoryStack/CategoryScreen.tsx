@@ -141,10 +141,6 @@ const CategoryScreen = ({
                     marginRight: 40,
                     width: 85,
                     height: 50,
-                    shadowColor: '#000',
-                    shadowOffset: {width: 1, height: 1},
-                    shadowOpacity: 0.3,
-                    shadowRadius: 3,
                   }}
                 />
                 <View className="absolute flex-row justify-between w-full pl-4 pr-3 items-center">

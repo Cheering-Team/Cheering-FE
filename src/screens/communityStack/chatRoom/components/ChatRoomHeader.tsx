@@ -83,7 +83,9 @@ const ChatRoomHeader = ({
               }>
               <CustomText
                 style={{color: '#626262', marginRight: 2, fontSize: 15}}>
-                커뮤니티 바로가기
+                {chatRoom.type === 'OFFICIAL'
+                  ? '커뮤니티 바로가기'
+                  : chatRoom.community.koreanName}
               </CustomText>
             </Pressable>
 
@@ -98,7 +100,7 @@ const ChatRoomHeader = ({
           </Pressable>
         )}
       </View>
-      {chatRoom?.description !== '' && (
+      {/* {chatRoom?.description !== '' && (
         <Pressable
           onPress={() => setIsDescriptionOpen(prev => !prev)}
           className="mt-[5] mx-[10] rounded-[10px] bg-white py-[10] px-[15] flex-row border border-[#eeeeee]"
@@ -131,7 +133,7 @@ const ChatRoomHeader = ({
             )}
           </View>
         </Pressable>
-      )}
+      )} */}
     </View>
   );
 };

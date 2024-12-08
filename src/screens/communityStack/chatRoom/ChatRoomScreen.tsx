@@ -20,7 +20,6 @@ import {Chat, ChatResponse} from 'apis/chat/types';
 import {Drawer} from 'react-native-drawer-layout';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import ChatRoomEnterLoading from './components/ChatRoomEnterLoading';
 import ChatRoomDrawerContent from './components/ChatRoomDrawerContent';
 import ChatRoomHeader from './components/ChatRoomHeader';
 import ChatRoomFooter from './components/ChatRoomFooter';
@@ -41,7 +40,7 @@ const ChatRoomScreen = () => {
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
-  const {stompClient, activateWebSocket, isConnected} = useWebSocket();
+  const {stompClient, isConnected} = useWebSocket();
   const subscriptionRefs = useRef<{
     participants: StompSubscription | null;
     chatRoom: StompSubscription | null;
@@ -172,10 +171,6 @@ const ChatRoomScreen = () => {
   // blur시 구독 해제
   useFocusEffect(
     useCallback(() => {
-      if (!stompClient || !isConnected) {
-        activateWebSocket();
-      }
-
       return () => {
         if (stompClient.current && isConnected) {
           stompClient.current.publish({
@@ -189,7 +184,7 @@ const ChatRoomScreen = () => {
           subscriptionRefs.current = {participants: null, chatRoom: null};
         }
       };
-    }, [activateWebSocket, chatRoomId, isConnected, stompClient]),
+    }, [chatRoomId, isConnected, stompClient]),
   );
 
   useFocusEffect(
@@ -237,8 +232,8 @@ const ChatRoomScreen = () => {
     navigation,
   ]);
 
-  if (!chatRoom || !isConnected) {
-    return <ChatRoomEnterLoading />;
+  if (!chatRoom) {
+    return null;
   }
 
   return (

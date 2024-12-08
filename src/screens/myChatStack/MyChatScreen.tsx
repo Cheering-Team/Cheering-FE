@@ -26,11 +26,13 @@ import {MyChatStackParamList} from 'navigations/MyChatStackNavigator';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useWebSocket} from 'context/useWebSocket';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
+import {queryClient} from '../../../App';
+import {chatRoomKeys} from 'apis/chat/queries';
 
 const MyChatScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<MyChatStackParamList>>();
-  const {stompClient, activateWebSocket, isConnected} = useWebSocket();
+  const {stompClient, isConnected} = useWebSocket();
 
   const [chatRoomData, setChatRoomData] = useState<ChatRoom[]>([]);
   const chatRoomRef = useRef<ChatRoom[]>([]);
@@ -82,6 +84,14 @@ const MyChatScreen = () => {
     },
     [navigation],
   );
+
+  useEffect(() => {
+    if (officials) {
+      officials.forEach(chatRoom =>
+        queryClient.setQueryData(chatRoomKeys.detail(chatRoom.id), chatRoom),
+      );
+    }
+  }, [officials]);
 
   useEffect(() => {
     if (publics) {
@@ -150,10 +160,6 @@ const MyChatScreen = () => {
     useCallback(() => {
       const client = stompClient.current;
 
-      if (!client || !isConnected) {
-        activateWebSocket();
-      }
-
       return () => {
         if (client && isConnected) {
           publics?.forEach(chatRoom => {
@@ -165,7 +171,7 @@ const MyChatScreen = () => {
           });
         }
       };
-    }, [activateWebSocket, isConnected, publics, stompClient]),
+    }, [isConnected, publics, stompClient]),
   );
 
   useFocusEffect(
