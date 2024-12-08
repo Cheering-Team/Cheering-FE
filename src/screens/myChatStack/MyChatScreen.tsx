@@ -87,16 +87,19 @@ const MyChatScreen = () => {
 
   useEffect(() => {
     if (officials) {
-      officials.forEach(chatRoom =>
-        queryClient.setQueryData(chatRoomKeys.detail(chatRoom.id), chatRoom),
-      );
+      officials.forEach(chatRoom => {
+        queryClient.setQueryData(chatRoomKeys.detail(chatRoom.id), chatRoom);
+      });
     }
   }, [officials]);
 
   useEffect(() => {
     if (publics) {
       setChatRoomData(publics);
-      chatRoomRef.current = publics; // Ref로 현재 데이터를 업데이트
+      chatRoomRef.current = publics;
+      publics.forEach(chatRoom => {
+        queryClient.setQueryData(chatRoomKeys.detail(chatRoom.id), chatRoom);
+      });
     }
   }, [publics]);
 

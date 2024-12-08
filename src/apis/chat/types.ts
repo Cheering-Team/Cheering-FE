@@ -11,8 +11,8 @@ export interface ChatRoom {
   max: number;
   type: 'OFFICIAL' | 'PUBLIC';
   count: number;
-  user?: Fan;
-  community: Community;
+  user: Fan | null;
+  community: Community | null;
   manager: Fan | null;
   isParticipating: boolean | null;
   lastMessage: string | null;

@@ -40,7 +40,7 @@ const ChatRoomEnterScreen = ({route}) => {
           <CustomText
             fontWeight="500"
             className="text-gray-600 text-[14px] ml-1 pb-0 mt-4">
-            {chatRoom.community.koreanName}
+            {chatRoom.community?.koreanName}
           </CustomText>
           <CustomText fontWeight="500" className="text-3xl mt-1">
             {chatRoom.name}

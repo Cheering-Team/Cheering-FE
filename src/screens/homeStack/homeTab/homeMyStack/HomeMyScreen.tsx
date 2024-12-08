@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Pressable, View} from 'react-native';
+import {Platform, Pressable, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
 import {isFirstLogin, saveFCMToken} from 'apis/user';
@@ -21,6 +21,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {checkNotificationPermission} from 'utils/fcmUtils';
 import DeviceInfo from 'react-native-device-info';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
+import {useWebSocket} from 'context/useWebSocket';
 
 const HomeMyScreen = () => {
   const navigation =
@@ -29,6 +30,8 @@ const HomeMyScreen = () => {
 
   const [isRegisiterOpen, setIsRegisterOpen] = useState(false);
   const [isIntroOpen, setIsIntroOpen] = useState(false);
+
+  const {activateWebSocket, isConnected} = useWebSocket();
 
   const {data: communities} = useGetMyCommunities();
   const {refetch: refetchUnRead} = useGetIsUnread();
@@ -147,6 +150,11 @@ const HomeMyScreen = () => {
 
     checkFirst();
   }, [navigation]);
+  useEffect(() => {
+    if (!isConnected && Platform.OS === 'android') {
+      activateWebSocket();
+    }
+  }, [activateWebSocket, isConnected]);
 
   return (
     <View className="flex-1">

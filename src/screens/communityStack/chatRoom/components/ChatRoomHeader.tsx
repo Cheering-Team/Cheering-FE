@@ -30,7 +30,7 @@ const ChatRoomHeader = ({
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
-  const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
+  // const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
 
   return (
     <View style={{position: 'absolute', width: '100%', zIndex: 5, flex: 1}}>
@@ -76,16 +76,18 @@ const ChatRoomHeader = ({
               }}
             />
             <Pressable
-              onPress={() =>
-                navigation.navigate('Community', {
-                  communityId: chatRoom.community.id,
-                })
-              }>
+              onPress={() => {
+                if (chatRoom.community) {
+                  navigation.navigate('Community', {
+                    communityId: chatRoom.community?.id,
+                  });
+                }
+              }}>
               <CustomText
                 style={{color: '#626262', marginRight: 2, fontSize: 15}}>
                 {chatRoom.type === 'OFFICIAL'
                   ? '커뮤니티 바로가기'
-                  : chatRoom.community.koreanName}
+                  : chatRoom.community?.koreanName}
               </CustomText>
             </Pressable>
 

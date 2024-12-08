@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
+  AppState,
   FlatList,
   KeyboardAvoidingView,
   ListRenderItem,
@@ -45,6 +46,7 @@ const ChatRoomScreen = () => {
     participants: StompSubscription | null;
     chatRoom: StompSubscription | null;
   }>({participants: null, chatRoom: null});
+  const appState = useRef(AppState.currentState);
 
   const [messages, setMessages] = useState<Chat[]>([]);
   const [isAtBottom, setIsAtBottom] = useState(true);
@@ -53,7 +55,12 @@ const ChatRoomScreen = () => {
 
   const flatListRef = useRef<FlatList>(null);
 
-  const {data: chatRoom, isError, error} = useGetChatRoomById(chatRoomId, true);
+  const {
+    data: chatRoom,
+    refetch: refetchChatRoom,
+    isError,
+    error,
+  } = useGetChatRoomById(chatRoomId, true);
   const {
     data: chats,
     refetch,
@@ -134,38 +141,39 @@ const ChatRoomScreen = () => {
     }
   }, [chatRoom]);
 
-  useEffect(() => {
-    const client = stompClient.current;
+  useFocusEffect(
+    useCallback(() => {
+      const client = stompClient.current;
 
-    const subscribeToChatRoom = async () => {
-      const accessToken = await EncryptedStorage.getItem('accessToken');
-      if (client && isConnected && accessToken) {
-        const participantsSubscription = client.subscribe(
-          `/topic/chatRoom/${chatRoomId}/participants`,
-          message => {
-            const updatedCount = JSON.parse(message.body);
-            setParticipantCount(updatedCount);
-          },
-        );
-        subscriptionRefs.current.participants = participantsSubscription;
+      const subscribeToChatRoom = async () => {
+        const accessToken = await EncryptedStorage.getItem('accessToken');
 
-        const chatRoomSubscription = client.subscribe(
-          `/topic/chatRoom/${chatRoomId}`,
-          message => {
-            handleNewMessage(JSON.parse(message.body));
-          },
-          {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        );
-        subscriptionRefs.current.chatRoom = chatRoomSubscription;
-      }
-    };
+        if (client && isConnected && accessToken) {
+          const participantsSubscription = client.subscribe(
+            `/topic/chatRoom/${chatRoomId}/participants`,
+            message => {
+              const updatedCount = JSON.parse(message.body);
+              setParticipantCount(updatedCount);
+            },
+          );
+          subscriptionRefs.current.participants = participantsSubscription;
 
-    if (isConnected) {
+          const chatRoomSubscription = client.subscribe(
+            `/topic/chatRoom/${chatRoomId}`,
+            message => {
+              handleNewMessage(JSON.parse(message.body));
+            },
+            {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          );
+          subscriptionRefs.current.chatRoom = chatRoomSubscription;
+        }
+      };
+
       subscribeToChatRoom();
-    }
-  }, [chatRoomId, handleNewMessage, isConnected, stompClient]);
+    }, [chatRoomId, handleNewMessage, isConnected, stompClient]),
+  );
 
   // focus시 소켓 연결 확인
   // blur시 구독 해제
@@ -212,9 +220,28 @@ const ChatRoomScreen = () => {
   // Focus시 채팅 다시 불러오기
   useFocusEffect(
     useCallback(() => {
+      refetchChatRoom();
       refetch();
-    }, [refetch]),
+    }, [refetch, refetchChatRoom]),
   );
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      'change',
+      async nextAppState => {
+        if (
+          appState.current.match(/inactive|background/) &&
+          nextAppState === 'active'
+        ) {
+          refetch();
+        }
+        appState.current = nextAppState;
+      },
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [refetch]);
 
   useEffect(() => {
     if (
