@@ -21,7 +21,7 @@ export interface ChatRoom {
 }
 
 export interface Chat {
-  type: 'MESSAGE' | 'SYSTEM_ENTER';
+  type: 'MESSAGE' | 'SYSTEM_ENTER' | 'SYSTEM_EXIT';
   createdAt: string;
   writer: Fan;
   messages: string[];
@@ -29,7 +29,7 @@ export interface Chat {
 }
 
 export interface ChatResponse {
-  type: 'MESSAGE' | 'SYSTEM_ENTER';
+  type: 'MESSAGE' | 'SYSTEM_ENTER' | 'SYSTEM_EXIT';
   content: string;
   createdAt: string;
   writerId: number;
