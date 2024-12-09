@@ -1,6 +1,6 @@
 export interface Fan {
   id: number;
-  type: 'TEAM' | 'PLAYER' | 'ADMIN';
+  type?: 'TEAM' | 'PLAYER' | 'ADMIN';
   name: string;
   image: string;
 }

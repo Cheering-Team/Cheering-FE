@@ -33,11 +33,19 @@ const ChatRoomHeader = ({
   // const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
 
   return (
-    <View style={{position: 'absolute', width: '100%', zIndex: 5, flex: 1}}>
+    <View
+      style={{
+        position: 'absolute',
+        width: '100%',
+        zIndex: 5,
+        flex: 1,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f4f4f4',
+      }}>
       <View
         className="justify-between flex-1"
         style={{
-          height: insets.top + 50,
+          height: insets.top + 55,
           paddingTop: insets.top,
           flexDirection: 'row',
           paddingHorizontal: 5,

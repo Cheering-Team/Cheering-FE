@@ -3,11 +3,11 @@ import {axiosInstance} from '../index';
 import {ApiResponse, Id} from '../types';
 import {chatKeys, chatRoomKeys} from './queries';
 import {
+  ChatListResponse,
   ChatRoom,
   ChatRoomIdPayload,
   ChatRoomListResponse,
   CreateChatRoomPayload,
-  GetChatsResponse,
 } from './types';
 
 // 채팅방 생성
@@ -91,15 +91,23 @@ export const getChatRoomById = async ({
 // 채팅 목록 조회
 export const getChats = async ({
   queryKey,
-  pageParam = 0,
+  pageParam = null,
 }: {
   queryKey: ReturnType<typeof chatKeys.list>;
-  pageParam: number;
+  pageParam: string | null;
 }) => {
   const [, , {chatRoomId}] = queryKey;
-  const response = await axiosInstance.get<ApiResponse<GetChatsResponse>>(
-    `/chatrooms/${chatRoomId}/chats?page=${pageParam}&size=20`,
-  );
+  let response;
+  if (pageParam === null) {
+    response = await axiosInstance.get<ApiResponse<ChatListResponse>>(
+      `/chatrooms/${chatRoomId}/chats?size=20`,
+    );
+  } else {
+    response = await axiosInstance.get<ApiResponse<ChatListResponse>>(
+      `/chatrooms/${chatRoomId}/chats?cursorDate=${pageParam}&size=20`,
+    );
+  }
+
   return response.data.result;
 };
 

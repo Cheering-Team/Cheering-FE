@@ -1,9 +1,4 @@
-import {
-  keepPreviousData,
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-} from '@tanstack/react-query';
+import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import {chatKeys, chatRoomKeys} from './queries';
 import {
   createChatRoom,
@@ -95,11 +90,14 @@ export const useGetChats = (chatRoomId: number) => {
   return useInfiniteQuery({
     queryKey: chatKeys.list(chatRoomId),
     queryFn: getChats,
-    initialPageParam: 0,
+    initialPageParam: null,
     getNextPageParam: lastPage => {
-      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
+      return lastPage.hasNext
+        ? lastPage.chats[lastPage.chats.length - 1].createdAt
+        : undefined;
     },
     retry: false,
+    gcTime: 0,
   });
 };
 

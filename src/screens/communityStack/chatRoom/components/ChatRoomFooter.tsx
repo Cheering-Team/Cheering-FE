@@ -5,17 +5,18 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ArrowSvg from 'assets/images/arrow_up.svg';
 import ChevronDownSvg from 'assets/images/chevron-down-black-thin.svg';
 import {Client} from '@stomp/stompjs';
+import {ChatRoom} from 'apis/chat/types';
 
 interface ChatRoomFooterProps {
   client: MutableRefObject<Client | null>;
-  chatRoomId: number;
+  chatRoom: ChatRoom;
   flatListRef: RefObject<FlatList<any>>;
   isAtBottom: boolean;
 }
 
 const ChatRoomFooter = ({
   client,
-  chatRoomId,
+  chatRoom,
   flatListRef,
   isAtBottom,
 }: ChatRoomFooterProps) => {
@@ -30,9 +31,13 @@ const ChatRoomFooter = ({
 
     if (client.current && client.current.connected) {
       client.current?.publish({
-        destination: `/app/chatRooms/${chatRoomId}/sendMessage`,
+        destination: `/app/chatRooms/${chatRoom.id}/sendMessage`,
         body: JSON.stringify({
-          message: text.trim(),
+          chatRoomType: chatRoom.type,
+          writerId: chatRoom.user?.id,
+          writerImage: chatRoom.user?.image,
+          writerName: chatRoom.user?.name,
+          content: text.trim(),
         }),
       });
     }

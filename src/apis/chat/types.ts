@@ -21,15 +21,21 @@ export interface ChatRoom {
 }
 
 export interface Chat {
+  type: 'MESSAGE' | 'SYSTEM_ENTER';
   createdAt: string;
-  sender: Fan;
+  writer: Fan;
   messages: string[];
+  groupKey: string;
 }
 
 export interface ChatResponse {
+  type: 'MESSAGE' | 'SYSTEM_ENTER';
+  content: string;
   createdAt: string;
-  sender: Fan;
-  message: string;
+  writerId: number;
+  writerImage: string;
+  writerName: string;
+  groupKey: string;
 }
 
 // 요청
@@ -50,6 +56,7 @@ export interface ChatRoomListResponse extends Page {
   chatRooms: ChatRoom[];
 }
 
-export interface GetChatsResponse extends Page {
+export interface ChatListResponse {
   chats: Chat[];
+  hasNext: boolean;
 }

@@ -13,6 +13,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   Platform,
+  View,
 } from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -27,6 +28,7 @@ import ChatRoomFooter from './components/ChatRoomFooter';
 import ChatMessage from './components/ChatMessage';
 import {useWebSocket} from 'context/useWebSocket';
 import {StompSubscription} from '@stomp/stompjs';
+import CustomText from 'components/common/CustomText';
 const TextEncodingPolyfill = require('text-encoding');
 
 Object.assign('global', {
@@ -75,23 +77,25 @@ const ChatRoomScreen = () => {
       const firstGroup = prevMessages[0];
 
       if (
+        newMessage.type === 'MESSAGE' &&
         firstGroup &&
-        firstGroup.sender.id === newMessage.sender.id &&
-        firstGroup.createdAt.substring(0, 16) ===
-          newMessage.createdAt.substring(0, 16)
+        firstGroup.groupKey === newMessage.groupKey
       ) {
-        return prevMessages.map((group, index) =>
-          index === 0
-            ? {...group, messages: [...group.messages, newMessage.message]}
-            : group,
-        );
+        const updatedMessages = [...prevMessages];
+        updatedMessages[0].messages.push(newMessage.content);
+        return updatedMessages;
       }
-
       return [
         {
-          createdAt: newMessage.createdAt.substring(0, 16),
-          sender: newMessage.sender,
-          messages: [newMessage.message],
+          type: newMessage.type,
+          createdAt: newMessage.createdAt,
+          writer: {
+            id: newMessage.writerId,
+            name: newMessage.writerName,
+            image: newMessage.writerImage,
+          },
+          messages: [newMessage.content],
+          groupKey: newMessage.groupKey,
         },
         ...prevMessages,
       ];
@@ -108,25 +112,42 @@ const ChatRoomScreen = () => {
 
   const renderChatMessage: ListRenderItem<Chat> = useCallback(
     ({item, index}) => {
-      const currentMessageDate = new Date(item.createdAt).setHours(0, 0, 0, 0);
-      const previousMessageDate =
-        index < messages.length - 1
-          ? new Date(messages[index + 1].createdAt).setHours(0, 0, 0, 0)
-          : null;
+      if (item.type === 'MESSAGE') {
+        const currentMessageDate = new Date(item.createdAt).setHours(
+          0,
+          0,
+          0,
+          0,
+        );
+        const previousMessageDate =
+          index < messages.length - 1
+            ? new Date(messages[index + 1].createdAt).setHours(0, 0, 0, 0)
+            : null;
 
-      const isFirst =
-        index === messages.length - 1 ||
-        currentMessageDate !== previousMessageDate;
+        const isFirst =
+          index === messages.length - 1 ||
+          currentMessageDate !== previousMessageDate;
 
-      return (
-        <ChatMessage
-          chat={item}
-          isMy={item.sender.id === chatRoom?.user?.id}
-          isFirst={isFirst}
-        />
-      );
+        return (
+          <ChatMessage
+            chat={item}
+            isMy={item.writer.id === chatRoom?.user?.id}
+            isFirst={isFirst}
+          />
+        );
+      } else {
+        return (
+          <View className="justify-center items-center mb-[15] mt-[5]">
+            <View className="bg-black/30 py-1 px-3 rounded-xl">
+              <CustomText fontWeight="500" className="text-white text-sm">
+                {item.messages[0]}
+              </CustomText>
+            </View>
+          </View>
+        );
+      }
     },
-    [chatRoom?.user?.id, messages],
+    [chatRoom, messages],
   );
 
   const loadChat = useCallback(() => {
@@ -152,8 +173,11 @@ const ChatRoomScreen = () => {
           const participantsSubscription = client.subscribe(
             `/topic/chatRoom/${chatRoomId}/participants`,
             message => {
-              const updatedCount = JSON.parse(message.body);
-              setParticipantCount(updatedCount);
+              const body = JSON.parse(message.body);
+              setParticipantCount(body.count);
+              if (chatRoom?.type === 'PUBLIC') {
+                handleNewMessage(body);
+              }
             },
           );
           subscriptionRefs.current.participants = participantsSubscription;
@@ -172,7 +196,13 @@ const ChatRoomScreen = () => {
       };
 
       subscribeToChatRoom();
-    }, [chatRoomId, handleNewMessage, isConnected, stompClient]),
+    }, [
+      chatRoom?.type,
+      chatRoomId,
+      handleNewMessage,
+      isConnected,
+      stompClient,
+    ]),
   );
 
   // focus시 소켓 연결 확인
@@ -214,7 +244,9 @@ const ChatRoomScreen = () => {
 
   // 채팅 불러오기 및 표시
   useEffect(() => {
-    setMessages(chats?.pages.flatMap(page => page.chats) || []);
+    if (chats) {
+      setMessages(chats.pages.flatMap(page => page.chats));
+    }
   }, [chats]);
 
   // Focus시 채팅 다시 불러오기
@@ -224,6 +256,7 @@ const ChatRoomScreen = () => {
       refetch();
     }, [refetch, refetchChatRoom]),
   );
+
   useEffect(() => {
     const subscription = AppState.addEventListener(
       'change',
@@ -297,7 +330,7 @@ const ChatRoomScreen = () => {
           }}
           data={messages}
           renderItem={renderChatMessage}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => `${item.groupKey}-${index}`}
           onScroll={handleScroll}
           scrollEventThrottle={16}
           maintainVisibleContentPosition={
@@ -308,7 +341,7 @@ const ChatRoomScreen = () => {
         />
         <ChatRoomFooter
           client={stompClient}
-          chatRoomId={chatRoomId}
+          chatRoom={chatRoom}
           flatListRef={flatListRef}
           isAtBottom={isAtBottom}
         />
