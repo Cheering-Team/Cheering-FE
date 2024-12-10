@@ -3,7 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {ChatRoom} from 'apis/chat/types';
 import CustomText from 'components/common/CustomText';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {Dispatch, SetStateAction, useState} from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import {Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChevronLeftSvg from 'assets/images/chevron-left.svg';
@@ -11,9 +11,6 @@ import OfficialSvg from 'assets/images/official.svg';
 import PersonSvg from 'assets/images/person-gray.svg';
 import ChevronRightSvg from 'assets/images/chevron-right-gray.svg';
 import DrawerSvg from 'assets/images/drawer.svg';
-import MegaphoneSvg from 'assets/images/megaphone.svg';
-import ChevronDownGraySvg from 'assets/images/chevron-down-gray.svg';
-import ChevronUpGraySvg from 'assets/images/chevron-up-gray.svg';
 
 interface ChatRoomHeaderProps {
   chatRoom: ChatRoom;

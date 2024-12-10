@@ -29,6 +29,8 @@ import ChatMessage from './components/ChatMessage';
 import {useWebSocket} from 'context/useWebSocket';
 import {StompSubscription} from '@stomp/stompjs';
 import CustomText from 'components/common/CustomText';
+import {queryClient} from '../../../../App';
+import {chatRoomKeys} from 'apis/chat/queries';
 const TextEncodingPolyfill = require('text-encoding');
 
 Object.assign('global', {
@@ -158,6 +160,7 @@ const ChatRoomScreen = () => {
 
   useEffect(() => {
     if (chatRoom) {
+      console.log('chatRoom 불러옴1');
       setParticipantCount(chatRoom.count);
     }
   }, [chatRoom]);
@@ -173,10 +176,14 @@ const ChatRoomScreen = () => {
           const participantsSubscription = client.subscribe(
             `/topic/chatRoom/${chatRoomId}/participants`,
             message => {
+              console.log('인원수 반영1');
               const body = JSON.parse(message.body);
               setParticipantCount(body.count);
               if (chatRoom?.type === 'PUBLIC') {
                 handleNewMessage(body);
+                queryClient.invalidateQueries({
+                  queryKey: chatRoomKeys.participants(chatRoomId),
+                });
               }
             },
           );
@@ -185,6 +192,7 @@ const ChatRoomScreen = () => {
           const chatRoomSubscription = client.subscribe(
             `/topic/chatRoom/${chatRoomId}`,
             message => {
+              console.log('Here');
               handleNewMessage(JSON.parse(message.body));
             },
             {
@@ -211,10 +219,11 @@ const ChatRoomScreen = () => {
     useCallback(() => {
       return () => {
         if (stompClient.current && isConnected) {
-          stompClient.current.publish({
-            destination: `/app/chatRooms/exit`,
-            body: JSON.stringify({chatRoomId}),
-          });
+          queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
+          // stompClient.current.publish({
+          //   destination: `/app/chatRooms/exit`,
+          //   body: JSON.stringify({chatRoomId}),
+          // });
           const {participants, chatRoom: chatRoomSub} =
             subscriptionRefs.current;
           if (participants) participants.unsubscribe();
@@ -222,7 +231,7 @@ const ChatRoomScreen = () => {
           subscriptionRefs.current = {participants: null, chatRoom: null};
         }
       };
-    }, [chatRoomId, isConnected, stompClient]),
+    }, [isConnected, stompClient]),
   );
 
   useFocusEffect(
@@ -248,14 +257,6 @@ const ChatRoomScreen = () => {
       setMessages(chats.pages.flatMap(page => page.chats));
     }
   }, [chats]);
-
-  // Focus시 채팅 다시 불러오기
-  useFocusEffect(
-    useCallback(() => {
-      refetchChatRoom();
-      refetch();
-    }, [refetch, refetchChatRoom]),
-  );
 
   useEffect(() => {
     const subscription = AppState.addEventListener(

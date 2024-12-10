@@ -11,16 +11,11 @@ import {
   getOfficialChatRoom,
   getParticipants,
 } from './index';
-import {queryClient} from '../../../App';
 
 // 채팅방 개설
 export const useCreateChatRoom = () => {
   return useMutation({
     mutationFn: createChatRoom,
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
-      queryClient.invalidateQueries({queryKey: chatRoomKeys.my('PUBLIC')});
-    },
   });
 };
 

@@ -93,7 +93,7 @@ function App(): React.JSX.Element {
             <Toast config={toastConfig} />
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
-        {/* <DevToolsBubble /> */}
+        <DevToolsBubble />
       </QueryClientProvider>
     </SafeAreaProvider>
   );
