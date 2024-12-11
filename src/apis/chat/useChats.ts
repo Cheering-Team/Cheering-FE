@@ -10,7 +10,10 @@ import {
   getMyOfficialChatRooms,
   getOfficialChatRoom,
   getParticipants,
+  getUnreadChats,
+  updateExitTime,
 } from './index';
+import {queryClient} from '../../../App';
 
 // 채팅방 개설
 export const useCreateChatRoom = () => {
@@ -109,5 +112,25 @@ export const useGetParticipants = (chatRoomId: number) => {
 export const useDeleteChatRoom = () => {
   return useMutation({
     mutationFn: deleteChatRoom,
+  });
+};
+
+// 퇴장 시간 갱신
+export const useUpdateExitTime = () => {
+  return useMutation({
+    mutationFn: updateExitTime,
+    onSettled: () => {
+      queryClient.refetchQueries({
+        queryKey: chatRoomKeys.my('PUBLIC'),
+      });
+    },
+  });
+};
+
+// 안읽은 전체 채팅 수
+export const useGetUnreadChats = () => {
+  return useQuery({
+    queryKey: chatKeys.isUnread(),
+    queryFn: getUnreadChats,
   });
 };

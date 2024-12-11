@@ -17,7 +17,11 @@ import {
 } from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useGetChatRoomById, useGetChats} from 'apis/chat/useChats';
+import {
+  useGetChatRoomById,
+  useGetChats,
+  useUpdateExitTime,
+} from 'apis/chat/useChats';
 import {Chat, ChatResponse} from 'apis/chat/types';
 import {Drawer} from 'react-native-drawer-layout';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -59,12 +63,7 @@ const ChatRoomScreen = () => {
 
   const flatListRef = useRef<FlatList>(null);
 
-  const {
-    data: chatRoom,
-    refetch: refetchChatRoom,
-    isError,
-    error,
-  } = useGetChatRoomById(chatRoomId, true);
+  const {data: chatRoom, isError, error} = useGetChatRoomById(chatRoomId, true);
   const {
     data: chats,
     refetch,
@@ -73,6 +72,7 @@ const ChatRoomScreen = () => {
     isError: chatIsError,
     error: chatError,
   } = useGetChats(chatRoomId);
+  const {mutate: updateExitTime} = useUpdateExitTime();
 
   const handleNewMessage = useCallback((newMessage: ChatResponse) => {
     setMessages(prevMessages => {
@@ -160,7 +160,6 @@ const ChatRoomScreen = () => {
 
   useEffect(() => {
     if (chatRoom) {
-      console.log('chatRoom 불러옴1');
       setParticipantCount(chatRoom.count);
     }
   }, [chatRoom]);
@@ -176,7 +175,6 @@ const ChatRoomScreen = () => {
           const participantsSubscription = client.subscribe(
             `/topic/chatRoom/${chatRoomId}/participants`,
             message => {
-              console.log('인원수 반영1');
               const body = JSON.parse(message.body);
               setParticipantCount(body.count);
               if (chatRoom?.type === 'PUBLIC') {
@@ -192,7 +190,6 @@ const ChatRoomScreen = () => {
           const chatRoomSubscription = client.subscribe(
             `/topic/chatRoom/${chatRoomId}`,
             message => {
-              console.log('Here');
               handleNewMessage(JSON.parse(message.body));
             },
             {
@@ -213,17 +210,11 @@ const ChatRoomScreen = () => {
     ]),
   );
 
-  // focus시 소켓 연결 확인
-  // blur시 구독 해제
   useFocusEffect(
     useCallback(() => {
       return () => {
+        queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
         if (stompClient.current && isConnected) {
-          queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
-          // stompClient.current.publish({
-          //   destination: `/app/chatRooms/exit`,
-          //   body: JSON.stringify({chatRoomId}),
-          // });
           const {participants, chatRoom: chatRoomSub} =
             subscriptionRefs.current;
           if (participants) participants.unsubscribe();
@@ -236,19 +227,22 @@ const ChatRoomScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      const client = stompClient.current;
-
       return () => {
-        if (client) {
-          if (chatRoom?.type === 'OFFICIAL' && client.connected) {
-            client.publish({
-              destination: `/app/chatRooms/leave`,
-              body: JSON.stringify({chatRoomId}),
-            });
-          }
+        if (isConnected && chatRoom?.type === 'PUBLIC') {
+          updateExitTime({chatRoomId});
+        }
+        if (
+          stompClient.current &&
+          isConnected &&
+          chatRoom?.type === 'OFFICIAL'
+        ) {
+          stompClient.current.publish({
+            destination: `/app/chatRooms/leave`,
+            body: JSON.stringify({chatRoomId}),
+          });
         }
       };
-    }, [chatRoom?.type, chatRoomId, stompClient]),
+    }, [chatRoom?.type, chatRoomId, isConnected, stompClient, updateExitTime]),
   );
 
   // 채팅 불러오기 및 표시
@@ -275,7 +269,7 @@ const ChatRoomScreen = () => {
     return () => {
       subscription.remove();
     };
-  }, [refetch]);
+  }, [chatRoomId, refetch, stompClient]);
 
   useEffect(() => {
     if (

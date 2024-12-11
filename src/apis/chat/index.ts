@@ -132,3 +132,19 @@ export const deleteChatRoom = async (data: ChatRoomIdPayload) => {
   );
   return response.data.result;
 };
+
+// 퇴장 시간 갱신
+export const updateExitTime = async (data: ChatRoomIdPayload) => {
+  const {chatRoomId} = data;
+  const response = await axiosInstance.put<ApiResponse<null>>(
+    `/chat-rooms/${chatRoomId}/exit-time`,
+  );
+  return response.data.result;
+};
+
+// 안읽은 전체 메세지 수
+export const getUnreadChats = async () => {
+  const response =
+    await axiosInstance.get<ApiResponse<number>>(`/chats/unread`);
+  return response.data.result;
+};

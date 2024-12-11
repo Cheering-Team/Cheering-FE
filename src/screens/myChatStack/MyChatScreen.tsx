@@ -27,7 +27,8 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {useWebSocket} from 'context/useWebSocket';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import {queryClient} from '../../../App';
-import {chatRoomKeys} from 'apis/chat/queries';
+import {chatKeys, chatRoomKeys} from 'apis/chat/queries';
+import {useIsMutating} from '@tanstack/react-query';
 
 const MyChatScreen = () => {
   const navigation =
@@ -35,13 +36,13 @@ const MyChatScreen = () => {
   const {stompClient, isConnected} = useWebSocket();
 
   const [chatRoomData, setChatRoomData] = useState<ChatRoom[]>([]);
-  const chatRoomRef = useRef<ChatRoom[]>([]);
   const subscriptionsRef = useRef<{[key: number]: any}>({});
 
   const paginationProgress = useSharedValue<number>(0);
 
   const {data: officials} = useGetMyOfficialChatRooms();
   const {data: publics, refetch} = useGetMyChatRooms();
+  const isMutating = useIsMutating();
 
   const handleConfigurePanGesture = (panGesture: PanGesture) => {
     panGesture.activeOffsetX([-10, 10]);
@@ -96,73 +97,67 @@ const MyChatScreen = () => {
   useEffect(() => {
     if (publics) {
       setChatRoomData(publics);
-      chatRoomRef.current = publics;
       publics.forEach(chatRoom => {
         queryClient.setQueryData(chatRoomKeys.detail(chatRoom.id), chatRoom);
       });
     }
   }, [publics]);
 
-  useEffect(() => {
-    const client = stompClient.current;
-
-    const subscribeToChatRooms = async () => {
-      const accessToken = await EncryptedStorage.getItem('accessToken');
-      if (client && client.connected && accessToken && publics) {
-        publics.forEach(chatRoom => {
-          const subscription = client.subscribe(
-            `/topic/chatRoom/${chatRoom.id}`,
-            message => {
-              const res = JSON.parse(message.body);
-
-              setChatRoomData(prevChatRooms => {
-                const updatedChatRooms = prevChatRooms.map(room => {
-                  if (room.id === chatRoom.id) {
-                    return {
-                      ...room,
-                      lastMessage: res.message,
-                      lastMessageTime: res.createdAt,
-                      unreadCount: (room.unreadCount ?? 0) + 1,
-                    };
-                  }
-                  return room;
-                });
-
-                chatRoomRef.current = updatedChatRooms;
-
-                const updatedChatRoom = updatedChatRooms.find(
-                  room => room.id === chatRoom.id,
-                );
-
-                const remainingChatRooms = updatedChatRooms.filter(
-                  room => room.id !== chatRoom.id,
-                );
-
-                if (updatedChatRoom) {
-                  return [updatedChatRoom, ...remainingChatRooms];
-                }
-
-                return updatedChatRooms;
-              });
-            },
-            {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          );
-          subscriptionsRef.current[chatRoom.id] = subscription;
-        });
-      }
-    };
-
-    if (isConnected) {
-      subscribeToChatRooms();
-    }
-  }, [isConnected, publics, stompClient]);
-
   useFocusEffect(
     useCallback(() => {
       const client = stompClient.current;
 
+      const subscribeToChatRooms = async () => {
+        const accessToken = await EncryptedStorage.getItem('accessToken');
+        if (client && isConnected && accessToken && publics) {
+          publics.forEach(chatRoom => {
+            const subscription = client.subscribe(
+              `/topic/chatRoom/${chatRoom.id}`,
+              message => {
+                const res = JSON.parse(message.body);
+
+                setChatRoomData(prevChatRooms => {
+                  const updatedChatRooms = prevChatRooms.map(room => {
+                    if (room.id === chatRoom.id) {
+                      return {
+                        ...room,
+                        lastMessage: res.content,
+                        lastMessageTime: res.createdAt,
+                        unreadCount: (room.unreadCount ?? 0) + 1,
+                      };
+                    }
+                    return room;
+                  });
+
+                  const updatedChatRoom = updatedChatRooms.find(
+                    room => room.id === chatRoom.id,
+                  );
+                  const remainingChatRooms = updatedChatRooms.filter(
+                    room => room.id !== chatRoom.id,
+                  );
+
+                  if (updatedChatRoom) {
+                    return [updatedChatRoom, ...remainingChatRooms];
+                  }
+
+                  return updatedChatRooms;
+                });
+              },
+              {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            );
+            subscriptionsRef.current[chatRoom.id] = subscription;
+          });
+        }
+      };
+      subscribeToChatRooms();
+    }, [isConnected, publics, stompClient]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      const client = stompClient.current;
       return () => {
         if (client && isConnected) {
           publics?.forEach(chatRoom => {
@@ -179,8 +174,11 @@ const MyChatScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      refetch();
-    }, [refetch]),
+      if (!isMutating) {
+        refetch();
+        queryClient.refetchQueries({queryKey: chatKeys.isUnread()});
+      }
+    }, [refetch, isMutating]),
   );
 
   return (

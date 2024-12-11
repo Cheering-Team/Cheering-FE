@@ -49,10 +49,11 @@ const HomeMyScreen = () => {
     };
   }, []);
   useEffect(() => {
-    const unsubscribe = messaging().onMessage(async () => {
-      refetchUnRead();
+    const unsubscribe = messaging().onMessage(async payload => {
+      if (payload.data.type === 'POST') {
+        refetchUnRead();
+      }
     });
-
     return unsubscribe;
   }, [refetchUnRead]);
   // 백그라운드, 종료 알림 클릭 처리
