@@ -190,7 +190,8 @@ const HomeMyScreen = () => {
           speed={1500}>
           <View
             style={{
-              height: WINDOW_HEIGHT * 0.65,
+              height:
+                (WINDOW_HEIGHT - 50 - insets.top - insets.bottom - 45) * 0.87,
               marginBottom: 20,
               marginHorizontal: 25,
               marginTop: 43,
