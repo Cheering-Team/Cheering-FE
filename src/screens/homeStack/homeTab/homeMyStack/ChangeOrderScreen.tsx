@@ -23,7 +23,7 @@ const ChangeOrderScreen = () => {
 
   const [data, setData] = useState<Community[]>([]);
 
-  const {data: communities} = useGetMyCommunities();
+  const {data: communities} = useGetMyCommunities(true);
   const {mutateAsync: changeCommunityOrder, isPending} =
     useChangeCommuniyOrder();
 

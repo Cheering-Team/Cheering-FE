@@ -33,7 +33,7 @@ const HomeMyScreen = () => {
 
   const {activateWebSocket, isConnected} = useWebSocket();
 
-  const {data: communities} = useGetMyCommunities();
+  const {data: communities} = useGetMyCommunities(true);
   const {refetch: refetchUnRead} = useGetIsUnread();
   const {mutateAsync: readNotificaiton} = useReadNotification();
 

@@ -13,6 +13,7 @@ import {
   TokenPayload,
   UpdateUserNamePayload,
   User,
+  VersionInfo,
 } from './types';
 import {userKeys} from './queries';
 
@@ -172,5 +173,11 @@ export const reissuePlayerAccountPassword = async (
 export const isFirstLogin = async () => {
   const response =
     await axiosInstance.get<ApiResponse<boolean>>(`/isFirstLogin`);
+  return response.data.result;
+};
+
+export const getVersionInfo = async () => {
+  const response =
+    await axiosInstance.get<ApiResponse<VersionInfo>>('/version');
   return response.data.result;
 };

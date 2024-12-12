@@ -2,9 +2,15 @@ import * as React from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import AuthStackNavigator from './AuthStackNavigator';
 import MainTabNavigator from './MainTabNavigator';
-import {deleteFCMToken} from 'apis/user';
+import {deleteFCMToken, getVersionInfo} from 'apis/user';
 import {queryClient} from '../../App';
 import DeviceInfo from 'react-native-device-info';
+import SplashScreen from 'screens/auth/SplashScreen';
+import {Alert, Linking, Platform} from 'react-native';
+import VersionCheck from 'react-native-version-check';
+import NativeSplash from 'react-native-splash-screen';
+import {useGetMyCommunities} from 'apis/community/useCommunities';
+import FastImage from 'react-native-fast-image';
 
 interface AuthState {
   isLoading: boolean;
@@ -27,6 +33,69 @@ interface AuthContextType {
 export const AuthContext = React.createContext<AuthContextType | null>(null);
 
 const AuthSwitch = () => {
+  const [isLoading, setIsLoading] = React.useState(true);
+  const {data: communities, refetch} = useGetMyCommunities(false);
+
+  React.useEffect(() => {
+    NativeSplash.hide();
+    const checkVersion = async () => {
+      try {
+        const data = await getVersionInfo();
+        const currentVersion = VersionCheck.getCurrentVersion();
+        const accessToken = await EncryptedStorage.getItem('accessToken');
+
+        VersionCheck.needUpdate({
+          currentVersion,
+          latestVersion: data.minSupportedVersion,
+        }).then(res => {
+          if (res.isNeeded) {
+            Alert.alert(
+              '필수 업데이트',
+              '새로운 기능들이 생겼어요\n5초만에 업데이트 해보세요',
+              [
+                {
+                  text: '스토어로 이동',
+                  onPress: () =>
+                    Linking.openURL(
+                      Platform.OS === 'ios' ? data.iosUrl : data.aosUrl,
+                    ),
+                },
+              ],
+              {cancelable: false}, // 앱 종료 방지
+            );
+          } else {
+            if (accessToken) {
+              refetch();
+            } else {
+              setTimeout(() => {
+                setIsLoading(false);
+              }, 1500);
+            }
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkVersion();
+  });
+
+  React.useEffect(() => {
+    if (communities) {
+      if (communities.length) {
+        FastImage.preload([
+          {uri: communities[0].backgroundImage},
+          {uri: communities[0].image},
+        ]);
+      }
+
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1500);
+    }
+  }, [communities]);
+
   const [state, dispatch] = React.useReducer(
     (prevState: AuthState, action: AuthAction): AuthState => {
       switch (action.type) {
@@ -122,11 +191,11 @@ const AuthSwitch = () => {
     [],
   );
 
-  // const Stack = createNativeStackNavigator<{Splash: undefined}>();
-
   return (
     <AuthContext.Provider value={authContext}>
-      {state.isLoading ? null : state.accessToken == null ? (
+      {state.isLoading || isLoading ? (
+        <SplashScreen />
+      ) : state.accessToken == null ? (
         <AuthStackNavigator />
       ) : (
         <MainTabNavigator />
