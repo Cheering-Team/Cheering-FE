@@ -1,4 +1,4 @@
-import {ActivityIndicator, Image, SafeAreaView} from 'react-native';
+import {ActivityIndicator, SafeAreaView} from 'react-native';
 import React from 'react';
 import LogoTitleSvg from '../../assets/images/logo-title.svg';
 import FastImage from 'react-native-fast-image';

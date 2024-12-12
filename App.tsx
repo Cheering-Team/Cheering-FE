@@ -1,7 +1,7 @@
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import AuthSwitch from './src/navigations/AuthSwitch';
-import {StatusBar} from 'react-native';
+import {StatusBar, Text, TextInput} from 'react-native';
 import {navigationRef} from './src/navigations/RootNavigation';
 import Toast, {ToastConfigParams} from 'react-native-toast-message';
 import {QueryClientProvider, QueryClient} from '@tanstack/react-query';
@@ -31,6 +31,24 @@ if (config.ENV === 'production') {
     environment: `${config.ENV}`,
   });
 }
+
+interface TextWithDefaultProps extends Text {
+  defaultProps?: {allowFontScaling?: boolean};
+}
+interface TextInputWithDefaultProps extends TextInput {
+  defaultProps?: {allowFontScaling?: boolean};
+}
+
+(Text as unknown as TextWithDefaultProps).defaultProps =
+  (Text as unknown as TextWithDefaultProps).defaultProps || {};
+(Text as unknown as TextWithDefaultProps).defaultProps!.allowFontScaling =
+  false;
+
+(TextInput as unknown as TextInputWithDefaultProps).defaultProps =
+  (TextInput as unknown as TextInputWithDefaultProps).defaultProps || {};
+(
+  TextInput as unknown as TextInputWithDefaultProps
+).defaultProps!.allowFontScaling = false;
 
 export const toastConfig = {
   success: (params: ToastConfigParams<any>) => <SuccessToast {...params} />,
