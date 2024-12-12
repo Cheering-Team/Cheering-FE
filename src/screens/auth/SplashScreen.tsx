@@ -1,18 +1,24 @@
-import {ActivityIndicator, SafeAreaView} from 'react-native';
+import {ActivityIndicator, Platform, View} from 'react-native';
 import React from 'react';
-import LogoTitleSvg from '../../assets/images/logo-title.svg';
 import FastImage from 'react-native-fast-image';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const SplashScreen = () => {
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView className="flex-1 bg-black items-center">
-      <LogoTitleSvg width={'90%'} height={'55%'} />
-      <ActivityIndicator size="large" />
+    <View
+      className="flex-1 bg-white justify-center items-center"
+      style={{paddingTop: Platform.OS === 'android' ? insets.top : undefined}}>
       <FastImage
-        className="absolute bottom-[-50] w-full"
-        source={require('../../assets/images/logo-graphic.png')}
+        source={require('assets/images/splash.png')}
+        className="w-full h-full"
+        resizeMode="contain"
       />
-    </SafeAreaView>
+      <View className="absolute bottom-[200]">
+        <ActivityIndicator size={'large'} />
+      </View>
+    </View>
   );
 };
 

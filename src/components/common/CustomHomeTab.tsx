@@ -65,6 +65,7 @@ function CustomTabBar({state, descriptors, navigation}) {
 
       <View
         style={[
+          routeName === 'Splash' ||
           routeName === 'PostWrite' ||
           routeName === 'Post' ||
           routeName === 'Search' ||

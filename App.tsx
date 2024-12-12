@@ -10,8 +10,6 @@ import NaverLogin from '@react-native-seoul/naver-login';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import './gesture-handler';
-import SplashScreen from 'react-native-splash-screen';
-import {DevToolsBubble} from 'react-native-react-query-devtools';
 import SuccessToast from 'components/common/toast/SuccessToast';
 import FailToast from 'components/common/toast/FailToast';
 import {WebSocketProvider} from 'context/useWebSocket';
@@ -22,6 +20,7 @@ import {
   configureReanimatedLogger,
   ReanimatedLogLevel,
 } from 'react-native-reanimated';
+import {DevToolsBubble} from 'react-native-react-query-devtools';
 
 if (config.ENV === 'production') {
   Sentry.init({
@@ -78,12 +77,6 @@ function App(): React.JSX.Element {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      SplashScreen.hide();
-    }, 1000);
-  });
-
-  useEffect(() => {
     NaverLogin.initialize({
       appName,
       consumerKey,
@@ -111,7 +104,7 @@ function App(): React.JSX.Element {
             <Toast config={toastConfig} />
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
-        {/* <DevToolsBubble /> */}
+        <DevToolsBubble />
       </QueryClientProvider>
     </SafeAreaProvider>
   );
