@@ -18,6 +18,10 @@ import {WebSocketProvider} from 'context/useWebSocket';
 import * as Sentry from '@sentry/react-native';
 import config from 'react-native-config';
 import codePush from 'react-native-code-push';
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from 'react-native-reanimated';
 
 if (config.ENV === 'production') {
   Sentry.init({
@@ -40,6 +44,11 @@ const serviceUrlScheme = 'org.reactjs.native.example.Cheering';
 
 export const queryClient = new QueryClient();
 const codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME};
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
+});
 
 function App(): React.JSX.Element {
   const navTheme = {

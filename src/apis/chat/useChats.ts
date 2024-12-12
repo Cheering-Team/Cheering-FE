@@ -1,9 +1,4 @@
-import {
-  keepPreviousData,
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-} from '@tanstack/react-query';
+import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import {chatKeys, chatRoomKeys} from './queries';
 import {
   createChatRoom,
@@ -15,6 +10,8 @@ import {
   getMyOfficialChatRooms,
   getOfficialChatRoom,
   getParticipants,
+  getUnreadChats,
+  updateExitTime,
 } from './index';
 import {queryClient} from '../../../App';
 
@@ -22,10 +19,6 @@ import {queryClient} from '../../../App';
 export const useCreateChatRoom = () => {
   return useMutation({
     mutationFn: createChatRoom,
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
-      queryClient.invalidateQueries({queryKey: chatRoomKeys.my('PUBLIC')});
-    },
   });
 };
 
@@ -95,11 +88,14 @@ export const useGetChats = (chatRoomId: number) => {
   return useInfiniteQuery({
     queryKey: chatKeys.list(chatRoomId),
     queryFn: getChats,
-    initialPageParam: 0,
+    initialPageParam: null,
     getNextPageParam: lastPage => {
-      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
+      return lastPage.hasNext
+        ? lastPage.chats[lastPage.chats.length - 1].createdAt
+        : undefined;
     },
     retry: false,
+    gcTime: 0,
   });
 };
 
@@ -116,5 +112,25 @@ export const useGetParticipants = (chatRoomId: number) => {
 export const useDeleteChatRoom = () => {
   return useMutation({
     mutationFn: deleteChatRoom,
+  });
+};
+
+// 퇴장 시간 갱신
+export const useUpdateExitTime = () => {
+  return useMutation({
+    mutationFn: updateExitTime,
+    onSettled: () => {
+      queryClient.refetchQueries({
+        queryKey: chatRoomKeys.my('PUBLIC'),
+      });
+    },
+  });
+};
+
+// 안읽은 전체 채팅 수
+export const useGetUnreadChats = () => {
+  return useQuery({
+    queryKey: chatKeys.isUnread(),
+    queryFn: getUnreadChats,
   });
 };

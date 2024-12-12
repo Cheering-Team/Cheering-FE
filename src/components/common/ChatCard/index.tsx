@@ -154,7 +154,7 @@ const ChatCard = (props: ChatCardProps) => {
             </CustomText>
           )}
           {chatRoom.unreadCount !== 0 ? (
-            <View className="bg-[#ff4e37] rounded-full w-[20] h-[20] justify-center items-center mt-1">
+            <View className="bg-[#fc3b3b] rounded-full min-w-[20] h-[20] px-1 justify-center items-center mt-1">
               <CustomText fontWeight="600" className="text-white text-center">
                 {chatRoom.unreadCount}
               </CustomText>

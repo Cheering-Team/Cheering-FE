@@ -32,7 +32,7 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
         queryClient.setQueryData(communityKeys.detail(community.id), community);
       });
     }
-  });
+  }, [communities]);
 
   return (
     <>

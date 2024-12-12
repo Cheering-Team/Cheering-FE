@@ -20,4 +20,5 @@ export const chatKeys = {
   all: ['chats'] as const,
   lists: () => [...chatKeys.all, 'list'] as const,
   list: (chatRoomId: number) => [...chatKeys.lists(), {chatRoomId}] as const,
+  isUnread: () => [...chatKeys.all, 'isUnread'] as const,
 };

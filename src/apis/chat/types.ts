@@ -11,24 +11,31 @@ export interface ChatRoom {
   max: number;
   type: 'OFFICIAL' | 'PUBLIC';
   count: number;
-  user?: Fan;
-  community: Community;
+  user: Fan | null;
+  community: Community | null;
   manager: Fan | null;
   isParticipating: boolean | null;
   lastMessage: string | null;
   lastMessageTime: string | null;
+  unreadCount: number | null;
 }
 
 export interface Chat {
+  type: 'MESSAGE' | 'SYSTEM_ENTER' | 'SYSTEM_EXIT';
   createdAt: string;
-  sender: Fan;
+  writer: Fan;
   messages: string[];
+  groupKey: string;
 }
 
 export interface ChatResponse {
+  type: 'MESSAGE' | 'SYSTEM_ENTER' | 'SYSTEM_EXIT';
+  content: string;
   createdAt: string;
-  sender: Fan;
-  message: string;
+  writerId: number;
+  writerImage: string;
+  writerName: string;
+  groupKey: string;
 }
 
 // 요청
@@ -49,6 +56,7 @@ export interface ChatRoomListResponse extends Page {
   chatRooms: ChatRoom[];
 }
 
-export interface GetChatsResponse extends Page {
+export interface ChatListResponse {
   chats: Chat[];
+  hasNext: boolean;
 }

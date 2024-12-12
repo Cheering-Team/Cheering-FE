@@ -125,11 +125,11 @@ const HomeHotScreen = () => {
                     <CustomText
                       className="text-[11px] text-gray-600 mt-[3]"
                       fontWeight="400">{`${item.sportName}/${item.leagueName}`}</CustomText>
-                    <Pressable className="bg-black mt-5 rounded-lg w-[93%] items-center">
+                    <View className="bg-black mt-5 rounded-lg w-[93%] items-center">
                       <CustomText fontWeight="500" className="text-white py-2">
                         바로가기
                       </CustomText>
-                    </Pressable>
+                    </View>
                   </Pressable>
                 )}
               />
@@ -169,11 +169,11 @@ const HomeHotScreen = () => {
                       fontWeight="400">
                       {item.firstTeamName}
                     </CustomText>
-                    <Pressable className="bg-black mt-5 rounded-lg w-[93%] items-center">
+                    <View className="bg-black mt-5 rounded-lg w-[93%] items-center">
                       <CustomText fontWeight="500" className="text-white py-2">
                         바로가기
                       </CustomText>
-                    </Pressable>
+                    </View>
                   </Pressable>
                 )}
               />

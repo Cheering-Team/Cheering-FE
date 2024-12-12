@@ -4,7 +4,7 @@ import {Community} from 'apis/community/types';
 import ChatCard from 'components/common/ChatCard';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_HEIGHT} from 'constants/dimension';
-import React, {MutableRefObject, useState} from 'react';
+import React, {MutableRefObject, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -30,6 +30,8 @@ import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import PlusSvg from 'assets/images/plus-white.svg';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import ChatRoomSkeleton from 'components/skeleton/ChatRoomSkeleton';
+import {queryClient} from '../../../../App';
+import {chatKeys, chatRoomKeys} from 'apis/chat/queries';
 
 const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
 
@@ -107,6 +109,25 @@ const ChatList = ({
       setIsRefreshing(false);
     }, 1000);
   };
+
+  useEffect(() => {
+    if (officialChatRoom) {
+      queryClient.setQueryData(
+        chatRoomKeys.detail(officialChatRoom.id),
+        officialChatRoom,
+      );
+    }
+  }, [officialChatRoom]);
+
+  useEffect(() => {
+    if (chatRooms) {
+      chatRooms.pages
+        .flatMap(page => page.chatRooms)
+        .forEach(chatRoom => {
+          queryClient.setQueryData(chatRoomKeys.detail(chatRoom.id), chatRoom);
+        });
+    }
+  }, [chatRooms]);
 
   return (
     <View className="flex-1">
