@@ -13,7 +13,6 @@ import CameraSvg from '../../assets/images/camera-01.svg';
 import CustomTextInput from 'components/common/CustomTextInput';
 import {Picker} from '@react-native-picker/picker';
 import {useCreateChatRoom} from 'apis/chat/useChats';
-import {CHATROOM_NAME_REGEX} from 'constants/regex';
 import {showTopToast} from 'utils/toast';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
 import {Image} from 'react-native-compressor';
@@ -79,7 +78,7 @@ const CreateChatRoomScreen = ({navigation, route}) => {
   };
 
   const handleCreateChatRoom = async () => {
-    if (!CHATROOM_NAME_REGEX.test(formData.name)) {
+    if (formData.name.trim().length < 2 || formData.name.trim().length > 20) {
       setIsValid(false);
       return;
     }
@@ -188,7 +187,7 @@ const CreateChatRoomScreen = ({navigation, route}) => {
           curLength={formData.name.length}
           onChangeText={text => handleChange('name', text)}
           isValid={isValid}
-          inValidMessage="2자~20자, 한글과 영어만 사용 가능합니다."
+          inValidMessage="채팅방 이름은 2자~20자로 제한됩니다"
         />
         <CustomTextInput
           label="설명"
