@@ -1,9 +1,12 @@
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Chat} from 'apis/chat/types';
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_WIDTH} from 'constants/dimension';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import React, {memo} from 'react';
-import {View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import {formatDay, formatAmPmTime} from 'utils/format';
 
 interface ChatMessageProps {
@@ -13,6 +16,9 @@ interface ChatMessageProps {
 }
 
 const ChatMessage = ({isMy, chat, isFirst}: ChatMessageProps) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
+
   return (
     <>
       {isMy ? (
@@ -64,13 +70,24 @@ const ChatMessage = ({isMy, chat, isFirst}: ChatMessageProps) => {
             maxWidth: WINDOW_WIDTH / 1.8,
             marginBottom: 7,
           }}>
-          <Avatar uri={chat.sender.image} size={32} />
+          <Pressable
+            onPress={() => {
+              navigation.navigate('Profile', {fanId: chat.writer.id});
+            }}>
+            <Avatar uri={chat.writer.image} size={32} />
+          </Pressable>
+
           <View style={{marginLeft: 7, marginTop: 1}}>
-            <CustomText
-              fontWeight="500"
-              style={{color: '#6a6a6a', marginLeft: 2}}>
-              {chat.sender.name}
-            </CustomText>
+            <Pressable
+              onPress={() => {
+                navigation.navigate('Profile', {fanId: chat.writer.id});
+              }}>
+              <CustomText
+                fontWeight="500"
+                style={{color: '#6a6a6a', marginLeft: 2}}>
+                {chat.writer.name}
+              </CustomText>
+            </Pressable>
             {chat.messages.map((message, index) => (
               <View
                 key={index}
@@ -120,4 +137,4 @@ const ChatMessage = ({isMy, chat, isFirst}: ChatMessageProps) => {
   );
 };
 
-export default memo(ChatMessage);
+export default ChatMessage;

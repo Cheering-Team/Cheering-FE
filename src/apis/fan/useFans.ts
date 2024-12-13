@@ -10,7 +10,6 @@ import {
 } from './index';
 import {queryClient} from '../../../App';
 import {fanKeys} from './queries';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {postKeys} from 'apis/post/queries';
 import {showTopToast} from 'utils/toast';
 import {useNavigation} from '@react-navigation/native';

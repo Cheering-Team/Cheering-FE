@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import CategoryGraySvg from '../../assets/images/category-gray.svg';
 import CategoryBlackSvg from '../../assets/images/category-black.svg';
@@ -8,18 +8,37 @@ import ChatGraySvg from '../../assets/images/chat-gray.svg';
 import ChatBlackSvg from '../../assets/images/chat-black.svg';
 import MoreGraySvg from '../../assets/images/more-gray.svg';
 import MoreBlackSvg from '../../assets/images/more-black.svg';
-
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from './CustomText';
 import {getActiveRouteName} from '../../utils/getActiveRouteName';
+import {useGetUnreadChats} from 'apis/chat/useChats';
+import messaging from '@react-native-firebase/messaging';
 
 function CustomTabBar({state, descriptors, navigation}) {
   // 탭 애니메이션 상태
   const [modeValue, setModeValue] = React.useState(false);
+  const [chatCount, setChatCount] = useState(0);
   const mode = React.useRef(new Animated.Value(0)).current;
 
   // 현재 화면 이름
-  let routeName = getActiveRouteName(state);
+  const routeName = getActiveRouteName(state);
+
+  const {data: unreadChats} = useGetUnreadChats();
+
+  useEffect(() => {
+    if (unreadChats !== undefined) {
+      setChatCount(unreadChats);
+    }
+  }, [unreadChats]);
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async payload => {
+      if (payload.data.type === 'CHAT') {
+        setChatCount(JSON.parse(Number(payload.data.count)));
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <>
@@ -46,6 +65,7 @@ function CustomTabBar({state, descriptors, navigation}) {
 
       <View
         style={[
+          routeName === 'Splash' ||
           routeName === 'PostWrite' ||
           routeName === 'Post' ||
           routeName === 'Search' ||
@@ -116,39 +136,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                     </CustomText>
                   </>
                 )
-              ) : // index === 1 ? (
-              //   isFocused ? (
-              //     <>
-              //       <AlertSvg width={20} height={20} />
-              //       <CustomText fontWeight="600" style={styles.TabLabelFocused}>
-              //         알림
-              //       </CustomText>
-              //     </>
-              //   ) : (
-              //     <>
-              //       {data && (
-              //         <View
-              //           style={{
-              //             position: 'absolute',
-              //             zIndex: 100,
-              //             width: 10,
-              //             height: 10,
-              //             backgroundColor: 'red',
-              //             borderRadius: 100,
-              //             top: 4,
-              //             left: 40,
-              //           }}
-              //         />
-              //       )}
-
-              //       <AlertGraySvg width={20} height={20} />
-              //       <CustomText fontWeight="600" style={styles.TabLabel}>
-              //         알림
-              //       </CustomText>
-              //     </>
-              //   )
-              // ) :
-              index === 0 ? (
+              ) : index === 0 ? (
                 isFocused ? (
                   <>
                     <HomeBlackSvg width={20} height={20} />
@@ -171,6 +159,15 @@ function CustomTabBar({state, descriptors, navigation}) {
                     <CustomText fontWeight="600" style={styles.TabLabelFocused}>
                       채팅
                     </CustomText>
+                    {chatCount > 0 && (
+                      <View className="absolute bg-[#fc3b3b] rounded-full min-w-[15] h-[15] px-1 justify-center items-center top-[2] left-[48]">
+                        <CustomText
+                          fontWeight="600"
+                          className="text-white text-center text-[12px]">
+                          {chatCount}
+                        </CustomText>
+                      </View>
+                    )}
                   </>
                 ) : (
                   <>
@@ -178,6 +175,15 @@ function CustomTabBar({state, descriptors, navigation}) {
                     <CustomText fontWeight="600" style={styles.TabLabel}>
                       채팅
                     </CustomText>
+                    {chatCount > 0 && (
+                      <View className="absolute bg-[#fc3b3b] rounded-full min-w-[15] h-[15] px-1 justify-center items-center top-[2] left-[48]">
+                        <CustomText
+                          fontWeight="600"
+                          className="text-white text-center text-[12px]">
+                          {chatCount}
+                        </CustomText>
+                      </View>
+                    )}
                   </>
                 )
               ) : isFocused ? (

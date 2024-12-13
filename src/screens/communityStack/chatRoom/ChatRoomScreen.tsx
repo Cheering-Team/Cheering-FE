@@ -6,27 +6,35 @@ import {
 } from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
+  AppState,
   FlatList,
   KeyboardAvoidingView,
   ListRenderItem,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Platform,
+  View,
 } from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useGetChatRoomById, useGetChats} from 'apis/chat/useChats';
+import {
+  useGetChatRoomById,
+  useGetChats,
+  useUpdateExitTime,
+} from 'apis/chat/useChats';
 import {Chat, ChatResponse} from 'apis/chat/types';
 import {Drawer} from 'react-native-drawer-layout';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import ChatRoomEnterLoading from './components/ChatRoomEnterLoading';
 import ChatRoomDrawerContent from './components/ChatRoomDrawerContent';
 import ChatRoomHeader from './components/ChatRoomHeader';
 import ChatRoomFooter from './components/ChatRoomFooter';
 import ChatMessage from './components/ChatMessage';
 import {useWebSocket} from 'context/useWebSocket';
 import {StompSubscription} from '@stomp/stompjs';
+import CustomText from 'components/common/CustomText';
+import {queryClient} from '../../../../App';
+import {chatRoomKeys} from 'apis/chat/queries';
 const TextEncodingPolyfill = require('text-encoding');
 
 Object.assign('global', {
@@ -41,11 +49,12 @@ const ChatRoomScreen = () => {
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
-  const {stompClient, activateWebSocket, isConnected} = useWebSocket();
+  const {stompClient, isConnected} = useWebSocket();
   const subscriptionRefs = useRef<{
     participants: StompSubscription | null;
     chatRoom: StompSubscription | null;
   }>({participants: null, chatRoom: null});
+  const appState = useRef(AppState.currentState);
 
   const [messages, setMessages] = useState<Chat[]>([]);
   const [isAtBottom, setIsAtBottom] = useState(true);
@@ -63,29 +72,32 @@ const ChatRoomScreen = () => {
     isError: chatIsError,
     error: chatError,
   } = useGetChats(chatRoomId);
+  const {mutate: updateExitTime} = useUpdateExitTime();
 
   const handleNewMessage = useCallback((newMessage: ChatResponse) => {
     setMessages(prevMessages => {
       const firstGroup = prevMessages[0];
 
       if (
+        newMessage.type === 'MESSAGE' &&
         firstGroup &&
-        firstGroup.sender.id === newMessage.sender.id &&
-        firstGroup.createdAt.substring(0, 16) ===
-          newMessage.createdAt.substring(0, 16)
+        firstGroup.groupKey === newMessage.groupKey
       ) {
-        return prevMessages.map((group, index) =>
-          index === 0
-            ? {...group, messages: [...group.messages, newMessage.message]}
-            : group,
-        );
+        const updatedMessages = [...prevMessages];
+        updatedMessages[0].messages.push(newMessage.content);
+        return updatedMessages;
       }
-
       return [
         {
-          createdAt: newMessage.createdAt.substring(0, 16),
-          sender: newMessage.sender,
-          messages: [newMessage.message],
+          type: newMessage.type,
+          createdAt: newMessage.createdAt,
+          writer: {
+            id: newMessage.writerId,
+            name: newMessage.writerName,
+            image: newMessage.writerImage,
+          },
+          messages: [newMessage.content],
+          groupKey: newMessage.groupKey,
         },
         ...prevMessages,
       ];
@@ -102,25 +114,42 @@ const ChatRoomScreen = () => {
 
   const renderChatMessage: ListRenderItem<Chat> = useCallback(
     ({item, index}) => {
-      const currentMessageDate = new Date(item.createdAt).setHours(0, 0, 0, 0);
-      const previousMessageDate =
-        index < messages.length - 1
-          ? new Date(messages[index + 1].createdAt).setHours(0, 0, 0, 0)
-          : null;
+      if (item.type === 'MESSAGE') {
+        const currentMessageDate = new Date(item.createdAt).setHours(
+          0,
+          0,
+          0,
+          0,
+        );
+        const previousMessageDate =
+          index < messages.length - 1
+            ? new Date(messages[index + 1].createdAt).setHours(0, 0, 0, 0)
+            : null;
 
-      const isFirst =
-        index === messages.length - 1 ||
-        currentMessageDate !== previousMessageDate;
+        const isFirst =
+          index === messages.length - 1 ||
+          currentMessageDate !== previousMessageDate;
 
-      return (
-        <ChatMessage
-          chat={item}
-          isMy={item.sender.id === chatRoom?.user?.id}
-          isFirst={isFirst}
-        />
-      );
+        return (
+          <ChatMessage
+            chat={item}
+            isMy={item.writer.id === chatRoom?.user?.id}
+            isFirst={isFirst}
+          />
+        );
+      } else {
+        return (
+          <View className="justify-center items-center mb-[15] mt-[5]">
+            <View className="bg-black/30 py-1 px-3 rounded-xl">
+              <CustomText fontWeight="500" className="text-white text-sm">
+                {item.messages[0]}
+              </CustomText>
+            </View>
+          </View>
+        );
+      }
     },
-    [chatRoom?.user?.id, messages],
+    [chatRoom, messages],
   );
 
   const loadChat = useCallback(() => {
@@ -135,53 +164,57 @@ const ChatRoomScreen = () => {
     }
   }, [chatRoom]);
 
-  useEffect(() => {
-    const client = stompClient.current;
-
-    const subscribeToChatRoom = async () => {
-      const accessToken = await EncryptedStorage.getItem('accessToken');
-      if (client && isConnected && accessToken) {
-        const participantsSubscription = client.subscribe(
-          `/topic/chatRoom/${chatRoomId}/participants`,
-          message => {
-            const updatedCount = JSON.parse(message.body);
-            setParticipantCount(updatedCount);
-          },
-        );
-        subscriptionRefs.current.participants = participantsSubscription;
-
-        const chatRoomSubscription = client.subscribe(
-          `/topic/chatRoom/${chatRoomId}`,
-          message => {
-            handleNewMessage(JSON.parse(message.body));
-          },
-          {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        );
-        subscriptionRefs.current.chatRoom = chatRoomSubscription;
-      }
-    };
-
-    if (isConnected) {
-      subscribeToChatRoom();
-    }
-  }, [chatRoomId, handleNewMessage, isConnected, stompClient]);
-
-  // focus시 소켓 연결 확인
-  // blur시 구독 해제
   useFocusEffect(
     useCallback(() => {
-      if (!stompClient || !isConnected) {
-        activateWebSocket();
-      }
+      const client = stompClient.current;
 
+      const subscribeToChatRoom = async () => {
+        const accessToken = await EncryptedStorage.getItem('accessToken');
+
+        if (client && isConnected && accessToken && chatRoom?.type) {
+          const participantsSubscription = client.subscribe(
+            `/topic/chatRoom/${chatRoomId}/participants`,
+            message => {
+              const body = JSON.parse(message.body);
+              setParticipantCount(body.count);
+              if (chatRoom?.type === 'PUBLIC') {
+                handleNewMessage(body);
+                queryClient.invalidateQueries({
+                  queryKey: chatRoomKeys.participants(chatRoomId),
+                });
+              }
+            },
+          );
+          subscriptionRefs.current.participants = participantsSubscription;
+
+          const chatRoomSubscription = client.subscribe(
+            `/topic/chatRoom/${chatRoomId}`,
+            message => {
+              handleNewMessage(JSON.parse(message.body));
+            },
+            {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          );
+          subscriptionRefs.current.chatRoom = chatRoomSubscription;
+        }
+      };
+
+      subscribeToChatRoom();
+    }, [
+      chatRoom?.type,
+      chatRoomId,
+      handleNewMessage,
+      isConnected,
+      stompClient,
+    ]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
       return () => {
         if (stompClient.current && isConnected) {
-          stompClient.current.publish({
-            destination: `/app/chatRooms/exit`,
-            body: JSON.stringify({chatRoomId}),
-          });
+          queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
           const {participants, chatRoom: chatRoomSub} =
             subscriptionRefs.current;
           if (participants) participants.unsubscribe();
@@ -189,37 +222,54 @@ const ChatRoomScreen = () => {
           subscriptionRefs.current = {participants: null, chatRoom: null};
         }
       };
-    }, [activateWebSocket, chatRoomId, isConnected, stompClient]),
+    }, [isConnected, stompClient]),
   );
 
   useFocusEffect(
     useCallback(() => {
-      const client = stompClient.current;
-
       return () => {
-        if (client) {
-          if (chatRoom?.type === 'OFFICIAL' && client.connected) {
-            client.publish({
-              destination: `/app/chatRooms/leave`,
-              body: JSON.stringify({chatRoomId}),
-            });
-          }
+        if (isConnected && chatRoom?.type === 'PUBLIC') {
+          updateExitTime({chatRoomId});
+        }
+        if (
+          stompClient.current &&
+          isConnected &&
+          chatRoom?.type === 'OFFICIAL'
+        ) {
+          stompClient.current.publish({
+            destination: `/app/chatRooms/leave`,
+            body: JSON.stringify({chatRoomId}),
+          });
         }
       };
-    }, [chatRoom?.type, chatRoomId, stompClient]),
+    }, [chatRoom?.type, chatRoomId, isConnected, stompClient, updateExitTime]),
   );
 
   // 채팅 불러오기 및 표시
   useEffect(() => {
-    setMessages(chats?.pages.flatMap(page => page.chats) || []);
+    if (chats) {
+      setMessages(chats.pages.flatMap(page => page.chats));
+    }
   }, [chats]);
 
-  // Focus시 채팅 다시 불러오기
-  useFocusEffect(
-    useCallback(() => {
-      refetch();
-    }, [refetch]),
-  );
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      'change',
+      async nextAppState => {
+        if (
+          appState.current.match(/inactive|background/) &&
+          nextAppState === 'active'
+        ) {
+          refetch();
+        }
+        appState.current = nextAppState;
+      },
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [chatRoomId, refetch, stompClient]);
 
   useEffect(() => {
     if (
@@ -237,8 +287,8 @@ const ChatRoomScreen = () => {
     navigation,
   ]);
 
-  if (!chatRoom || !isConnected) {
-    return <ChatRoomEnterLoading />;
+  if (!chatRoom) {
+    return null;
   }
 
   return (
@@ -275,7 +325,7 @@ const ChatRoomScreen = () => {
           }}
           data={messages}
           renderItem={renderChatMessage}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => `${item.groupKey}-${index}`}
           onScroll={handleScroll}
           scrollEventThrottle={16}
           maintainVisibleContentPosition={
@@ -286,7 +336,7 @@ const ChatRoomScreen = () => {
         />
         <ChatRoomFooter
           client={stompClient}
-          chatRoomId={chatRoomId}
+          chatRoom={chatRoom}
           flatListRef={flatListRef}
           isAtBottom={isAtBottom}
         />

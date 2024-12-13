@@ -4,11 +4,13 @@ import React, {
   MutableRefObject,
   ReactNode,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from 'react';
 import SockJS from 'sockjs-client';
 import config from 'react-native-config';
+import {AppState} from 'react-native';
 
 type WebSocketContextType = {
   stompClient: MutableRefObject<Client | null>;
@@ -25,6 +27,7 @@ const WebSocketContext = createContext<WebSocketContextType>(null);
 export const WebSocketProvider = ({children}: WebSocketProviderProps) => {
   const stompClient = useRef<Client | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const appState = useRef(AppState.currentState);
 
   const activateWebSocket = () => {
     if (!stompClient.current) {
@@ -47,6 +50,37 @@ export const WebSocketProvider = ({children}: WebSocketProviderProps) => {
       stompClient.current.activate();
     }
   };
+
+  const deactivateWebScoket = () => {
+    if (stompClient.current) {
+      stompClient.current?.deactivate();
+      stompClient.current = null;
+    }
+  };
+
+  useEffect(() => {
+    const handleAppStateChange = nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        activateWebSocket();
+      } else {
+        deactivateWebScoket();
+      }
+
+      appState.current = nextAppState;
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
     <WebSocketContext.Provider

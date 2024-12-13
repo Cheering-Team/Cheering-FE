@@ -1,4 +1,9 @@
-import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
 import {
   changeCommunityOrder,
   getCommunityById,
@@ -55,11 +60,12 @@ export const useJoinCommunity = () => {
 };
 
 // 내 선수 불러오기
-export const useGetMyCommunities = () => {
+export const useGetMyCommunities = (enabled: boolean) => {
   return useQuery({
     queryKey: communityKeys.listByMy(),
     queryFn: getMyCommunities,
     retry: false,
+    enabled,
   });
 };
 

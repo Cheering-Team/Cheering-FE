@@ -61,3 +61,10 @@ export interface RegisterManagerAccountPayload {
   communityId: number;
   phone: string;
 }
+
+export interface VersionInfo {
+  latestVersion: string;
+  minSupportedVersion: string;
+  iosUrl: string;
+  aosUrl: string;
+}

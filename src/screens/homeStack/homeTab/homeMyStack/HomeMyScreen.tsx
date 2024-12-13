@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Pressable, View} from 'react-native';
+import {Platform, Pressable, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import messaging from '@react-native-firebase/messaging';
 import {isFirstLogin, saveFCMToken} from 'apis/user';
@@ -21,6 +21,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {checkNotificationPermission} from 'utils/fcmUtils';
 import DeviceInfo from 'react-native-device-info';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
+import {useWebSocket} from 'context/useWebSocket';
+import OneButtonModal from 'components/common/OneButtonModal';
 
 const HomeMyScreen = () => {
   const navigation =
@@ -30,7 +32,9 @@ const HomeMyScreen = () => {
   const [isRegisiterOpen, setIsRegisterOpen] = useState(false);
   const [isIntroOpen, setIsIntroOpen] = useState(false);
 
-  const {data: communities} = useGetMyCommunities();
+  const {activateWebSocket, isConnected} = useWebSocket();
+
+  const {data: communities} = useGetMyCommunities(true);
   const {refetch: refetchUnRead} = useGetIsUnread();
   const {mutateAsync: readNotificaiton} = useReadNotification();
 
@@ -46,10 +50,11 @@ const HomeMyScreen = () => {
     };
   }, []);
   useEffect(() => {
-    const unsubscribe = messaging().onMessage(async () => {
-      refetchUnRead();
+    const unsubscribe = messaging().onMessage(async payload => {
+      if (payload.data.type === 'POST') {
+        refetchUnRead();
+      }
     });
-
     return unsubscribe;
   }, [refetchUnRead]);
   // 백그라운드, 종료 알림 클릭 처리
@@ -147,6 +152,11 @@ const HomeMyScreen = () => {
 
     checkFirst();
   }, [navigation]);
+  useEffect(() => {
+    if (!isConnected && Platform.OS === 'android') {
+      activateWebSocket();
+    }
+  }, [activateWebSocket, isConnected]);
 
   return (
     <View className="flex-1">
@@ -181,7 +191,8 @@ const HomeMyScreen = () => {
           speed={1500}>
           <View
             style={{
-              height: WINDOW_HEIGHT * 0.65,
+              height:
+                (WINDOW_HEIGHT - 50 - insets.top - insets.bottom - 45) * 0.87,
               marginBottom: 20,
               marginHorizontal: 25,
               marginTop: 43,
