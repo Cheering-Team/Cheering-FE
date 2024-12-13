@@ -6,11 +6,13 @@ import {deleteFCMToken, getVersionInfo} from 'apis/user';
 import {queryClient} from '../../App';
 import DeviceInfo from 'react-native-device-info';
 import SplashScreen from 'screens/auth/SplashScreen';
-import {Alert, Linking, Platform} from 'react-native';
+import {Linking, Platform} from 'react-native';
 import VersionCheck from 'react-native-version-check';
 import NativeSplash from 'react-native-splash-screen';
 import {useGetMyCommunities} from 'apis/community/useCommunities';
 import FastImage from 'react-native-fast-image';
+import OneButtonModal from 'components/common/OneButtonModal';
+import {VersionInfo} from 'apis/user/types';
 
 interface AuthState {
   isLoading: boolean;
@@ -34,6 +36,10 @@ export const AuthContext = React.createContext<AuthContextType | null>(null);
 
 const AuthSwitch = () => {
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isUpdate, setIsUpdate] = React.useState(false);
+  const [versionInfo, setVersionInfo] = React.useState<VersionInfo | null>(
+    null,
+  );
   const {data: communities, refetch} = useGetMyCommunities(false);
 
   React.useEffect(() => {
@@ -41,6 +47,7 @@ const AuthSwitch = () => {
     const checkVersion = async () => {
       try {
         const data = await getVersionInfo();
+        setVersionInfo(data);
         const currentVersion = VersionCheck.getCurrentVersion();
         const accessToken = await EncryptedStorage.getItem('accessToken');
 
@@ -49,20 +56,7 @@ const AuthSwitch = () => {
           latestVersion: data.minSupportedVersion,
         }).then(res => {
           if (res.isNeeded) {
-            Alert.alert(
-              '필수 업데이트',
-              '새로운 기능들이 생겼어요\n5초만에 업데이트 해보세요',
-              [
-                {
-                  text: '스토어로 이동',
-                  onPress: () =>
-                    Linking.openURL(
-                      Platform.OS === 'ios' ? data.iosUrl : data.aosUrl,
-                    ),
-                },
-              ],
-              {cancelable: false},
-            );
+            setIsUpdate(true);
           } else {
             if (accessToken) {
               refetch();
@@ -201,6 +195,18 @@ const AuthSwitch = () => {
         <AuthStackNavigator />
       ) : (
         <MainTabNavigator />
+      )}
+      {isUpdate && versionInfo && (
+        <OneButtonModal
+          title="업데이트"
+          content="새 기능들이 출시됐어요. 지금 바로 업데이트 해보세요."
+          buttonTitle="업데이트"
+          onButtonPress={() =>
+            Linking.openURL(
+              Platform.OS === 'ios' ? versionInfo.iosUrl : versionInfo.aosUrl,
+            )
+          }
+        />
       )}
     </AuthContext.Provider>
   );
