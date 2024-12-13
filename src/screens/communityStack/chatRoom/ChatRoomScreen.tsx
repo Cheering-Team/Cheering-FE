@@ -213,8 +213,8 @@ const ChatRoomScreen = () => {
   useFocusEffect(
     useCallback(() => {
       return () => {
-        queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
         if (stompClient.current && isConnected) {
+          queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
           const {participants, chatRoom: chatRoomSub} =
             subscriptionRefs.current;
           if (participants) participants.unsubscribe();
