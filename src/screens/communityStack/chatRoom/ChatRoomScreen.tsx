@@ -171,7 +171,7 @@ const ChatRoomScreen = () => {
       const subscribeToChatRoom = async () => {
         const accessToken = await EncryptedStorage.getItem('accessToken');
 
-        if (client && isConnected && accessToken) {
+        if (client && isConnected && accessToken && chatRoom?.type) {
           const participantsSubscription = client.subscribe(
             `/topic/chatRoom/${chatRoomId}/participants`,
             message => {
