@@ -171,7 +171,7 @@ const ChatRoomScreen = () => {
       const subscribeToChatRoom = async () => {
         const accessToken = await EncryptedStorage.getItem('accessToken');
 
-        if (client && isConnected && accessToken) {
+        if (client && isConnected && accessToken && chatRoom?.type) {
           const participantsSubscription = client.subscribe(
             `/topic/chatRoom/${chatRoomId}/participants`,
             message => {
@@ -213,8 +213,8 @@ const ChatRoomScreen = () => {
   useFocusEffect(
     useCallback(() => {
       return () => {
-        queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
         if (stompClient.current && isConnected) {
+          queryClient.invalidateQueries({queryKey: chatRoomKeys.lists()});
           const {participants, chatRoom: chatRoomSub} =
             subscriptionRefs.current;
           if (participants) participants.unsubscribe();

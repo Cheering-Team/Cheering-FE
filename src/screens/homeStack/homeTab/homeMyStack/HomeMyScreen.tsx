@@ -22,6 +22,7 @@ import {checkNotificationPermission} from 'utils/fcmUtils';
 import DeviceInfo from 'react-native-device-info';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import {useWebSocket} from 'context/useWebSocket';
+import OneButtonModal from 'components/common/OneButtonModal';
 
 const HomeMyScreen = () => {
   const navigation =
