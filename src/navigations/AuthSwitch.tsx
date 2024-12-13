@@ -61,7 +61,7 @@ const AuthSwitch = () => {
                     ),
                 },
               ],
-              {cancelable: false}, // 앱 종료 방지
+              {cancelable: false},
             );
           } else {
             if (accessToken) {
@@ -79,15 +79,17 @@ const AuthSwitch = () => {
     };
 
     checkVersion();
-  });
+  }, [refetch]);
 
   React.useEffect(() => {
     if (communities) {
       if (communities.length) {
-        FastImage.preload([
-          {uri: communities[0].backgroundImage},
-          {uri: communities[0].image},
-        ]);
+        if (communities[0].backgroundImage) {
+          FastImage.preload([{uri: communities[0].backgroundImage}]);
+        }
+        if (communities[0].image) {
+          FastImage.preload([{uri: communities[0].image}]);
+        }
       }
 
       setTimeout(() => {
