@@ -200,7 +200,7 @@ const AuthSwitch = () => {
         <OneButtonModal
           title="업데이트"
           content="새 기능들이 출시됐어요. 지금 바로 업데이트 해보세요."
-          buttonTitle="업데이트"
+          buttonTitle="확인"
           onButtonPress={() =>
             Linking.openURL(
               Platform.OS === 'ios' ? versionInfo.iosUrl : versionInfo.aosUrl,

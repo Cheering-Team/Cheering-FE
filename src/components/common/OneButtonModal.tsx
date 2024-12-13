@@ -18,23 +18,23 @@ const OneButtonModal = ({
   return (
     <Modal transparent={true} animationType="fade">
       <View className="w-full h-full bg-black/50 justify-center items-center">
-        <View className="bg-[#EDEDED] w-[85%] py-6 px-6 rounded-xl">
+        <View className="bg-[#ffffff] w-[85%] py-5 px-6 rounded-3xl">
           <CustomText
-            className="text-[21px] mb-[14] text-[#313A49]"
+            className="text-xl mb-[14] text-[#313A49]"
             numberOfLines={999}
             fontWeight="700">
             {title}
           </CustomText>
           {content && (
             <CustomText
-              className="text-[17px] leading-[24px] text-gray-500"
-              fontWeight="600"
+              className="text-[15px] leading-[22px] text-gray-600"
+              fontWeight="500"
               numberOfLines={999}>
               {content}
             </CustomText>
           )}
           <Pressable className="self-end mt-6" onPress={onButtonPress}>
-            <CustomText className="text-lg text-gray-700" fontWeight="700">
+            <CustomText className="text-lg text-gray-700" fontWeight="600">
               {buttonTitle}
             </CustomText>
           </Pressable>
