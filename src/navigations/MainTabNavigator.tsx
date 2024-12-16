@@ -3,8 +3,8 @@ import React from 'react';
 import HomeStackNavigator from './HomeStackNavigator';
 import CategoryStackNavigator from './CategoryStackNavigator';
 import MoreStackNavigator from './MoreStackNavigator';
-import CustomTabBar from '../components/common/CustomHomeTab';
 import MyChatStackNavigator from './MyChatStackNavigator';
+import CustomTabBar from 'components/common/CustomTabBar';
 
 const MainTabNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -17,16 +17,23 @@ const MainTabNavigator = () => {
         tabBarShowLabel: false,
       }}>
       <Tab.Screen
-        name="HomeStack"
-        component={HomeStackNavigator}
-        options={{headerShown: false}}
-      />
-      <Tab.Screen
         name="CategoryStack"
         component={CategoryStackNavigator}
         options={{
           headerShown: false,
         }}
+      />
+      <Tab.Screen
+        name="HotStack"
+        component={CategoryStackNavigator}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="HomeStack"
+        component={HomeStackNavigator}
+        options={{headerShown: false}}
       />
       <Tab.Screen
         name="MyChatStack"

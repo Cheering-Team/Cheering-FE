@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Animated, Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import CategoryGraySvg from '../../assets/images/category-gray.svg';
 import CategoryBlackSvg from '../../assets/images/category-black.svg';
 import HomeGraySvg from '../../assets/images/home-gray.svg';
@@ -8,17 +8,17 @@ import ChatGraySvg from '../../assets/images/chat-gray.svg';
 import ChatBlackSvg from '../../assets/images/chat-black.svg';
 import MoreGraySvg from '../../assets/images/more-gray.svg';
 import MoreBlackSvg from '../../assets/images/more-black.svg';
+import CompassBlackSvg from 'assets/images/compass-black.svg';
+import CompassGraySvg from 'assets/images/compass-gray.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from './CustomText';
 import {getActiveRouteName} from '../../utils/getActiveRouteName';
 import {useGetUnreadChats} from 'apis/chat/useChats';
 import messaging from '@react-native-firebase/messaging';
+import {WINDOW_WIDTH} from 'constants/dimension';
 
 function CustomTabBar({state, descriptors, navigation}) {
-  // 탭 애니메이션 상태
-  const [modeValue, setModeValue] = React.useState(false);
   const [chatCount, setChatCount] = useState(0);
-  const mode = React.useRef(new Animated.Value(0)).current;
 
   // 현재 화면 이름
   const routeName = getActiveRouteName(state);
@@ -42,27 +42,6 @@ function CustomTabBar({state, descriptors, navigation}) {
 
   return (
     <>
-      {modeValue && (
-        <Pressable
-          style={{
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-          }}
-          onPress={() => {
-            Animated.timing(mode, {
-              toValue: 0,
-              duration: 350,
-              useNativeDriver: true,
-            }).start(() => {
-              setModeValue(!modeValue);
-            });
-          }}
-        />
-      )}
-
       <View
         style={[
           routeName === 'Splash' ||
@@ -120,47 +99,65 @@ function CustomTabBar({state, descriptors, navigation}) {
               onPress={onPress}
               onLongPress={onLongPress}
               style={styles.Tab}>
-              {index === 1 ? (
+              {index === 0 ? (
                 isFocused ? (
                   <>
-                    <CategoryBlackSvg width={20} height={20} />
-                    <CustomText fontWeight="600" style={styles.TabLabelFocused}>
+                    <CategoryBlackSvg width={22} height={22} />
+                    {/* <CustomText fontWeight="600" style={styles.TabLabelFocused}>
                       카테고리
-                    </CustomText>
+                    </CustomText> */}
                   </>
                 ) : (
                   <>
-                    <CategoryGraySvg width={20} height={20} />
-                    <CustomText fontWeight="600" style={styles.TabLabel}>
+                    <CategoryGraySvg width={22} height={22} />
+                    {/* <CustomText fontWeight="600" style={styles.TabLabel}>
                       카테고리
-                    </CustomText>
+                    </CustomText> */}
                   </>
                 )
-              ) : index === 0 ? (
+              ) : index === 1 ? (
                 isFocused ? (
                   <>
-                    <HomeBlackSvg width={20} height={20} />
-                    <CustomText fontWeight="600" style={styles.TabLabelFocused}>
+                    <CompassBlackSvg width={22} height={22} />
+                    {/* <CustomText fontWeight="600" style={styles.TabLabelFocused}>
                       홈
-                    </CustomText>
+                    </CustomText> */}
                   </>
                 ) : (
                   <>
-                    <HomeGraySvg width={20} height={20} />
-                    <CustomText fontWeight="600" style={styles.TabLabel}>
+                    <CompassGraySvg width={22} height={22} />
+                    {/* <CustomText fontWeight="600" style={styles.TabLabel}>
                       홈
-                    </CustomText>
+                    </CustomText> */}
                   </>
                 )
               ) : index === 2 ? (
                 isFocused ? (
                   <>
-                    <ChatBlackSvg width={20} height={20} />
-                    <CustomText fontWeight="600" style={styles.TabLabelFocused}>
+                    <HomeBlackSvg width={22} height={22} />
+                    {/* <CustomText fontWeight="600" style={styles.TabLabelFocused}>
+                      홈
+                    </CustomText> */}
+                  </>
+                ) : (
+                  <>
+                    <HomeGraySvg width={22} height={22} />
+                    {/* <CustomText fontWeight="600" style={styles.TabLabel}>
+                      홈
+                    </CustomText> */}
+                  </>
+                )
+              ) : index === 3 ? (
+                isFocused ? (
+                  <>
+                    <ChatBlackSvg width={22} height={22} />
+                    {/* <CustomText fontWeight="600" style={styles.TabLabelFocused}>
                       채팅
-                    </CustomText>
+                    </CustomText> */}
                     {chatCount > 0 && (
-                      <View className="absolute bg-[#fc3b3b] rounded-full min-w-[15] h-[15] px-1 justify-center items-center top-[2] left-[48]">
+                      <View
+                        className="absolute bg-[#fc3b3b] rounded-full min-w-[15] h-[15] px-1 justify-center items-center top-[8]"
+                        style={{left: WINDOW_WIDTH / 10}}>
                         <CustomText
                           fontWeight="600"
                           className="text-white text-center text-[12px]">
@@ -171,12 +168,14 @@ function CustomTabBar({state, descriptors, navigation}) {
                   </>
                 ) : (
                   <>
-                    <ChatGraySvg width={20} height={20} />
-                    <CustomText fontWeight="600" style={styles.TabLabel}>
+                    <ChatGraySvg width={22} height={22} />
+                    {/* <CustomText fontWeight="600" style={styles.TabLabel}>
                       채팅
-                    </CustomText>
+                    </CustomText> */}
                     {chatCount > 0 && (
-                      <View className="absolute bg-[#fc3b3b] rounded-full min-w-[15] h-[15] px-1 justify-center items-center top-[2] left-[48]">
+                      <View
+                        className="absolute bg-[#fc3b3b] rounded-full min-w-[15] h-[15] px-1 justify-center items-center top-[8]"
+                        style={{left: WINDOW_WIDTH / 10}}>
                         <CustomText
                           fontWeight="600"
                           className="text-white text-center text-[12px]">
@@ -188,17 +187,17 @@ function CustomTabBar({state, descriptors, navigation}) {
                 )
               ) : isFocused ? (
                 <>
-                  <MoreBlackSvg width={20} height={20} />
-                  <CustomText fontWeight="600" style={styles.TabLabelFocused}>
+                  <MoreBlackSvg width={22} height={22} />
+                  {/* <CustomText fontWeight="600" style={styles.TabLabelFocused}>
                     더보기
-                  </CustomText>
+                  </CustomText> */}
                 </>
               ) : (
                 <>
-                  <MoreGraySvg width={20} height={20} />
-                  <CustomText fontWeight="600" style={styles.TabLabel}>
+                  <MoreGraySvg width={22} height={22} />
+                  {/* <CustomText fontWeight="600" style={styles.TabLabel}>
                     더보기
-                  </CustomText>
+                  </CustomText> */}
                 </>
               )}
             </Pressable>
@@ -216,16 +215,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     flexDirection: 'row',
-    borderTopWidth: 1,
-    borderTopColor: '#eaeaea',
     backgroundColor: 'white',
   },
   Tab: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 12,
+    paddingBottom: 12,
   },
   TabLabel: {fontSize: 10, color: '#B7B7B7', marginTop: 3},
   TabLabelFocused: {fontSize: 10, color: '#323232', marginTop: 3},
