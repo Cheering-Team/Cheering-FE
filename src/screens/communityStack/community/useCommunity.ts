@@ -1,4 +1,4 @@
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
+import {WINDOW_WIDTH} from 'constants/dimension';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList} from 'react-native';
 import {
@@ -11,14 +11,16 @@ import {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
-
 export const useCommunity = () => {
   const insets = useSafeAreaInsets();
+  const HEADER_HEIGHT = 110 + insets.top;
 
   const [tabRoutes, setTabRoutes] = useState([
+    {key: 'main', title: '메인'},
     {key: 'feed', title: '피드'},
     {key: 'chat', title: '채팅'},
+    {key: 'schedule', title: '일정'},
+    {key: 'meet', title: '모임'},
   ]);
 
   const [tabIndex, setTabIndex] = useState(0);
@@ -42,8 +44,8 @@ export const useCommunity = () => {
       {
         translateY: interpolate(
           scrollY.value,
-          [0, HEADER_HEIGHT - insets.top - 45],
-          [0, -HEADER_HEIGHT + insets.top + 45],
+          [0, 0, HEADER_HEIGHT - insets.top - 40],
+          [0, 0, -HEADER_HEIGHT + insets.top + 40],
           {extrapolateRight: Extrapolation.CLAMP},
         ),
       },
@@ -55,8 +57,8 @@ export const useCommunity = () => {
       {
         translateY: interpolate(
           scrollY.value,
-          [0, HEADER_HEIGHT - insets.top - 45],
-          [HEADER_HEIGHT, insets.top + 45],
+          [0, 0, HEADER_HEIGHT - insets.top - 40],
+          [HEADER_HEIGHT, HEADER_HEIGHT, insets.top + 40],
           {
             extrapolateRight: Extrapolation.CLAMP,
           },
@@ -91,7 +93,7 @@ export const useCommunity = () => {
     listArrRef.current.forEach(item => {
       if (item.key !== focusedTabKey) {
         if (
-          scrollY.value < HEADER_HEIGHT - insets.top - 45 &&
+          scrollY.value < HEADER_HEIGHT - insets.top - 40 &&
           scrollY.value >= 0
         ) {
           if (item.value) {
@@ -101,17 +103,17 @@ export const useCommunity = () => {
             });
             listOffsetRef.current[item.key] = scrollY.value;
           }
-        } else if (scrollY.value >= HEADER_HEIGHT - insets.top - 45) {
+        } else if (scrollY.value >= HEADER_HEIGHT - insets.top - 40) {
           if (
-            listOffsetRef.current[item.key] < HEADER_HEIGHT - insets.top - 45 ||
+            listOffsetRef.current[item.key] < HEADER_HEIGHT - insets.top - 40 ||
             listOffsetRef.current[item.key] === undefined
           ) {
             if (item.value) {
               item.value.scrollToOffset({
-                offset: HEADER_HEIGHT - insets.top - 45,
+                offset: HEADER_HEIGHT - insets.top - 40,
                 animated: false,
               });
-              listOffsetRef.current[item.key] = HEADER_HEIGHT - insets.top - 45;
+              listOffsetRef.current[item.key] = HEADER_HEIGHT - insets.top - 40;
             }
           }
         }

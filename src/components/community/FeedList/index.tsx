@@ -6,7 +6,6 @@ import {
   ListRenderItem,
   Pressable,
   RefreshControl,
-  View,
 } from 'react-native';
 import Animated, {
   SharedValue,
@@ -26,8 +25,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
-
-const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
+import {useMainTabScroll} from 'context/useMainTabScroll';
 
 interface FeedListProps {
   scrollY: SharedValue<number>;
@@ -61,7 +59,9 @@ const FeedList = ({
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
+  const HEADER_HEIGHT = 110 + insets.top;
 
+  const {scrollY: tabScrollY, previousScrollY} = useMainTabScroll();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const buttonOpacity = useSharedValue(1);
 
@@ -80,9 +80,20 @@ const FeedList = ({
   );
 
   const scrollHandler = useAnimatedScrollHandler(event => {
+    const currentScrollY = event.contentOffset.y;
     if (isTabFocused) {
-      scrollY.value = event.contentOffset.y;
+      scrollY.value = currentScrollY;
     }
+
+    if (currentScrollY > previousScrollY.value + 2 && currentScrollY > 0) {
+      tabScrollY.value = withTiming(50);
+    } else if (
+      currentScrollY < previousScrollY.value - 2 &&
+      currentScrollY > 0
+    ) {
+      tabScrollY.value = withTiming(0);
+    }
+    previousScrollY.value = currentScrollY;
   });
 
   const handleRefresh = () => {
@@ -95,7 +106,7 @@ const FeedList = ({
   };
 
   return (
-    <View style={{flex: 1}}>
+    <Animated.View style={{flex: 1}}>
       <Animated.FlatList
         ref={ref => {
           const foundIndex = listArrRef.current.findIndex(
@@ -118,8 +129,8 @@ const FeedList = ({
         renderItem={renderItem}
         contentContainerStyle={{
           paddingTop: HEADER_HEIGHT,
-          minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 45,
-          paddingBottom: insets.bottom + 100,
+          minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
+          paddingBottom: insets.bottom + 100 + 2000,
         }}
         ListHeaderComponent={
           <FeedFilter
@@ -142,7 +153,7 @@ const FeedList = ({
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={handleRefresh}
-            progressViewOffset={-20}
+            progressViewOffset={HEADER_HEIGHT}
             colors={['#787878']}
           />
         }
@@ -175,7 +186,7 @@ const FeedList = ({
           <PenSvg width={23} height={23} />
         </Pressable>
       </Animated.View>
-    </View>
+    </Animated.View>
   );
 };
 

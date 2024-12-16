@@ -7,7 +7,6 @@ import Avatar from '../../common/Avatar';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {Community} from 'apis/community/types';
-import CalendarSvg from 'assets/images/calendar.svg';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -16,9 +15,6 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import CustomText from 'components/common/CustomText';
-import {WINDOW_HEIGHT} from 'constants/dimension';
-
-const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
 
 interface CommunityHeaderProps {
   community: Community;
@@ -28,6 +24,7 @@ interface CommunityHeaderProps {
 const CommunityHeader = (props: CommunityHeaderProps) => {
   const {community, scrollY} = props;
   const insets = useSafeAreaInsets();
+  const HEADER_HEIGHT = 110 + insets.top;
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
 
@@ -35,7 +32,7 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
     return {
       backgroundColor: interpolateColor(
         scrollY.value,
-        [HEADER_HEIGHT - insets.top - 110, HEADER_HEIGHT - insets.top - 45],
+        [HEADER_HEIGHT - insets.top - 60, HEADER_HEIGHT - insets.top - 40],
         ['transparent', community.color],
       ),
     };
@@ -44,7 +41,7 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
       scrollY.value,
-      [HEADER_HEIGHT - insets.top - 110, HEADER_HEIGHT - insets.top - 45],
+      [HEADER_HEIGHT - insets.top - 60, HEADER_HEIGHT - insets.top - 40],
       [0, 1],
       Extrapolation.CLAMP,
     ),
@@ -56,7 +53,7 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
         styles.headerContainer,
         {
           paddingTop: insets.top,
-          height: insets.top + 45,
+          height: insets.top + 40,
         },
         animatedBGStyle,
       ]}>
@@ -64,22 +61,16 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
         onPress={() => {
           navigation.goBack();
         }}>
-        <CheveronLeft width={18} height={18} />
+        <CheveronLeft width={15} height={15} />
       </Pressable>
       <CustomText
-        className="text-white text-xl ml-3 flex-1"
+        className="text-white text-[19px] ml-3 flex-1"
         type="titleCenter"
         style={[animatedStyle, {bottom: Platform.OS === 'android' ? 3 : 0}]}>
         {community.koreanName}
       </CustomText>
       {community.curFan && (
         <View className="flex-row items-center">
-          <Pressable
-            onPress={() =>
-              navigation.navigate('Schedule', {communityId: community.id})
-            }>
-            <CalendarSvg width={23} height={23} />
-          </Pressable>
           <Pressable
             className="ml-4"
             onPress={() => {

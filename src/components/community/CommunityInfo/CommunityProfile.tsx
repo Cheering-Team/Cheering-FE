@@ -1,12 +1,12 @@
 import React from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import StarOrangeSvg from 'assets/images/star-white.svg';
 import FastImage from 'react-native-fast-image';
 import TeamList from './TeamList';
 import CustomText from '../../common/CustomText';
-import {WINDOW_HEIGHT} from '../../../constants/dimension';
 import {Community} from 'apis/community/types';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface CommunityProfileProps {
   community: Community;
@@ -14,10 +14,11 @@ interface CommunityProfileProps {
 
 const CommunityProfile = (props: CommunityProfileProps) => {
   const {community} = props;
+  const insets = useSafeAreaInsets();
 
   return (
     <View
-      style={[styles.profileContainer, {height: WINDOW_HEIGHT / 2}]}
+      style={[styles.profileContainer, {height: 110 + insets.top}]}
       pointerEvents="box-none">
       <View
         style={[
@@ -32,15 +33,17 @@ const CommunityProfile = (props: CommunityProfileProps) => {
         pointerEvents="box-none">
         <View className="flex-1" pointerEvents="none">
           <View className="flex-row items-center mb-[2] ml-[3]">
-            <StarOrangeSvg width={13} height={13} className="mb-[2]" />
-            <CustomText className="text-white ml-1" fontWeight="500">
+            <StarOrangeSvg width={10} height={10} className="mb-[2]" />
+            <CustomText
+              className="text-white ml-1 text-[13px]"
+              fontWeight="500">
               {`${community.fanCount}`}
             </CustomText>
           </View>
 
           {community.type === 'TEAM' && (
             <CustomText
-              className="text-white text-[15px] ml-[2]"
+              className="text-white text-[14px]"
               fontWeight="500">{`${community.sportName} / ${community.leagueName}`}</CustomText>
           )}
 
@@ -48,7 +51,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
             {community.englishName && (
               <CustomText
                 fontWeight="500"
-                className="text-white text-[16px] mb-[1] ml-[1]">
+                className="text-white text-[13px] leading-[15px] ml-[1]">
                 {community.englishName}
               </CustomText>
             )}
@@ -56,8 +59,7 @@ const CommunityProfile = (props: CommunityProfileProps) => {
             <View className="flex-row">
               <CustomText
                 type="titleCenter"
-                className="text-3xl text-white"
-                style={{bottom: Platform.OS === 'ios' ? 1 : 0}}>
+                className="text-2xl text-white leading-[25px]">
                 {community.koreanName}
               </CustomText>
             </View>

@@ -1,16 +1,16 @@
 import React, {createContext, ReactNode, useContext} from 'react';
 import {
-  runOnJS,
+  interpolate,
   SharedValue,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
-  withTiming,
 } from 'react-native-reanimated';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type MainTabScrollContextType = {
   scrollY: SharedValue<number>;
-  animatedTabBarStyle: {
+  previousScrollY: SharedValue<number>;
+  tabAnimationStyle: {
     transform: {
       translateY: number;
     }[];
@@ -26,28 +26,27 @@ const MainTabScrollContext = createContext<MainTabScrollContextType>(null);
 export const MainTabScrollProvider = ({
   children,
 }: MainTabScrollProviderProps) => {
+  const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
   const previousScrollY = useSharedValue(0);
-  const translateY = useSharedValue(0);
 
-  useDerivedValue(() => {
-    const deltaY = scrollY.value - previousScrollY.value;
-
-    if (deltaY > 0) {
-      translateY.value = withTiming(45, {duration: 200});
-    } else if (deltaY < 0) {
-      translateY.value = withTiming(0, {duration: 200});
-    }
-
-    previousScrollY.value = scrollY.value; // 현재 스크롤 값을 이전 값으로 업데이트
-  }, [scrollY.value]);
-
-  const animatedTabBarStyle = useAnimatedStyle(() => ({
-    transform: [{translateY: translateY.value}],
-  }));
+  const tabAnimationStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            scrollY.value,
+            [0, 50],
+            [0, 45 + insets.bottom],
+          ),
+        },
+      ],
+    };
+  });
 
   return (
-    <MainTabScrollContext.Provider value={{scrollY, animatedTabBarStyle}}>
+    <MainTabScrollContext.Provider
+      value={{scrollY, previousScrollY, tabAnimationStyle}}>
       {children}
     </MainTabScrollContext.Provider>
   );

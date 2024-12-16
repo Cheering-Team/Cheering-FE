@@ -1,13 +1,18 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {useGetCommunityById} from 'apis/community/useCommunities';
 import CustomText from 'components/common/CustomText';
 import CommunityHeader from 'components/community/CommunityInfo/CommunityHeader';
 import CommunityProfile from 'components/community/CommunityInfo/CommunityProfile';
 import FeedList from 'components/community/FeedList';
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
+import {WINDOW_HEIGHT} from 'constants/dimension';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import React, {useCallback, useEffect, useRef} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {StatusBar, TouchableOpacity, View} from 'react-native';
 import Animated from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
@@ -24,12 +29,12 @@ import {
 } from '@gorhom/bottom-sheet';
 import JoinProfile from 'components/community/JoinModal/JoinProfile/JoinProfile';
 import ChatList from 'components/community/ChatList/ChatList';
+import {useMainTabScroll} from 'context/useMainTabScroll';
 
 const CommunityScreen = () => {
   const {communityId} =
     useRoute<RouteProp<CommunityStackParamList, 'Community'>>().params;
   const navigation = useNavigation();
-
   const insets = useSafeAreaInsets();
 
   const renderBackdrop = useCallback(
@@ -46,7 +51,6 @@ const CommunityScreen = () => {
   const {
     tabBarTranslateY,
     onTabPress,
-    animatedIndicatorStyle,
     tabRoutes,
     tabIndex,
     scrollY,
@@ -58,6 +62,7 @@ const CommunityScreen = () => {
     headerTranslateY,
   } = useCommunity();
 
+  const {scrollY: tabScrollY, previousScrollY} = useMainTabScroll();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const {data: community} = useGetCommunityById(communityId);
@@ -66,55 +71,57 @@ const CommunityScreen = () => {
     (props: SceneRendererProps & {navigationState: NavigationState<Route>}) => {
       const {navigationState} = props;
       return (
-        <Animated.View
+        <Animated.FlatList
+          horizontal
+          data={navigationState.routes}
           style={[
             {
-              flexDirection: 'row',
-              alignItems: 'center',
-              height: 40,
+              height: 38,
+              flexGrow: 0,
               backgroundColor: community?.color,
               zIndex: 1,
             },
             tabBarTranslateY,
-          ]}>
-          {navigationState.routes.map((route, idx) => {
-            return (
-              <TouchableOpacity
-                style={{flex: 1}}
-                key={idx}
-                onPress={() => {
-                  onTabPress(idx);
-                  if (idx === tabIndex) {
-                    listArrRef.current.forEach(item => {
-                      if (item.key === route.key) {
-                        item.value?.scrollToOffset({
-                          offset: WINDOW_HEIGHT / 2 - 45 - insets.top,
-                          animated: true,
-                        });
-                      }
-                    });
-                  }
+          ]}
+          contentContainerStyle={{paddingHorizontal: 5}}
+          renderItem={({item, index}) => (
+            <TouchableOpacity
+              className="mx-2 px-[6]"
+              key={index}
+              style={{
+                borderBottomWidth: 3,
+                borderBlockColor:
+                  index === tabIndex ? 'white' : community?.color,
+              }}
+              onPress={() => {
+                onTabPress(index);
+                if (index === tabIndex) {
+                  listArrRef.current.forEach(ref => {
+                    if (ref.key === item.key) {
+                      ref.value?.scrollToOffset({
+                        offset: WINDOW_HEIGHT / 2 - 45 - insets.top,
+                        animated: true,
+                      });
+                    }
+                  });
+                }
+              }}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%',
                 }}>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '100%',
-                  }}>
-                  <CustomText
-                    fontWeight="600"
-                    style={{color: 'white', fontSize: 16.5}}>
-                    {route.title}
-                  </CustomText>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-          <Animated.View
-            className="absolute bottom-0 h-[3] bg-white"
-            style={[{width: WINDOW_WIDTH / 2}, animatedIndicatorStyle]}
-          />
-        </Animated.View>
+                <CustomText
+                  fontWeight={index === tabIndex ? '700' : '400'}
+                  className="text-[15px] text-gray-50"
+                  style={{color: index === tabIndex ? 'white' : '#cfcfcf'}}>
+                  {item.title}
+                </CustomText>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
       );
     },
     [community, tabIndex],
@@ -164,12 +171,22 @@ const CommunityScreen = () => {
     }
   }, [community]);
 
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        tabScrollY.value = 0;
+        previousScrollY.value = 0;
+      };
+    }, [previousScrollY, tabScrollY]),
+  );
+
   if (!community) {
     return null;
   }
 
   return (
     <View className="flex-1">
+      <StatusBar barStyle="light-content" />
       <CommunityHeader community={community} scrollY={scrollY} />
       <TabView
         navigationState={{index: tabIndex, routes: tabRoutes}}
