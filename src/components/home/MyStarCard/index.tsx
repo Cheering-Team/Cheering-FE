@@ -50,13 +50,13 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           <View className="flex-1">
             {community.type === 'PLAYER' ? (
               <CustomText
-                className="text-white text-[18px] ml-[2] mb-[5]"
+                className="text-white text-[17px] ml-[2] mb-[5]"
                 fontWeight="600">
                 {community.englishName}
               </CustomText>
             ) : (
               <CustomText
-                className="text-white text-[18px] ml-[2] mb-[5]"
+                className="text-white text-[17px] ml-[2] mb-[5]"
                 fontWeight="600">
                 {`${community.sportName} / ${community.leagueName}`}
               </CustomText>
@@ -65,7 +65,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
             <View className="flex-row items-center">
               <CustomText
                 numberOfLines={2}
-                className="text-white text-[28px]"
+                className="text-white text-[26px]"
                 style={{bottom: 3}}
                 type="titleCenter">
                 {community.koreanName}
@@ -216,7 +216,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 })
               }>
               <CustomText
-                className="text-white text-center text-lg"
+                className="text-white text-center text-base"
                 fontWeight="500">
                 글 작성
               </CustomText>
@@ -234,7 +234,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 }
               }}>
               <CustomText
-                className="text-white text-center text-lg"
+                className="text-white text-center text-base"
                 fontWeight="500">
                 대표 채팅
               </CustomText>
@@ -253,7 +253,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 }
               }}>
               <CustomText
-                className="text-white text-center text-lg"
+                className="text-white text-center text-base"
                 fontWeight="500">
                 경기 일정
               </CustomText>

@@ -8,7 +8,10 @@ import {QueryClientProvider, QueryClient} from '@tanstack/react-query';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import NaverLogin from '@react-native-seoul/naver-login';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import './gesture-handler';
 import SuccessToast from 'components/common/toast/SuccessToast';
 import FailToast from 'components/common/toast/FailToast';

@@ -193,7 +193,7 @@ const MyChatScreen = () => {
               <>
                 <CustomText
                   type="titleCenter"
-                  className="text-[22px] mt-3 mx-3 mb-2">
+                  className="text-[18px] mt-3 mx-3 mb-2">
                   대표 채팅방
                 </CustomText>
                 <Carousel
@@ -257,7 +257,7 @@ const MyChatScreen = () => {
             ) : null}
             <CustomText
               type="titleCenter"
-              className="text-[22px] mt-3 mx-3 mb-2">
+              className="text-[18px] mt-3 mx-3 mb-2">
               일반 채팅방
             </CustomText>
           </View>
