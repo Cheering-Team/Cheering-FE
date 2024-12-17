@@ -11,6 +11,7 @@ import {
   Platform,
   Pressable,
   RefreshControl,
+  ScrollView,
   TextInput,
   View,
 } from 'react-native';
@@ -44,7 +45,7 @@ interface ChatListProps {
   listArrRef: MutableRefObject<
     {
       key: string;
-      value: FlatList<ChatRoom> | null;
+      value: FlatList<ChatRoom> | ScrollView | null;
     }[]
   >;
   tabRoute: {

@@ -97,10 +97,17 @@ export const useCommunity = () => {
           scrollY.value >= 0
         ) {
           if (item.value) {
-            item.value.scrollToOffset({
-              offset: scrollY.value,
-              animated: false,
-            });
+            if (item.key === 'main') {
+              item.value.scrollTo({
+                y: scrollY.value,
+                animated: false,
+              });
+            } else {
+              item.value.scrollToOffset({
+                offset: scrollY.value,
+                animated: false,
+              });
+            }
             listOffsetRef.current[item.key] = scrollY.value;
           }
         } else if (scrollY.value >= HEADER_HEIGHT - insets.top - 40) {
@@ -109,10 +116,18 @@ export const useCommunity = () => {
             listOffsetRef.current[item.key] === undefined
           ) {
             if (item.value) {
-              item.value.scrollToOffset({
-                offset: HEADER_HEIGHT - insets.top - 40,
-                animated: false,
-              });
+              if (item.key === 'main') {
+                item.value.scrollTo({
+                  y: HEADER_HEIGHT - insets.top - 40,
+                  animated: false,
+                });
+              } else {
+                item.value.scrollToOffset({
+                  offset: HEADER_HEIGHT - insets.top - 40,
+                  animated: false,
+                });
+              }
+
               listOffsetRef.current[item.key] = HEADER_HEIGHT - insets.top - 40;
             }
           }

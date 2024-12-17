@@ -99,10 +99,17 @@ const CommunityScreen = () => {
                 if (index === tabIndex) {
                   listArrRef.current.forEach(ref => {
                     if (ref.key === item.key) {
-                      ref.value?.scrollToOffset({
-                        offset: WINDOW_HEIGHT / 2 - 45 - insets.top,
-                        animated: true,
-                      });
+                      if (item.key === 'main') {
+                        ref.value?.scrollTo({
+                          y: 70,
+                          animated: true,
+                        });
+                      } else {
+                        ref.value?.scrollToOffset({
+                          offset: 70,
+                          animated: true,
+                        });
+                      }
                     }
                   });
                 }
@@ -137,6 +144,11 @@ const CommunityScreen = () => {
           case 'main':
             return (
               <MainTab
+                scrollY={scrollY}
+                isTabFocused={isFocused}
+                onMomentumScrollBegin={onMomentumScrollBegin}
+                onMomentumScrollEnd={onMomentumScrollEnd}
+                onScrollEndDrag={onScrollEndDrag}
                 listArrRef={listArrRef}
                 tabRoute={route}
                 community={community}
