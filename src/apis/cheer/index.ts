@@ -1,5 +1,10 @@
 import {axiosInstance} from 'apis/index';
-import {CheerIdPayload, GetCheersResponse, WriteCheerPayload} from './types';
+import {
+  CheerIdPayload,
+  GetCheersResponse,
+  LikeCheerPayload,
+  WriteCheerPayload,
+} from './types';
 import {ApiResponse} from 'apis/types';
 import {cheerKeys} from './queries';
 
@@ -35,6 +40,24 @@ export const deleteCheer = async (data: CheerIdPayload) => {
   const {cheerId} = data;
   const response = await axiosInstance.delete<ApiResponse<null>>(
     `/cheers/${cheerId}`,
+  );
+  return response.data.result;
+};
+
+// 응원 좋아요
+export const likeCheer = async (data: LikeCheerPayload) => {
+  const {communityId, cheerId} = data;
+  const response = await axiosInstance.post<ApiResponse<number>>(
+    `/communities/${communityId}/cheers/${cheerId}/likes`,
+  );
+  return response.data.result;
+};
+
+// 응원 좋아요 취소
+export const deleteLikeCheer = async (data: LikeCheerPayload) => {
+  const {communityId, cheerId} = data;
+  const response = await axiosInstance.delete<ApiResponse<number>>(
+    `/communities/${communityId}/cheers/${cheerId}/likes`,
   );
   return response.data.result;
 };

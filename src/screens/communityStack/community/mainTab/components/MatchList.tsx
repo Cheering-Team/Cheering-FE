@@ -66,27 +66,37 @@ const MatchList = ({community}: MatchListProps) => {
           )}
         </View>
         <View className="flex-row items-center mt-4 rounded-sm pl-1 pr-2">
-          <FastImage
-            source={{uri: item.homeTeam.image}}
-            className="w-[30] h-[30]"
-          />
-          <CustomText
-            className="ml-1 text-[13px] flex-1"
-            fontWeight={
-              item.homeTeam.id === community.id ||
-              item.homeTeam.koreanName === community.firstTeamName
-                ? '500'
-                : '400'
-            }
-            style={{
-              color:
+          <View className="flex-1 flex-row items-center">
+            <FastImage
+              source={{uri: item.homeTeam.image}}
+              className="w-[30] h-[30]"
+            />
+            <CustomText
+              className="ml-1 text-[13px]"
+              fontWeight={
                 item.homeTeam.id === community.id ||
                 item.homeTeam.koreanName === community.firstTeamName
-                  ? community.color
-                  : '#232323',
-            }}>
-            {item.homeTeam.shortName}
-          </CustomText>
+                  ? '500'
+                  : '400'
+              }
+              style={{
+                color:
+                  item.homeTeam.id === community.id ||
+                  item.homeTeam.koreanName === community.firstTeamName
+                    ? community.color
+                    : '#232323',
+              }}>
+              {item.homeTeam.shortName}
+            </CustomText>
+            <View
+              className="justify-center items-center rounded-[3px] ml-1 p-[2]"
+              style={{backgroundColor: item.homeTeam.color}}>
+              <CustomText fontWeight="600" className="text-[11px] text-white">
+                홈
+              </CustomText>
+            </View>
+          </View>
+
           <CustomText>{item.homeScore}</CustomText>
         </View>
         <View className="flex-row items-center rounded-sm pl-1 pr-2">

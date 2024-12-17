@@ -7,6 +7,8 @@ export interface Cheer {
   createdAt: string;
   writer: Fan;
   isWriter: boolean;
+  isLike: boolean;
+  likeCount: number;
 }
 
 // 요청
@@ -17,6 +19,11 @@ export interface WriteCheerPayload {
 }
 
 export interface CheerIdPayload {
+  cheerId: number;
+}
+
+export interface LikeCheerPayload {
+  communityId: number;
   cheerId: number;
 }
 

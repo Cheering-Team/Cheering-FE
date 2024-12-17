@@ -13,21 +13,19 @@ import {useGetCheers, useWriteCheer} from 'apis/cheer/useCheers';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import {queryClient} from '../../../../../../App';
 import {matchKeys} from 'apis/match/queries';
-import Cheer from './Cheer';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import CommentSkeleton from 'components/skeleton/CommentSkeleton';
-import CustomText from 'components/common/CustomText';
 import {Community} from 'apis/community/types';
-import FastImage from 'react-native-fast-image';
+import {queryClient} from '../../../../../App';
+import Cheer from './components/Cheer';
 
-interface CheerListProps {
+interface CheerTabProps {
   matchId: number;
   community: Community;
 }
 
-const CheerList = ({matchId, community}: CheerListProps) => {
+const CheerTab = ({matchId, community}: CheerTabProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
@@ -84,24 +82,11 @@ const CheerList = ({matchId, community}: CheerListProps) => {
       <Tabs.FlatList
         data={isLoading ? [] : cheers?.pages.flatMap(page => page.cheers)}
         renderItem={({item}) => (
-          <Cheer cheer={item} matchId={matchId} communityId={community.id} />
+          <Cheer cheer={item} matchId={matchId} community={community} />
         )}
-        contentContainerStyle={{paddingHorizontal: 10, paddingVertical: 10}}
+        contentContainerStyle={{paddingHorizontal: 6, paddingTop: 5}}
         onEndReached={loadCheers}
         onEndReachedThreshold={1}
-        ListHeaderComponent={
-          <View
-            className="p-2 rounded-md mb-3 my-2 items-center flex-row justify-center"
-            style={{backgroundColor: community.color}}>
-            <FastImage
-              source={{uri: community.image}}
-              className="w-[20] h-[20]"
-            />
-            <CustomText
-              className="text-white text-[15px] ml-1"
-              fontWeight="600">{`${community.koreanName}를 위한 응원 공간이에요`}</CustomText>
-          </View>
-        }
         ListFooterComponent={isFetchingNextPage ? <CommentSkeleton /> : null}
         ListEmptyComponent={
           isLoading ? <CommentSkeleton /> : <ListEmpty type="cheer" />
@@ -154,4 +139,4 @@ const CheerList = ({matchId, community}: CheerListProps) => {
   );
 };
 
-export default CheerList;
+export default CheerTab;
