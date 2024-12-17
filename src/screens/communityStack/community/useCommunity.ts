@@ -1,6 +1,6 @@
 import {WINDOW_WIDTH} from 'constants/dimension';
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, ScrollView} from 'react-native';
 import {
   cancelAnimation,
   Extrapolation,
@@ -29,7 +29,7 @@ export const useCommunity = () => {
   const listArrRef = useRef<
     {
       key: string;
-      value: FlatList<any> | null;
+      value: FlatList<any> | ScrollView | null;
     }[]
   >([]);
   const listOffsetRef = useRef<{

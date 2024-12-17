@@ -93,7 +93,11 @@ const CommunityProfile = (props: CommunityProfileProps) => {
       <LinearGradient
         start={{x: 1, y: 1}}
         end={{x: 0, y: 0}}
-        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.1)', 'rgba(0,0,0,0.2)']}
+        colors={[
+          'rgba(0, 0, 0, 0)',
+          `${community.color}15`,
+          `${community.color}30`,
+        ]}
         style={{
           ...StyleSheet.absoluteFillObject,
         }}

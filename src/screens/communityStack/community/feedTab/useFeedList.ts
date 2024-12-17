@@ -1,7 +1,7 @@
 import {useState} from 'react';
-import {useGetPosts} from '../../../apis/post/usePosts';
-import {FilterType} from '../../../apis/post/types';
 import {Community} from 'apis/community/types';
+import {FilterType} from 'react-native-video';
+import {useGetPosts} from 'apis/post/usePosts';
 
 export const useFeedList = (community: Community) => {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');

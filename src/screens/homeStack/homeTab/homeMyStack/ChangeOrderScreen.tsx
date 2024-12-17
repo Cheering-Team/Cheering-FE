@@ -97,6 +97,7 @@ const ChangeOrderScreen = () => {
           onDragEnd={({data: newData}) => setData(newData)}
           keyExtractor={item => item.id.toString()}
           renderItem={renderItem}
+          contentContainerStyle={{paddingBottom: 100}}
         />
       )}
     </View>

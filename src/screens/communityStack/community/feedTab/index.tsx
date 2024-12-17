@@ -6,6 +6,7 @@ import {
   ListRenderItem,
   Pressable,
   RefreshControl,
+  ScrollView,
 } from 'react-native';
 import Animated, {
   SharedValue,
@@ -13,11 +14,10 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {useFeedList} from './useFeedList';
 import {Community} from 'apis/community/types';
-import FeedPost from '../FeedPost';
+import FeedPost from '../../../../components/community/FeedPost';
 import {Post} from 'apis/post/types';
-import FeedFilter from '../FeedFilter';
+import FeedFilter from '../../../../components/community/FeedFilter';
 import PenSvg from 'assets/images/pencil-white.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -26,6 +26,7 @@ import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import {useMainTabScroll} from 'context/useMainTabScroll';
+import {useFeedList} from './useFeedList';
 
 interface FeedListProps {
   scrollY: SharedValue<number>;
@@ -36,7 +37,7 @@ interface FeedListProps {
   listArrRef: MutableRefObject<
     {
       key: string;
-      value: FlatList<Post> | null;
+      value: FlatList<any> | ScrollView | null;
     }[]
   >;
   tabRoute: {
@@ -46,7 +47,7 @@ interface FeedListProps {
   community: Community;
 }
 
-const FeedList = ({
+const FeedTab = ({
   scrollY,
   isTabFocused,
   onMomentumScrollBegin,
@@ -106,7 +107,7 @@ const FeedList = ({
   };
 
   return (
-    <Animated.View style={{flex: 1}}>
+    <>
       <Animated.FlatList
         ref={ref => {
           const foundIndex = listArrRef.current.findIndex(
@@ -186,8 +187,8 @@ const FeedList = ({
           <PenSvg width={23} height={23} />
         </Pressable>
       </Animated.View>
-    </Animated.View>
+    </>
   );
 };
 
-export default FeedList;
+export default FeedTab;
