@@ -1,7 +1,7 @@
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import React, {useRef} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {Pressable, TouchableOpacity, View} from 'react-native';
 import {formatBeforeDate} from 'utils/format';
 import {Cheer as CheerType} from 'apis/cheer/types';
 import OptionModal from 'components/common/OptionModal';
@@ -53,7 +53,8 @@ const Cheer = ({cheer, matchId, community}: CheerProps) => {
 
   return (
     <>
-      <View
+      <Pressable
+        onLongPress={() => bottomSheetModalRef.current?.present()}
         className="flex-row px-1 py-2 rounded-md my-[3] border"
         style={{
           backgroundColor: `${community.color}0b`,
@@ -81,7 +82,7 @@ const Cheer = ({cheer, matchId, community}: CheerProps) => {
         </View>
         <TouchableOpacity
           activeOpacity={0.5}
-          className="items-center ml-5 mr-1 mt-1"
+          className="items-center pl-[18] pr-[6] mt-1"
           onPress={cheer.isLike ? handleDeleteLikeCheer : handleLikeCheer}>
           {cheer.isLike ? (
             <HeartFillSvg width={15} height={15} />
@@ -97,7 +98,7 @@ const Cheer = ({cheer, matchId, community}: CheerProps) => {
             </CustomText>
           )}
         </TouchableOpacity>
-      </View>
+      </Pressable>
       {cheer.isWriter ? (
         <OptionModal
           modalRef={bottomSheetModalRef}

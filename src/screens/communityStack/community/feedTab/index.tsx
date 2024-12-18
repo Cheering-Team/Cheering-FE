@@ -7,6 +7,7 @@ import {
   Pressable,
   RefreshControl,
   ScrollView,
+  View,
 } from 'react-native';
 import Animated, {
   SharedValue,

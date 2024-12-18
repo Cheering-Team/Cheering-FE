@@ -9,7 +9,6 @@ import CustomText from 'components/common/CustomText';
 import CommunityHeader from 'components/community/CommunityInfo/CommunityHeader';
 import CommunityProfile from 'components/community/CommunityInfo/CommunityProfile';
 import FeedTab from 'screens/communityStack/community/feedTab';
-import {WINDOW_HEIGHT} from 'constants/dimension';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import React, {useCallback, useEffect, useRef} from 'react';
 import {StatusBar, TouchableOpacity, View} from 'react-native';
@@ -132,7 +131,7 @@ const CommunityScreen = () => {
         />
       );
     },
-    [community, tabIndex],
+    [community?.color, listArrRef, onTabPress, tabBarTranslateY, tabIndex],
   );
 
   const renderScene = useCallback(
@@ -183,7 +182,16 @@ const CommunityScreen = () => {
         }
       }
     },
-    [tabIndex, community],
+    [
+      tabRoutes,
+      tabIndex,
+      community,
+      scrollY,
+      onMomentumScrollBegin,
+      onMomentumScrollEnd,
+      onScrollEndDrag,
+      listArrRef,
+    ],
   );
 
   useEffect(() => {

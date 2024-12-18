@@ -25,7 +25,6 @@ const MatchScreen = () => {
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const {matchId, communityId} =
     useRoute<RouteProp<CommunityStackParamList, 'Match'>>().params;
-
   const insets = useSafeAreaInsets();
 
   const {data: match, isLoading} = useGetMatchDetail(matchId);
@@ -74,7 +73,7 @@ const MatchScreen = () => {
           />
         )}>
         <Tabs.Tab name="응원">
-          <CheerTab matchId={matchId} community={community} />
+          <CheerTab match={match} community={community} />
         </Tabs.Tab>
         <Tabs.Tab name="투표">
           <VoteList matchId={matchId} community={community} />
