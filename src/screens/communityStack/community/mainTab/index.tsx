@@ -28,6 +28,7 @@ interface MainListProps {
     title: string;
   };
   community: Community;
+  onTabPress: (index: number) => void;
 }
 
 const MainTab = ({
@@ -39,6 +40,7 @@ const MainTab = ({
   listArrRef,
   tabRoute,
   community,
+  onTabPress,
 }: MainListProps) => {
   const {scrollY: tabScrollY, previousScrollY} = useMainTabScroll();
   const insets = useSafeAreaInsets();
@@ -82,6 +84,9 @@ const MainTab = ({
           }
         }}
         scrollEventThrottle={16}
+        scrollIndicatorInsets={{
+          top: 110 + insets.top,
+        }}
         onScroll={scrollHandler}
         onMomentumScrollBegin={onMomentumScrollBegin}
         onMomentumScrollEnd={onMomentumScrollEnd}
@@ -90,10 +95,10 @@ const MainTab = ({
           backgroundColor: '#F5F4F5',
           paddingTop: HEADER_HEIGHT,
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
-          paddingBottom: insets.bottom + 100 + 2000,
+          paddingBottom: insets.bottom + 100,
         }}>
         {/* 일정 */}
-        <MatchList community={community} />
+        <MatchList community={community} onTabPress={onTabPress} />
       </Animated.ScrollView>
     </>
   );

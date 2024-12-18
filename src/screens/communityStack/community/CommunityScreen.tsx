@@ -30,6 +30,7 @@ import JoinProfile from 'components/community/JoinModal/JoinProfile/JoinProfile'
 import ChatList from 'components/community/ChatList/ChatList';
 import {useMainTabScroll} from 'context/useMainTabScroll';
 import MainTab from './mainTab';
+import ScheduleTab from './ScheduleTab';
 
 const CommunityScreen = () => {
   const {communityId} =
@@ -98,7 +99,7 @@ const CommunityScreen = () => {
                 if (index === tabIndex) {
                   listArrRef.current.forEach(ref => {
                     if (ref.key === item.key) {
-                      if (item.key === 'main') {
+                      if (item.key === 'main' || item.key === 'schedule') {
                         ref.value?.scrollTo({
                           y: 70,
                           animated: true,
@@ -151,6 +152,7 @@ const CommunityScreen = () => {
                 listArrRef={listArrRef}
                 tabRoute={route}
                 community={community}
+                onTabPress={onTabPress}
               />
             );
           case 'feed':
@@ -179,6 +181,21 @@ const CommunityScreen = () => {
                 community={community}
               />
             );
+          case 'schedule':
+            return (
+              <ScheduleTab
+                scrollY={scrollY}
+                isTabFocused={isFocused}
+                onMomentumScrollBegin={onMomentumScrollBegin}
+                onMomentumScrollEnd={onMomentumScrollEnd}
+                onScrollEndDrag={onScrollEndDrag}
+                listArrRef={listArrRef}
+                tabRoute={route}
+                community={community}
+              />
+            );
+          default:
+            return null;
         }
       }
     },
@@ -191,6 +208,7 @@ const CommunityScreen = () => {
       onMomentumScrollEnd,
       onScrollEndDrag,
       listArrRef,
+      onTabPress,
     ],
   );
 
@@ -214,10 +232,11 @@ const CommunityScreen = () => {
   }
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 bg-[#F5F4F5]">
       <StatusBar barStyle="light-content" />
       <CommunityHeader community={community} scrollY={scrollY} />
       <TabView
+        lazy={true}
         navigationState={{index: tabIndex, routes: tabRoutes}}
         renderScene={renderScene}
         renderTabBar={renderTabBar}

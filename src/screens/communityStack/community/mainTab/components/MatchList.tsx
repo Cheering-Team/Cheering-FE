@@ -13,9 +13,10 @@ import {formatDOW, formatTime, formatTodayOrDate} from 'utils/format';
 
 interface MatchListProps {
   community: Community;
+  onTabPress: (index: number) => void;
 }
 
-const MatchList = ({community}: MatchListProps) => {
+const MatchList = ({community, onTabPress}: MatchListProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const matchRef = useRef<FlatList | null>(null);
@@ -35,14 +36,15 @@ const MatchList = ({community}: MatchListProps) => {
         style={{
           width: WINDOW_WIDTH * 0.67,
           marginHorizontal: 4,
-          opacity: item.status === 'closed' ? 0.5 : 1,
           borderWidth: 1,
           borderColor:
             formatTodayOrDate(item.time) === '오늘'
               ? community.color
               : '#eeeeee',
         }}>
-        <View className="flex-row items-center justify-between">
+        <View
+          className="flex-row items-center justify-between"
+          style={{opacity: item.status === 'closed' ? 0.5 : 1}}>
           <View className="flex-row items-center">
             {formatTodayOrDate(item.time) !== '오늘' ? (
               <CustomText className="text-gray-900">
@@ -65,7 +67,9 @@ const MatchList = ({community}: MatchListProps) => {
             <CustomText fontWeight="500">{formatTime(item.time)}</CustomText>
           )}
         </View>
-        <View className="flex-row items-center mt-4 rounded-sm pl-1 pr-2">
+        <View
+          className="flex-row items-center mt-4 rounded-sm pl-1 pr-2"
+          style={{opacity: item.status === 'closed' ? 0.5 : 1}}>
           <View className="flex-1 flex-row items-center">
             <FastImage
               source={{uri: item.homeTeam.image}}
@@ -99,7 +103,9 @@ const MatchList = ({community}: MatchListProps) => {
 
           <CustomText>{item.homeScore}</CustomText>
         </View>
-        <View className="flex-row items-center rounded-sm pl-1 pr-2">
+        <View
+          className="flex-row items-center rounded-sm pl-1 pr-2"
+          style={{opacity: item.status === 'closed' ? 0.5 : 1}}>
           <FastImage
             source={{uri: item.awayTeam.image}}
             className="w-[30] h-[30]"
@@ -123,6 +129,43 @@ const MatchList = ({community}: MatchListProps) => {
           </CustomText>
           <CustomText>{item.awayScore}</CustomText>
         </View>
+        {item.status === 'not_started' && (
+          <View className="mt-1 border-t border-gray-100 pt-2">
+            <View className="justify-center items-center">
+              <CustomText>응원하기</CustomText>
+            </View>
+          </View>
+        )}
+        {item.status === 'live' && (
+          <View className="mt-1 border-t border-gray-100 pt-2">
+            <Pressable
+              className="justify-center items-center"
+              onPress={() => {
+                if (community.officialRoomId) {
+                  navigation.navigate('ChatRoom', {
+                    chatRoomId: community.officialRoomId,
+                  });
+                }
+              }}>
+              <CustomText className="text-rose-600" fontWeight="500">
+                실시간 응원
+              </CustomText>
+            </Pressable>
+          </View>
+        )}
+        {item.status === 'closed' && (
+          <View className="mt-1 flex-row border-t border-gray-100 pt-2">
+            <Pressable className="justify-center items-center flex-1">
+              <CustomText style={{color: community.color}} fontWeight="500">
+                MVP 투표
+              </CustomText>
+            </Pressable>
+            <View className="w-[1] h-full bg-gray-100" />
+            <Pressable className="justify-center items-center flex-1">
+              <CustomText>공유하기</CustomText>
+            </Pressable>
+          </View>
+        )}
       </Pressable>
     );
   };
@@ -171,7 +214,9 @@ const MatchList = ({community}: MatchListProps) => {
           </CustomText>
         </View>
 
-        <Pressable className="border-b border-b-gray-600">
+        <Pressable
+          className="border-b border-b-gray-600"
+          onPress={() => onTabPress(3)}>
           <CustomText className="text-gray-600 text-[13px]">
             전체보기
           </CustomText>
@@ -185,7 +230,7 @@ const MatchList = ({community}: MatchListProps) => {
         decelerationRate={'fast'}
         contentContainerStyle={{
           paddingLeft: 13,
-          paddingRight: WINDOW_WIDTH * 0.33 - 14,
+          paddingRight: 8,
         }}
         showsHorizontalScrollIndicator={false}
         renderItem={renderItem}

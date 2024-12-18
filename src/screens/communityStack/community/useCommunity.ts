@@ -97,7 +97,7 @@ export const useCommunity = () => {
           scrollY.value >= 0
         ) {
           if (item.value) {
-            if (item.key === 'main') {
+            if (item.key === 'main' || item.key === 'schedule') {
               item.value.scrollTo({
                 y: scrollY.value,
                 animated: false,
@@ -116,7 +116,7 @@ export const useCommunity = () => {
             listOffsetRef.current[item.key] === undefined
           ) {
             if (item.value) {
-              if (item.key === 'main') {
+              if (item.key === 'main' || item.key === 'schedule') {
                 item.value.scrollTo({
                   y: HEADER_HEIGHT - insets.top - 40,
                   animated: false,
