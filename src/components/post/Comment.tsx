@@ -83,7 +83,9 @@ const Comment = ({comment, setUnder, setTo, inputRef, postId}: Props) => {
             postId={postId}
             under={comment.id}
           />
-          <CustomText className="text-[#282828] text-base">
+          <CustomText
+            className="text-[14.5px] leading-[20px]"
+            numberOfLines={999}>
             {comment.content}
           </CustomText>
           <TouchableOpacity
@@ -99,7 +101,7 @@ const Comment = ({comment, setUnder, setTo, inputRef, postId}: Props) => {
               style={{
                 marginTop: 8,
                 marginBottom: 5,
-                fontSize: 14,
+                fontSize: 13,
                 color: '#888888',
               }}>
               답글 달기

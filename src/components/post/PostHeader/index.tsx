@@ -17,6 +17,7 @@ import {
 } from '@tanstack/react-query';
 import {Post} from 'apis/post/types';
 import {GetCommentsResponse} from 'apis/comment/types';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface PostHeaderProps {
   community: Community;
@@ -32,6 +33,7 @@ interface PostHeaderProps {
 
 const PostHeader = ({community, refetchPost, refetch}: PostHeaderProps) => {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const rotation = useSharedValue(0);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -51,28 +53,28 @@ const PostHeader = ({community, refetchPost, refetch}: PostHeaderProps) => {
 
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: 45,
-        paddingRight: 17,
-        paddingLeft: 5,
-      }}>
+      className="pl-[5] pr-[8] flex-row justify-between items-center bg-white z-50"
+      style={{paddingTop: insets.top, height: 40 + insets.top}}>
       <Pressable
         onPress={() => {
           navigation.goBack();
         }}>
-        <ChevronLeftSvg width={33} height={33} />
+        <ChevronLeftSvg width={27} height={27} />
       </Pressable>
       <View className="items-center">
-        <CustomText fontWeight="600" className="text-lg top-[1]">
+        <CustomText fontWeight="500" className="text-[15px] text-slate-900">
+          게시글
+        </CustomText>
+        <CustomText
+          fontWeight="500"
+          className="text-[13px]"
+          style={{color: community.color}}>
           {community.koreanName}
         </CustomText>
       </View>
       <Pressable onPress={handleRefresh}>
-        <Animated.View style={animatedStyle}>
-          <RefreshSvg width={20} height={20} />
+        <Animated.View style={animatedStyle} className={'w-[24]'}>
+          <RefreshSvg width={17} height={17} />
         </Animated.View>
       </Pressable>
     </View>

@@ -7,7 +7,6 @@ import {
   Pressable,
   RefreshControl,
   ScrollView,
-  View,
 } from 'react-native';
 import Animated, {
   SharedValue,
@@ -130,9 +129,10 @@ const FeedTab = ({
         data={posts?.pages.flatMap(page => page.posts) || []}
         renderItem={renderItem}
         contentContainerStyle={{
+          backgroundColor: '#FFFFFF',
           paddingTop: HEADER_HEIGHT,
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
-          paddingBottom: insets.bottom + 100 + 2000,
+          paddingBottom: insets.bottom + 100,
         }}
         ListHeaderComponent={
           <FeedFilter
@@ -140,10 +140,13 @@ const FeedTab = ({
             setSelectedFilter={setSelectedFilter}
           />
         }
+        scrollIndicatorInsets={{
+          top: 110 + insets.top,
+        }}
         scrollEventThrottle={16}
         onScroll={scrollHandler}
         onMomentumScrollBegin={() => {
-          buttonOpacity.value = withTiming(0.2, {duration: 150});
+          buttonOpacity.value = withTiming(0.1, {duration: 150});
           onMomentumScrollBegin();
         }}
         onMomentumScrollEnd={() => {

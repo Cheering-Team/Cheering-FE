@@ -3,16 +3,11 @@ import {FlatList, Pressable} from 'react-native';
 import CustomText from '../../common/CustomText';
 import {FilterType} from '../../../screens/communityStack/postWrite/PostWriteScreen';
 import PlusSvg from 'assets/images/plus-black.svg';
-
-interface FilterDataType {
-  name: string;
-  filter: 'photo' | 'viewing' | 'information';
-}
+import {FilterDataType} from 'components/community/FeedFilter';
 
 export const TagData: FilterDataType[] = [
-  {name: '📸 직찍사', filter: 'photo'},
-  {name: '👀 직관인증', filter: 'viewing'},
-  {name: '🔎 정보', filter: 'information'},
+  {name: '', filter: 'vote'},
+  {name: '👀 직관인증', filter: 'info'},
 ];
 
 interface TagListProps {

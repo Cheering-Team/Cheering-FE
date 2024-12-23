@@ -77,7 +77,7 @@ const CommentWriter = ({
               fanId: comment.writer.id,
             });
         }}>
-        <CustomText fontWeight="500" className="text-base">
+        <CustomText fontWeight="600" className="text-sm text-gray-800">
           {comment.writer.name}
         </CustomText>
         {comment.writer.type === 'ADMIN' && (
