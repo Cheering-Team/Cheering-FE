@@ -18,7 +18,7 @@ const StackHeader = (props: StackHeaderProps) => {
 
   return (
     <View
-      className="h-[48] px-[5] flex-row justify-between items-center bg-white border-b border-b-slate-50"
+      className="h-[40] px-[5] flex-row justify-between items-center bg-white border-b border-b-slate-50"
       style={Platform.OS === 'android' && {marginTop: insets.top}}>
       {type === 'back' && (
         <Pressable onPress={() => navigation.goBack()}>

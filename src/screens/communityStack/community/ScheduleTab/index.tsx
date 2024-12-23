@@ -161,6 +161,7 @@ const ScheduleTab = ({
           };
         }
       }}
+      showsVerticalScrollIndicator={false}
       scrollEventThrottle={16}
       onScroll={scrollHandler}
       scrollIndicatorInsets={{

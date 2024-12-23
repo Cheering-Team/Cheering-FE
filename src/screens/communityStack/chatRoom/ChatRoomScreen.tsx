@@ -13,6 +13,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   Platform,
+  StatusBar,
   View,
 } from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -141,7 +142,7 @@ const ChatRoomScreen = () => {
         return (
           <View className="justify-center items-center mb-[15] mt-[5]">
             <View className="bg-black/30 py-1 px-3 rounded-xl">
-              <CustomText fontWeight="500" className="text-white text-sm">
+              <CustomText fontWeight="500" className="text-white text-[13px]">
                 {item.messages[0]}
               </CustomText>
             </View>
@@ -310,6 +311,7 @@ const ChatRoomScreen = () => {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={-insets.bottom}>
+        <StatusBar barStyle={'dark-content'} />
         <ChatRoomHeader
           chatRoom={chatRoom}
           setIsDrawerOpen={setIsDrawerOpen}

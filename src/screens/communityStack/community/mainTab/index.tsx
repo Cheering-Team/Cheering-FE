@@ -84,6 +84,7 @@ const MainTab = ({
           }
         }}
         scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
         scrollIndicatorInsets={{
           top: 110 + insets.top,
         }}

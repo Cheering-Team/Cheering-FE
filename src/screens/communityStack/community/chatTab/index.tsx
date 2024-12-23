@@ -31,10 +31,9 @@ import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import PlusSvg from 'assets/images/plus-white.svg';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import ChatRoomSkeleton from 'components/skeleton/ChatRoomSkeleton';
-import {queryClient} from '../../../../App';
-import {chatKeys, chatRoomKeys} from 'apis/chat/queries';
-
-const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
+import {queryClient} from '../../../../../App';
+import {chatRoomKeys} from 'apis/chat/queries';
+import {useMainTabScroll} from 'context/useMainTabScroll';
 
 interface ChatListProps {
   scrollY: SharedValue<number>;
@@ -55,7 +54,7 @@ interface ChatListProps {
   community: Community;
 }
 
-const ChatList = ({
+const ChatTab = ({
   scrollY,
   isTabFocused,
   onMomentumScrollBegin,
@@ -68,6 +67,8 @@ const ChatList = ({
   const insets = useSafeAreaInsets();
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
+  const HEADER_HEIGHT = 110 + insets.top;
+  const {scrollY: tabScrollY, previousScrollY} = useMainTabScroll();
 
   const [sortBy, setSortBy] = useState<'participants' | 'createdAt'>(
     'participants',
@@ -96,9 +97,20 @@ const ChatList = ({
   };
 
   const scrollHandler = useAnimatedScrollHandler(event => {
+    const currentScrollY = event.contentOffset.y;
     if (isTabFocused) {
-      scrollY.value = event.contentOffset.y;
+      scrollY.value = currentScrollY;
     }
+
+    if (currentScrollY > previousScrollY.value + 2 && currentScrollY > 0) {
+      tabScrollY.value = withTiming(50);
+    } else if (
+      currentScrollY < previousScrollY.value - 2 &&
+      currentScrollY > 0
+    ) {
+      tabScrollY.value = withTiming(0);
+    }
+    previousScrollY.value = currentScrollY;
   });
 
   const handleRefresh = () => {
@@ -131,7 +143,7 @@ const ChatList = ({
   }, [chatRooms]);
 
   return (
-    <View className="flex-1">
+    <>
       <Animated.FlatList
         ref={ref => {
           const foundIndex = listArrRef.current.findIndex(
@@ -163,15 +175,19 @@ const ChatList = ({
           />
         )}
         contentContainerStyle={{
+          backgroundColor: '#F5F4F5',
           paddingTop: HEADER_HEIGHT,
-          minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 45,
-          paddingHorizontal: 10,
+          minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
           paddingBottom: insets.bottom + 100,
+          paddingHorizontal: 12,
         }}
         scrollEventThrottle={16}
+        scrollIndicatorInsets={{
+          top: 110 + insets.top,
+        }}
         onScroll={scrollHandler}
         onMomentumScrollBegin={() => {
-          buttonOpacity.value = withTiming(0.2, {duration: 150});
+          buttonOpacity.value = withTiming(0.1, {duration: 150});
           onMomentumScrollBegin();
         }}
         onMomentumScrollEnd={() => {
@@ -179,11 +195,10 @@ const ChatList = ({
           onMomentumScrollEnd();
         }}
         onScrollEndDrag={onScrollEndDrag}
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <View>
-            <CustomText
-              type="titleCenter"
-              className="text-[22px] mt-3 ml-1 mb-3">
+            <CustomText className="text-lg pt-3 pb-2" fontWeight="600">
               대표 채팅방
             </CustomText>
             {officialChatRoom && (
@@ -198,39 +213,38 @@ const ChatList = ({
               />
             )}
             <View>
-              <View className="flex-row justify-between items-center">
-                <CustomText
-                  type="titleCenter"
-                  className="text-[22px] mt-5 ml-1">
+              <View className="flex-row justify-between items-center mb-1">
+                <CustomText className="text-lg pt-3 pb-2" fontWeight="600">
                   일반 채팅방
                 </CustomText>
                 <Pressable
-                  className="flex-row items-center mr-[10] mt-3"
+                  className="flex-row items-center mr-[2]"
                   onPress={() =>
                     setSortBy(prev =>
                       prev === 'createdAt' ? 'participants' : 'createdAt',
                     )
                   }>
-                  <SortSvg width={12} height={12} />
+                  <SortSvg width={11} height={11} />
                   <CustomText
-                    className="ml-1 text-base text-gray-600"
+                    className="ml-1 text-sm text-gray-600"
                     fontWeight="600">
                     {sortBy === 'participants' ? '인기순' : '최신순'}
                   </CustomText>
                 </Pressable>
               </View>
               <View
-                className="bg-gray-100 flex-row px-3 rounded-2xl mx-1 items-center mb-3 mt-3"
-                style={{paddingVertical: Platform.OS === 'ios' ? 9 : 5}}>
-                <SearchSvg width={20} height={20} />
+                className="bg-white flex-row px-2 rounded-lg items-center mb-1"
+                style={{paddingVertical: Platform.OS === 'ios' ? 8 : 4}}>
+                <SearchSvg width={18} height={18} />
                 <TextInput
                   className="flex-1 p-0 m-0 ml-[6]"
                   placeholder="채팅방 검색"
+                  placeholderTextColor={'#9e9e9e'}
                   onChangeText={debouncedSetName}
                   style={{
                     fontFamily: 'Pretendard-Regular',
                     paddingBottom: 1,
-                    fontSize: 16,
+                    fontSize: 15,
                     includeFontPadding: false,
                   }}
                 />
@@ -272,8 +286,8 @@ const ChatList = ({
           <PlusSvg width={21} height={21} />
         </Pressable>
       </Animated.View>
-    </View>
+    </>
   );
 };
 
-export default ChatList;
+export default ChatTab;

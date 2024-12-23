@@ -34,6 +34,14 @@ const MatchList = ({community, onTabPress}: MatchListProps) => {
         }}
         className="bg-white py-[9] px-2 rounded-sm"
         style={{
+          shadowColor: '#000000',
+          shadowOffset: {
+            width: 0,
+            height: 0,
+          },
+          shadowOpacity: 0.03,
+          shadowRadius: 3,
+          elevation: 0.2,
           width: WINDOW_WIDTH * 0.67,
           marginHorizontal: 4,
           borderWidth: 1,

@@ -95,10 +95,10 @@ const ChatRoomDrawerContent = ({
                   {chatRoom.description}
                 </CustomText>
               </View>
-              <View className="ml-4">
+              <View className="ml-3">
                 <CustomText
                   fontWeight="600"
-                  className="text-lg text-gray-500 mb-2">
+                  className="text-base text-gray-500 mb-2 ml-[2]">
                   {`참여자 ${chatRoom.count}명`}
                 </CustomText>
                 <Pressable
@@ -110,7 +110,7 @@ const ChatRoomDrawerContent = ({
                       });
                     }
                   }}>
-                  <Avatar uri={chatRoom.manager?.image} size={35} />
+                  <Avatar uri={chatRoom.manager?.image} size={32} />
                   <View className="bg-gray-800 rounded-xl px-1 py-[1] mx-[5]">
                     <CustomText
                       fontWeight="600"
@@ -119,8 +119,8 @@ const ChatRoomDrawerContent = ({
                     </CustomText>
                   </View>
                   <CustomText
-                    className="text-base text-slate-600"
-                    fontWeight="600">
+                    className="text-[15px] text-slate-700"
+                    fontWeight="500">
                     {chatRoom.manager?.name}
                   </CustomText>
                 </Pressable>
@@ -129,17 +129,17 @@ const ChatRoomDrawerContent = ({
           }
           renderItem={({item}) => (
             <Pressable
-              className="flex-row items-center py-2 ml-4"
+              className="flex-row items-center py-2 ml-3"
               onPress={() => {
                 if (item.type !== 'ADMIN')
                   navigation.navigate('Profile', {
                     fanId: item.id,
                   });
               }}>
-              <Avatar uri={item.image} size={35} />
+              <Avatar uri={item.image} size={32} />
               <CustomText
-                className="ml-2 text-base text-slate-600"
-                fontWeight="600">
+                className="ml-[10] text-[15px] text-slate-700"
+                fontWeight="500">
                 {item.name}
               </CustomText>
             </Pressable>

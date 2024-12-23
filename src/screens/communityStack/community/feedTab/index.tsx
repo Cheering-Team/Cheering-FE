@@ -126,6 +126,7 @@ const FeedTab = ({
             };
           }
         }}
+        showsVerticalScrollIndicator={false}
         data={posts?.pages.flatMap(page => page.posts) || []}
         renderItem={renderItem}
         contentContainerStyle={{

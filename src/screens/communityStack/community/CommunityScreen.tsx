@@ -27,7 +27,7 @@ import {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import JoinProfile from 'components/community/JoinModal/JoinProfile/JoinProfile';
-import ChatList from 'components/community/ChatList/ChatList';
+import ChatTab from 'screens/communityStack/community/chatTab';
 import {useMainTabScroll} from 'context/useMainTabScroll';
 import MainTab from './mainTab';
 import ScheduleTab from './ScheduleTab';
@@ -170,7 +170,7 @@ const CommunityScreen = () => {
             );
           case 'chat':
             return (
-              <ChatList
+              <ChatTab
                 scrollY={scrollY}
                 isTabFocused={isFocused}
                 onMomentumScrollBegin={onMomentumScrollBegin}

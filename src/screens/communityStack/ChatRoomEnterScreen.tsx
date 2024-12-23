@@ -42,29 +42,29 @@ const ChatRoomEnterScreen = ({route}) => {
             className="text-gray-600 text-[14px] ml-1 pb-0 mt-4">
             {chatRoom.community?.koreanName}
           </CustomText>
-          <CustomText fontWeight="500" className="text-3xl mt-1">
+          <CustomText fontWeight="500" className="text-[25px] mt-1">
             {chatRoom.name}
           </CustomText>
-          <CustomText className="text-gray-500 mt-2 text-base">
+          <CustomText className="text-gray-500 mt-[6] text-base">
             {chatRoom.description}
           </CustomText>
         </View>
         <View className="flex-row justify-between mb-5 mx-1">
           <View className="flex-row items-center">
-            <CustomText className="text-gray-500 mr-3 text-base">
+            <CustomText className="text-gray-500 mr-3 text-[15px]">
               참여 인원
             </CustomText>
-            <CustomText fontWeight="700" className="text-base">
+            <CustomText fontWeight="700" className="text-[15px]">
               {chatRoom.count}
             </CustomText>
-            <CustomText className="text-base">{`/${chatRoom.max}명`}</CustomText>
+            <CustomText className="text-[15px]">{`/${chatRoom.max}명`}</CustomText>
           </View>
           <View className="flex-row items-center">
-            <CustomText className="text-gray-500 mr-3 text-base">
+            <CustomText className="text-gray-500 mr-3 text-[15px]">
               방장
             </CustomText>
             <Avatar uri={chatRoom.manager?.image} size={20} />
-            <CustomText className="ml-1 text-base">
+            <CustomText className="ml-1 text-[15px]">
               {chatRoom.manager?.name}
             </CustomText>
           </View>
