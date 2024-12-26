@@ -232,11 +232,12 @@ const CommunityScreen = () => {
   }
 
   return (
-    <View className="flex-1 bg-[#F5F4F5]">
+    <View
+      className="flex-1"
+      style={{backgroundColor: tabIndex === 1 ? 'white' : '#F5F4F5'}}>
       <StatusBar barStyle="light-content" />
       <CommunityHeader community={community} scrollY={scrollY} />
       <TabView
-        lazy={true}
         navigationState={{index: tabIndex, routes: tabRoutes}}
         renderScene={renderScene}
         renderTabBar={renderTabBar}

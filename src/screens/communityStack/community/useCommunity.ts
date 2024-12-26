@@ -89,7 +89,6 @@ export const useCommunity = () => {
 
   const syncScrollOffset = () => {
     const focusedTabKey = tabRoutes[tabIndexRef.current].key;
-
     listArrRef.current.forEach(item => {
       if (item.key !== focusedTabKey) {
         if (

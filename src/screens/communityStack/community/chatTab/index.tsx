@@ -176,7 +176,7 @@ const ChatTab = ({
         )}
         contentContainerStyle={{
           backgroundColor: '#F5F4F5',
-          paddingTop: HEADER_HEIGHT,
+          marginTop: HEADER_HEIGHT,
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
           paddingBottom: insets.bottom + 100,
           paddingHorizontal: 12,
@@ -264,7 +264,7 @@ const ChatTab = ({
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={handleRefresh}
-            progressViewOffset={-20}
+            progressViewOffset={HEADER_HEIGHT}
             colors={['#787878']}
           />
         }
