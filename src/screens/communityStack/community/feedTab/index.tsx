@@ -9,11 +9,8 @@ import {
   ScrollView,
 } from 'react-native';
 import Animated, {
-  Extrapolation,
-  interpolate,
   SharedValue,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -109,21 +106,6 @@ const FeedTab = ({
     }, 1000);
   };
 
-  // const tabBarTranslateY = useAnimatedStyle(() => ({
-  //   transform: [
-  //     {
-  //       translateY: interpolate(
-  //         scrollY.value,
-  //         [0, 0, HEADER_HEIGHT - insets.top - 40],
-  //         [HEADER_HEIGHT, HEADER_HEIGHT, insets.top + 40],
-  //         {
-  //           extrapolateRight: Extrapolation.CLAMP,
-  //         },
-  //       ),
-  //     },
-  //   ],
-  // }));
-
   return (
     <>
       <Animated.FlatList
@@ -153,7 +135,6 @@ const FeedTab = ({
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
           paddingBottom: insets.bottom + 100,
         }}
-        // style={[tabBarTranslateY]}
         ListHeaderComponent={
           <FeedFilter
             selectedFilter={selectedFilter}

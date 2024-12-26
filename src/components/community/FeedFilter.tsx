@@ -2,9 +2,11 @@ import React from 'react';
 import {Pressable, ScrollView} from 'react-native';
 import CustomText from 'components/common/CustomText';
 
+export type FilterType = 'all' | 'hot' | 'vote';
+
 export interface FilterDataType {
   name: string;
-  filter: 'all' | 'hot' | 'vote' | 'info';
+  filter: FilterType;
 }
 
 const FeedFilterData: FilterDataType[] = [

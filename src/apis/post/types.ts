@@ -41,7 +41,6 @@ export interface PostImageType {
   type: string;
 }
 
-export type FilterType = 'all' | 'hot' | 'photo' | 'viewing' | 'information';
 export type TagType = 'photo' | 'viewing' | 'information';
 
 // 요청
