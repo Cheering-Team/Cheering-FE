@@ -17,12 +17,13 @@ import {
   writeDaily,
   writePost,
 } from './index';
-import {FilterType, Post} from './types';
+import {Post} from './types';
 import {useNavigation} from '@react-navigation/native';
 import {PostWriteScreenNavigationProp} from '../../screens/communityStack/postWrite/PostWriteScreen.tsx';
 import {hideToast, showTopToast} from '../../utils/toast';
 import {queryClient} from '../../../App';
 import {LayoutAnimation} from 'react-native';
+import {FilterType} from 'components/community/FeedFilter.tsx';
 
 // 게시글 작성
 export const useWritePost = () => {

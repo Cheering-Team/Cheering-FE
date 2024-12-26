@@ -7,6 +7,7 @@ import {
   View,
   ScrollView,
   useWindowDimensions,
+  StatusBar,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../../../constants/dimension';
@@ -259,6 +260,7 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
 
   return (
     <>
+      <StatusBar barStyle={'dark-content'} />
       {isWriting && (
         <View
           style={{
@@ -331,7 +333,6 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
             community={community}
           />
           <ScrollView keyboardShouldPersistTaps="always">
-            <TagList selectedTag={selectedTag} setIsTagOpen={setIsTagOpen} />
             <TextInput
               placeholder="글을 작성해보세요"
               multiline
@@ -339,7 +340,8 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
               value={content}
               onChangeText={setContent}
               style={{
-                fontSize: 18,
+                fontSize: 17,
+                marginTop: 8,
                 paddingHorizontal: 12,
                 textAlignVertical: 'top',
                 marginBottom: 15,
@@ -368,12 +370,12 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
             />
           )}
 
-          {isTagOpen && (
+          {/* {isTagOpen && (
             <TagModal
               selectedTag={selectedTag}
               setSelectedTag={setSelectedTag}
             />
-          )}
+          )} */}
         </KeyboardAvoidingView>
       </SafeAreaView>
       <Toast config={toastConfig} />

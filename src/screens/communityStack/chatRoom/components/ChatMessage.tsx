@@ -35,7 +35,7 @@ const ChatMessage = ({isMy, chat, isFirst}: ChatMessageProps) => {
               style={{flexDirection: 'row', alignItems: 'flex-end'}}>
               {chat.messages.length - 1 === index && (
                 <CustomText
-                  className="text-xs"
+                  className="text-[11px]"
                   style={{
                     marginRight: 5,
                     marginBottom: 2,
@@ -47,14 +47,14 @@ const ChatMessage = ({isMy, chat, isFirst}: ChatMessageProps) => {
               <View
                 style={{
                   backgroundColor: '#f1f1f1',
-                  paddingVertical: 7,
-                  paddingHorizontal: 12,
-                  borderRadius: 15,
+                  paddingVertical: 6,
+                  paddingHorizontal: 10,
+                  borderRadius: 10,
                   marginTop: 5,
                 }}>
                 <CustomText
                   key={index}
-                  className="text-base"
+                  className="text-[15px] leading-[22px]"
                   numberOfLines={999}
                   style={{color: '#343434'}}>
                   {message}
@@ -74,17 +74,18 @@ const ChatMessage = ({isMy, chat, isFirst}: ChatMessageProps) => {
             onPress={() => {
               navigation.navigate('Profile', {fanId: chat.writer.id});
             }}>
-            <Avatar uri={chat.writer.image} size={32} />
+            <Avatar uri={chat.writer.image} size={32} className="mt-[2]" />
           </Pressable>
 
-          <View style={{marginLeft: 7, marginTop: 1}}>
+          <View style={{marginLeft: 6, marginTop: 1}}>
             <Pressable
               onPress={() => {
                 navigation.navigate('Profile', {fanId: chat.writer.id});
               }}>
               <CustomText
                 fontWeight="500"
-                style={{color: '#6a6a6a', marginLeft: 2}}>
+                style={{color: '#6a6a6a', marginLeft: 2}}
+                className="text-[13px]">
                 {chat.writer.name}
               </CustomText>
             </Pressable>
@@ -95,22 +96,22 @@ const ChatMessage = ({isMy, chat, isFirst}: ChatMessageProps) => {
                 <View
                   style={{
                     backgroundColor: '#f1f1f1',
-                    paddingVertical: 7,
-                    paddingHorizontal: 12,
-                    borderRadius: 15,
+                    paddingVertical: 6,
+                    paddingHorizontal: 10,
+                    borderRadius: 10,
                     marginTop: 5,
                   }}>
                   <CustomText
                     key={index}
                     numberOfLines={999}
-                    className="text-base"
+                    className="text-[15px] leading-[22px]"
                     style={{color: '#343434'}}>
                     {message}
                   </CustomText>
                 </View>
                 {chat.messages.length - 1 === index && (
                   <CustomText
-                    className="text-xs"
+                    className="text-[11px]"
                     style={{
                       marginLeft: 5,
                       marginBottom: 2,
@@ -127,7 +128,7 @@ const ChatMessage = ({isMy, chat, isFirst}: ChatMessageProps) => {
       {isFirst && (
         <View className="justify-center items-center mb-[15] mt-[5]">
           <View className="bg-black/30 py-1 px-3 rounded-xl">
-            <CustomText fontWeight="500" className="text-white text-sm">
+            <CustomText fontWeight="500" className="text-white text-[13px]">
               {formatDay(chat.createdAt)}
             </CustomText>
           </View>

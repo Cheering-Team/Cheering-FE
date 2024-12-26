@@ -166,11 +166,11 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
 
             <CustomText
               style={{
-                color: '#282828',
                 marginRight: 25,
+                marginTop: 3,
               }}
               numberOfLines={20}
-              className="text-base">
+              className="text-[#000000] text-[14.5px] leading-[20px]">
               {feed.content}
             </CustomText>
           </View>

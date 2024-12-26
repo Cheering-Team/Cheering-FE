@@ -8,7 +8,10 @@ import {QueryClientProvider, QueryClient} from '@tanstack/react-query';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import NaverLogin from '@react-native-seoul/naver-login';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import './gesture-handler';
 import SuccessToast from 'components/common/toast/SuccessToast';
 import FailToast from 'components/common/toast/FailToast';
@@ -21,6 +24,7 @@ import {
   ReanimatedLogLevel,
 } from 'react-native-reanimated';
 import {DevToolsBubble} from 'react-native-react-query-devtools';
+import {MainTabScrollProvider} from 'context/useMainTabScroll';
 
 if (config.ENV === 'production') {
   Sentry.init({
@@ -91,16 +95,18 @@ function App(): React.JSX.Element {
       <QueryClientProvider client={queryClient}>
         <GestureHandlerRootView style={{flex: 1}}>
           <BottomSheetModalProvider>
-            <WebSocketProvider>
-              <NavigationContainer theme={navTheme} ref={navigationRef}>
-                <StatusBar
-                  barStyle="dark-content"
-                  translucent={true}
-                  backgroundColor="transparent"
-                />
-                <AuthSwitch />
-              </NavigationContainer>
-            </WebSocketProvider>
+            <MainTabScrollProvider>
+              <WebSocketProvider>
+                <NavigationContainer theme={navTheme} ref={navigationRef}>
+                  <StatusBar
+                    barStyle="dark-content"
+                    translucent={true}
+                    backgroundColor="transparent"
+                  />
+                  <AuthSwitch />
+                </NavigationContainer>
+              </WebSocketProvider>
+            </MainTabScrollProvider>
             <Toast config={toastConfig} />
           </BottomSheetModalProvider>
         </GestureHandlerRootView>

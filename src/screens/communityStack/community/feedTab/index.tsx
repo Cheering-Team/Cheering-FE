@@ -6,7 +6,7 @@ import {
   ListRenderItem,
   Pressable,
   RefreshControl,
-  View,
+  ScrollView,
 } from 'react-native';
 import Animated, {
   SharedValue,
@@ -14,11 +14,10 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {useFeedList} from './useFeedList';
 import {Community} from 'apis/community/types';
-import FeedPost from '../FeedPost';
+import FeedPost from '../../../../components/community/FeedPost';
 import {Post} from 'apis/post/types';
-import FeedFilter from '../FeedFilter';
+import FeedFilter from '../../../../components/community/FeedFilter';
 import PenSvg from 'assets/images/pencil-white.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -26,8 +25,8 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
-
-const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
+import {useMainTabScroll} from 'context/useMainTabScroll';
+import {useFeedList} from './useFeedList';
 
 interface FeedListProps {
   scrollY: SharedValue<number>;
@@ -38,7 +37,7 @@ interface FeedListProps {
   listArrRef: MutableRefObject<
     {
       key: string;
-      value: FlatList<Post> | null;
+      value: FlatList<any> | ScrollView | null;
     }[]
   >;
   tabRoute: {
@@ -48,7 +47,7 @@ interface FeedListProps {
   community: Community;
 }
 
-const FeedList = ({
+const FeedTab = ({
   scrollY,
   isTabFocused,
   onMomentumScrollBegin,
@@ -61,7 +60,9 @@ const FeedList = ({
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
+  const HEADER_HEIGHT = 110 + insets.top;
 
+  const {scrollY: tabScrollY, previousScrollY} = useMainTabScroll();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const buttonOpacity = useSharedValue(1);
 
@@ -80,9 +81,20 @@ const FeedList = ({
   );
 
   const scrollHandler = useAnimatedScrollHandler(event => {
+    const currentScrollY = event.contentOffset.y;
     if (isTabFocused) {
-      scrollY.value = event.contentOffset.y;
+      scrollY.value = currentScrollY;
     }
+
+    if (currentScrollY > previousScrollY.value + 2 && currentScrollY > 0) {
+      tabScrollY.value = withTiming(50);
+    } else if (
+      currentScrollY < previousScrollY.value - 2 &&
+      currentScrollY > 0
+    ) {
+      tabScrollY.value = withTiming(0);
+    }
+    previousScrollY.value = currentScrollY;
   });
 
   const handleRefresh = () => {
@@ -95,7 +107,7 @@ const FeedList = ({
   };
 
   return (
-    <View style={{flex: 1}}>
+    <>
       <Animated.FlatList
         ref={ref => {
           const foundIndex = listArrRef.current.findIndex(
@@ -114,11 +126,13 @@ const FeedList = ({
             };
           }
         }}
+        showsVerticalScrollIndicator={false}
         data={posts?.pages.flatMap(page => page.posts) || []}
         renderItem={renderItem}
         contentContainerStyle={{
-          paddingTop: HEADER_HEIGHT,
-          minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 45,
+          backgroundColor: '#FFFFFF',
+          marginTop: HEADER_HEIGHT,
+          minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
           paddingBottom: insets.bottom + 100,
         }}
         ListHeaderComponent={
@@ -127,10 +141,13 @@ const FeedList = ({
             setSelectedFilter={setSelectedFilter}
           />
         }
+        scrollIndicatorInsets={{
+          top: 110 + insets.top,
+        }}
         scrollEventThrottle={16}
         onScroll={scrollHandler}
         onMomentumScrollBegin={() => {
-          buttonOpacity.value = withTiming(0.2, {duration: 150});
+          buttonOpacity.value = withTiming(0.1, {duration: 150});
           onMomentumScrollBegin();
         }}
         onMomentumScrollEnd={() => {
@@ -142,7 +159,7 @@ const FeedList = ({
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={handleRefresh}
-            progressViewOffset={-20}
+            progressViewOffset={HEADER_HEIGHT}
             colors={['#787878']}
           />
         }
@@ -175,8 +192,8 @@ const FeedList = ({
           <PenSvg width={23} height={23} />
         </Pressable>
       </Animated.View>
-    </View>
+    </>
   );
 };
 
-export default FeedList;
+export default FeedTab;

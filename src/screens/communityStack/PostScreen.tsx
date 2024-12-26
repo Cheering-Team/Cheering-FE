@@ -5,6 +5,7 @@ import {
   Platform,
   Pressable,
   RefreshControl,
+  StatusBar,
   TextInput,
   View,
 } from 'react-native';
@@ -94,7 +95,8 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
 
   if (post) {
     return (
-      <View style={{flex: 1, paddingTop: insets.top}}>
+      <View style={{flex: 1}}>
+        <StatusBar barStyle={'dark-content'} />
         <KeyboardAvoidingView
           style={{flex: 1}}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -128,41 +130,12 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
             }
             ListHeaderComponent={
               <>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    paddingTop: 10,
-                    paddingHorizontal: 15,
-                  }}>
-                  {post.tags.map(tag => (
-                    <View
-                      key={tag}
-                      style={{
-                        height: 35,
-                        borderWidth: 1,
-                        borderColor: '#e1e1e1',
-                        paddingHorizontal: 15,
-                        borderRadius: 12,
-                        marginRight: 6,
-                        justifyContent: 'center',
-                      }}>
-                      <CustomText fontWeight="500" style={{fontSize: 15}}>
-                        {tag === 'photo'
-                          ? '📸 직찍사'
-                          : tag === 'viewing'
-                            ? '👀 직관인증'
-                            : '🔎 정보'}
-                      </CustomText>
-                    </View>
-                  ))}
-                </View>
                 {/* 작성자 */}
                 <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    paddingHorizontal: 15,
+                    paddingHorizontal: 10,
                     marginTop: 15,
                   }}>
                   <Pressable
@@ -191,13 +164,12 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                   numberOfLines={999}
                   style={{
                     marginTop: 5,
-                    color: '#282828',
+                    color: '#181818',
                     marginRight: 25,
-                    lineHeight: 24,
-                    fontSize: 17,
-                    paddingHorizontal: 15,
+                    paddingHorizontal: 10,
                     marginBottom: 10,
-                  }}>
+                  }}
+                  className="text-[#000000] text-[14.5px] leading-[20px]">
                   {post.content}
                 </CustomText>
                 {/* 이미지 */}
@@ -207,12 +179,7 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                 {/* 댓글 */}
                 <CustomText
                   fontWeight="600"
-                  style={{
-                    fontSize: 18,
-                    paddingHorizontal: 10,
-                    paddingTop: 10,
-                    marginBottom: 10,
-                  }}>
+                  className="px-[10] pt-[10] mb-[10] text-base">
                   댓글
                 </CustomText>
               </>

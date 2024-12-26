@@ -6,6 +6,7 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   TextInput,
   View,
@@ -115,6 +116,7 @@ const SearchScreen = ({
 
   return (
     <SafeAreaView className="flex-1">
+      <StatusBar barStyle={'dark-content'} />
       <View
         className="flex-row items-center pb-3 pl-2 pr-4"
         style={{paddingTop: Platform.OS === 'ios' ? 12 : insets.top + 12}}>

@@ -10,7 +10,6 @@ export interface Post {
   content: string;
   isHide: boolean;
   createdAt: string;
-  tags: string[];
   isLike: boolean;
   likeCount: number;
   commentCount: number;
@@ -41,7 +40,6 @@ export interface PostImageType {
   type: string;
 }
 
-export type FilterType = 'all' | 'hot' | 'photo' | 'viewing' | 'information';
 export type TagType = 'photo' | 'viewing' | 'information';
 
 // 요청

@@ -5,6 +5,7 @@ import {
   Pressable,
   RefreshControl,
   SafeAreaView,
+  StatusBar,
   View,
 } from 'react-native';
 import CloseSvg from '../../assets/images/close-black.svg';
@@ -79,6 +80,7 @@ const ProfileScreen = () => {
   if (profile) {
     return (
       <SafeAreaView style={{flex: 1}}>
+        <StatusBar barStyle={'dark-content'} />
         <View
           style={{
             flexDirection: 'row',

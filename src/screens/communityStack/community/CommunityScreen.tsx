@@ -1,13 +1,17 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {useGetCommunityById} from 'apis/community/useCommunities';
 import CustomText from 'components/common/CustomText';
 import CommunityHeader from 'components/community/CommunityInfo/CommunityHeader';
 import CommunityProfile from 'components/community/CommunityInfo/CommunityProfile';
-import FeedList from 'components/community/FeedList';
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
+import FeedTab from 'screens/communityStack/community/feedTab';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import React, {useCallback, useEffect, useRef} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {StatusBar, TouchableOpacity, View} from 'react-native';
 import Animated from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
@@ -23,13 +27,15 @@ import {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import JoinProfile from 'components/community/JoinModal/JoinProfile/JoinProfile';
-import ChatList from 'components/community/ChatList/ChatList';
+import ChatTab from 'screens/communityStack/community/chatTab';
+import {useMainTabScroll} from 'context/useMainTabScroll';
+import MainTab from './mainTab';
+import ScheduleTab from './ScheduleTab';
 
 const CommunityScreen = () => {
   const {communityId} =
     useRoute<RouteProp<CommunityStackParamList, 'Community'>>().params;
   const navigation = useNavigation();
-
   const insets = useSafeAreaInsets();
 
   const renderBackdrop = useCallback(
@@ -46,7 +52,6 @@ const CommunityScreen = () => {
   const {
     tabBarTranslateY,
     onTabPress,
-    animatedIndicatorStyle,
     tabRoutes,
     tabIndex,
     scrollY,
@@ -58,6 +63,7 @@ const CommunityScreen = () => {
     headerTranslateY,
   } = useCommunity();
 
+  const {scrollY: tabScrollY, previousScrollY} = useMainTabScroll();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const {data: community} = useGetCommunityById(communityId);
@@ -66,58 +72,67 @@ const CommunityScreen = () => {
     (props: SceneRendererProps & {navigationState: NavigationState<Route>}) => {
       const {navigationState} = props;
       return (
-        <Animated.View
+        <Animated.FlatList
+          horizontal
+          data={navigationState.routes}
           style={[
             {
-              flexDirection: 'row',
-              alignItems: 'center',
-              height: 40,
+              height: 38,
+              flexGrow: 0,
               backgroundColor: community?.color,
               zIndex: 1,
             },
             tabBarTranslateY,
-          ]}>
-          {navigationState.routes.map((route, idx) => {
-            return (
-              <TouchableOpacity
-                style={{flex: 1}}
-                key={idx}
-                onPress={() => {
-                  onTabPress(idx);
-                  if (idx === tabIndex) {
-                    listArrRef.current.forEach(item => {
-                      if (item.key === route.key) {
-                        item.value?.scrollToOffset({
-                          offset: WINDOW_HEIGHT / 2 - 45 - insets.top,
+          ]}
+          contentContainerStyle={{paddingHorizontal: 5}}
+          renderItem={({item, index}) => (
+            <TouchableOpacity
+              className="mx-2 px-[6]"
+              key={index}
+              style={{
+                borderBottomWidth: 3,
+                borderBlockColor:
+                  index === tabIndex ? 'white' : community?.color,
+              }}
+              onPress={() => {
+                onTabPress(index);
+                if (index === tabIndex) {
+                  listArrRef.current.forEach(ref => {
+                    if (ref.key === item.key) {
+                      if (item.key === 'main' || item.key === 'schedule') {
+                        ref.value?.scrollTo({
+                          y: 70,
+                          animated: true,
+                        });
+                      } else {
+                        ref.value?.scrollToOffset({
+                          offset: 70,
                           animated: true,
                         });
                       }
-                    });
-                  }
+                    }
+                  });
+                }
+              }}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%',
                 }}>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '100%',
-                  }}>
-                  <CustomText
-                    fontWeight="600"
-                    style={{color: 'white', fontSize: 16.5}}>
-                    {route.title}
-                  </CustomText>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-          <Animated.View
-            className="absolute bottom-0 h-[3] bg-white"
-            style={[{width: WINDOW_WIDTH / 2}, animatedIndicatorStyle]}
-          />
-        </Animated.View>
+                <CustomText
+                  fontWeight={index === tabIndex ? '700' : '400'}
+                  className="text-[15px] text-gray-50"
+                  style={{color: index === tabIndex ? 'white' : '#cfcfcf'}}>
+                  {item.title}
+                </CustomText>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
       );
     },
-    [community, tabIndex],
+    [community?.color, listArrRef, onTabPress, tabBarTranslateY, tabIndex],
   );
 
   const renderScene = useCallback(
@@ -126,9 +141,23 @@ const CommunityScreen = () => {
 
       if (community) {
         switch (route.key) {
+          case 'main':
+            return (
+              <MainTab
+                scrollY={scrollY}
+                isTabFocused={isFocused}
+                onMomentumScrollBegin={onMomentumScrollBegin}
+                onMomentumScrollEnd={onMomentumScrollEnd}
+                onScrollEndDrag={onScrollEndDrag}
+                listArrRef={listArrRef}
+                tabRoute={route}
+                community={community}
+                onTabPress={onTabPress}
+              />
+            );
           case 'feed':
             return (
-              <FeedList
+              <FeedTab
                 scrollY={scrollY}
                 isTabFocused={isFocused}
                 onMomentumScrollBegin={onMomentumScrollBegin}
@@ -141,7 +170,7 @@ const CommunityScreen = () => {
             );
           case 'chat':
             return (
-              <ChatList
+              <ChatTab
                 scrollY={scrollY}
                 isTabFocused={isFocused}
                 onMomentumScrollBegin={onMomentumScrollBegin}
@@ -152,10 +181,35 @@ const CommunityScreen = () => {
                 community={community}
               />
             );
+          case 'schedule':
+            return (
+              <ScheduleTab
+                scrollY={scrollY}
+                isTabFocused={isFocused}
+                onMomentumScrollBegin={onMomentumScrollBegin}
+                onMomentumScrollEnd={onMomentumScrollEnd}
+                onScrollEndDrag={onScrollEndDrag}
+                listArrRef={listArrRef}
+                tabRoute={route}
+                community={community}
+              />
+            );
+          default:
+            return null;
         }
       }
     },
-    [tabIndex, community],
+    [
+      tabRoutes,
+      tabIndex,
+      community,
+      scrollY,
+      onMomentumScrollBegin,
+      onMomentumScrollEnd,
+      onScrollEndDrag,
+      listArrRef,
+      onTabPress,
+    ],
   );
 
   useEffect(() => {
@@ -164,12 +218,24 @@ const CommunityScreen = () => {
     }
   }, [community]);
 
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        tabScrollY.value = 0;
+        previousScrollY.value = 0;
+      };
+    }, [previousScrollY, tabScrollY]),
+  );
+
   if (!community) {
     return null;
   }
 
   return (
-    <View className="flex-1">
+    <View
+      className="flex-1"
+      style={{backgroundColor: tabIndex === 1 ? 'white' : '#F5F4F5'}}>
+      <StatusBar barStyle="light-content" />
       <CommunityHeader community={community} scrollY={scrollY} />
       <TabView
         navigationState={{index: tabIndex, routes: tabRoutes}}

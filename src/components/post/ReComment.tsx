@@ -63,10 +63,12 @@ const ReComment = (props: Props) => {
           under={commentId}
         />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <CustomText fontWeight="500" style={{color: '#939393', fontSize: 15}}>
+          <CustomText
+            fontWeight="500"
+            style={{color: '#939393', fontSize: 14.5}}>
             {`@${reComment.to.name} `}
           </CustomText>
-          <CustomText className="text-[#282828] text-base">
+          <CustomText className="text-[14.5px] leading-[20px]">
             {reComment.content}
           </CustomText>
         </View>
@@ -80,7 +82,7 @@ const ReComment = (props: Props) => {
           }}>
           <CustomText
             fontWeight="500"
-            style={{marginTop: 8, fontSize: 14, color: '#888888'}}>
+            style={{marginTop: 8, fontSize: 13, color: '#888888'}}>
             답글 달기
           </CustomText>
         </TouchableOpacity>

@@ -131,7 +131,7 @@ const MakeVote = ({community, setIsVote, vote, setVote}: MakeVoteProps) => {
   };
 
   return (
-    <View className="m-3 p-4 bg-gray-100 rounded-md border border-gray-200">
+    <View className="m-3 px-4 py-3 bg-gray-100 rounded-md border border-gray-200">
       <View className="flex-row justify-between mb-3 items-center">
         {match ? (
           <View className="flex-row items-center border border-gray-200 rounded-full px-2 bg-white h-[34]">

@@ -1,9 +1,19 @@
-import {useInfiniteQuery, useMutation} from '@tanstack/react-query';
-import {deleteCheer, getCheers, writeCheer} from '.';
+import {
+  InfiniteData,
+  useInfiniteQuery,
+  useMutation,
+} from '@tanstack/react-query';
+import {
+  deleteCheer,
+  deleteLikeCheer,
+  getCheers,
+  likeCheer,
+  writeCheer,
+} from '.';
 import {cheerKeys} from './queries';
 import {queryClient} from '../../../App';
 import {showTopToast} from 'utils/toast';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Cheer, GetCheersResponse} from './types';
 
 export const useWriteCheer = () => {
   return useMutation({
@@ -37,6 +47,72 @@ export const useDeleteCheer = (matchId: number, communityId: number) => {
       queryClient.invalidateQueries({
         queryKey: cheerKeys.list(matchId, communityId),
       });
+    },
+  });
+};
+
+export const useLikeCheer = (
+  matchId: number,
+  communityId: number,
+  cheerId: number,
+) => {
+  return useMutation({
+    mutationFn: likeCheer,
+    onMutate: () => {
+      queryClient.setQueryData(
+        cheerKeys.list(matchId, communityId),
+        (data: InfiniteData<GetCheersResponse, unknown>) => {
+          if (!data) return data;
+          return {
+            ...data,
+            pages: data.pages.map((page: GetCheersResponse) => ({
+              ...page,
+              cheers: page.cheers.map((cheer: Cheer) =>
+                cheer.id === cheerId
+                  ? {
+                      ...cheer,
+                      isLike: true,
+                      likeCount: cheer.likeCount + 1,
+                    }
+                  : cheer,
+              ),
+            })),
+          };
+        },
+      );
+    },
+  });
+};
+
+export const useDeleteLikeCheer = (
+  matchId: number,
+  communityId: number,
+  cheerId: number,
+) => {
+  return useMutation({
+    mutationFn: deleteLikeCheer,
+    onMutate: () => {
+      queryClient.setQueryData(
+        cheerKeys.list(matchId, communityId),
+        (data: InfiniteData<GetCheersResponse, unknown>) => {
+          if (!data) return data;
+          return {
+            ...data,
+            pages: data.pages.map((page: GetCheersResponse) => ({
+              ...page,
+              cheers: page.cheers.map((cheer: Cheer) =>
+                cheer.id === cheerId
+                  ? {
+                      ...cheer,
+                      isLike: false,
+                      likeCount: cheer.likeCount - 1,
+                    }
+                  : cheer,
+              ),
+            })),
+          };
+        },
+      );
     },
   });
 };

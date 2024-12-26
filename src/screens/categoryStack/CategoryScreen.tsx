@@ -4,6 +4,7 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
+  StatusBar,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -56,6 +57,7 @@ const CategoryScreen = ({
 
   return (
     <SafeAreaView className="flex-1">
+      <StatusBar barStyle={'dark-content'} />
       <Pressable
         className="flex-row pb-3 px-4"
         style={{paddingTop: Platform.OS === 'ios' ? 12 : insets.top + 12}}
@@ -77,14 +79,14 @@ const CategoryScreen = ({
           renderItem={({item}) => (
             <Pressable
               onPress={() => setSelectedSport(item)}
-              className="items-center px-[14] py-[10] justify-center"
+              className="items-center px-[10] py-[6] justify-center"
               style={{
                 borderBottomWidth: 3,
                 borderBlockColor: selectedSport === item ? 'black' : 'white',
               }}>
               <CustomText
                 fontWeight="600"
-                className="text-[18px]"
+                className="text-base"
                 style={{color: selectedSport === item ? 'black' : 'gray'}}>
                 {item.name}
               </CustomText>
@@ -105,10 +107,10 @@ const CategoryScreen = ({
           renderItem={({item}) => (
             <Pressable
               onPress={() => setSelectedLeague(item)}
-              className={`py-4 pl-3 ${selectedLeague === item && 'bg-white'}`}>
+              className={`py-3 pl-3 ${selectedLeague === item && 'bg-white'}`}>
               <CustomText
                 fontWeight="600"
-                className={`color-[#6f6f6f] text-[15px] ${selectedLeague === item && 'text-black'}`}>
+                className={`color-[#6f6f6f] text-sm ${selectedLeague === item && 'text-black'}`}>
                 {item.name}
               </CustomText>
             </Pressable>
@@ -140,12 +142,12 @@ const CategoryScreen = ({
                   style={{
                     marginRight: 40,
                     width: 85,
-                    height: 50,
+                    height: 45,
                   }}
                 />
                 <View className="absolute flex-row justify-between w-full pl-4 pr-3 items-center">
                   <CustomText
-                    className="text-[16px] text-white"
+                    className="text-[14px] mb-[2] text-white"
                     type="titleCenter">
                     {item.shortName}
                   </CustomText>
