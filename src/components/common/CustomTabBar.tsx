@@ -103,7 +103,7 @@ function CustomTabBar({state, descriptors, navigation}) {
               onPress={onPress}
               onLongPress={onLongPress}
               style={styles.Tab}>
-              {index === 0 ? (
+              {index === 1 ? (
                 isFocused ? (
                   <>
                     <CategoryBlackSvg width={22} height={22} />
@@ -113,17 +113,18 @@ function CustomTabBar({state, descriptors, navigation}) {
                     <CategoryGraySvg width={22} height={22} />
                   </>
                 )
-              ) : index === 1 ? (
-                isFocused ? (
-                  <>
-                    <CompassBlackSvg width={22} height={22} />
-                  </>
-                ) : (
-                  <>
-                    <CompassGraySvg width={22} height={22} />
-                  </>
-                )
-              ) : index === 2 ? (
+              ) : // : index === 1 ? (
+              //   isFocused ? (
+              //     <>
+              //       <CompassBlackSvg width={22} height={22} />
+              //     </>
+              //   ) : (
+              //     <>
+              //       <CompassGraySvg width={22} height={22} />
+              //     </>
+              //   )
+              // )
+              index === 0 ? (
                 isFocused ? (
                   <>
                     <HomeBlackSvg width={22} height={22} />
@@ -133,7 +134,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                     <HomeGraySvg width={22} height={22} />
                   </>
                 )
-              ) : index === 3 ? (
+              ) : index === 2 ? (
                 isFocused ? (
                   <>
                     <ChatBlackSvg width={22} height={22} />

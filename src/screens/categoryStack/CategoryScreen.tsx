@@ -4,6 +4,7 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
+  StatusBar,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -56,6 +57,7 @@ const CategoryScreen = ({
 
   return (
     <SafeAreaView className="flex-1">
+      <StatusBar barStyle={'dark-content'} />
       <Pressable
         className="flex-row pb-3 px-4"
         style={{paddingTop: Platform.OS === 'ios' ? 12 : insets.top + 12}}

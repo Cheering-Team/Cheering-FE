@@ -5,6 +5,7 @@ import {
   ListRenderItem,
   Platform,
   Pressable,
+  StatusBar,
   StyleSheet,
   TextInput,
   View,
@@ -134,6 +135,7 @@ const PlayerListScreen = ({
 
   return (
     <View style={{flex: 1, backgroundColor: team.color}}>
+      <StatusBar barStyle={'light-content'} />
       <View
         style={{
           paddingTop: insets.top,

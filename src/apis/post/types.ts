@@ -10,7 +10,6 @@ export interface Post {
   content: string;
   isHide: boolean;
   createdAt: string;
-  tags: string[];
   isLike: boolean;
   likeCount: number;
   commentCount: number;

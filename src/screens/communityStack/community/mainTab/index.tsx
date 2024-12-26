@@ -3,11 +3,8 @@ import {WINDOW_HEIGHT} from 'constants/dimension';
 import React, {MutableRefObject} from 'react';
 import {FlatList, ScrollView} from 'react-native';
 import Animated, {
-  Extrapolation,
-  interpolate,
   SharedValue,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
