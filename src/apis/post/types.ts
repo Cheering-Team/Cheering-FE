@@ -2,6 +2,7 @@ import {AxiosProgressEvent} from 'axios';
 import {Page} from '../types';
 import {Community} from 'apis/community/types';
 import {Fan} from 'apis/fan/types';
+import {Vote} from 'apis/vote/types';
 
 // 엔티티
 export interface Post {
@@ -16,6 +17,7 @@ export interface Post {
   images: PostImageType[];
   writer: Fan;
   user: Fan;
+  vote: Vote;
 }
 
 export interface ImageType {

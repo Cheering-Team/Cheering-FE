@@ -28,7 +28,6 @@ import CommentSkeleton from 'components/skeleton/CommentSkeleton';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import NotFound from 'components/notfound';
 import Vote from 'components/post/Vote';
-import {useGetVote} from 'apis/vote/useVotes';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 type PostScreenNavigationProp = StackNavigationProp<
@@ -68,7 +67,6 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
     hasNextPage,
     fetchNextPage,
   } = useGetComments(postId, !!post && !postIsLoading && !isError);
-  const {data: vote} = useGetVote(postId);
 
   const loadComment = () => {
     if (hasNextPage) {
@@ -174,7 +172,9 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                 </CustomText>
                 {/* 이미지 */}
                 <PostImage images={post.images} type="POST" />
-                {vote && <Vote vote={vote} post={post} />}
+                {post.vote && (
+                  <Vote vote={post.vote} community={post.community} />
+                )}
                 <InteractBar post={post} type="post" />
                 {/* 댓글 */}
                 <CustomText

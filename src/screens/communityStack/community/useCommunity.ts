@@ -1,3 +1,4 @@
+import {useGetCommunityById} from 'apis/community/useCommunities';
 import {WINDOW_WIDTH} from 'constants/dimension';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList, ScrollView} from 'react-native';
@@ -11,16 +12,17 @@ import {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-export const useCommunity = () => {
+export const useCommunity = (communityId: number) => {
   const insets = useSafeAreaInsets();
   const HEADER_HEIGHT = 110 + insets.top;
+
+  const {data: community} = useGetCommunityById(communityId);
 
   const [tabRoutes, setTabRoutes] = useState([
     {key: 'main', title: '메인'},
     {key: 'feed', title: '피드'},
     {key: 'chat', title: '채팅'},
     {key: 'schedule', title: '일정'},
-    {key: 'meet', title: '모임'},
   ]);
 
   const [tabIndex, setTabIndex] = useState(0);
@@ -177,5 +179,6 @@ export const useCommunity = () => {
     onScrollEndDrag,
     onTabIndexChange,
     headerTranslateY,
+    community,
   };
 };
