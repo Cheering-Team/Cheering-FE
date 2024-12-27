@@ -21,8 +21,10 @@ import ListEmpty from '../../components/common/ListEmpty/ListEmpty';
 import {formatBeforeDate} from '../../utils/format';
 import StackHeader from 'components/common/StackHeader';
 import FastImage from 'react-native-fast-image';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const NotificationScreen = ({navigation}) => {
+  useDarkStatusBar();
   const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
 

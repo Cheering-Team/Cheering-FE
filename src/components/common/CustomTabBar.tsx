@@ -142,7 +142,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                     {chatCount > 0 && (
                       <View
                         className="absolute bg-[#fc3b3b] rounded-full min-w-[15] h-[15] px-1 justify-center items-center top-[8]"
-                        style={{left: WINDOW_WIDTH / 10}}>
+                        style={{left: WINDOW_WIDTH / 8}}>
                         <CustomText
                           fontWeight="600"
                           className="text-white text-center text-[12px]">
@@ -158,7 +158,7 @@ function CustomTabBar({state, descriptors, navigation}) {
                     {chatCount > 0 && (
                       <View
                         className="absolute bg-[#fc3b3b] rounded-full min-w-[15] h-[15] px-1 justify-center items-center top-[8]"
-                        style={{left: WINDOW_WIDTH / 10}}>
+                        style={{left: WINDOW_WIDTH / 8}}>
                         <CustomText
                           fontWeight="600"
                           className="text-white text-center text-[12px]">

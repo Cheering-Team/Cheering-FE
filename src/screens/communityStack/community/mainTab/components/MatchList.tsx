@@ -2,7 +2,6 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Community} from 'apis/community/types';
 import {MatchDetail} from 'apis/match/types';
-import {useGetNearMatch} from 'apis/match/useMatches';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_WIDTH} from 'constants/dimension';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
@@ -14,14 +13,13 @@ import {formatDOW, formatTime, formatTodayOrDate} from 'utils/format';
 interface MatchListProps {
   community: Community;
   onTabPress: (index: number) => void;
+  matches: MatchDetail[] | undefined;
 }
 
-const MatchList = ({community, onTabPress}: MatchListProps) => {
+const MatchList = ({community, onTabPress, matches}: MatchListProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const matchRef = useRef<FlatList | null>(null);
-
-  const {data} = useGetNearMatch(community.id);
 
   const renderItem: ListRenderItem<MatchDetail> = ({item}) => {
     return (
@@ -179,8 +177,8 @@ const MatchList = ({community, onTabPress}: MatchListProps) => {
   };
 
   useEffect(() => {
-    if (data) {
-      const index = data.findIndex(match => {
+    if (matches) {
+      const index = matches.findIndex(match => {
         const matchDate = new Date(match.time);
         const now = new Date();
 
@@ -203,14 +201,14 @@ const MatchList = ({community, onTabPress}: MatchListProps) => {
         animated: false,
       });
     }
-  }, [data]);
+  }, [matches]);
 
-  if (!data || data.length === 0) {
+  if (!matches) {
     return null;
   }
 
   return (
-    <View className="py-3">
+    <View className="mt-3">
       <View className="flex-row justify-between items-center px-[14] mb-2">
         <View className="flex-row items-center">
           <CustomText className="text-lg" fontWeight="500">
@@ -230,19 +228,27 @@ const MatchList = ({community, onTabPress}: MatchListProps) => {
           </CustomText>
         </Pressable>
       </View>
-      <FlatList
-        ref={matchRef}
-        horizontal
-        data={data}
-        snapToInterval={WINDOW_WIDTH * 0.67 + 8}
-        decelerationRate={'fast'}
-        contentContainerStyle={{
-          paddingLeft: 13,
-          paddingRight: 8,
-        }}
-        showsHorizontalScrollIndicator={false}
-        renderItem={renderItem}
-      />
+      {matches.length > 0 ? (
+        <FlatList
+          ref={matchRef}
+          horizontal
+          data={matches}
+          snapToInterval={WINDOW_WIDTH * 0.67 + 8}
+          decelerationRate={'fast'}
+          contentContainerStyle={{
+            paddingLeft: 13,
+            paddingRight: 8,
+          }}
+          showsHorizontalScrollIndicator={false}
+          renderItem={renderItem}
+        />
+      ) : (
+        <View className="justify-center items-center h-[80]">
+          <CustomText className="text-slate-700">
+            최근 일주일 전/후 경기가 없습니다
+          </CustomText>
+        </View>
+      )}
     </View>
   );
 };

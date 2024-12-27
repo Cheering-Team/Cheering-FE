@@ -13,7 +13,6 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   Platform,
-  StatusBar,
   View,
 } from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -36,6 +35,7 @@ import {StompSubscription} from '@stomp/stompjs';
 import CustomText from 'components/common/CustomText';
 import {queryClient} from '../../../../App';
 import {chatRoomKeys} from 'apis/chat/queries';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 const TextEncodingPolyfill = require('text-encoding');
 
 Object.assign('global', {
@@ -44,6 +44,7 @@ Object.assign('global', {
 });
 
 const ChatRoomScreen = () => {
+  useDarkStatusBar();
   const {chatRoomId} =
     useRoute<RouteProp<CommunityStackParamList, 'ChatRoom'>>().params;
   const navigation =
@@ -311,7 +312,6 @@ const ChatRoomScreen = () => {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={-insets.bottom}>
-        <StatusBar barStyle={'dark-content'} />
         <ChatRoomHeader
           chatRoom={chatRoom}
           setIsDrawerOpen={setIsDrawerOpen}

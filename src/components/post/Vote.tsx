@@ -19,9 +19,8 @@ import {
 } from 'utils/format';
 import DownSvg from 'assets/images/chevron-down-gray.svg';
 import UpSvg from 'assets/images/chevron-up-gray.svg';
-import {VoteOption, Vote as VoteType} from 'apis/vote/types';
+import {Vote as VoteType, VoteOption} from 'apis/vote/types';
 import {useVote} from 'apis/vote/useVotes';
-import {Post} from 'apis/post/types';
 import RankingSvg from 'assets/images/fullscreen-black.svg';
 import {WINDOW_WIDTH} from 'constants/dimension';
 import LinearGradient from 'react-native-linear-gradient';
@@ -35,13 +34,14 @@ import Toast from 'react-native-toast-message';
 import {queryClient, toastConfig} from '../../../App';
 import Share from 'react-native-share';
 import {voteKeys} from 'apis/vote/queries';
+import {Community} from 'apis/community/types';
 
 interface VoteProps {
   vote: VoteType;
-  post: Post;
+  community: Community;
 }
 
-const Vote = ({vote, post}: VoteProps) => {
+const Vote = ({vote, community}: VoteProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const insets = useSafeAreaInsets();
@@ -52,7 +52,7 @@ const Vote = ({vote, post}: VoteProps) => {
   const [isRanking, setIsRanking] = useState(false);
   const [first, setFirst] = useState<VoteOption | null>();
 
-  const {mutateAsync: postVote} = useVote(post.id);
+  const {mutateAsync: postVote} = useVote(community.id);
 
   const handleVote = async (voteOptionId: number) => {
     try {
@@ -60,7 +60,7 @@ const Vote = ({vote, post}: VoteProps) => {
     } catch (error: any) {
       if (error.code === 2009) {
         showTopToast({type: 'fail', message: '이미 마감된 투표입니다'});
-        queryClient.invalidateQueries({queryKey: voteKeys.detail(post.id)});
+        queryClient.invalidateQueries({queryKey: voteKeys.detail(vote.id)});
       }
     }
   };
@@ -135,25 +135,35 @@ const Vote = ({vote, post}: VoteProps) => {
         quality: 0.8, // 품질 (0~1)
       });
 
-      await Share.open({
-        title: '공유하기',
-        url: `file://${uri}`,
-        type: 'image/png',
-        message: vote.title,
-      });
+      if (vote) {
+        await Share.open({
+          title: '공유하기',
+          url: `file://${uri}`,
+          type: 'image/png',
+          message: vote.title,
+        });
+      }
     } catch (error) {
       //
     }
   };
 
   useEffect(() => {
-    setFirst([...vote.options].sort((a, b) => b.percent - a.percent)[0]);
+    if (vote) {
+      setFirst([...vote.options].sort((a, b) => b.percent - a.percent)[0]);
+    }
   }, [vote]);
+
+  if (!vote) {
+    return null;
+  }
 
   return (
     <View className="my-2 py-1 px-1 rounded-x items-start">
       <View className="flex-row items-center pr-3">
-        <CustomText className="text-[17px] my-1 ml-2 flex-1" fontWeight="500">
+        <CustomText
+          className="text-base mt-1 mb-[3] ml-2 flex-1"
+          fontWeight="500">
           {vote.title}
         </CustomText>
         <Pressable onPress={() => setIsRanking(true)} className="pl-2 py-1">
@@ -167,12 +177,12 @@ const Vote = ({vote, post}: VoteProps) => {
               screen: 'Match',
               params: {
                 matchId: vote.match.id,
-                communityId: post.community.id,
+                communityId: community.id,
               },
             })
           }
-          className="flex-row items-center border border-gray-200 rounded-lg ml-2 px-1 my-1 py-[2]">
-          <CustomText className="text-[15px] mr-[3]">
+          className="flex-row items-center border border-gray-200 rounded-[6xpx] ml-2 pl-[6] pr-[2] my-[1] py-[2]">
+          <CustomText className="text-[13px] mr-[3]">
             {`${formatMonthDaySlash(vote.match.time)} vs ${vote.match.shortName}`}
           </CustomText>
           <FastImage
@@ -195,18 +205,18 @@ const Vote = ({vote, post}: VoteProps) => {
                 }
               }
             }}
-            className="flex-row items-center my-1">
+            className="flex-row items-center my-[3]">
             <View
-              className="w-full relative bg-gray-100 h-[40] rounded-full overflow-hidden"
+              className="w-full relative bg-gray-100 h-10 rounded-full overflow-hidden"
               style={{
                 borderWidth: 1,
-                borderColor: option.isVoted ? post.community.color : 'white',
+                borderColor: option.isVoted ? community.color : 'white',
               }}>
               {(vote.isVoted || vote.isClosed) && (
                 <View
                   style={{
                     width: `${option.percent}%`,
-                    backgroundColor: `${post.community.color}28`,
+                    backgroundColor: `${community.color}28`,
                     height: '100%',
                     position: 'absolute',
                     left: 0,
@@ -223,7 +233,7 @@ const Vote = ({vote, post}: VoteProps) => {
                 />
               )}
               <CustomText
-                className="text-[17px] ml-[6] flex-1"
+                className="text-base ml-[6] flex-1"
                 fontWeight={option.isVoted ? '500' : '400'}
                 style={{opacity: vote.isClosed ? 0.5 : 1}}>
                 {option.name}
@@ -235,7 +245,7 @@ const Vote = ({vote, post}: VoteProps) => {
                   <CustomText
                     fontWeight="600"
                     className="text-base"
-                    style={{color: post.community.color}}>
+                    style={{color: community.color}}>
                     결과보기
                   </CustomText>
                 </Pressable>
@@ -247,7 +257,7 @@ const Vote = ({vote, post}: VoteProps) => {
                   <CustomText
                     fontWeight="600"
                     className="text-base"
-                    style={{color: post.community.color}}>
+                    style={{color: community.color}}>
                     결과보기
                   </CustomText>
                 </Pressable>
@@ -293,12 +303,10 @@ const Vote = ({vote, post}: VoteProps) => {
           ))}
       </View>
       <View className="flex-row mt-[2] mx-3">
-        <CustomText
-          className="text-gray-400 text-[13px] flex-1"
-          fontWeight="600">
+        <CustomText className="text-gray-400 text-xs flex-1" fontWeight="500">
           {formatRemainingTime(vote.endTime)}
         </CustomText>
-        <CustomText className="text-gray-400 text-[13px]" fontWeight="600">
+        <CustomText className="text-gray-400 text-xs" fontWeight="500">
           {`${vote.totalCount}명 참여`}
         </CustomText>
       </View>
@@ -400,7 +408,7 @@ const Vote = ({vote, post}: VoteProps) => {
                                 height: 30,
                                 backgroundColor:
                                   option.percent >= first?.percent
-                                    ? post.community.color
+                                    ? community.color
                                     : '#959595',
                               }}>
                               {option.percent >= 30 && (
@@ -429,12 +437,12 @@ const Vote = ({vote, post}: VoteProps) => {
                   <View className="w-[1] h-[10] bg-slate-400 mx-1" />
                   <View className="flex-row items-center">
                     <FastImage
-                      source={{uri: post.community.image}}
+                      source={{uri: community.image}}
                       className="h-[11] w-[11] mr-[3]"
                       resizeMode="contain"
                     />
                     <CustomText fontWeight="600" className="text-[11px]">
-                      {post.community.koreanName}
+                      {community.koreanName}
                     </CustomText>
                   </View>
                 </View>

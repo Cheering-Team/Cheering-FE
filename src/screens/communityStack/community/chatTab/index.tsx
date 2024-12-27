@@ -178,7 +178,7 @@ const ChatTab = ({
           backgroundColor: '#F5F4F5',
           marginTop: HEADER_HEIGHT,
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
-          paddingBottom: insets.bottom + 100,
+          paddingBottom: insets.bottom + 200,
           paddingHorizontal: 12,
         }}
         scrollEventThrottle={16}

@@ -19,8 +19,10 @@ import {CommunityTabBar} from 'components/community/CommunityTabBar/CommunityTab
 import VoteList from '../schedule/match/components/VoteList';
 import {useGetCommunityById} from 'apis/community/useCommunities';
 import CheerTab from './CheerTab';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const MatchScreen = () => {
+  useDarkStatusBar();
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const {matchId, communityId} =
@@ -39,7 +41,6 @@ const MatchScreen = () => {
       style={{flex: 1}}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={-insets.bottom}>
-      <StatusBar barStyle={'dark-content'} />
       <View
         className="px-[5] flex-row justify-between items-center bg-white z-50"
         style={{paddingTop: insets.top, height: 40 + insets.top}}>

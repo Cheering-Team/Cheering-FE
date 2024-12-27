@@ -1,7 +1,13 @@
 import {Community} from 'apis/community/types';
 import {WINDOW_HEIGHT} from 'constants/dimension';
-import React, {MutableRefObject} from 'react';
-import {FlatList, ScrollView} from 'react-native';
+import React, {MutableRefObject, useState} from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  ScrollView,
+  View,
+} from 'react-native';
 import Animated, {
   SharedValue,
   useAnimatedScrollHandler,
@@ -10,6 +16,13 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MatchList from './components/MatchList';
 import {useMainTabScroll} from 'context/useMainTabScroll';
+import OfficialChat from './components/OfficialChat';
+import HotPosts from './components/HotPosts';
+import HotVote from './components/HotVote';
+import {useGetNearMatch} from 'apis/match/useMatches';
+import {useGetOfficialChatRoom} from 'apis/chat/useChats';
+import {useGetHotVote} from 'apis/vote/useVotes';
+import {useGetPosts} from 'apis/post/usePosts';
 
 interface MainListProps {
   scrollY: SharedValue<number>;
@@ -46,6 +59,29 @@ const MainTab = ({
   const insets = useSafeAreaInsets();
   const HEADER_HEIGHT = 110 + insets.top;
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const {
+    data: matches,
+    isLoading: matchesIsLoading,
+    refetch: matchesRefetch,
+  } = useGetNearMatch(community.id);
+  const {
+    data: officialChatRoom,
+    isLoading: officialChatRoomIsLoading,
+    refetch: officialChatRoomRefetch,
+  } = useGetOfficialChatRoom(community.id, community.curFan !== null);
+  const {
+    data: vote,
+    isLoading: voteIsLoading,
+    refetch: voteRefetch,
+  } = useGetHotVote(community.id, community.curFan !== null);
+  const {
+    data: posts,
+    isLoading: postsIsLoading,
+    refetch: postRefetch,
+  } = useGetPosts(community.id, 'hot', community.curFan !== null);
+
   const scrollHandler = useAnimatedScrollHandler(event => {
     const currentScrollY = event.contentOffset.y;
     if (isTabFocused) {
@@ -62,6 +98,35 @@ const MainTab = ({
     }
     previousScrollY.value = currentScrollY;
   });
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    matchesRefetch();
+    officialChatRoomRefetch();
+    voteRefetch();
+    postRefetch();
+
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  };
+
+  if (
+    matchesIsLoading ||
+    officialChatRoomIsLoading ||
+    voteIsLoading ||
+    postsIsLoading
+  ) {
+    return (
+      <View
+        className="w-full justify-center items-center"
+        style={{
+          height: WINDOW_HEIGHT - insets.bottom - 38 - 45,
+        }}>
+        <ActivityIndicator color={'#bababa'} size={'small'} />
+      </View>
+    );
+  }
 
   return (
     <>
@@ -93,13 +158,30 @@ const MainTab = ({
         onMomentumScrollEnd={onMomentumScrollEnd}
         onScrollEndDrag={onScrollEndDrag}
         contentContainerStyle={{
-          backgroundColor: '#F5F4F5',
           paddingTop: HEADER_HEIGHT,
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
-          paddingBottom: insets.bottom + 100,
-        }}>
+          paddingBottom: insets.bottom + 200,
+        }}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            progressViewOffset={HEADER_HEIGHT}
+            colors={['#787878']}
+          />
+        }>
         {/* 일정 */}
-        <MatchList community={community} onTabPress={onTabPress} />
+        <MatchList
+          community={community}
+          onTabPress={onTabPress}
+          matches={matches}
+        />
+        {/* 대표 채팅방 */}
+        <OfficialChat officialChatRoom={officialChatRoom} />
+        {/* 인기 투표 */}
+        <HotVote community={community} vote={vote} />
+        {/* 인기 게시글 */}
+        <HotPosts onTabPress={onTabPress} posts={posts} />
       </Animated.ScrollView>
     </>
   );

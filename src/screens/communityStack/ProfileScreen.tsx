@@ -29,8 +29,10 @@ import Viewer from 'components/post/Viewer';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import NotFound from 'components/notfound';
 import {useBlockUser, useGetFanInfo} from 'apis/fan/useFans';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const ProfileScreen = () => {
+  useDarkStatusBar();
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const {fanId} =
@@ -80,7 +82,6 @@ const ProfileScreen = () => {
   if (profile) {
     return (
       <SafeAreaView style={{flex: 1}}>
-        <StatusBar barStyle={'dark-content'} />
         <View
           style={{
             flexDirection: 'row',

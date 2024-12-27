@@ -4,14 +4,13 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import {useGetCommunityById} from 'apis/community/useCommunities';
 import CustomText from 'components/common/CustomText';
 import CommunityHeader from 'components/community/CommunityInfo/CommunityHeader';
 import CommunityProfile from 'components/community/CommunityInfo/CommunityProfile';
 import FeedTab from 'screens/communityStack/community/feedTab';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import React, {useCallback, useEffect, useRef} from 'react';
-import {StatusBar, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import Animated from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
@@ -31,8 +30,10 @@ import ChatTab from 'screens/communityStack/community/chatTab';
 import {useMainTabScroll} from 'context/useMainTabScroll';
 import MainTab from './mainTab';
 import ScheduleTab from './ScheduleTab';
+import {useLightStatusBar} from 'hooks/useLightStatusBar';
 
 const CommunityScreen = () => {
+  useLightStatusBar();
   const {communityId} =
     useRoute<RouteProp<CommunityStackParamList, 'Community'>>().params;
   const navigation = useNavigation();
@@ -61,12 +62,11 @@ const CommunityScreen = () => {
     onScrollEndDrag,
     onTabIndexChange,
     headerTranslateY,
-  } = useCommunity();
+    community,
+  } = useCommunity(communityId);
 
   const {scrollY: tabScrollY, previousScrollY} = useMainTabScroll();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-  const {data: community} = useGetCommunityById(communityId);
 
   const renderTabBar = useCallback(
     (props: SceneRendererProps & {navigationState: NavigationState<Route>}) => {
@@ -235,7 +235,6 @@ const CommunityScreen = () => {
     <View
       className="flex-1"
       style={{backgroundColor: tabIndex === 1 ? 'white' : '#F5F4F5'}}>
-      <StatusBar barStyle="light-content" />
       <CommunityHeader community={community} scrollY={scrollY} />
       <TabView
         navigationState={{index: tabIndex, routes: tabRoutes}}

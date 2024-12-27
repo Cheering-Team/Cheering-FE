@@ -5,7 +5,6 @@ import {
   Platform,
   Pressable,
   RefreshControl,
-  StatusBar,
   TextInput,
   View,
 } from 'react-native';
@@ -29,7 +28,7 @@ import CommentSkeleton from 'components/skeleton/CommentSkeleton';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import NotFound from 'components/notfound';
 import Vote from 'components/post/Vote';
-import {useGetVote} from 'apis/vote/useVotes';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 type PostScreenNavigationProp = StackNavigationProp<
   CommunityStackParamList,
@@ -43,6 +42,7 @@ interface PostScreenProps {
 }
 
 const PostScreen = ({navigation, route}: PostScreenProps) => {
+  useDarkStatusBar();
   const {postId} = route.params;
   const insets = useSafeAreaInsets();
 
@@ -67,7 +67,6 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
     hasNextPage,
     fetchNextPage,
   } = useGetComments(postId, !!post && !postIsLoading && !isError);
-  const {data: vote} = useGetVote(postId);
 
   const loadComment = () => {
     if (hasNextPage) {
@@ -96,7 +95,6 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
   if (post) {
     return (
       <View style={{flex: 1}}>
-        <StatusBar barStyle={'dark-content'} />
         <KeyboardAvoidingView
           style={{flex: 1}}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -174,7 +172,9 @@ const PostScreen = ({navigation, route}: PostScreenProps) => {
                 </CustomText>
                 {/* 이미지 */}
                 <PostImage images={post.images} type="POST" />
-                {vote && <Vote vote={vote} post={post} />}
+                {post.vote && (
+                  <Vote vote={post.vote} community={post.community} />
+                )}
                 <InteractBar post={post} type="post" />
                 {/* 댓글 */}
                 <CustomText
