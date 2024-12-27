@@ -32,6 +32,7 @@ import {communityKeys} from 'apis/community/queries';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import PlusSvg from 'assets/images/plus-white.svg';
 import RegisterModal from 'components/common/RegisterModal';
+import {useLightStatusBar} from 'hooks/useLightStatusBar';
 
 type PlayerListScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -50,6 +51,7 @@ const PlayerListScreen = ({
   navigation: PlayerListScreenNavigationProp;
   route: PlayerListScreenRouteProp;
 }) => {
+  useLightStatusBar();
   const insets = useSafeAreaInsets();
   const {teamId} = route.params;
 
@@ -135,7 +137,6 @@ const PlayerListScreen = ({
 
   return (
     <View style={{flex: 1, backgroundColor: team.color}}>
-      <StatusBar barStyle={'light-content'} />
       <View
         style={{
           paddingTop: insets.top,

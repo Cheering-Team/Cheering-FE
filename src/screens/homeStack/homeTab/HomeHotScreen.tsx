@@ -26,8 +26,10 @@ import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const HomeHotScreen = () => {
+  useDarkStatusBar();
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const insets = useSafeAreaInsets();

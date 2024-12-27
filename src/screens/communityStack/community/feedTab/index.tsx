@@ -133,7 +133,7 @@ const FeedTab = ({
           backgroundColor: '#FFFFFF',
           marginTop: HEADER_HEIGHT,
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
-          paddingBottom: insets.bottom + 100,
+          paddingBottom: insets.bottom + 200,
         }}
         ListHeaderComponent={
           <FeedFilter

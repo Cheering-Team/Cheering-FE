@@ -10,6 +10,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import StackHeader from 'components/common/StackHeader';
 import {useUpdateFanName} from 'apis/fan/useFans';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 type EditNicknameScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
@@ -23,6 +24,7 @@ const EditNameScreen = ({
   navigation: EditNicknameScreenNavigationProp;
   route: any;
 }) => {
+  useDarkStatusBar();
   const {fanId} = route.params;
 
   const [name, setName] = useState(route.params.name);

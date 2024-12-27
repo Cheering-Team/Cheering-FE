@@ -30,8 +30,10 @@ import {queryClient} from '../../../App';
 import {chatKeys, chatRoomKeys} from 'apis/chat/queries';
 import {useIsMutating} from '@tanstack/react-query';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const MyChatScreen = () => {
+  useDarkStatusBar();
   const navigation =
     useNavigation<NativeStackNavigationProp<MyChatStackParamList>>();
   const {stompClient, isConnected} = useWebSocket();
@@ -185,7 +187,6 @@ const MyChatScreen = () => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <StatusBar barStyle={'dark-content'} />
       <StackHeader title="내 채팅" type="none" />
       <FlatList
         data={chatRoomData}

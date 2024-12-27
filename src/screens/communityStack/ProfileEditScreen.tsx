@@ -13,8 +13,10 @@ import {openPicker} from '@baronha/react-native-multiple-image-picker';
 import {Image} from 'react-native-compressor';
 import LoadingOverlay from 'components/common/LoadingOverlay';
 import {useGetFanInfo, useUpdateFanImage} from 'apis/fan/useFans';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const ProfileEditScreen = ({route}) => {
+  useDarkStatusBar();
   const {fanId} = route.params;
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();

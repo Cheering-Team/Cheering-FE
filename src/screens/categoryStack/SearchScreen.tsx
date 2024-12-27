@@ -6,7 +6,6 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
   TextInput,
   View,
@@ -27,6 +26,7 @@ import {communityKeys} from 'apis/community/queries';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import {useSearchPlayers} from 'apis/community/useCommunities';
 import {useSearchTeams} from 'apis/team/useTeams';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 type SearchScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -38,6 +38,7 @@ const SearchScreen = ({
 }: {
   navigation: SearchScreenNavigationProp;
 }) => {
+  useDarkStatusBar();
   const insets = useSafeAreaInsets();
 
   const [name, setName] = useState('');
@@ -116,7 +117,6 @@ const SearchScreen = ({
 
   return (
     <SafeAreaView className="flex-1">
-      <StatusBar barStyle={'dark-content'} />
       <View
         className="flex-row items-center pb-3 pl-2 pr-4"
         style={{paddingTop: Platform.OS === 'ios' ? 12 : insets.top + 12}}>

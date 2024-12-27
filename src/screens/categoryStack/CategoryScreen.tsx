@@ -4,7 +4,6 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
-  StatusBar,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -21,6 +20,7 @@ import {Sport} from 'apis/team/types';
 import RightSvg from 'assets/images/chevron-right-white.svg';
 import RegisterModal from 'components/common/RegisterModal';
 import PlusSvg from 'assets/images/plus-black.svg';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 type CategoryScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -32,6 +32,7 @@ const CategoryScreen = ({
 }: {
   navigation: CategoryScreenNavigationProp;
 }) => {
+  useDarkStatusBar();
   const insets = useSafeAreaInsets();
   const [isRegisiterOpen, setIsRegisterOpen] = useState(false);
   const [selectedSport, setSelectedSport] = useState<Sport | null>(null);
@@ -57,7 +58,6 @@ const CategoryScreen = ({
 
   return (
     <SafeAreaView className="flex-1">
-      <StatusBar barStyle={'dark-content'} />
       <Pressable
         className="flex-row pb-3 px-4"
         style={{paddingTop: Platform.OS === 'ios' ? 12 : insets.top + 12}}

@@ -31,8 +31,10 @@ import ChatTab from 'screens/communityStack/community/chatTab';
 import {useMainTabScroll} from 'context/useMainTabScroll';
 import MainTab from './mainTab';
 import ScheduleTab from './ScheduleTab';
+import {useLightStatusBar} from 'hooks/useLightStatusBar';
 
 const CommunityScreen = () => {
+  useLightStatusBar();
   const {communityId} =
     useRoute<RouteProp<CommunityStackParamList, 'Community'>>().params;
   const navigation = useNavigation();
@@ -235,7 +237,6 @@ const CommunityScreen = () => {
     <View
       className="flex-1"
       style={{backgroundColor: tabIndex === 1 ? 'white' : '#F5F4F5'}}>
-      <StatusBar barStyle="light-content" />
       <CommunityHeader community={community} scrollY={scrollY} />
       <TabView
         navigationState={{index: tabIndex, routes: tabRoutes}}
