@@ -76,13 +76,14 @@ const ChatRoomFooter = ({
         }}>
         <View
           className="flex-row bg-[#f5f5f5] rounded-[20px] justify-between pl-3"
-          style={{paddingVertical: Platform.OS === 'ios' ? 9 : 7}}>
+          style={{paddingVertical: Platform.OS === 'ios' ? 9 : 6.5}}>
           <TextInput
             multiline
             value={text}
             onChangeText={setText}
             maxLength={150}
-            className="text-base flex-1 p-0 m-0 mr-[50]"
+            allowFontScaling={false}
+            className="flex-1 p-0 m-0 mr-[50] text-[15px] leading-[22px]"
             style={{
               fontFamily: 'NotoSansKR-Regular',
               includeFontPadding: false,

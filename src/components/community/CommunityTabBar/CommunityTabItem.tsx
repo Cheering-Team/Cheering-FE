@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   label: {
     margin: 4,
-    fontSize: 16.5,
-    fontWeight: '700',
+    fontSize: 15,
+    fontWeight: '600',
   },
 });

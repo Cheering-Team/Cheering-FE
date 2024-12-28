@@ -23,18 +23,18 @@ const CustomDay = ({data, dateString, day, community}: CustomDayProps) => {
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   return (
     <View
-      className="items-center rounded-lg"
+      className="items-center rounded-lg mb-1"
       style={{
         width: width / 7,
       }}>
       <CustomText
-        className="text-base mt-3 mb-[1]"
+        className="text-[14px] mb-[3]"
         style={{
           color:
             data && data[dateString]
               ? 'black'
               : formatBarDate(new Date()) === dateString
-                ? 'black'
+                ? community.color
                 : '#b5b5b5',
         }}
         fontWeight={formatBarDate(new Date()) === dateString ? '600' : '500'}>
@@ -52,11 +52,13 @@ const CustomDay = ({data, dateString, day, community}: CustomDayProps) => {
               });
             }}
             key={match.id}
-            className="rounded-lg"
+            className="rounded-[3px]"
             style={{
-              backgroundColor: match.isHome ? `${community.color}70` : 'white',
+              backgroundColor: match.isHome
+                ? `${community.color}40`
+                : undefined,
               borderWidth: match.isHome ? 1 : 0,
-              borderColor: community.color,
+              borderColor: `${community.color}60`,
             }}>
             <FastImage
               source={{uri: match.opponentImage}}

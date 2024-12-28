@@ -28,7 +28,7 @@ export const formatAmPmTime = (inputTimeString: string) => {
   return `${ampm} ${hours}:${formattedMinutes}`;
 };
 
-// 오후 9:11
+// 9:11
 export const formatTime = (inputTimeString: string) => {
   const date = new Date(inputTimeString);
   const hours = date.getHours();
@@ -132,6 +132,33 @@ export const formatDateTime = (dateString: string) => {
   const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
 
   return `${year}. ${month}. ${day}. (${dayOfWeek}) ${ampm} ${hours}:${formattedMinutes}`;
+};
+
+// 오늘 or 12월 17일 (화)
+export const formatTodayOrDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+
+  if (
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate()
+  ) {
+    return '오늘';
+  }
+
+  return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+};
+
+// 요일
+export const formatDOW = (dataString: string) => {
+  const date = new Date(dataString);
+
+  const dayOfWeekIndex = date.getDay();
+  const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+  const dayOfWeek = daysOfWeek[dayOfWeekIndex];
+
+  return `(${dayOfWeek})`;
 };
 
 // 오늘이면 시간, 어제, 몇월몇일

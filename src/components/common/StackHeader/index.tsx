@@ -18,7 +18,7 @@ const StackHeader = (props: StackHeaderProps) => {
 
   return (
     <View
-      className="h-[48] px-[5] flex-row justify-between items-center bg-white border-b border-b-slate-50"
+      className="h-[40] px-[5] flex-row justify-between items-center bg-white border-b border-b-slate-50"
       style={Platform.OS === 'android' && {marginTop: insets.top}}>
       {type === 'back' && (
         <Pressable onPress={() => navigation.goBack()}>
@@ -32,7 +32,7 @@ const StackHeader = (props: StackHeaderProps) => {
       )}
       {type === 'none' && <View className="w-8 h-8" />}
 
-      <CustomText fontWeight="600" className="text-[19px] pb-0">
+      <CustomText fontWeight="600" className="text-[17px] pb-0">
         {title}
       </CustomText>
       <View className="w-8 h-8" />

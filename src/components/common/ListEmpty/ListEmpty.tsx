@@ -29,7 +29,7 @@ const ListEmpty = (props: ListEmptyProps) => {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <CustomText className="text-[19px] text-gray-800 mb-1" fontWeight="600">
+      <CustomText className="text-[17px] text-gray-800 mb-1" fontWeight="600">
         {type === 'feed' && '아직 게시글이 없어요'}
         {type === 'comment' && '아직 댓글이 없어요'}
         {type === 'notification' && '아직 알림이 없어요'}
@@ -43,7 +43,7 @@ const ListEmpty = (props: ListEmptyProps) => {
         {type === 'myChat' && '아직 참여중인 채팅방이 없어요'}
         {type === 'vote' && '아직 투표가 없어요'}
       </CustomText>
-      <CustomText className="text-[15px] text-gray-500">
+      <CustomText className="text-[13px] text-gray-500">
         {type === 'feed' && '가장 먼저 글을 작성해보세요'}
         {type === 'comment' && '가장 먼저 댓글을 작성해보세요'}
         {type === 'notification' && '커뮤니티에 가입하여 팬들과 소통해보세요'}

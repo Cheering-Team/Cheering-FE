@@ -11,9 +11,7 @@ import {
 import {TextInput} from 'react-native-gesture-handler';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../../../constants/dimension';
 import WriteHeader from '../../../components/post/write/WriteHeader';
-import TagList from '../../../components/post/write/TagList';
 import WriteFooter from '../../../components/post/write/WriteFooter';
-import TagModal from '../../../components/post/write/TagModal';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from '../../../navigations/CommunityStackNavigator';
 import {RouteProp} from '@react-navigation/native';
@@ -33,6 +31,7 @@ import uuid from 'react-native-uuid';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '../../../../App';
 import MakeVote from './components/MakeVote';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 export type PostWriteScreenNavigationProp = NativeStackNavigationProp<
   CommunityStackParamList,
@@ -42,6 +41,7 @@ export type PostWriteScreenNavigationProp = NativeStackNavigationProp<
 type PostWriteScreenRouteProp = RouteProp<CommunityStackParamList, 'PostWrite'>;
 
 const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
+  useDarkStatusBar();
   const {community, post} = route.params;
 
   const isEdit = !!post;
@@ -331,7 +331,6 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
             community={community}
           />
           <ScrollView keyboardShouldPersistTaps="always">
-            <TagList selectedTag={selectedTag} setIsTagOpen={setIsTagOpen} />
             <TextInput
               placeholder="글을 작성해보세요"
               multiline
@@ -339,7 +338,8 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
               value={content}
               onChangeText={setContent}
               style={{
-                fontSize: 18,
+                fontSize: 17,
+                marginTop: 8,
                 paddingHorizontal: 12,
                 textAlignVertical: 'top',
                 marginBottom: 15,
@@ -368,12 +368,12 @@ const PostWriteScreen = ({route}: {route: PostWriteScreenRouteProp}) => {
             />
           )}
 
-          {isTagOpen && (
+          {/* {isTagOpen && (
             <TagModal
               selectedTag={selectedTag}
               setSelectedTag={setSelectedTag}
             />
-          )}
+          )} */}
         </KeyboardAvoidingView>
       </SafeAreaView>
       <Toast config={toastConfig} />

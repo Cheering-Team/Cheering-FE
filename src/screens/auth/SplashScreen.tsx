@@ -16,7 +16,7 @@ const SplashScreen = () => {
         resizeMode="contain"
       />
       <View className="absolute bottom-[200]">
-        <ActivityIndicator size={'large'} />
+        <ActivityIndicator size={'small'} color={'#323232'} />
       </View>
     </View>
   );

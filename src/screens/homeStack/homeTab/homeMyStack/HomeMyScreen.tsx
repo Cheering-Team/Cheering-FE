@@ -22,9 +22,10 @@ import {checkNotificationPermission} from 'utils/fcmUtils';
 import DeviceInfo from 'react-native-device-info';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import {useWebSocket} from 'context/useWebSocket';
-import OneButtonModal from 'components/common/OneButtonModal';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const HomeMyScreen = () => {
+  useDarkStatusBar();
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const insets = useSafeAreaInsets();
@@ -176,7 +177,7 @@ const HomeMyScreen = () => {
           }}>
           <ChageSvg width={12} height={12} />
           <CustomText
-            className="text-gray-400 text-[15px] ml-[4]"
+            className="text-gray-400 text-[13px] ml-[4]"
             fontWeight="700">
             순서 변경
           </CustomText>

@@ -20,7 +20,6 @@ import Viewer from 'components/post/Viewer';
 import Vote from 'components/post/Vote';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
-import {useGetVote} from 'apis/vote/useVotes';
 
 interface FeedPostProps {
   feed: Post;
@@ -37,8 +36,6 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
   const [height, setHeight] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [viewIndex, setViewIndex] = useState(0);
-
-  const {data: vote} = useGetVote(feed.id);
 
   const renderItem: ListRenderItem<PostImageType> = ({item, index}) => {
     return (
@@ -166,11 +163,11 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
 
             <CustomText
               style={{
-                color: '#282828',
                 marginRight: 25,
+                marginTop: 3,
               }}
               numberOfLines={20}
-              className="text-base">
+              className="text-[#000000] text-[14.5px] leading-[20px]">
               {feed.content}
             </CustomText>
           </View>
@@ -183,7 +180,7 @@ const FeedPost = ({feed, type}: FeedPostProps) => {
           renderItem={renderItem}
         />
         <View className="ml-[40]">
-          {vote && <Vote vote={vote} post={feed} />}
+          {feed.vote && <Vote vote={feed.vote} community={feed.community} />}
         </View>
         {/* 상호작용 */}
         <InteractBar post={feed} type={type} />

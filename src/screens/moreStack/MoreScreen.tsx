@@ -1,5 +1,11 @@
 import React from 'react';
-import {Pressable, SafeAreaView, ScrollView, View} from 'react-native';
+import {
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  View,
+} from 'react-native';
 import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
 import CustomText from '../../components/common/CustomText';
 import {useGetUserInfo} from 'apis/user/useUsers';
@@ -25,6 +31,7 @@ const MoreScreen = ({navigation}: {navigation: MoreScreenNavigationProp}) => {
 
   return (
     <SafeAreaView className="flex-1">
+      <StatusBar barStyle={'dark-content'} />
       <StackHeader title="계정 및 설정" type="none" />
       <ScrollView className="flex-1">
         <View className="pt-3 px-3 bg-white">

@@ -49,15 +49,15 @@ const InteractBar = (props: InteractBarProps) => {
             paddingVertical: 10,
           }}>
           {post.isLike ? (
-            <HeartFillSvg width={23} height={23} />
+            <HeartFillSvg width={22} height={22} />
           ) : (
-            <HeartSvg width={23} height={23} />
+            <HeartSvg width={22} height={22} />
           )}
           {post.likeCount !== 0 && (
             <CustomText
               fontWeight={post.isLike ? '600' : '500'}
               style={{
-                fontSize: 16,
+                fontSize: 15,
                 color: post.isLike ? '#fa4b4b' : '#333333',
                 marginLeft: 4,
               }}>
@@ -71,12 +71,12 @@ const InteractBar = (props: InteractBarProps) => {
             alignItems: 'center',
             flex: 1,
           }}>
-          <CommentSvg width={23} height={23} />
+          <CommentSvg width={22} height={22} />
           {post.commentCount !== 0 && (
             <CustomText
               fontWeight="500"
               style={{
-                fontSize: 16,
+                fontSize: 15,
                 color: '#333333',
                 marginLeft: 6,
               }}>

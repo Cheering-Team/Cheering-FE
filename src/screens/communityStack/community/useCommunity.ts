@@ -1,6 +1,7 @@
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
+import {useGetCommunityById} from 'apis/community/useCommunities';
+import {WINDOW_WIDTH} from 'constants/dimension';
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, ScrollView} from 'react-native';
 import {
   cancelAnimation,
   Extrapolation,
@@ -11,14 +12,17 @@ import {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-const HEADER_HEIGHT = WINDOW_HEIGHT / 2;
-
-export const useCommunity = () => {
+export const useCommunity = (communityId: number) => {
   const insets = useSafeAreaInsets();
+  const HEADER_HEIGHT = 110 + insets.top;
+
+  const {data: community} = useGetCommunityById(communityId);
 
   const [tabRoutes, setTabRoutes] = useState([
+    {key: 'main', title: '메인'},
     {key: 'feed', title: '피드'},
     {key: 'chat', title: '채팅'},
+    {key: 'schedule', title: '일정'},
   ]);
 
   const [tabIndex, setTabIndex] = useState(0);
@@ -27,7 +31,7 @@ export const useCommunity = () => {
   const listArrRef = useRef<
     {
       key: string;
-      value: FlatList<any> | null;
+      value: FlatList<any> | ScrollView | null;
     }[]
   >([]);
   const listOffsetRef = useRef<{
@@ -42,8 +46,8 @@ export const useCommunity = () => {
       {
         translateY: interpolate(
           scrollY.value,
-          [0, HEADER_HEIGHT - insets.top - 45],
-          [0, -HEADER_HEIGHT + insets.top + 45],
+          [0, 0, HEADER_HEIGHT - insets.top - 40],
+          [0, 0, -HEADER_HEIGHT + insets.top + 40],
           {extrapolateRight: Extrapolation.CLAMP},
         ),
       },
@@ -55,8 +59,8 @@ export const useCommunity = () => {
       {
         translateY: interpolate(
           scrollY.value,
-          [0, HEADER_HEIGHT - insets.top - 45],
-          [HEADER_HEIGHT, insets.top + 45],
+          [0, 0, HEADER_HEIGHT - insets.top - 40],
+          [HEADER_HEIGHT, HEADER_HEIGHT, insets.top + 40],
           {
             extrapolateRight: Extrapolation.CLAMP,
           },
@@ -87,31 +91,45 @@ export const useCommunity = () => {
 
   const syncScrollOffset = () => {
     const focusedTabKey = tabRoutes[tabIndexRef.current].key;
-
     listArrRef.current.forEach(item => {
       if (item.key !== focusedTabKey) {
         if (
-          scrollY.value < HEADER_HEIGHT - insets.top - 45 &&
+          scrollY.value < HEADER_HEIGHT - insets.top - 40 &&
           scrollY.value >= 0
         ) {
           if (item.value) {
-            item.value.scrollToOffset({
-              offset: scrollY.value,
-              animated: false,
-            });
+            if (item.key === 'main' || item.key === 'schedule') {
+              item.value.scrollTo({
+                y: scrollY.value,
+                animated: false,
+              });
+            } else {
+              item.value.scrollToOffset({
+                offset: scrollY.value,
+                animated: false,
+              });
+            }
             listOffsetRef.current[item.key] = scrollY.value;
           }
-        } else if (scrollY.value >= HEADER_HEIGHT - insets.top - 45) {
+        } else if (scrollY.value >= HEADER_HEIGHT - insets.top - 40) {
           if (
-            listOffsetRef.current[item.key] < HEADER_HEIGHT - insets.top - 45 ||
+            listOffsetRef.current[item.key] < HEADER_HEIGHT - insets.top - 40 ||
             listOffsetRef.current[item.key] === undefined
           ) {
             if (item.value) {
-              item.value.scrollToOffset({
-                offset: HEADER_HEIGHT - insets.top - 45,
-                animated: false,
-              });
-              listOffsetRef.current[item.key] = HEADER_HEIGHT - insets.top - 45;
+              if (item.key === 'main' || item.key === 'schedule') {
+                item.value.scrollTo({
+                  y: HEADER_HEIGHT - insets.top - 40,
+                  animated: false,
+                });
+              } else {
+                item.value.scrollToOffset({
+                  offset: HEADER_HEIGHT - insets.top - 40,
+                  animated: false,
+                });
+              }
+
+              listOffsetRef.current[item.key] = HEADER_HEIGHT - insets.top - 40;
             }
           }
         }
@@ -161,5 +179,6 @@ export const useCommunity = () => {
     onScrollEndDrag,
     onTabIndexChange,
     headerTranslateY,
+    community,
   };
 };

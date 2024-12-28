@@ -35,6 +35,7 @@ import {StompSubscription} from '@stomp/stompjs';
 import CustomText from 'components/common/CustomText';
 import {queryClient} from '../../../../App';
 import {chatRoomKeys} from 'apis/chat/queries';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 const TextEncodingPolyfill = require('text-encoding');
 
 Object.assign('global', {
@@ -43,6 +44,7 @@ Object.assign('global', {
 });
 
 const ChatRoomScreen = () => {
+  useDarkStatusBar();
   const {chatRoomId} =
     useRoute<RouteProp<CommunityStackParamList, 'ChatRoom'>>().params;
   const navigation =
@@ -141,7 +143,7 @@ const ChatRoomScreen = () => {
         return (
           <View className="justify-center items-center mb-[15] mt-[5]">
             <View className="bg-black/30 py-1 px-3 rounded-xl">
-              <CustomText fontWeight="500" className="text-white text-sm">
+              <CustomText fontWeight="500" className="text-white text-[13px]">
                 {item.messages[0]}
               </CustomText>
             </View>

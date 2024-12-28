@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {FlatList, ListRenderItem, View} from 'react-native';
+import {FlatList, ListRenderItem, StatusBar, View} from 'react-native';
 import {SafeAreaView} from 'react-native';
 import {
   useGetMyChatRooms,
@@ -29,11 +29,15 @@ import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import {queryClient} from '../../../App';
 import {chatKeys, chatRoomKeys} from 'apis/chat/queries';
 import {useIsMutating} from '@tanstack/react-query';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const MyChatScreen = () => {
+  useDarkStatusBar();
   const navigation =
     useNavigation<NativeStackNavigationProp<MyChatStackParamList>>();
   const {stompClient, isConnected} = useWebSocket();
+  const insets = useSafeAreaInsets();
 
   const [chatRoomData, setChatRoomData] = useState<ChatRoom[]>([]);
   const subscriptionsRef = useRef<{[key: number]: any}>({});
@@ -187,13 +191,12 @@ const MyChatScreen = () => {
       <FlatList
         data={chatRoomData}
         renderItem={renderChatRoom}
+        contentContainerStyle={{paddingBottom: insets.bottom + 100}}
         ListHeaderComponent={
           <View>
             {officials && officials.length !== 0 ? (
               <>
-                <CustomText
-                  type="titleCenter"
-                  className="text-[22px] mt-3 mx-3 mb-2">
+                <CustomText fontWeight="600" className="text-lg mt-2 mx-3 mb-1">
                   대표 채팅방
                 </CustomText>
                 <Carousel
@@ -203,7 +206,7 @@ const MyChatScreen = () => {
                   renderItem={renderOfficial}
                   width={WINDOW_WIDTH}
                   mode="parallax"
-                  height={105}
+                  height={93}
                   onProgressChange={paginationProgress}
                   modeConfig={{
                     parallaxScrollingScale: 0.87,
@@ -215,15 +218,15 @@ const MyChatScreen = () => {
                   data={officials}
                   size={20}
                   dotStyle={{
-                    width: 6,
-                    height: 6,
+                    width: 5,
+                    height: 5,
                     borderRadius: 100,
                     backgroundColor: '#d7d7d7',
                   }}
                   activeDotStyle={{
                     borderRadius: 100,
-                    width: 8,
-                    height: 8,
+                    width: 7,
+                    height: 7,
                     overflow: 'hidden',
                     backgroundColor: '#383838',
                   }}
@@ -255,9 +258,7 @@ const MyChatScreen = () => {
                 />
               </>
             ) : null}
-            <CustomText
-              type="titleCenter"
-              className="text-[22px] mt-3 mx-3 mb-2">
+            <CustomText fontWeight="600" className="text-lg mt-2 mx-3 mb-2">
               일반 채팅방
             </CustomText>
           </View>

@@ -2,6 +2,7 @@ import {AxiosProgressEvent} from 'axios';
 import {Page} from '../types';
 import {Community} from 'apis/community/types';
 import {Fan} from 'apis/fan/types';
+import {Vote} from 'apis/vote/types';
 
 // 엔티티
 export interface Post {
@@ -10,13 +11,13 @@ export interface Post {
   content: string;
   isHide: boolean;
   createdAt: string;
-  tags: string[];
   isLike: boolean;
   likeCount: number;
   commentCount: number;
   images: PostImageType[];
   writer: Fan;
   user: Fan;
+  vote: Vote;
 }
 
 export interface ImageType {
@@ -41,7 +42,6 @@ export interface PostImageType {
   type: string;
 }
 
-export type FilterType = 'all' | 'hot' | 'photo' | 'viewing' | 'information';
 export type TagType = 'photo' | 'viewing' | 'information';
 
 // 요청

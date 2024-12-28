@@ -101,7 +101,7 @@ const CommentInput: FC<CommentInputProps> = props => {
             fontWeight="500"
             style={{
               color: 'white',
-              fontSize: 13,
+              fontSize: 12.5,
             }}>{`${to.name}님에게 답글 남기기`}</CustomText>
           <View style={{padding: 5}}>
             <CloseSvg width={10} height={10} />

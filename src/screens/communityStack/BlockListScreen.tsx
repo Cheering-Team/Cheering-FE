@@ -4,10 +4,12 @@ import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import StackHeader from 'components/common/StackHeader';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 import React, {useState} from 'react';
 import {FlatList, Pressable, SafeAreaView, View} from 'react-native';
 
 const BlockListScreen = ({route}) => {
+  useDarkStatusBar();
   const {playerUserId} = route.params;
 
   const [isModalOpen, setIsModalOpen] = useState(false);

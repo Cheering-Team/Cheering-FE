@@ -4,22 +4,29 @@ import {useGetMatchDetail} from 'apis/match/useMatches';
 import CustomText from 'components/common/CustomText';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import React from 'react';
-import {KeyboardAvoidingView, Platform, Pressable, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StatusBar,
+  View,
+} from 'react-native';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BackSvg from 'assets/images/chevron-left.svg';
 import MatchInfo from './components/MatchInfo';
-import CheerList from './components/CheerList';
 import {CommunityTabBar} from 'components/community/CommunityTabBar/CommunityTabBar';
-import VoteList from './components/VoteList';
+import VoteList from '../schedule/match/components/VoteList';
 import {useGetCommunityById} from 'apis/community/useCommunities';
+import CheerTab from './CheerTab';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const MatchScreen = () => {
+  useDarkStatusBar();
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const {matchId, communityId} =
     useRoute<RouteProp<CommunityStackParamList, 'Match'>>().params;
-
   const insets = useSafeAreaInsets();
 
   const {data: match, isLoading} = useGetMatchDetail(matchId);
@@ -36,23 +43,26 @@ const MatchScreen = () => {
       keyboardVerticalOffset={-insets.bottom}>
       <View
         className="px-[5] flex-row justify-between items-center bg-white z-50"
-        style={{paddingTop: insets.top, height: 48 + insets.top}}>
-        <Pressable className="pr-[28]" onPress={() => navigation.goBack()}>
-          <BackSvg width={32} height={32} />
+        style={{paddingTop: insets.top, height: 40 + insets.top}}>
+        <Pressable onPress={() => navigation.goBack()}>
+          <BackSvg width={25} height={25} />
         </Pressable>
 
         <View className="items-center">
-          <CustomText fontWeight="600" className="text-lg top-[1]">
+          <CustomText fontWeight="500" className="text-[15px] text-slate-900">
             경기 일정
           </CustomText>
-          <CustomText className="text-gray-600">
+          <CustomText
+            fontWeight="500"
+            className="text-[13px]"
+            style={{color: community.color}}>
             {community.koreanName}
           </CustomText>
         </View>
-        <View className="w-[65]" />
+        <View className="w-[25]" />
       </View>
       <Tabs.Container
-        renderHeader={() => <MatchInfo match={match} />}
+        renderHeader={() => <MatchInfo match={match} community={community} />}
         renderTabBar={props => (
           <CommunityTabBar
             {...props}
@@ -64,7 +74,7 @@ const MatchScreen = () => {
           />
         )}>
         <Tabs.Tab name="응원">
-          <CheerList matchId={matchId} community={community} />
+          <CheerTab match={match} community={community} />
         </Tabs.Tab>
         <Tabs.Tab name="투표">
           <VoteList matchId={matchId} community={community} />

@@ -5,6 +5,7 @@ import {
   ListRenderItem,
   Platform,
   Pressable,
+  StatusBar,
   StyleSheet,
   TextInput,
   View,
@@ -31,6 +32,7 @@ import {communityKeys} from 'apis/community/queries';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import PlusSvg from 'assets/images/plus-white.svg';
 import RegisterModal from 'components/common/RegisterModal';
+import {useLightStatusBar} from 'hooks/useLightStatusBar';
 
 type PlayerListScreenNavigationProp = NativeStackNavigationProp<
   CategoryStackParamList,
@@ -49,6 +51,7 @@ const PlayerListScreen = ({
   navigation: PlayerListScreenNavigationProp;
   route: PlayerListScreenRouteProp;
 }) => {
+  useLightStatusBar();
   const insets = useSafeAreaInsets();
   const {teamId} = route.params;
 
@@ -120,7 +123,7 @@ const PlayerListScreen = ({
               {item.fanCount}
             </CustomText>
           </View>
-          <CustomText className="text-white text-[20px]" type="titleCenter">
+          <CustomText className="text-white text-[18px]" type="titleCenter">
             {item.koreanName}
           </CustomText>
         </View>
@@ -147,7 +150,7 @@ const PlayerListScreen = ({
           <ChevronRightWhiteSvg width={18} height={18} />
         </Pressable>
         <CustomText
-          className="text-white text-xl"
+          className="text-white text-[19px]"
           type="titleCenter"
           style={{bottom: Platform.OS === 'android' ? 3 : 0}}>
           {team.koreanName}
@@ -204,7 +207,7 @@ const PlayerListScreen = ({
             backgroundColor: team.color,
           }}>
           <CustomText
-            className="text-[18px] mr-[6] text-white"
+            className="text-[16px] mr-[6] text-white"
             fontWeight="600">
             커뮤니티 바로가기
           </CustomText>

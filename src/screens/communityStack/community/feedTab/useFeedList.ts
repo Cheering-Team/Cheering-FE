@@ -1,7 +1,7 @@
 import {useState} from 'react';
-import {useGetPosts} from '../../../apis/post/usePosts';
-import {FilterType} from '../../../apis/post/types';
 import {Community} from 'apis/community/types';
+import {useGetPosts} from 'apis/post/usePosts';
+import {FilterType} from 'components/community/FeedFilter';
 
 export const useFeedList = (community: Community) => {
   const [selectedFilter, setSelectedFilter] = useState<FilterType>('all');
@@ -13,11 +13,7 @@ export const useFeedList = (community: Community) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetPosts(
-    community.id,
-    selectedFilter,
-    community.curFan !== null || community.role === 'ADMIN',
-  );
+  } = useGetPosts(community.id, selectedFilter, community.curFan !== null);
 
   const loadPosts = () => {
     if (hasNextPage) {

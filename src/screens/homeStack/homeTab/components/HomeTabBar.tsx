@@ -45,7 +45,7 @@ const HomeTabBar = ({state, descriptors, navigation, position}) => {
 
       <View
         style={{
-          width: '34%',
+          width: '30%',
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-around',
@@ -98,7 +98,7 @@ const HomeTabBar = ({state, descriptors, navigation, position}) => {
               <CustomText
                 type="title"
                 style={{
-                  fontSize: 26,
+                  fontSize: 23,
                   color: isFocused ? 'black' : 'rgb(190,190,190)',
                   textAlign: 'center',
                 }}>
@@ -114,7 +114,7 @@ const HomeTabBar = ({state, descriptors, navigation, position}) => {
         onPress={() => {
           stackNavigation.navigate('Notification');
         }}>
-        <AlertSvg />
+        <AlertSvg width={23} height={23} />
         {data?.isUnread && (
           <View
             style={{

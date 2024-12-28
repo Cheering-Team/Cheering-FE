@@ -97,7 +97,7 @@ const ScheduleList = ({community}: ScheduleListProps) => {
       const weeks = generateCalendarData(item.year, item.month);
 
       return (
-        <ScrollView style={{width: width}} className="">
+        <ScrollView style={{width: width}}>
           <View className="flex-row items-center justify-center py-1">
             {isLoading && <View className="w-5 h-5" />}
             <CustomText

@@ -72,16 +72,14 @@ const PostWriter = ({
                   params: {fanId: post.writer.id},
                 });
             }}>
-            <CustomText fontWeight="600" className="text-base text-gray-800">
+            <CustomText fontWeight="600" className="text-sm text-gray-800">
               {post.writer.name}
             </CustomText>
             {post.writer.type === 'ADMIN' && (
               <CrownSvg width={20} height={20} className="ml-[2]" />
             )}
           </Pressable>
-          <CustomText
-            style={{fontSize: 15, color: '#737373', marginLeft: 5}}
-            fontWeight="400">
+          <CustomText style={{color: '#737373', marginLeft: 5}}>
             {formatBeforeDate(post.createdAt)}
           </CustomText>
         </View>
@@ -152,9 +150,5 @@ const PostWriter = ({
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  writerNameContainer: {marginLeft: 8, justifyContent: 'center'},
-});
 
 export default PostWriter;

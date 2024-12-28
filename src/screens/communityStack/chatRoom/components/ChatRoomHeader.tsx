@@ -50,11 +50,11 @@ const ChatRoomHeader = ({
           backgroundColor: 'white',
         }}>
         <Pressable onPress={() => navigation.goBack()}>
-          <ChevronLeftSvg width={35} height={35} />
+          <ChevronLeftSvg width={30} height={30} />
         </Pressable>
-        <View style={{marginLeft: 10, flex: 1, marginTop: 3}}>
+        <View style={{marginLeft: 6, flex: 1, marginTop: 3}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <CustomText fontWeight="600" style={{fontSize: 17, marginRight: 3}}>
+            <CustomText fontWeight="600" style={{fontSize: 16, marginRight: 3}}>
               {chatRoom?.name}
             </CustomText>
             {chatRoom.type === 'OFFICIAL' && (
@@ -68,15 +68,15 @@ const ChatRoomHeader = ({
               alignItems: 'center',
               marginTop: 2,
             }}>
-            <PersonSvg width={12} height={12} />
-            <CustomText className="color-[#626262] ml-[3] text-[15px]">
+            <PersonSvg width={11} height={11} />
+            <CustomText className="color-[#626262] ml-[3] text-[14px]">
               {participantCount}
             </CustomText>
             <View
               style={{
                 width: 1,
-                height: 9,
-                backgroundColor: '#626262',
+                height: 12,
+                backgroundColor: '#d7d6d6',
                 marginHorizontal: 4,
               }}
             />
@@ -89,7 +89,7 @@ const ChatRoomHeader = ({
                 }
               }}>
               <CustomText
-                style={{color: '#626262', marginRight: 2, fontSize: 15}}>
+                style={{color: '#626262', marginRight: 2, fontSize: 14}}>
                 {chatRoom.type === 'OFFICIAL'
                   ? '커뮤니티 바로가기'
                   : chatRoom.community?.koreanName}
@@ -107,40 +107,6 @@ const ChatRoomHeader = ({
           </Pressable>
         )}
       </View>
-      {/* {chatRoom?.description !== '' && (
-        <Pressable
-          onPress={() => setIsDescriptionOpen(prev => !prev)}
-          className="mt-[5] mx-[10] rounded-[10px] bg-white py-[10] px-[15] flex-row border border-[#eeeeee]"
-          style={{
-            shadowColor: '#000000',
-            shadowOffset: {
-              width: 3,
-              height: 3,
-            },
-            shadowOpacity: 0.1,
-            shadowRadius: 10,
-            elevation: 3,
-          }}>
-          <MegaphoneSvg width={20} height={20} style={{marginTop: 2}} />
-          <CustomText
-            className="flex-1 text-[#404040] text-base mx-[10]"
-            fontWeight="400"
-            numberOfLines={isDescriptionOpen ? undefined : 2}>
-            {chatRoom?.description}
-          </CustomText>
-          <View>
-            {isDescriptionOpen ? (
-              <ChevronUpGraySvg width={18} height={18} style={{marginTop: 2}} />
-            ) : (
-              <ChevronDownGraySvg
-                width={18}
-                height={18}
-                style={{marginTop: 2}}
-              />
-            )}
-          </View>
-        </Pressable>
-      )} */}
     </View>
   );
 };

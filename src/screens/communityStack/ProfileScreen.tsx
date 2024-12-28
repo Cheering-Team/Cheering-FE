@@ -5,6 +5,7 @@ import {
   Pressable,
   RefreshControl,
   SafeAreaView,
+  StatusBar,
   View,
 } from 'react-native';
 import CloseSvg from '../../assets/images/close-black.svg';
@@ -28,8 +29,10 @@ import Viewer from 'components/post/Viewer';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import NotFound from 'components/notfound';
 import {useBlockUser, useGetFanInfo} from 'apis/fan/useFans';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const ProfileScreen = () => {
+  useDarkStatusBar();
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const {fanId} =

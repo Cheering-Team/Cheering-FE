@@ -57,19 +57,19 @@ const WriteFooter = (props: WriterFooterProps) => {
   return (
     <View
       style={{
-        height: 45,
+        height: 41,
         backgroundColor: 'yello',
         borderTopWidth: 1,
         borderColor: '#e1e1e1',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingLeft: 8,
+        paddingLeft: 6,
         paddingRight: 16,
       }}>
       <View className="flex-row items-center">
         <Pressable onPress={handleImageUpload} className="px-2">
-          <ImagesSvg width={26} height={26} />
+          <ImagesSvg width={24} height={24} />
         </Pressable>
 
         <Pressable
@@ -77,13 +77,13 @@ const WriteFooter = (props: WriterFooterProps) => {
             setIsVote(true);
           }}
           className="px-3">
-          <VoteSvg width={23} height={23} />
+          <VoteSvg width={21} height={21} />
         </Pressable>
       </View>
 
       {isKeyboardVisible && (
         <Pressable onPress={() => Keyboard.dismiss()}>
-          <CustomText className="text-[19px]" fontWeight="600">
+          <CustomText className="text-[17px]" fontWeight="600">
             닫기
           </CustomText>
         </Pressable>

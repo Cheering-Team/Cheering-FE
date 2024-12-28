@@ -1,4 +1,4 @@
-import {FilterType} from './types';
+import {FilterType} from 'components/community/FeedFilter';
 
 export const postKeys = {
   all: ['posts'] as const,

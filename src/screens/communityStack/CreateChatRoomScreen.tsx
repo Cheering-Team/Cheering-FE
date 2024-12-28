@@ -5,6 +5,7 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
+  StatusBar,
   View,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -118,6 +119,7 @@ const CreateChatRoomScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView className="flex-1">
+      <StatusBar barStyle={'dark-content'} />
       <LoadingOverlay isLoading={imageLoding} type="LOADING" />
       <View
         style={{
