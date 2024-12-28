@@ -82,7 +82,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         </View>
 
         <View className="z-10 items-end">
-          {match &&
+          {/* {match &&
             (match.status === 'live' ||
             match.status === 'delayed' ||
             match.status === 'started' ? (
@@ -204,7 +204,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                   </CustomText>
                 </View>
               </TouchableOpacity>
-            ))}
+            ))} */}
           <View className="w-full flex-row justify-evenly items-center">
             <TouchableOpacity
               className="p-1"
@@ -325,13 +325,3 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 };
 
 export default MyStarCard;
-
-const styles = StyleSheet.create({
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: {width: 2, height: 2},
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-});
