@@ -31,6 +31,7 @@ import {useMainTabScroll} from 'context/useMainTabScroll';
 import MainTab from './mainTab';
 import ScheduleTab from './ScheduleTab';
 import {useLightStatusBar} from 'hooks/useLightStatusBar';
+import MeetTab from './meetTab';
 
 const CommunityScreen = () => {
   useLightStatusBar();
@@ -191,6 +192,19 @@ const CommunityScreen = () => {
                 onScrollEndDrag={onScrollEndDrag}
                 listArrRef={listArrRef}
                 tabRoute={route}
+                community={community}
+              />
+            );
+          case 'meet':
+            return (
+              <MeetTab
+                scrollY={scrollY}
+                isTabFocused={isFocused}
+                onMomentumScrollBegin={onMomentumScrollBegin}
+                listArrRef={listArrRef}
+                tabRoute={route}
+                onMomentumScrollEnd={onMomentumScrollEnd}
+                onScrollEndDrag={onScrollEndDrag}
                 community={community}
               />
             );

@@ -23,6 +23,7 @@ export const useCommunity = (communityId: number) => {
     {key: 'feed', title: '피드'},
     {key: 'chat', title: '채팅'},
     {key: 'schedule', title: '일정'},
+    {key: 'meet', title: '모임'},
   ]);
 
   const [tabIndex, setTabIndex] = useState(0);

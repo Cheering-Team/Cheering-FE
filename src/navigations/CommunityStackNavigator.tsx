@@ -17,6 +17,7 @@ import EditNameScreen from 'screens/moreStack/EditNameScreen';
 import DeletePlayerUserScreen from 'screens/communityStack/DeleteFanScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
 import ScheduleScreen from 'screens/communityStack/schedule/ScheduleScreen';
+import CreateMeetScreen from 'screens/communityStack/CreateMeetScreen';
 
 export type CommunityStackParamList = {
   Community: {communityId: number};
@@ -34,6 +35,7 @@ export type CommunityStackParamList = {
   BlockList: {playerUserId: number};
   Schedule: {communityId: number};
   Match: {matchId: number; communityId: number};
+  CreateMeet: {community: Community};
 };
 
 const CommunityStackNavigator = () => {
@@ -112,6 +114,11 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="Match"
         component={MatchScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="CreateMeet"
+        component={CreateMeetScreen}
         options={{headerShown: false}}
       />
     </CommunityStack.Navigator>
