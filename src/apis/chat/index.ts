@@ -148,3 +148,10 @@ export const getUnreadChats = async () => {
     await axiosInstance.get<ApiResponse<number>>(`/chats/unread`);
   return response.data.result;
 };
+
+export const createPrivateChatRoom = async () => {
+  const response = await axiosInstance.post<ApiResponse<Id>>(
+    `/communities/59/meets/1/talk`,
+  );
+  return response.data.result;
+};

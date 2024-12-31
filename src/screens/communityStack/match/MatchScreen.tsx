@@ -4,13 +4,7 @@ import {useGetMatchDetail} from 'apis/match/useMatches';
 import CustomText from 'components/common/CustomText';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import React from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StatusBar,
-  View,
-} from 'react-native';
+import {KeyboardAvoidingView, Platform, Pressable, View} from 'react-native';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BackSvg from 'assets/images/chevron-left.svg';

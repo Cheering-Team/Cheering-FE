@@ -18,6 +18,7 @@ import DeletePlayerUserScreen from 'screens/communityStack/DeleteFanScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
 import ScheduleScreen from 'screens/communityStack/schedule/ScheduleScreen';
 import CreateMeetScreen from 'screens/communityStack/CreateMeetScreen';
+import MeetRecruitScreen from 'screens/communityStack/MeetRecruitScreen';
 
 export type CommunityStackParamList = {
   Community: {communityId: number};
@@ -36,6 +37,7 @@ export type CommunityStackParamList = {
   Schedule: {communityId: number};
   Match: {matchId: number; communityId: number};
   CreateMeet: {community: Community};
+  MeetRecruit: {meetId: number; community: Community};
 };
 
 const CommunityStackNavigator = () => {
@@ -119,6 +121,11 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="CreateMeet"
         component={CreateMeetScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="MeetRecruit"
+        component={MeetRecruitScreen}
         options={{headerShown: false}}
       />
     </CommunityStack.Navigator>

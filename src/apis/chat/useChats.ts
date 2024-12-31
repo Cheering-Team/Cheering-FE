@@ -2,6 +2,7 @@ import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import {chatKeys, chatRoomKeys} from './queries';
 import {
   createChatRoom,
+  createPrivateChatRoom,
   deleteChatRoom,
   getChatRoomById,
   getChatRooms,
@@ -133,4 +134,8 @@ export const useGetUnreadChats = () => {
     queryKey: chatKeys.isUnread(),
     queryFn: getUnreadChats,
   });
+};
+
+export const useCreatePrivateChatRoom = () => {
+  return useMutation({mutationFn: createPrivateChatRoom});
 };

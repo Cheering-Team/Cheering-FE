@@ -248,7 +248,9 @@ const CommunityScreen = () => {
   return (
     <View
       className="flex-1"
-      style={{backgroundColor: tabIndex === 1 ? 'white' : '#F5F4F5'}}>
+      style={{
+        backgroundColor: tabIndex === 1 || tabIndex === 4 ? 'white' : '#F5F4F5',
+      }}>
       <CommunityHeader community={community} scrollY={scrollY} />
       <TabView
         navigationState={{index: tabIndex, routes: tabRoutes}}

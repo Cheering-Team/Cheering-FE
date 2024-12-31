@@ -123,7 +123,7 @@ const MainTab = ({
         style={{
           height: WINDOW_HEIGHT - insets.bottom - 38 - 45,
         }}>
-        <ActivityIndicator color={'#bababa'} size={'small'} />
+        <ActivityIndicator color={'#828282'} size={'small'} />
       </View>
     );
   }

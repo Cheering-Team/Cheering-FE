@@ -63,7 +63,8 @@ function CustomTabBar({state, descriptors, navigation}) {
           routeName === 'Schedule' ||
           routeName === 'Match' ||
           routeName === 'MatchEdit' ||
-          routeName === 'CreateMeet'
+          routeName === 'CreateMeet' ||
+          routeName === 'MeetRecruit'
             ? {display: 'none'}
             : styles.TabContainer,
           {paddingBottom: useSafeAreaInsets().bottom},
