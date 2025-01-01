@@ -17,6 +17,11 @@ import FastImage from 'react-native-fast-image';
 import {formatMonthDaySlash} from 'utils/format';
 import {useGetMeetById} from 'apis/meet/useMeets';
 import {useCreatePrivateChatRoom} from 'apis/chat/useChats';
+import CCHeader from 'components/common/CCHeader';
+import Animated, {
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from 'react-native-reanimated';
 
 const MeetRecruitScreen = () => {
   useDarkStatusBar();
@@ -29,6 +34,14 @@ const MeetRecruitScreen = () => {
   const {data: meet} = useGetMeetById();
   const {mutateAsync: register} = useCreatePrivateChatRoom();
 
+  const scrollY = useSharedValue(0);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
+
   const handleRegister = async () => {
     // const {id} = await register();
 
@@ -40,34 +53,17 @@ const MeetRecruitScreen = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1">
-      <View
-        className="pl-[6] pr-[10] flex-row justify-between items-center bg-white z-50 border-b border-gray-100"
-        style={{
-          height: 40,
-          marginTop: Platform.OS === 'android' ? insets.top : undefined,
-        }}>
-        <Pressable
-          className="w-[50]"
-          onPress={() => {
-            navigation.goBack();
-          }}>
-          <BackSvg width={25} height={25} />
-        </Pressable>
-        <View className="items-center">
-          <CustomText fontWeight="500" className="text-[15px] text-slate-900">
-            모임 참여하기
-          </CustomText>
-          <CustomText
-            fontWeight="500"
-            className="text-[13px]"
-            style={{color: community.color}}>
-            {community.koreanName}
-          </CustomText>
-        </View>
-        <View className="w-[50]" />
-      </View>
-      <ScrollView contentContainerStyle={{padding: 12}}>
+    <View className="flex-1">
+      <CCHeader
+        scrollY={scrollY}
+        community={community}
+        onFirstPress={() => {
+          navigation.goBack();
+        }}
+      />
+      <Animated.ScrollView
+        onScroll={scrollHandler}
+        contentContainerStyle={{paddingTop: insets.top + 55 + 15}}>
         <View>
           <CustomText>{meet.title}</CustomText>
         </View>
@@ -99,13 +95,13 @@ const MeetRecruitScreen = () => {
           </View>
         </View>
         <CustomText numberOfLines={999}>{meet.description}</CustomText>
-      </ScrollView>
+      </Animated.ScrollView>
       <Pressable
         className="justify-center items-center bg-black m-2 p-3 rounded-md"
         onPress={handleRegister}>
         <CustomText className="text-white">신청하기</CustomText>
       </Pressable>
-    </SafeAreaView>
+    </View>
   );
 };
 

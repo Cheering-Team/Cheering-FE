@@ -124,7 +124,7 @@ const CommunityScreen = () => {
                 <CustomText
                   fontWeight={index === tabIndex ? '700' : '400'}
                   className="text-[15px] text-gray-50"
-                  style={{color: index === tabIndex ? 'white' : '#cfcfcf'}}>
+                  style={{color: index === tabIndex ? 'white' : '#fbfbfb'}}>
                   {item.title}
                 </CustomText>
               </View>

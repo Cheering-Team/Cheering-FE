@@ -1,5 +1,4 @@
 import {Fan} from 'apis/fan/types';
-import {Match, MatchDetail} from 'apis/match/types';
 
 export interface Meet {
   title: string;
@@ -16,4 +15,20 @@ export interface Meet {
     opponentImage: string;
     time: string;
   };
+}
+
+// 요청
+export interface CreateMeetPayload {
+  communityId: number;
+  title: string;
+  description: string;
+  max: number;
+  gender: 'ANY' | 'MALE' | 'FEMALE';
+  ageMin: number;
+  ageMax: number;
+  place: string | null;
+  type: 'BOOKING' | 'LIVE';
+  hasTicket: boolean | null;
+  matchId: number;
+  communityType: 'TEAM' | 'PLAYER';
 }

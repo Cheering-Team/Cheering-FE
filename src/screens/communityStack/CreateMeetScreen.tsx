@@ -1,40 +1,24 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import CustomText from 'components/common/CustomText';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import React, {useState} from 'react';
-import {
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  TextInput,
-  View,
-} from 'react-native';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import CloseSvg from 'assets/images/close-black.svg';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import {
-  BottomSheetFlatList,
-  BottomSheetModal,
-  WINDOW_WIDTH,
-} from '@gorhom/bottom-sheet';
+import {WINDOW_WIDTH} from '@gorhom/bottom-sheet';
 import AgeSliderLabel from './community/meetTab/components/AgeSliderLabel';
 import RadioButton from 'components/common/RadioButton';
-import ArrowLeftSvg from 'assets/images/arrow-left.svg';
 import Animated, {
-  Extrapolate,
-  Extrapolation,
-  interpolate,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
-  withTiming,
 } from 'react-native-reanimated';
 import CCHeader from 'components/common/CCHeader';
 import BasicTextInput from 'components/common/BasicTextInput';
+import {useCreateMeet} from 'apis/meet/useMeets';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {showTopToast} from 'utils/toast';
 
 const AnimatedKeyboardAwareScrollView = Animated.createAnimatedComponent(
   KeyboardAwareScrollView,
@@ -44,11 +28,21 @@ const CreateMeetScreen = () => {
   useDarkStatusBar();
   const {community} =
     useRoute<RouteProp<CommunityStackParamList, 'CreateMeet'>>().params;
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
   const [type, setType] = useState<'BOOKING' | 'LIVE'>('BOOKING');
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [gender, setGender] = useState<'ANY' | 'MALE' | 'FEMALE'>('ANY');
-  const [hasTicket, setHasTicket] = useState(false);
+  const [hasTicket, setHasTicket] = useState(true);
+  const [max, setMax] = useState(2);
+  const [ageMin, setAgeMin] = useState(13);
+  const [ageMax, setAgeMax] = useState(45);
+  const [place, setPlace] = useState<string>('');
+
+  const {mutateAsync: createMeet} = useCreateMeet();
 
   const scrollY = useSharedValue(0);
 
@@ -58,14 +52,60 @@ const CreateMeetScreen = () => {
     },
   });
 
+  const handleCreateMeet = async () => {
+    if (title.trim().length === 0) {
+      showTopToast({
+        type: 'fail',
+        message: '제목을 입력해 주세요',
+      });
+      return;
+    }
+
+    if (type === 'BOOKING') {
+      if (place.trim().length === 0) {
+        showTopToast({
+          type: 'fail',
+          message: '선호하는 지역을 입력해 주세요',
+        });
+        return;
+      }
+    }
+
+    try {
+      const data = await createMeet({
+        communityId: community.id,
+        type,
+        title,
+        description,
+        max,
+        gender,
+        ageMin,
+        ageMax,
+        place,
+        hasTicket,
+        matchId: 1,
+        communityType: community.type,
+      });
+    } catch (error: any) {
+      //
+    }
+  };
+
   return (
     <View className="flex-1">
-      <CCHeader scrollY={scrollY} community={community} />
+      <CCHeader
+        scrollY={scrollY}
+        community={community}
+        onFirstPress={() => {
+          navigation.goBack();
+        }}
+        onSecondPress={handleCreateMeet}
+      />
       <AnimatedKeyboardAwareScrollView
         className="flex-1"
         contentContainerStyle={{
           paddingHorizontal: 12,
-          paddingTop: insets.top + 55 + 10,
+          paddingTop: insets.top + 55 + 15,
           paddingBottom: 40,
         }}
         onScroll={scrollHandler}>
@@ -94,12 +134,16 @@ const CreateMeetScreen = () => {
         <BasicTextInput
           label="제목"
           placeholder="모집글의 제목을 입력해주세요"
+          value={title}
+          onChangeText={setTitle}
         />
         <BasicTextInput
           label="설명"
           multiline={true}
           height={100}
           placeholder="어떤 사람과 가고 싶은지 구체적으로 설명해 주세요"
+          value={description}
+          onChangeText={setDescription}
         />
         <View>
           <CustomText fontWeight="500" className="text-[15px] ml-[2] mt-5 mb-3">
@@ -108,7 +152,7 @@ const CreateMeetScreen = () => {
           <View className="items-center">
             <MultiSlider
               allowOverlap
-              values={[2]}
+              values={[max]}
               min={2}
               max={10}
               sliderLength={WINDOW_WIDTH * 0.8}
@@ -123,8 +167,7 @@ const CreateMeetScreen = () => {
               selectedStyle={{backgroundColor: community.color}}
               unselectedStyle={{backgroundColor: '#eeeeee'}}
               onValuesChange={([first]) => {
-                // setMinAge(first);
-                // setMaxAge(second);
+                setMax(first);
               }}
             />
           </View>
@@ -136,7 +179,7 @@ const CreateMeetScreen = () => {
           <View className="items-center">
             <MultiSlider
               allowOverlap
-              values={[13, 45]}
+              values={[ageMin, ageMax]}
               min={13}
               max={45}
               sliderLength={WINDOW_WIDTH * 0.8}
@@ -151,8 +194,8 @@ const CreateMeetScreen = () => {
               selectedStyle={{backgroundColor: community.color}}
               unselectedStyle={{backgroundColor: '#eeeeee'}}
               onValuesChange={([first, second]) => {
-                // setMinAge(first);
-                // setMaxAge(second);
+                setAgeMin(first);
+                setAgeMax(second);
               }}
             />
           </View>
@@ -186,8 +229,10 @@ const CreateMeetScreen = () => {
         </View>
         {type === 'BOOKING' && (
           <BasicTextInput
-            label="위치"
+            label="선호 지역"
             placeholder="선호하는 지역을 입력해주세요"
+            value={place}
+            onChangeText={setPlace}
           />
         )}
 

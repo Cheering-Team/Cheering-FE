@@ -25,15 +25,15 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PlusSvg from 'assets/images/plus-white.svg';
 import FastImage from 'react-native-fast-image';
-import {formatDOW, formatMonthDaySlash} from 'utils/format';
+import {formatDOW, formatMonthDayDay, formatMonthDaySlash} from 'utils/format';
 import DownSvg from 'assets/images/chevron-down-gray.svg';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import AgeSliderLabel from './components/AgeSliderLabel';
 import RadioButton from 'components/common/RadioButton';
 import SearchSvg from 'assets/images/search-sm.svg';
-import PersonSvg from 'assets/images/person-gray-fill.svg';
+import PersonSvg from 'assets/images/person-slate.svg';
 import GenderSvg from 'assets/images/gender-gray.svg';
-import TicketSvg from 'assets/images/ticket-gray.svg';
+import TicketSvg from 'assets/images/ticket-white.svg';
 import AgeSvg from 'assets/images/age-gray.svg';
 
 const MOCK_DATA = [
@@ -99,7 +99,7 @@ const MeetTab = ({
   const {scrollY: tabScrollY, previousScrollY} = useMainTabScroll();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const buttonOpacity = useSharedValue(1);
-  const [type, setType] = useState<'BOOK' | 'LIVE'>('BOOK');
+  const [type, setType] = useState<'BOOKING' | 'LIVE'>('BOOKING');
   const [isAgeOpen, setIsAgeOpen] = useState(false);
   const [isAgeFirstOpen, setIsAgeFirstOpen] = useState(false);
   const [minAge, setMinAge] = useState(13);
@@ -140,57 +140,55 @@ const MeetTab = ({
   const renderItem: ListRenderItem<any> = ({item}) => {
     return (
       <Pressable
-        className="mx-[10] pt-4 pb-2 border-b border-gray-100"
+        className="flex-row mx-[10] my-3 border border-gray-200 bg-white rounded-[4px] overflow-hidden"
+        style={{height: 105, width: WINDOW_WIDTH - 20}}
         onPress={() =>
           navigation.navigate('MeetRecruit', {meetId: 1, community})
         }>
-        <CustomText numberOfLines={2} className="text-[15px]">
-          {item.title}
-        </CustomText>
-        <View className="flex-row justify-between items-end mt-4">
-          <View className="pb-1">
-            <View className="flex-row mb-1">
-              <View className="w-[80] flex-row items-center">
-                <PersonSvg width={13} height={12} />
-                <CustomText
-                  className="text-[13px] text-gray-500 ml-[3]"
-                  fontWeight="500">{`${item.curCount} / ${item.maxCount}명`}</CustomText>
-              </View>
-              <View className="w-[80] flex-row items-center">
-                <AgeSvg width={15} height={11} />
-                <CustomText
-                  className="text-[13px] text-gray-500 ml-[3]"
-                  fontWeight="500">{`${item.minAge} ~ ${item.maxAge}세`}</CustomText>
-              </View>
+        <View className="flex-1 px-3 pt-3 pb-[9] justify-between">
+          <View>
+            <CustomText className="text-[15px]" fontWeight="500">
+              {item.title}
+            </CustomText>
+            <CustomText className="text-[14px] mt-1 text-gray-500">
+              {item.description}
+            </CustomText>
+          </View>
+
+          <View className="flex-row items-center justify-between">
+            <View className="flex-row items-center">
+              <CustomText className="text-[13px] text-[#798497]">{`${item.minAge}~${item.maxAge}세`}</CustomText>
+              <View className="w-[1] h-3 bg-slate-400 mx-1" />
+              <CustomText className="text-[13px] text-[#798497]">
+                {item.gender === 'MALE' && '남자만'}
+              </CustomText>
             </View>
-            <View className="flex-row">
-              <View className="w-[80] flex-row items-center">
-                <GenderSvg width={13} height={13} />
-                <CustomText
-                  className="text-[13px] text-gray-500 ml-[3]"
-                  fontWeight="500">
-                  {item.gender === 'MALE' && '남자'}
-                </CustomText>
-              </View>
-              <View className="w-[80] flex-row items-center">
-                <TicketSvg width={15} height={15} />
-                <CustomText
-                  className="text-[13px] text-gray-500 ml-[3]"
-                  fontWeight="500">
-                  {item.ticket ? '티켓 있음' : '티켓 없음'}
-                </CustomText>
-              </View>
+            <View className="flex-row items-center">
+              <PersonSvg width={11} height={11} />
+              <CustomText className="text-[13px] ml-[2] text-[#798497]">{`${item.curCount}`}</CustomText>
+              <CustomText className="text-[13px] mx-[2] text-[#798497]">{`/`}</CustomText>
+              <CustomText className="text-[13px] text-[#798497]">{`${item.maxCount}`}</CustomText>
             </View>
           </View>
-          <View className="flex-row items-center">
-            <CustomText
-              className="mr-[3] text-gray-900 text-[13px]"
-              fontWeight="500">{`${formatMonthDaySlash(item.match.time)}${formatDOW(item.match.time)} vs ${item.match.opponentName}`}</CustomText>
-            <FastImage
-              source={{uri: item.match.opponentImage}}
-              className="w-[22] h-[22]"
-            />
-          </View>
+        </View>
+        <View
+          className="items-center justify-center w-[85]"
+          style={{backgroundColor: `${'#000000'}E0`}}>
+          <TicketSvg
+            width={22}
+            height={22}
+            className="absolute top-[1] right-[3]"
+          />
+          <FastImage
+            source={{uri: MOCK_DATA[0].match.opponentImage}}
+            className="w-[42] h-[42]"
+          />
+          <CustomText className="text-white mt-[2]">
+            {`vs ${MOCK_DATA[0].match.opponentName}`}
+          </CustomText>
+          <CustomText className="text-[#e9e9e9] mt-[2] text-[11.5px]">
+            {formatMonthDayDay(MOCK_DATA[0].match.time.toISOString())}
+          </CustomText>
         </View>
       </Pressable>
     );
@@ -220,7 +218,7 @@ const MeetTab = ({
         data={MOCK_DATA}
         renderItem={renderItem}
         contentContainerStyle={{
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#ffffff',
           marginTop: HEADER_HEIGHT,
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
           paddingBottom: insets.bottom + 200,
@@ -249,68 +247,80 @@ const MeetTab = ({
         }
         ListHeaderComponent={
           <View>
-            <View className="px-[10] py-2">
-              <View className="flex-row bg-[#ecebec] p-[2.5] rounded-[3px]">
+            <View className="bg-[#ececec] mx-[10] my-2 border border-slate-300 rounded-t-[6px] rounded-b-[6px]">
+              <View className="flex-row">
                 <Pressable
-                  className="flex-1 justify-center items-center py-[2] rounded-[2px]"
+                  className="flex-1 justify-center items-center py-[3] border-r border-slate-300 rounded-tl-[4px]"
                   style={{
-                    backgroundColor: type === 'BOOK' ? 'white' : undefined,
+                    backgroundColor: type === 'BOOKING' ? 'white' : undefined,
                   }}
-                  onPress={() => setType('BOOK')}>
+                  onPress={() => setType('BOOKING')}>
                   <CustomText
                     fontWeight="600"
-                    className="text-[14px] mb-[1]"
-                    style={{color: type === 'BOOK' ? '#3755ff' : '#8b8b8b'}}>
+                    className="text-[15px] mb-[1]"
+                    style={{
+                      color: type === 'BOOKING' ? community.color : '#858585',
+                    }}>
                     모관
                   </CustomText>
-                  <CustomText
-                    className="text-[11px]"
-                    style={{color: type === 'BOOK' ? '#5c5c5c' : '#8b8b8b'}}>
-                    모여서 우리끼리 보자
-                  </CustomText>
+                  {type === 'BOOKING' && (
+                    <CustomText
+                      fontWeight="500"
+                      className="text-[11px]"
+                      style={{
+                        color: type === 'BOOKING' ? '#5c5c5c' : '#8b8b8b',
+                      }}>
+                      모여서 우리끼리
+                    </CustomText>
+                  )}
                 </Pressable>
                 <Pressable
-                  className="flex-1 justify-center items-center py-[2] rounded-[2px]"
+                  className="flex-1 justify-center items-center py-[3] rounded-tr-[4px]"
                   onPress={() => setType('LIVE')}
                   style={{
                     backgroundColor: type === 'LIVE' ? 'white' : undefined,
                   }}>
                   <CustomText
                     fontWeight="600"
-                    className="text-[14px] mb-[1]"
-                    style={{color: type === 'LIVE' ? '#ff3737' : '#8b8b8b'}}>
+                    className="text-[15px] mb-[1]"
+                    style={{
+                      color: type === 'LIVE' ? community.color : '#858585',
+                    }}>
                     직관
                   </CustomText>
-                  <CustomText
-                    className="text-[11px]"
-                    style={{color: type === 'LIVE' ? '#5c5c5c' : '#8b8b8b'}}>
-                    직접 경기장 가서 보자
-                  </CustomText>
+                  {type === 'LIVE' && (
+                    <CustomText
+                      fontWeight="500"
+                      className="text-[11px]"
+                      style={{color: type === 'LIVE' ? '#5c5c5c' : '#8b8b8b'}}>
+                      직접 경기장 가서
+                    </CustomText>
+                  )}
                 </Pressable>
               </View>
+              <View
+                className="bg-white flex-row items-center px-2 border-t border-slate-300 rounded-b-[4px]"
+                style={{paddingVertical: Platform.OS === 'ios' ? 10 : 6}}>
+                <SearchSvg width={18} height={18} />
+                <TextInput
+                  className="flex-1 p-0 m-0 ml-[6]"
+                  placeholder="모임 검색"
+                  placeholderTextColor={'#9e9e9e'}
+                  // onChangeText={debouncedSetName}
+                  style={{
+                    fontFamily: 'Pretendard-Regular',
+                    paddingBottom: 1,
+                    fontSize: 15,
+                    includeFontPadding: false,
+                  }}
+                />
+              </View>
             </View>
-            <View
-              className="bg-[#F5F4F5] flex-row px-2 rounded-md items-center mb-1 mx-[10] mt-[2]"
-              style={{paddingVertical: Platform.OS === 'ios' ? 8 : 4}}>
-              <SearchSvg width={18} height={18} />
-              <TextInput
-                className="flex-1 p-0 m-0 ml-[6]"
-                placeholder="모임 검색"
-                placeholderTextColor={'#9e9e9e'}
-                // onChangeText={debouncedSetName}
-                style={{
-                  fontFamily: 'Pretendard-Regular',
-                  paddingBottom: 1,
-                  fontSize: 15,
-                  includeFontPadding: false,
-                }}
-              />
-            </View>
+
             <ScrollView
               horizontal
-              className="mt-[6]"
               contentContainerStyle={{paddingHorizontal: 10}}>
-              <Pressable className="flex-row items-center mr-2 border border-[#dcdcdc] py-[6] px-2 rounded-[4px]">
+              <Pressable className="flex-row items-center mr-2 border border-slate-300 py-[6] px-2 rounded-[4px]">
                 <CustomText fontWeight="400" className="text-[#5c5c5c] mr-1">
                   경기
                 </CustomText>
@@ -318,7 +328,9 @@ const MeetTab = ({
               </Pressable>
               <Pressable
                 className="flex-row items-center justify-between mr-2 border py-[6] px-2 rounded-[4px]"
-                style={{borderColor: isAgeFirstOpen ? 'black' : '#dcdcdc'}}
+                style={{
+                  borderColor: isAgeFirstOpen ? community.color : '#cbd5e1',
+                }}
                 onPress={() => {
                   setIsAgeOpen(prev => !prev);
                   setIsAgeFirstOpen(true);
@@ -327,7 +339,7 @@ const MeetTab = ({
                 }}>
                 <CustomText
                   className="mr-1"
-                  style={{color: isAgeFirstOpen ? 'black' : '#5c5c5c'}}>
+                  style={{color: isAgeFirstOpen ? community.color : '#5c5c5c'}}>
                   {isAgeFirstOpen
                     ? minAge === maxAge
                       ? `${minAge === 45 ? '45+' : maxAge}세`
@@ -338,7 +350,9 @@ const MeetTab = ({
               </Pressable>
               <Pressable
                 className="flex-row items-center mr-2 border py-[6] px-2 rounded-[4px]"
-                style={{borderColor: isGenderFirstOpen ? 'black' : '#dcdcdc'}}
+                style={{
+                  borderColor: isGenderFirstOpen ? community.color : '#cbd5e1',
+                }}
                 onPress={() => {
                   setIsGenderOpen(prev => !prev);
                   setIsGenderFirstOpen(true);
@@ -347,7 +361,9 @@ const MeetTab = ({
                 }}>
                 <CustomText
                   className="mr-1"
-                  style={{color: isGenderFirstOpen ? 'black' : '#5c5c5c'}}>
+                  style={{
+                    color: isGenderFirstOpen ? community.color : '#5c5c5c',
+                  }}>
                   {isGenderFirstOpen
                     ? gender === 'ANY'
                       ? '성별 무관'
@@ -361,7 +377,11 @@ const MeetTab = ({
               {type === 'LIVE' && (
                 <Pressable
                   className="flex-row items-center mr-2 border py-[6] px-2 rounded-[4px]"
-                  style={{borderColor: isTicketFirstOpen ? 'black' : '#dcdcdc'}}
+                  style={{
+                    borderColor: isTicketFirstOpen
+                      ? community.color
+                      : '#cbd5e1',
+                  }}
                   onPress={() => {
                     setIsTicketOpen(prev => !prev);
                     setIsTicketFirstOpen(true);
@@ -370,7 +390,9 @@ const MeetTab = ({
                   }}>
                   <CustomText
                     className="mr-1"
-                    style={{color: isTicketFirstOpen ? 'black' : '#5c5c5c'}}>
+                    style={{
+                      color: isTicketFirstOpen ? community.color : '#5c5c5c',
+                    }}>
                     {isTicketFirstOpen
                       ? hasTicket === 'ALL'
                         ? '전체'
@@ -384,7 +406,7 @@ const MeetTab = ({
               )}
             </ScrollView>
             {isAgeOpen && (
-              <View className="items-center px-3 flex-1 pt-[13]">
+              <View className="items-center px-3 flex-1 pt-[11] mt-2 bg-gray-50">
                 <MultiSlider
                   allowOverlap
                   values={[minAge, maxAge]}
@@ -399,7 +421,7 @@ const MeetTab = ({
                     );
                   }}
                   customLabel={AgeSliderLabel}
-                  selectedStyle={{backgroundColor: '#909090'}}
+                  selectedStyle={{backgroundColor: community.color}}
                   unselectedStyle={{backgroundColor: '#eeeeee'}}
                   onValuesChange={([first, second]) => {
                     setMinAge(first);
@@ -409,95 +431,69 @@ const MeetTab = ({
               </View>
             )}
             {isGengerOpen && (
-              <View className="items-center flex-row px-[14] py-6">
-                <Pressable
-                  className="flex-row items-center"
+              <View className="items-center flex-row px-[10] py-2 mt-2 bg-gray-50">
+                <RadioButton
+                  title="성별 무관"
+                  selected={gender === 'ANY'}
                   onPress={() => {
                     setGender('ANY');
                     setIsGenderOpen(false);
-                  }}>
-                  <RadioButton selected={gender === 'ANY'} />
-                  <CustomText
-                    fontWeight="500"
-                    className="ml-[6] text-[13px]"
-                    style={{color: gender === 'ANY' ? 'black' : '#898989'}}>
-                    성별 무관
-                  </CustomText>
-                </Pressable>
-                <Pressable
-                  className="flex-row items-center ml-4"
+                  }}
+                  color={community.color}
+                />
+                <View className="w-[8]" />
+                <RadioButton
+                  title="남자"
+                  selected={gender === 'MALE'}
                   onPress={() => {
                     setGender('MALE');
                     setIsGenderOpen(false);
-                  }}>
-                  <RadioButton selected={gender === 'MALE'} />
-                  <CustomText
-                    fontWeight="500"
-                    className="ml-[6] text-[13px]"
-                    style={{color: gender === 'MALE' ? 'black' : '#898989'}}>
-                    남자
-                  </CustomText>
-                </Pressable>
-                <Pressable
-                  className="flex-row items-center ml-4"
+                  }}
+                  color={community.color}
+                />
+                <View className="w-[8]" />
+                <RadioButton
+                  title="여자"
+                  selected={gender === 'FEMALE'}
                   onPress={() => {
                     setGender('FEMALE');
                     setIsGenderOpen(false);
-                  }}>
-                  <RadioButton selected={gender === 'FEMALE'} />
-                  <CustomText
-                    fontWeight="500"
-                    className="ml-[6] text-[13px]"
-                    style={{color: gender === 'FEMALE' ? 'black' : '#898989'}}>
-                    여자
-                  </CustomText>
-                </Pressable>
+                  }}
+                  color={community.color}
+                />
               </View>
             )}
             {isTicketOpen && (
-              <View className="items-center flex-row px-[14] py-6">
-                <Pressable
-                  className="flex-row items-center"
+              <View className="items-center flex-row px-[10] py-2 mt-2 bg-gray-50">
+                <RadioButton
+                  title="전체"
+                  selected={hasTicket === 'ALL'}
                   onPress={() => {
                     setHasTicket('ALL');
                     setIsTicketOpen(false);
-                  }}>
-                  <RadioButton selected={hasTicket === 'ALL'} />
-                  <CustomText
-                    fontWeight="500"
-                    className="ml-[6] text-[13px]"
-                    style={{color: hasTicket === 'ALL' ? 'black' : '#898989'}}>
-                    전체
-                  </CustomText>
-                </Pressable>
-                <Pressable
-                  className="flex-row items-center ml-4"
+                  }}
+                  color={community.color}
+                />
+                <View className="w-[8]" />
+                <RadioButton
+                  title="티켓 있음"
+                  selected={hasTicket === 'HAS'}
                   onPress={() => {
                     setHasTicket('HAS');
                     setIsTicketOpen(false);
-                  }}>
-                  <RadioButton selected={hasTicket === 'HAS'} />
-                  <CustomText
-                    fontWeight="500"
-                    className="ml-[6] text-[13px]"
-                    style={{color: hasTicket === 'HAS' ? 'black' : '#898989'}}>
-                    티켓 있음
-                  </CustomText>
-                </Pressable>
-                <Pressable
-                  className="flex-row items-center ml-4"
+                  }}
+                  color={community.color}
+                />
+                <View className="w-[8]" />
+                <RadioButton
+                  title="티켓 없음"
+                  selected={hasTicket === 'NOT'}
                   onPress={() => {
                     setHasTicket('NOT');
                     setIsTicketOpen(false);
-                  }}>
-                  <RadioButton selected={hasTicket === 'NOT'} />
-                  <CustomText
-                    fontWeight="500"
-                    className="ml-[6] text-[13px]"
-                    style={{color: hasTicket === 'NOT' ? 'black' : '#898989'}}>
-                    티켓 없음
-                  </CustomText>
-                </Pressable>
+                  }}
+                  color={community.color}
+                />
               </View>
             )}
           </View>

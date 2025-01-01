@@ -7,6 +7,8 @@ interface BasicTextInputProps {
   placeholder: string;
   multiline?: boolean;
   height?: number;
+  value: string;
+  onChangeText: (text: string) => void;
 }
 
 const BasicTextInput = ({
@@ -14,6 +16,8 @@ const BasicTextInput = ({
   placeholder,
   multiline = false,
   height,
+  value,
+  onChangeText,
 }: BasicTextInputProps) => {
   return (
     <View>
@@ -23,6 +27,8 @@ const BasicTextInput = ({
       <TextInput
         placeholder={placeholder}
         placeholderTextColor={'#828181'}
+        value={value}
+        onChangeText={onChangeText}
         multiline={multiline}
         textAlignVertical={multiline ? 'top' : undefined}
         className="border border-gray-200 p-0 px-2 rounded-[5px]"

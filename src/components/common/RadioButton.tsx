@@ -19,7 +19,7 @@ const RadioButton = ({
 }: RadioButtonProps) => {
   return (
     <Pressable
-      className="flex-1 flex-row justify-between items-center border rounded-md"
+      className="bg-white flex-1 flex-row justify-between items-center border rounded-md"
       style={{
         borderColor: selected ? color : '#e5e7eb',
         paddingVertical: description ? 12 : 10,

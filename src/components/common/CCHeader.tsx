@@ -15,9 +15,18 @@ import {
 interface CCHeaderProps {
   community: Community;
   scrollY: SharedValue<number>;
+  secondType?: 'COMPELETE';
+  onFirstPress: () => void;
+  onSecondPress?: () => void;
 }
 
-const CCHeader = ({scrollY, community}: CCHeaderProps) => {
+const CCHeader = ({
+  scrollY,
+  community,
+  secondType,
+  onFirstPress,
+  onSecondPress,
+}: CCHeaderProps) => {
   const insets = useSafeAreaInsets();
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -30,7 +39,11 @@ const CCHeader = ({scrollY, community}: CCHeaderProps) => {
     <View
       className="flex-row px-3 absolute z-50 justify-between w-full h-[55] items-center"
       style={{top: insets.top}}>
-      <Pressable className="rounded-full bg-white w-[38] h-[38] items-center justify-center shadow-sm shadow-gray-200 border border-gray-200">
+      <Pressable
+        className="rounded-full bg-white w-[38] h-[38] items-center justify-center shadow-sm shadow-gray-200 border border-gray-200"
+        onPress={() => {
+          onFirstPress();
+        }}>
         <LeftSvg width={27} height={27} />
       </Pressable>
       <View className="items-center">
@@ -46,14 +59,20 @@ const CCHeader = ({scrollY, community}: CCHeaderProps) => {
           {community.koreanName}
         </CustomText>
       </View>
-      <Pressable
-        className="rounded-full w-[38] h-[38] items-center justify-center shadow-sm shadow-gray-200 border"
-        style={{
-          backgroundColor: community.color,
-          borderColor: 'white',
-        }}>
-        <CheckSvg width={17} height={17} />
-      </Pressable>
+      {secondType && onSecondPress ? (
+        <Pressable
+          onPress={() => {
+            onSecondPress();
+          }}
+          className="rounded-full w-[38] h-[38] items-center justify-center shadow-sm shadow-gray-200 border border-white"
+          style={{
+            backgroundColor: community.color,
+          }}>
+          <CheckSvg width={17} height={17} />
+        </Pressable>
+      ) : (
+        <View className="w-[38]" />
+      )}
     </View>
   );
 };
