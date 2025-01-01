@@ -13,6 +13,7 @@ import {
 } from 'react-native-reanimated';
 
 interface CCHeaderProps {
+  title: string;
   community: Community;
   scrollY: SharedValue<number>;
   secondType?: 'COMPELETE';
@@ -21,6 +22,7 @@ interface CCHeaderProps {
 }
 
 const CCHeader = ({
+  title,
   scrollY,
   community,
   secondType,
@@ -51,7 +53,7 @@ const CCHeader = ({
           className="text-[16px]"
           fontWeight="500"
           style={[animatedStyle]}>
-          모임 만들기
+          {title}
         </CustomText>
         <CustomText
           style={[{color: community.color}, animatedStyle]}

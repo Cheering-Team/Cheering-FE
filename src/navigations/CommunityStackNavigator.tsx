@@ -121,7 +121,9 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="CreateMeet"
         component={CreateMeetScreen}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+        }}
       />
       <CommunityStack.Screen
         name="MeetRecruit"

@@ -11,6 +11,7 @@ import {
   getMatchSchedule,
   getNearMatch,
   getNextMatch,
+  getTwoWeeksMatches,
   getUnfinishedMatches,
 } from '.';
 import {queryClient} from '../../../App';
@@ -71,5 +72,13 @@ export const useEditMatch = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: matchKeys.unfinishedList()});
     },
+  });
+};
+
+export const useGetTwoWeeksMatches = (communityId: number) => {
+  return useQuery({
+    queryKey: matchKeys.twoWeeksList(communityId),
+    queryFn: getTwoWeeksMatches,
+    retry: false,
   });
 };

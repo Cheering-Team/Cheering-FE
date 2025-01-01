@@ -1,13 +1,18 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import CustomText from 'components/common/CustomText';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {useState} from 'react';
-import {View} from 'react-native';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
+import {Keyboard, Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import {WINDOW_WIDTH} from '@gorhom/bottom-sheet';
+import {
+  BottomSheetBackdrop,
+  BottomSheetFlatList,
+  BottomSheetModal,
+  WINDOW_WIDTH,
+} from '@gorhom/bottom-sheet';
 import AgeSliderLabel from './community/meetTab/components/AgeSliderLabel';
 import RadioButton from 'components/common/RadioButton';
 import Animated, {
@@ -19,6 +24,13 @@ import BasicTextInput from 'components/common/BasicTextInput';
 import {useCreateMeet} from 'apis/meet/useMeets';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {showTopToast} from 'utils/toast';
+import {useGetTwoWeeksMatches} from 'apis/match/useMatches';
+import {formatDate, formatMonthDayDay, formatTime} from 'utils/format';
+import FastImage from 'react-native-fast-image';
+import {MatchDetail} from 'apis/match/types';
+import CloseSvg from 'assets/images/close-black.svg';
+import PlusSvg from 'assets/images/plus-white.svg';
+import MatchInfo from 'components/common/MatchInfo';
 
 const AnimatedKeyboardAwareScrollView = Animated.createAnimatedComponent(
   KeyboardAwareScrollView,
@@ -32,6 +44,9 @@ const CreateMeetScreen = () => {
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
+  const matchModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => ['70%', '90%'], []);
+
   const [type, setType] = useState<'BOOKING' | 'LIVE'>('BOOKING');
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -41,7 +56,9 @@ const CreateMeetScreen = () => {
   const [ageMin, setAgeMin] = useState(13);
   const [ageMax, setAgeMax] = useState(45);
   const [place, setPlace] = useState<string>('');
+  const [match, setMatch] = useState<MatchDetail | null>(null);
 
+  const {data: matches} = useGetTwoWeeksMatches(community.id);
   const {mutateAsync: createMeet} = useCreateMeet();
 
   const scrollY = useSharedValue(0);
@@ -52,11 +69,31 @@ const CreateMeetScreen = () => {
     },
   });
 
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        pressBehavior="close"
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    [],
+  );
+
   const handleCreateMeet = async () => {
     if (title.trim().length === 0) {
       showTopToast({
         type: 'fail',
         message: '제목을 입력해 주세요',
+      });
+      return;
+    }
+
+    if (match === null) {
+      showTopToast({
+        type: 'fail',
+        message: '관람할 경기를 선택해 주세요',
       });
       return;
     }
@@ -82,10 +119,11 @@ const CreateMeetScreen = () => {
         ageMin,
         ageMax,
         place,
-        hasTicket,
-        matchId: 1,
+        hasTicket: type === 'BOOKING' ? null : hasTicket,
+        matchId: match.id,
         communityType: community.type,
       });
+      console.log(data);
     } catch (error: any) {
       //
     }
@@ -94,6 +132,8 @@ const CreateMeetScreen = () => {
   return (
     <View className="flex-1">
       <CCHeader
+        title="모임 만들기"
+        secondType="COMPELETE"
         scrollY={scrollY}
         community={community}
         onFirstPress={() => {
@@ -130,12 +170,59 @@ const CreateMeetScreen = () => {
             }}
           />
         </View>
+        <View className="items-start">
+          <View>
+            <CustomText
+              fontWeight="500"
+              className="text-[15px] ml-[2] mt-5 mb-2">
+              경기 선택
+            </CustomText>
+            <View className="w-[6] h-[6] rounded-full bg-rose-600 absolute top-5 right-[-7]" />
+          </View>
+          {match ? (
+            <View className="flex-row items-center border border-gray-200 rounded-[6px] px-2 bg-white h-[32]">
+              <FastImage
+                source={{
+                  uri:
+                    community.koreanName === match.homeTeam.koreanName
+                      ? match.awayTeam.image
+                      : match.homeTeam.image,
+                }}
+                className="w-7 h-7"
+              />
+              <CustomText
+                className="ml-1 text-[15px] text-gray-800"
+                fontWeight="500">
+                {formatDate(match.time)}
+              </CustomText>
+              <Pressable
+                onPress={() => {
+                  setMatch(null);
+                }}
+                className="bg-gray-200 p-[1] rounded-full ml-2">
+                <CloseSvg width={16} height={16} />
+              </Pressable>
+            </View>
+          ) : (
+            <Pressable
+              className="px-2 rounded-[4px] flex-row items-center h-[32] bg-white border border-gray-200"
+              onPress={() => {
+                Keyboard.dismiss();
+                matchModalRef.current?.present();
+              }}>
+              <CustomText className="text-[#000000]" fontWeight="400">
+                경기 추가 +
+              </CustomText>
+            </Pressable>
+          )}
+        </View>
 
         <BasicTextInput
           label="제목"
           placeholder="모집글의 제목을 입력해주세요"
           value={title}
           onChangeText={setTitle}
+          isRequired
         />
         <BasicTextInput
           label="설명"
@@ -261,7 +348,11 @@ const CreateMeetScreen = () => {
           </View>
         )}
       </AnimatedKeyboardAwareScrollView>
-      {/* <BottomSheetModal ref={matchModalRef} backdropComponent={renderBackdrop}>
+      <BottomSheetModal
+        ref={matchModalRef}
+        backdropComponent={renderBackdrop}
+        enableDynamicSizing={false}
+        snapPoints={snapPoints}>
         <BottomSheetFlatList
           data={matches || []}
           contentContainerStyle={{paddingHorizontal: 10, paddingBottom: 10}}
@@ -272,17 +363,29 @@ const CreateMeetScreen = () => {
               </CustomText>
             </View>
           }
+          ListHeaderComponent={
+            matches && matches?.length > 0 ? (
+              <CustomText
+                className="text-center text-gray-600 text-[15px] my-2"
+                fontWeight="500">
+                2주 이내의 경기만 선택 가능합니다
+              </CustomText>
+            ) : null
+          }
           renderItem={({item}) => (
             <Pressable
-              className="border border-slate-200 rounded-lg bg-wihte my-2 px-3 py-[6] bg-slate-50"
-              onPress={() => {}}>
+              className="border border-slate-200 rounded-lg bg-wihte my-[6] px-3 pt-2 pb-3 bg-white"
+              onPress={() => {
+                setMatch(item);
+                matchModalRef.current?.dismiss();
+              }}>
               <CustomText
-                className="text-lg text-slate-800 mb-1 ml-[2]"
+                className="text-[15px] text-slate-700 mb-2"
                 fontWeight="600">
                 {formatMonthDayDay(item.time)}
               </CustomText>
               <View className="flex-row justify-between items-center">
-                <View className="items-center w-[120]">
+                <View className="items-center w-[110]">
                   <FastImage
                     source={{uri: item.homeTeam.image}}
                     className="w-[60] h-[60]"
@@ -293,7 +396,6 @@ const CreateMeetScreen = () => {
                         ? '600'
                         : '400'
                     }
-                    className="text-base"
                     style={{
                       color:
                         community.koreanName === item.homeTeam.koreanName
@@ -304,14 +406,16 @@ const CreateMeetScreen = () => {
                   </CustomText>
                 </View>
                 <View className="items-center">
-                  <CustomText fontWeight="600" className="text-base">
+                  <CustomText fontWeight="600" className="text-[15px]">
                     {formatTime(item.time)}
                   </CustomText>
-                  <CustomText className="text-slate-600" fontWeight="500">
+                  <CustomText
+                    className="text-slate-600 text-[13px] mt-[3]"
+                    fontWeight="500">
                     {item.location}
                   </CustomText>
                 </View>
-                <View className="items-center w-[120]">
+                <View className="items-center w-[110]">
                   <FastImage
                     source={{uri: item.awayTeam.image}}
                     className="w-[60] h-[60]"
@@ -322,7 +426,6 @@ const CreateMeetScreen = () => {
                         ? '400'
                         : '600'
                     }
-                    className="text-base"
                     style={{
                       color:
                         community.koreanName === item.homeTeam.koreanName
@@ -336,7 +439,7 @@ const CreateMeetScreen = () => {
             </Pressable>
           )}
         />
-      </BottomSheetModal> */}
+      </BottomSheetModal>
     </View>
   );
 };
