@@ -29,8 +29,6 @@ import {formatDate, formatMonthDayDay, formatTime} from 'utils/format';
 import FastImage from 'react-native-fast-image';
 import {MatchDetail} from 'apis/match/types';
 import CloseSvg from 'assets/images/close-black.svg';
-import PlusSvg from 'assets/images/plus-white.svg';
-import MatchInfo from 'components/common/MatchInfo';
 
 const AnimatedKeyboardAwareScrollView = Animated.createAnimatedComponent(
   KeyboardAwareScrollView,

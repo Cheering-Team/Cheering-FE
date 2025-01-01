@@ -25,16 +25,16 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PlusSvg from 'assets/images/plus-white.svg';
 import FastImage from 'react-native-fast-image';
-import {formatDOW, formatMonthDayDay, formatMonthDaySlash} from 'utils/format';
+import {formatMonthDayDay} from 'utils/format';
 import DownSvg from 'assets/images/chevron-down-gray.svg';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import AgeSliderLabel from './components/AgeSliderLabel';
 import RadioButton from 'components/common/RadioButton';
 import SearchSvg from 'assets/images/search-sm.svg';
 import PersonSvg from 'assets/images/person-slate.svg';
-import GenderSvg from 'assets/images/gender-gray.svg';
 import TicketSvg from 'assets/images/ticket-white.svg';
-import AgeSvg from 'assets/images/age-gray.svg';
+import {useGetAllMeetsByCommunity} from 'apis/meet/useMeets';
+import {MeetInfo} from 'apis/meet/types';
 
 const MOCK_DATA = [
   {
@@ -111,6 +111,8 @@ const MeetTab = ({
   const [isTicketFirstOpen, setIsTicketFirstOpen] = useState(false);
   const [hasTicket, setHasTicket] = useState<'ALL' | 'HAS' | 'NOT'>('ALL');
 
+  const {data: meets} = useGetAllMeetsByCommunity(community.id);
+
   const scrollHandler = useAnimatedScrollHandler(event => {
     const currentScrollY = event.contentOffset.y;
     if (isTabFocused) {
@@ -137,11 +139,11 @@ const MeetTab = ({
     }, 1000);
   };
 
-  const renderItem: ListRenderItem<any> = ({item}) => {
+  const renderItem: ListRenderItem<MeetInfo> = ({item}) => {
     return (
       <Pressable
-        className="flex-row mx-[10] my-3 border border-gray-200 bg-white rounded-[4px] overflow-hidden"
-        style={{height: 105, width: WINDOW_WIDTH - 20}}
+        className="flex-row mx-[10] my-1 border border-gray-200 bg-white rounded-[4px] overflow-hidden"
+        style={{height: 95, width: WINDOW_WIDTH - 20}}
         onPress={() =>
           navigation.navigate('MeetRecruit', {meetId: 1, community})
         }>
@@ -157,37 +159,43 @@ const MeetTab = ({
 
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center">
-              <CustomText className="text-[13px] text-[#798497]">{`${item.minAge}~${item.maxAge}세`}</CustomText>
+              <CustomText className="text-[13px] text-[#798497]">{`${item.ageMin}~${item.ageMax}세`}</CustomText>
               <View className="w-[1] h-3 bg-slate-400 mx-1" />
               <CustomText className="text-[13px] text-[#798497]">
-                {item.gender === 'MALE' && '남자만'}
+                {item.gender === 'MALE' && '남자'}
+                {item.gender === 'ANY' && '성별 무관'}
+                {item.gender === 'FEMALE' && '여자'}
               </CustomText>
             </View>
             <View className="flex-row items-center">
               <PersonSvg width={11} height={11} />
-              <CustomText className="text-[13px] ml-[2] text-[#798497]">{`${item.curCount}`}</CustomText>
+              <CustomText className="text-[13px] ml-[2] text-[#798497]">{`${item.currentCount}`}</CustomText>
               <CustomText className="text-[13px] mx-[2] text-[#798497]">{`/`}</CustomText>
-              <CustomText className="text-[13px] text-[#798497]">{`${item.maxCount}`}</CustomText>
+              <CustomText className="text-[13px] text-[#798497]">{`${item.max}`}</CustomText>
             </View>
           </View>
         </View>
         <View
-          className="items-center justify-center w-[85]"
-          style={{backgroundColor: `${'#000000'}E0`}}>
+          className="items-center justify-center w-[90] px-1"
+          style={{backgroundColor: `${item.match.opponentColor}E0`}}>
           <TicketSvg
             width={22}
             height={22}
             className="absolute top-[1] right-[3]"
           />
           <FastImage
-            source={{uri: MOCK_DATA[0].match.opponentImage}}
-            className="w-[42] h-[42]"
+            source={{uri: item.match.opponentImage}}
+            className="w-[37] h-[37]"
           />
-          <CustomText className="text-white mt-[2]">
-            {`vs ${MOCK_DATA[0].match.opponentName}`}
+          <CustomText
+            className="text-white mt-[1] text-[13px]"
+            fontWeight="500">
+            {`vs ${item.match.opponentShortName}`}
           </CustomText>
-          <CustomText className="text-[#e9e9e9] mt-[2] text-[11.5px]">
-            {formatMonthDayDay(MOCK_DATA[0].match.time.toISOString())}
+          <CustomText
+            className="text-[#e9e9e9] mt-[1] text-[11.5px]"
+            fontWeight="500">
+            {formatMonthDayDay(item.match.time)}
           </CustomText>
         </View>
       </Pressable>
@@ -215,7 +223,7 @@ const MeetTab = ({
           }
         }}
         showsVerticalScrollIndicator={false}
-        data={MOCK_DATA}
+        data={meets?.pages.flatMap(page => page.meets)}
         renderItem={renderItem}
         contentContainerStyle={{
           backgroundColor: '#ffffff',
@@ -319,6 +327,7 @@ const MeetTab = ({
 
             <ScrollView
               horizontal
+              style={{marginBottom: 5}}
               contentContainerStyle={{paddingHorizontal: 10}}>
               <Pressable className="flex-row items-center mr-2 border border-slate-300 py-[6] px-2 rounded-[4px]">
                 <CustomText fontWeight="400" className="text-[#5c5c5c] mr-1">
@@ -406,7 +415,7 @@ const MeetTab = ({
               )}
             </ScrollView>
             {isAgeOpen && (
-              <View className="items-center px-3 flex-1 pt-[11] mt-2 bg-gray-50">
+              <View className="items-center px-3 flex-1 pt-[11] bg-gray-100">
                 <MultiSlider
                   allowOverlap
                   values={[minAge, maxAge]}
@@ -431,7 +440,7 @@ const MeetTab = ({
               </View>
             )}
             {isGengerOpen && (
-              <View className="items-center flex-row px-[10] py-2 mt-2 bg-gray-50">
+              <View className="items-center flex-row px-[10] py-2 bg-gray-100">
                 <RadioButton
                   title="성별 무관"
                   selected={gender === 'ANY'}
@@ -464,7 +473,7 @@ const MeetTab = ({
               </View>
             )}
             {isTicketOpen && (
-              <View className="items-center flex-row px-[10] py-2 mt-2 bg-gray-50">
+              <View className="items-center flex-row px-[10] py-2 bg-gray-100">
                 <RadioButton
                   title="전체"
                   selected={hasTicket === 'ALL'}

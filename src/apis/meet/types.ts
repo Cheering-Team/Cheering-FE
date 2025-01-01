@@ -1,6 +1,8 @@
+import {ChatRoom} from 'apis/chat/types';
 import {Fan} from 'apis/fan/types';
+import {Page} from 'apis/types';
 
-export interface Meet {
+export interface MeetDetail {
   title: string;
   description: string;
   currentCount: number;
@@ -13,6 +15,28 @@ export interface Meet {
   match: {
     id: number;
     opponentImage: string;
+    time: string;
+  };
+}
+
+export interface MeetInfo {
+  id: number;
+  title: string;
+  description: string;
+  meetType: 'LIVE' | 'BOOKING';
+  chatRoomDTO: ChatRoom;
+  currentCount: number;
+  max: number;
+  hasTicket: boolean;
+  gender: 'ANY' | 'MALE' | 'FEMALE';
+  ageMin: number;
+  ageMax: number;
+  match: {
+    id: number;
+    isHome: boolean;
+    opponentShortName: string;
+    opponentImage: string;
+    opponentColor: string;
     time: string;
   };
 }
@@ -31,4 +55,9 @@ export interface CreateMeetPayload {
   hasTicket: boolean | null;
   matchId: number;
   communityType: 'TEAM' | 'PLAYER';
+}
+
+// 응답
+export interface GetMeetsResponse extends Page {
+  meets: MeetInfo[];
 }
