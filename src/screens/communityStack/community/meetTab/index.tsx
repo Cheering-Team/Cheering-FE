@@ -5,7 +5,7 @@ import CustomText from 'components/common/CustomText';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
 import {useMainTabScroll} from 'context/useMainTabScroll';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {MutableRefObject, useState} from 'react';
+import React, {MutableRefObject, useRef, useState} from 'react';
 import {
   FlatList,
   ListRenderItem,
@@ -25,7 +25,7 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import PlusSvg from 'assets/images/plus-white.svg';
 import FastImage from 'react-native-fast-image';
-import {formatMonthDayDay} from 'utils/format';
+import {formatDate, formatMonthDayDay} from 'utils/format';
 import DownSvg from 'assets/images/chevron-down-gray.svg';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import AgeSliderLabel from './components/AgeSliderLabel';
@@ -35,32 +35,11 @@ import PersonSvg from 'assets/images/person-slate.svg';
 import TicketSvg from 'assets/images/ticket-white.svg';
 import {useGetAllMeetsByCommunity} from 'apis/meet/useMeets';
 import {MeetInfo} from 'apis/meet/types';
-
-const MOCK_DATA = [
-  {
-    title: '같이 직관갈 사람 구해요',
-    description:
-      '직관 가실분 모집중이에요 뭐 어쩌구 저쩌구 티켓 자리는 얼씨구 절씨구 이야호',
-    curCount: 1,
-    maxCount: 5,
-    hasTicket: false,
-    gender: 'MALE',
-    minAge: 20,
-    maxAge: 29,
-    writer: {
-      id: 1,
-      age: 20,
-      gender: 'MALE',
-    },
-    match: {
-      id: 1,
-      opponentImage:
-        'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/kt_wiz_emblem.png',
-      opponentName: 'KT',
-      time: new Date(),
-    },
-  },
-];
+import MatchSelectModal from 'components/common/MatchSelectModal';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {useGetTwoWeeksMatches} from 'apis/match/useMatches';
+import {MatchDetail} from 'apis/match/types';
+import CloseSvg from 'assets/images/close-black.svg';
 
 interface MeetTabProps {
   scrollY: SharedValue<number>;
@@ -96,6 +75,8 @@ const MeetTab = ({
   const insets = useSafeAreaInsets();
   const HEADER_HEIGHT = 110 + insets.top;
 
+  const matchModalRef = useRef<BottomSheetModal>(null);
+
   const {scrollY: tabScrollY, previousScrollY} = useMainTabScroll();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const buttonOpacity = useSharedValue(1);
@@ -110,8 +91,18 @@ const MeetTab = ({
   const [isTicketOpen, setIsTicketOpen] = useState(false);
   const [isTicketFirstOpen, setIsTicketFirstOpen] = useState(false);
   const [hasTicket, setHasTicket] = useState<'ALL' | 'HAS' | 'NOT'>('ALL');
+  const [match, setMatch] = useState<MatchDetail | null>(null);
 
-  const {data: meets} = useGetAllMeetsByCommunity(community.id);
+  const {data: matches} = useGetTwoWeeksMatches(community.id);
+  const {data: meets} = useGetAllMeetsByCommunity({
+    communityId: community.id,
+    type,
+    gender,
+    minAge,
+    maxAge,
+    ticketOption: type === 'BOOKING' ? 'ALL' : hasTicket,
+    matchId: match ? match.id : null,
+  });
 
   const scrollHandler = useAnimatedScrollHandler(event => {
     const currentScrollY = event.contentOffset.y;
@@ -143,7 +134,7 @@ const MeetTab = ({
     return (
       <Pressable
         className="flex-row mx-[10] my-1 border border-gray-200 bg-white rounded-[4px] overflow-hidden"
-        style={{height: 95, width: WINDOW_WIDTH - 20}}
+        style={{height: 91, width: WINDOW_WIDTH - 20}}
         onPress={() =>
           navigation.navigate('MeetRecruit', {meetId: 1, community})
         }>
@@ -156,6 +147,10 @@ const MeetTab = ({
               {item.description}
             </CustomText>
           </View>
+          {/* <CustomText>
+            <LocationSvg />
+            <CustomText>{item.}</CustomText>
+          </CustomText> */}
 
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center">
@@ -176,16 +171,19 @@ const MeetTab = ({
           </View>
         </View>
         <View
-          className="items-center justify-center w-[90] px-1"
+          className="items-center justify-end w-[90] px-1 pb-[6]"
           style={{backgroundColor: `${item.match.opponentColor}E0`}}>
-          <TicketSvg
-            width={22}
-            height={22}
-            className="absolute top-[1] right-[3]"
-          />
+          {item.meetType === 'LIVE' && item.hasTicket && (
+            <TicketSvg
+              width={22}
+              height={22}
+              className="absolute top-[1] right-[3]"
+            />
+          )}
+
           <FastImage
             source={{uri: item.match.opponentImage}}
-            className="w-[37] h-[37]"
+            className="w-[40] h-[40]"
           />
           <CustomText
             className="text-white mt-[1] text-[13px]"
@@ -193,7 +191,7 @@ const MeetTab = ({
             {`vs ${item.match.opponentShortName}`}
           </CustomText>
           <CustomText
-            className="text-[#e9e9e9] mt-[1] text-[11.5px]"
+            className="text-[#f0f0f0] mt-[1] text-[12px]"
             fontWeight="500">
             {formatMonthDayDay(item.match.time)}
           </CustomText>
@@ -328,15 +326,77 @@ const MeetTab = ({
             <ScrollView
               horizontal
               style={{marginBottom: 5}}
-              contentContainerStyle={{paddingHorizontal: 10}}>
-              <Pressable className="flex-row items-center mr-2 border border-slate-300 py-[6] px-2 rounded-[4px]">
-                <CustomText fontWeight="400" className="text-[#5c5c5c] mr-1">
-                  경기
-                </CustomText>
-                <DownSvg width={12} height={12} />
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingHorizontal: 10,
+                alignItems: 'center',
+              }}>
+              {(match ||
+                isAgeFirstOpen ||
+                isGenderFirstOpen ||
+                (type === 'LIVE' && isTicketFirstOpen)) && (
+                <Pressable
+                  className="items-center justify-center mr-2 my-[2] border h-[26] w-[26] px-2 rounded-full border-[#cbd5e1]"
+                  onPress={() => {
+                    setMatch(null);
+                    setIsAgeFirstOpen(false);
+                    setMinAge(13);
+                    setMaxAge(45);
+                    setIsGenderFirstOpen(false);
+                    setGender('ANY');
+                    setIsTicketFirstOpen(false);
+                    setHasTicket('ALL');
+                    setIsAgeOpen(false);
+                    setIsGenderOpen(false);
+                    setIsTicketOpen(false);
+                  }}>
+                  <CloseSvg width={18} height={18} />
+                </Pressable>
+              )}
+
+              <Pressable
+                className="flex-row items-center mr-2 border h-[31] px-2 rounded-[4px]"
+                style={{
+                  borderColor: match ? community.color : '#cbd5e1',
+                }}
+                onPress={() => {
+                  matchModalRef.current?.present();
+                  setIsGenderOpen(false);
+                  setIsAgeOpen(false);
+                  setIsTicketOpen(false);
+                }}>
+                {match ? (
+                  <>
+                    <FastImage
+                      source={{
+                        uri:
+                          community.koreanName === match.homeTeam.koreanName
+                            ? match.awayTeam.image
+                            : match.homeTeam.image,
+                      }}
+                      className="w-[25] h-[25]"
+                    />
+                    <CustomText
+                      className="mx-1"
+                      style={{color: community.color}}
+                      fontWeight="500">
+                      {formatDate(match.time)}
+                    </CustomText>
+                    <DownSvg width={12} height={12} />
+                  </>
+                ) : (
+                  <>
+                    <CustomText
+                      fontWeight="400"
+                      className="text-[#5c5c5c] mr-1">
+                      경기
+                    </CustomText>
+                    <DownSvg width={12} height={12} />
+                  </>
+                )}
               </Pressable>
               <Pressable
-                className="flex-row items-center justify-between mr-2 border py-[6] px-2 rounded-[4px]"
+                className="flex-row items-center justify-between mr-2 border h-[31] px-2 rounded-[4px]"
                 style={{
                   borderColor: isAgeFirstOpen ? community.color : '#cbd5e1',
                 }}
@@ -358,7 +418,7 @@ const MeetTab = ({
                 <DownSvg width={12} height={12} />
               </Pressable>
               <Pressable
-                className="flex-row items-center mr-2 border py-[6] px-2 rounded-[4px]"
+                className="flex-row items-center mr-2 border h-[31] px-2 rounded-[4px]"
                 style={{
                   borderColor: isGenderFirstOpen ? community.color : '#cbd5e1',
                 }}
@@ -385,7 +445,7 @@ const MeetTab = ({
               </Pressable>
               {type === 'LIVE' && (
                 <Pressable
-                  className="flex-row items-center mr-2 border py-[6] px-2 rounded-[4px]"
+                  className="flex-row items-center mr-2 border h-[31] px-2 rounded-[4px]"
                   style={{
                     borderColor: isTicketFirstOpen
                       ? community.color
@@ -536,6 +596,14 @@ const MeetTab = ({
           <PlusSvg width={21} height={21} />
         </Pressable>
       </Animated.View>
+      <MatchSelectModal
+        matchModalRef={matchModalRef}
+        community={community}
+        matches={matches}
+        onPress={(item: MatchDetail) => {
+          setMatch(item);
+        }}
+      />
     </>
   );
 };

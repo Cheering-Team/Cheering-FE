@@ -57,6 +57,16 @@ export interface CreateMeetPayload {
   communityType: 'TEAM' | 'PLAYER';
 }
 
+export interface GetMeesPayload {
+  communityId: number;
+  type: 'BOOKING' | 'LIVE';
+  gender: 'ANY' | 'MALE' | 'FEMALE';
+  minAge: number;
+  maxAge: number;
+  ticketOption: 'ALL' | 'HAS' | 'NOT';
+  matchId: number | null;
+}
+
 // 응답
 export interface GetMeetsResponse extends Page {
   meets: MeetInfo[];
