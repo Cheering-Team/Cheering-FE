@@ -40,6 +40,8 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useGetTwoWeeksMatches} from 'apis/match/useMatches';
 import {MatchDetail} from 'apis/match/types';
 import CloseSvg from 'assets/images/close-black.svg';
+import {debounce} from 'lodash';
+import LocationSvg from 'assets/images/location-slate.svg';
 
 interface MeetTabProps {
   scrollY: SharedValue<number>;
@@ -92,6 +94,8 @@ const MeetTab = ({
   const [isTicketFirstOpen, setIsTicketFirstOpen] = useState(false);
   const [hasTicket, setHasTicket] = useState<'ALL' | 'HAS' | 'NOT'>('ALL');
   const [match, setMatch] = useState<MatchDetail | null>(null);
+  const [keyword, setKeyword] = useState<string>('');
+  const debouncedSetKeyword = debounce(setKeyword, 300);
 
   const {data: matches} = useGetTwoWeeksMatches(community.id);
   const {data: meets} = useGetAllMeetsByCommunity({
@@ -102,6 +106,7 @@ const MeetTab = ({
     maxAge,
     ticketOption: type === 'BOOKING' ? 'ALL' : hasTicket,
     matchId: match ? match.id : null,
+    keyword,
   });
 
   const scrollHandler = useAnimatedScrollHandler(event => {
@@ -136,21 +141,17 @@ const MeetTab = ({
         className="flex-row mx-[10] my-1 border border-gray-200 bg-white rounded-[4px] overflow-hidden"
         style={{height: 91, width: WINDOW_WIDTH - 20}}
         onPress={() =>
-          navigation.navigate('MeetRecruit', {meetId: 1, community})
+          navigation.navigate('MeetRecruit', {meetId: item.id, community})
         }>
-        <View className="flex-1 px-3 pt-3 pb-[9] justify-between">
+        <View className="flex-1 px-[11] pt-[9] pb-[9] justify-between">
           <View>
             <CustomText className="text-[15px]" fontWeight="500">
               {item.title}
             </CustomText>
-            <CustomText className="text-[14px] mt-1 text-gray-500">
+            <CustomText className="text-[14px] mt-[3] text-gray-700">
               {item.description}
             </CustomText>
           </View>
-          {/* <CustomText>
-            <LocationSvg />
-            <CustomText>{item.}</CustomText>
-          </CustomText> */}
 
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center">
@@ -161,6 +162,15 @@ const MeetTab = ({
                 {item.gender === 'ANY' && '성별 무관'}
                 {item.gender === 'FEMALE' && '여자'}
               </CustomText>
+              <View className="w-[1] h-3 bg-slate-400 mx-1" />
+              {item.meetType === 'BOOKING' && (
+                <View className="flex-row items-center">
+                  <LocationSvg />
+                  <CustomText className="text-[13px] text-[#798497] ml-[1]">
+                    {item.place}
+                  </CustomText>
+                </View>
+              )}
             </View>
             <View className="flex-row items-center">
               <PersonSvg width={11} height={11} />
@@ -312,7 +322,7 @@ const MeetTab = ({
                   className="flex-1 p-0 m-0 ml-[6]"
                   placeholder="모임 검색"
                   placeholderTextColor={'#9e9e9e'}
-                  // onChangeText={debouncedSetName}
+                  onChangeText={debouncedSetKeyword}
                   style={{
                     fontFamily: 'Pretendard-Regular',
                     paddingBottom: 1,
@@ -435,7 +445,7 @@ const MeetTab = ({
                   }}>
                   {isGenderFirstOpen
                     ? gender === 'ANY'
-                      ? '성별 무관'
+                      ? '성별 전체'
                       : gender === 'MALE'
                         ? '남자'
                         : '여자'
@@ -502,7 +512,7 @@ const MeetTab = ({
             {isGengerOpen && (
               <View className="items-center flex-row px-[10] py-2 bg-gray-100">
                 <RadioButton
-                  title="성별 무관"
+                  title="전체"
                   selected={gender === 'ANY'}
                   onPress={() => {
                     setGender('ANY');

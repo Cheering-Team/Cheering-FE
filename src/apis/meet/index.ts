@@ -12,9 +12,14 @@ export const createMeet = async (data: CreateMeetPayload) => {
   return response.data.result;
 };
 
-export const getMeetById = async () => {
+export const getMeetById = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof meetKeys.detail>;
+}) => {
+  const [, , meedId] = queryKey;
   const response = await axiosInstance.get<ApiResponse<MeetDetail>>(
-    `meets/${1}`,
+    `meets/${meedId}`,
   );
   return response.data.result;
 };
@@ -29,11 +34,10 @@ export const getAllMeetsByCommunity = async ({
   const [
     ,
     ,
-    {communityId, type, gender, minAge, maxAge, ticketOption, matchId},
+    {communityId, type, gender, minAge, maxAge, ticketOption, matchId, keyword},
   ] = queryKey;
   const response = await axiosInstance.get<ApiResponse<GetMeetsResponse>>(
-    `/communities/${communityId}/meets?type=${type}&gender=${gender}&minAge=${minAge}&maxAge=${maxAge}&ticketOption=${ticketOption}&matchId=${matchId}&page=${pageParam}&size=20`,
+    `/communities/${communityId}/meets?type=${type}&gender=${gender}&minAge=${minAge}&maxAge=${maxAge}&ticketOption=${ticketOption}${matchId ? `&matchId=${matchId}` : ''}&keyword=${keyword}&page=${pageParam}&size=20`,
   );
-  console.log(response.data.result);
   return response.data.result;
 };

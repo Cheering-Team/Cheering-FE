@@ -1,10 +1,12 @@
 import {ChatRoom} from 'apis/chat/types';
 import {Fan} from 'apis/fan/types';
+import {MatchDetail} from 'apis/match/types';
 import {Page} from 'apis/types';
 
 export interface MeetDetail {
   title: string;
   description: string;
+  meetType: 'LIVE' | 'BOOKING';
   currentCount: number;
   max: number;
   hasTicket: boolean;
@@ -12,11 +14,8 @@ export interface MeetDetail {
   minAge: number;
   maxAge: number;
   writer: Fan;
-  match: {
-    id: number;
-    opponentImage: string;
-    time: string;
-  };
+  match: MatchDetail;
+  place: string | null;
 }
 
 export interface MeetInfo {
@@ -39,6 +38,7 @@ export interface MeetInfo {
     opponentColor: string;
     time: string;
   };
+  place: string | null;
 }
 
 // 요청
@@ -65,6 +65,7 @@ export interface GetMeesPayload {
   maxAge: number;
   ticketOption: 'ALL' | 'HAS' | 'NOT';
   matchId: number | null;
+  keyword: string;
 }
 
 // 응답

@@ -30,8 +30,6 @@ const ChatRoomFooter = ({
     }
 
     if (client.current && client.current.connected) {
-      console.log(chatRoom);
-
       client.current?.publish({
         destination: `/app/chatRooms/${chatRoom.id}/sendMessage`,
         body: JSON.stringify({

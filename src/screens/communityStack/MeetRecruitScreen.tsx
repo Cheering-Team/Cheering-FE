@@ -4,16 +4,8 @@ import CustomText from 'components/common/CustomText';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import React from 'react';
-import {
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  View,
-} from 'react-native';
+import {Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import FastImage from 'react-native-fast-image';
-import {formatMonthDaySlash} from 'utils/format';
 import {useGetMeetById} from 'apis/meet/useMeets';
 import {useCreatePrivateChatRoom} from 'apis/chat/useChats';
 import CCHeader from 'components/common/CCHeader';
@@ -21,10 +13,7 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
-import {useGetMatchDetail} from 'apis/match/useMatches';
 import MatchInfo from 'components/common/MatchInfo';
-import {WINDOW_WIDTH} from 'constants/dimension';
-import CustomButton from 'components/common/CustomButton';
 
 const MeetRecruitScreen = () => {
   useDarkStatusBar();
@@ -34,8 +23,7 @@ const MeetRecruitScreen = () => {
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
-  const {data: meet} = useGetMeetById();
-  const {data: match} = useGetMatchDetail(1550);
+  const {data: meet} = useGetMeetById(meetId);
   const {mutateAsync: register} = useCreatePrivateChatRoom();
 
   const scrollY = useSharedValue(0);
@@ -52,7 +40,7 @@ const MeetRecruitScreen = () => {
     navigation.navigate('ChatRoom', {chatRoomId: 2404});
   };
 
-  if (!meet || !match) {
+  if (!meet) {
     return null;
   }
 
@@ -83,7 +71,7 @@ const MeetRecruitScreen = () => {
 
         <View className="mt-3 border border-slate-300 rounded-md p-3">
           <Pressable className="mb-3">
-            <MatchInfo match={match} height={85} radius={3} />
+            <MatchInfo match={meet.match} height={85} radius={3} />
           </Pressable>
           <View className="flex-row">
             <View className="flex-1 flex-row items-center">
@@ -106,12 +94,21 @@ const MeetRecruitScreen = () => {
               </CustomText>
               <CustomText className="text-[15px]">{`${meet.minAge}~${meet.maxAge}세`}</CustomText>
             </View>
-            <View className="flex-1 flex-row items-center">
-              <CustomText className="mr-2 text-slate-500" fontWeight="500">
-                티켓 여부
-              </CustomText>
-              <CustomText className="text-[15px]">{`${meet.hasTicket ? '있음' : '없음'}`}</CustomText>
-            </View>
+            {meet.meetType === 'BOOKING' ? (
+              <View className="flex-1 flex-row items-center">
+                <CustomText className="mr-2 text-slate-500" fontWeight="500">
+                  선호 위치
+                </CustomText>
+                <CustomText className="text-[15px]">{meet.place}</CustomText>
+              </View>
+            ) : (
+              <View className="flex-1 flex-row items-center">
+                <CustomText className="mr-2 text-slate-500" fontWeight="500">
+                  티켓 여부
+                </CustomText>
+                <CustomText className="text-[15px]">{`${meet.hasTicket ? '있음' : '없음'}`}</CustomText>
+              </View>
+            )}
           </View>
         </View>
 

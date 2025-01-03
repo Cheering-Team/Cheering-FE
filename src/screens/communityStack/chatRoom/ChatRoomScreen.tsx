@@ -199,8 +199,6 @@ const ChatRoomScreen = () => {
             },
           );
 
-          console.log('구독 완료~');
-
           subscriptionRefs.current.chatRoom = chatRoomSubscription;
         }
       };
