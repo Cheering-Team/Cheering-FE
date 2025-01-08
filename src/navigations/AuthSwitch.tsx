@@ -59,6 +59,10 @@ const AuthSwitch = () => {
           } else {
             if (accessToken) {
               refetch();
+
+              setTimeout(() => {
+                setIsLoading(false);
+              }, 1500);
             } else {
               setTimeout(() => {
                 setIsLoading(false);
@@ -74,22 +78,22 @@ const AuthSwitch = () => {
     checkVersion();
   }, [refetch]);
 
-  React.useEffect(() => {
-    if (communities) {
-      if (communities.length) {
-        if (communities[0].backgroundImage) {
-          FastImage.preload([{uri: communities[0].backgroundImage}]);
-        }
-        if (communities[0].image) {
-          FastImage.preload([{uri: communities[0].image}]);
-        }
-      }
+  // React.useEffect(() => {
+  //   if (communities) {
+  //     if (communities.length) {
+  //       if (communities[0].backgroundImage) {
+  //         FastImage.preload([{uri: communities[0].backgroundImage}]);
+  //       }
+  //       if (communities[0].image) {
+  //         FastImage.preload([{uri: communities[0].image}]);
+  //       }
+  //     }
 
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1500);
-    }
-  }, [communities]);
+  //     setTimeout(() => {
+  //       setIsLoading(false);
+  //     }, 1500);
+  //   }
+  // }, [communities]);
 
   const [state, dispatch] = React.useReducer(
     (prevState: AuthState, action: AuthAction): AuthState => {
