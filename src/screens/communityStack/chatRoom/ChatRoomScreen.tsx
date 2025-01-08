@@ -192,6 +192,7 @@ const ChatRoomScreen = () => {
           const chatRoomSubscription = client.subscribe(
             `/topic/chatRoom/${chatRoomId}`,
             message => {
+              console.log(JSON.parse(message.body));
               handleNewMessage(JSON.parse(message.body));
             },
             {
@@ -317,6 +318,7 @@ const ChatRoomScreen = () => {
           chatRoom={chatRoom}
           setIsDrawerOpen={setIsDrawerOpen}
           participantCount={participantCount}
+          client={stompClient}
         />
         <FlatList
           inverted

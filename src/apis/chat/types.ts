@@ -9,7 +9,7 @@ export interface ChatRoom {
   image: string;
   description: string;
   max: number;
-  type: 'OFFICIAL' | 'PUBLIC';
+  type: 'OFFICIAL' | 'PUBLIC' | 'PRIVATE';
   count: number;
   user: Fan | null;
   community: Community | null;
@@ -38,9 +38,19 @@ export interface ChatResponse {
   groupKey: string;
 }
 
+export interface IdWithConditionResponse {
+  chatRoomId: number;
+  isConditionMatched: boolean;
+}
+
 // 요청
 export interface ChatRoomIdPayload {
   chatRoomId: number;
+}
+
+export interface CreatePrivateChatRoomPayload {
+  communityId: number;
+  meetId: number;
 }
 
 export interface CreateChatRoomPayload {

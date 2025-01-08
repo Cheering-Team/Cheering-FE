@@ -8,6 +8,8 @@ import {
   ChatRoomIdPayload,
   ChatRoomListResponse,
   CreateChatRoomPayload,
+  CreatePrivateChatRoomPayload,
+  IdWithConditionResponse,
 } from './types';
 
 // 채팅방 생성
@@ -149,9 +151,12 @@ export const getUnreadChats = async () => {
   return response.data.result;
 };
 
-export const createPrivateChatRoom = async () => {
-  const response = await axiosInstance.post<ApiResponse<Id>>(
-    `/communities/59/meets/1/talk`,
-  );
+export const createPrivateChatRoom = async (
+  data: CreatePrivateChatRoomPayload,
+) => {
+  const {communityId, meetId} = data;
+  const response = await axiosInstance.post<
+    ApiResponse<IdWithConditionResponse>
+  >(`/communities/${communityId}/meets/${meetId}/talk`);
   return response.data.result;
 };

@@ -3,7 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {ChatRoom} from 'apis/chat/types';
 import CustomText from 'components/common/CustomText';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {Dispatch, SetStateAction} from 'react';
+import React, {Dispatch, MutableRefObject, SetStateAction} from 'react';
 import {Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChevronLeftSvg from 'assets/images/chevron-left.svg';
@@ -11,23 +11,43 @@ import OfficialSvg from 'assets/images/official.svg';
 import PersonSvg from 'assets/images/person-gray.svg';
 import ChevronRightSvg from 'assets/images/chevron-right-gray.svg';
 import DrawerSvg from 'assets/images/drawer.svg';
+import {Client} from '@stomp/stompjs';
 
 interface ChatRoomHeaderProps {
   chatRoom: ChatRoom;
   setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
   participantCount: number;
+  client: MutableRefObject<Client | null>;
 }
 
 const ChatRoomHeader = ({
   chatRoom,
   setIsDrawerOpen,
   participantCount,
+  client,
 }: ChatRoomHeaderProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
   // const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
+
+  const handleJoinRquest = () => {
+    if (client.current && client.current.connected) {
+      client.current?.publish({
+        destination: `/app/chatRooms/${chatRoom.id}/join-message`,
+        body: JSON.stringify({
+          chatRoomType: chatRoom.type,
+          writerId: chatRoom.user?.id,
+          writerImage: chatRoom.user?.image,
+          writerName: chatRoom.user?.name,
+          content: '없다',
+        }),
+      });
+
+      console.log('발행');
+    }
+  };
 
   return (
     <View
@@ -99,6 +119,13 @@ const ChatRoomHeader = ({
             <ChevronRightSvg width={9} height={9} />
           </View>
         </View>
+        {chatRoom.type === 'PRIVATE' &&
+          chatRoom.user?.id === chatRoom.manager?.id && (
+            <Pressable className="mr-3" onPress={handleJoinRquest}>
+              <CustomText>확정 신청</CustomText>
+            </Pressable>
+          )}
+
         {chatRoom.type === 'OFFICIAL' ? (
           <></>
         ) : (

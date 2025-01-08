@@ -35,9 +35,11 @@ const MeetRecruitScreen = () => {
   });
 
   const handleRegister = async () => {
-    // const {id} = await register();
+    // const data = await register({communityId: community.id, meetId});
 
-    navigation.navigate('ChatRoom', {chatRoomId: 2404});
+    // console.log(JSON.stringify(data));
+
+    navigation.navigate('ChatRoom', {chatRoomId: 2652});
   };
 
   if (!meet) {

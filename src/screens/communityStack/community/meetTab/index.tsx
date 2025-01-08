@@ -42,6 +42,7 @@ import {MatchDetail} from 'apis/match/types';
 import CloseSvg from 'assets/images/close-black.svg';
 import {debounce} from 'lodash';
 import LocationSvg from 'assets/images/location-slate.svg';
+import AgeGenderModal from './components/AgeGenderModal';
 
 interface MeetTabProps {
   scrollY: SharedValue<number>;
@@ -98,7 +99,12 @@ const MeetTab = ({
   const debouncedSetKeyword = debounce(setKeyword, 300);
 
   const {data: matches} = useGetTwoWeeksMatches(community.id);
-  const {data: meets} = useGetAllMeetsByCommunity({
+  const {
+    data: meets,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+  } = useGetAllMeetsByCommunity({
     communityId: community.id,
     type,
     gender,
@@ -128,18 +134,24 @@ const MeetTab = ({
 
   const handleRefresh = () => {
     setIsRefreshing(true);
-    // refetch();
+    refetch();
 
     setTimeout(() => {
       setIsRefreshing(false);
     }, 1000);
   };
 
+  const loadMeets = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
   const renderItem: ListRenderItem<MeetInfo> = ({item}) => {
     return (
       <Pressable
         className="flex-row mx-[10] my-1 border border-gray-200 bg-white rounded-[4px] overflow-hidden"
-        style={{height: 91, width: WINDOW_WIDTH - 20}}
+        style={{height: 87, width: WINDOW_WIDTH - 20}}
         onPress={() =>
           navigation.navigate('MeetRecruit', {meetId: item.id, community})
         }>
@@ -162,14 +174,16 @@ const MeetTab = ({
                 {item.gender === 'ANY' && '성별 무관'}
                 {item.gender === 'FEMALE' && '여자'}
               </CustomText>
-              <View className="w-[1] h-3 bg-slate-400 mx-1" />
               {item.meetType === 'BOOKING' && (
-                <View className="flex-row items-center">
-                  <LocationSvg />
-                  <CustomText className="text-[13px] text-[#798497] ml-[1]">
-                    {item.place}
-                  </CustomText>
-                </View>
+                <>
+                  <View className="w-[1] h-3 bg-slate-400 mx-1" />
+                  <View className="flex-row items-center">
+                    <LocationSvg />
+                    <CustomText className="text-[13px] text-[#798497] ml-[1]">
+                      {item.place}
+                    </CustomText>
+                  </View>
+                </>
               )}
             </View>
             <View className="flex-row items-center">
@@ -187,7 +201,7 @@ const MeetTab = ({
             <TicketSvg
               width={22}
               height={22}
-              className="absolute top-[1] right-[3]"
+              className="absolute top-[1] right-[3] z-50"
             />
           )}
 
@@ -196,12 +210,12 @@ const MeetTab = ({
             className="w-[40] h-[40]"
           />
           <CustomText
-            className="text-white mt-[1] text-[13px]"
+            className="text-white mt-[1] text-[12px]"
             fontWeight="500">
             {`vs ${item.match.opponentShortName}`}
           </CustomText>
           <CustomText
-            className="text-[#f0f0f0] mt-[1] text-[12px]"
+            className="text-[#f0f0f0] mt-[1] text-[11.5px]"
             fontWeight="500">
             {formatMonthDayDay(item.match.time)}
           </CustomText>
@@ -577,8 +591,8 @@ const MeetTab = ({
             )}
           </View>
         }
-        // onEndReached={community.curFan && loadPosts}
-        // onEndReachedThreshold={community.curFan && 1}
+        onEndReached={loadMeets}
+        onEndReachedThreshold={1}
         // ListEmptyComponent={
         //   isLoading ? (
         //     <FeedSkeleton type="Community" />
@@ -614,6 +628,7 @@ const MeetTab = ({
           setMatch(item);
         }}
       />
+      <AgeGenderModal />
     </>
   );
 };
