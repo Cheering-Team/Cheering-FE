@@ -4,7 +4,6 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {queryClient} from '../../App';
 import {showTopToast} from '../utils/toast';
 import config from 'react-native-config';
-import {CommonActions} from '@react-navigation/native';
 
 export const axiosInstance = axios.create({
   baseURL: `${config.API_URL}/api`,

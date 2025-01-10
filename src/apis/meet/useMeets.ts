@@ -3,8 +3,12 @@ import {meetKeys} from './queries';
 import {createMeet, getAllMeetsByCommunity, getMeetById} from '.';
 import {GetMeesPayload} from './types';
 
-export const useGetMeetById = (meedId: number) => {
-  return useQuery({queryKey: meetKeys.detail(meedId), queryFn: getMeetById});
+export const useGetMeetById = (meedId: number | null) => {
+  return useQuery({
+    queryKey: meetKeys.detail(meedId),
+    queryFn: getMeetById,
+    enabled: meedId !== null,
+  });
 };
 
 export const useCreateMeet = () => {

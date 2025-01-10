@@ -36,6 +36,7 @@ import CustomText from 'components/common/CustomText';
 import {queryClient} from '../../../../App';
 import {chatRoomKeys} from 'apis/chat/queries';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
+import PrivateChatRoomHeader from './components/PrivateChatRoomHeader';
 const TextEncodingPolyfill = require('text-encoding');
 
 Object.assign('global', {
@@ -75,6 +76,10 @@ const ChatRoomScreen = () => {
     error: chatError,
   } = useGetChats(chatRoomId);
   const {mutate: updateExitTime} = useUpdateExitTime();
+
+  useEffect(() => {
+    console.log(JSON.stringify(chatRoom));
+  }, [chatRoom]);
 
   const handleNewMessage = useCallback((newMessage: ChatResponse) => {
     setMessages(prevMessages => {
@@ -314,12 +319,18 @@ const ChatRoomScreen = () => {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={-insets.bottom}>
-        <ChatRoomHeader
-          chatRoom={chatRoom}
-          setIsDrawerOpen={setIsDrawerOpen}
-          participantCount={participantCount}
-          client={stompClient}
-        />
+        {(chatRoom.type === 'PRIVATE' || chatRoom.type === 'CONFIRM') && (
+          <PrivateChatRoomHeader chatRoom={chatRoom} />
+        )}
+        {chatRoom.type === 'OFFICIAL' ||
+          (chatRoom.type === 'PUBLIC' && (
+            <ChatRoomHeader
+              chatRoom={chatRoom}
+              setIsDrawerOpen={setIsDrawerOpen}
+              participantCount={participantCount}
+            />
+          ))}
+
         <FlatList
           inverted
           automaticallyAdjustsScrollIndicatorInsets={true}

@@ -8,6 +8,7 @@ import {
   RegisterManagerAccountPayload,
   SaveFCMTokenPayload,
   SendSMSPayload,
+  SetAgeAndGenderPayload,
   SignUpPayload,
   Token,
   TokenPayload,
@@ -179,5 +180,20 @@ export const isFirstLogin = async () => {
 export const getVersionInfo = async () => {
   const response =
     await axiosInstance.get<ApiResponse<VersionInfo>>('/version');
+  return response.data.result;
+};
+
+export const isAgeAndGenderSet = async () => {
+  const response = await axiosInstance.get<ApiResponse<boolean>>(
+    `/users/check-age-gender`,
+  );
+  return response.data.result;
+};
+
+export const setAgeAndGender = async (data: SetAgeAndGenderPayload) => {
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/users/age-gender`,
+    data,
+  );
   return response.data.result;
 };

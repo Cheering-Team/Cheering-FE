@@ -9,7 +9,7 @@ export interface ChatRoom {
   image: string;
   description: string;
   max: number;
-  type: 'OFFICIAL' | 'PUBLIC' | 'PRIVATE';
+  type: 'OFFICIAL' | 'PUBLIC' | 'PRIVATE' | 'CONFIRM';
   count: number;
   user: Fan | null;
   community: Community | null;
@@ -18,6 +18,7 @@ export interface ChatRoom {
   lastMessage: string | null;
   lastMessageTime: string | null;
   unreadCount: number | null;
+  meetId: number | null;
 }
 
 export interface Chat {

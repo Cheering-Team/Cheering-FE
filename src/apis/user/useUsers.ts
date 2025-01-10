@@ -7,11 +7,13 @@ import {
   deleteUser,
   getPlayerAccount,
   getUserInfo,
+  isAgeAndGenderSet,
   kakaoSignIn,
   naverSignIn,
   registerManagerAccount,
   reissuePlayerAccountPassword,
   sendSMS,
+  setAgeAndGender,
   signIn,
   signUp,
   updateUserName,
@@ -108,5 +110,19 @@ export const useReissuePlayerAccountPassword = () => {
         queryKey: userKeys.playerAccount(playerId),
       });
     },
+  });
+};
+
+export const useIsAgeAndGenderSet = () => {
+  return useQuery({
+    queryKey: userKeys.isAgeGenderSet(),
+    queryFn: isAgeAndGenderSet,
+    enabled: false,
+  });
+};
+
+export const useSetAgeAndGender = () => {
+  return useMutation({
+    mutationFn: setAgeAndGender,
   });
 };

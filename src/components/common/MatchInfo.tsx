@@ -20,7 +20,11 @@ const MatchInfo = ({
   radius = 0,
 }: MatchInfoProps) => {
   return (
-    <View className="flex-row justify-center items-center" style={{height}}>
+    <View
+      className="flex-row justify-center items-center"
+      style={{
+        height,
+      }}>
       <View
         className="flex-1 mr-[2] justify-center items-center overflow-hidden"
         style={{
@@ -36,10 +40,17 @@ const MatchInfo = ({
         />
         <CustomText
           type="title"
-          className="absolute text-white left-[6] bottom-0 text-lg w-[100]">
+          className="absolute text-white left-[6] bottom-0 text-lg"
+          style={{width: match.status !== 'not_started' ? 100 : 140}}>
           {match.homeTeam.shortName}
         </CustomText>
-        <View className="flex-row items-center absolute top-1 right-2">
+        <View
+          className="flex-row items-center absolute"
+          style={{
+            right: height < 75 ? undefined : 8,
+            left: height < 75 ? 6 : undefined,
+            top: height < 75 ? 6 : 4,
+          }}>
           <CustomText className="text-white text-[13px] mr-1" fontWeight="500">
             {formatMonthDayDay(match.time)}
           </CustomText>
@@ -47,14 +58,13 @@ const MatchInfo = ({
             {formatTime(match.time)}
           </CustomText>
         </View>
-        {match.status === 'live' ||
-          (match.status === 'closed' && (
-            <CustomText
-              className="absolute text-white bottom-1 right-[10] text-4xl"
-              fontWeight="900">
-              {match.homeScore}
-            </CustomText>
-          ))}
+        {match.status !== 'not_started' && (
+          <CustomText
+            className="absolute text-white bottom-1 right-[10] text-4xl"
+            fontWeight="900">
+            {match.homeScore}
+          </CustomText>
+        )}
       </View>
 
       <View
@@ -72,22 +82,27 @@ const MatchInfo = ({
         />
         <CustomText
           type="title"
-          className="absolute text-white right-[6] bottom-0 text-lg w-[100] text-right">
+          className="absolute text-white right-[6] bottom-0 text-lg text-right"
+          style={{width: match.status !== 'not_started' ? 100 : 140}}>
           {match.awayTeam.shortName}
         </CustomText>
         <CustomText
-          className="absolute text-white top-1 left-2 text-[13px]"
+          className="absolute text-white left-2 text-[13px]"
+          style={{
+            left: height < 75 ? undefined : 8,
+            right: height < 75 ? 6 : undefined,
+            top: height < 75 ? 6 : 4,
+          }}
           fontWeight="500">
           {match.location}
         </CustomText>
-        {match.status === 'live' ||
-          (match.status === 'closed' && (
-            <CustomText
-              className="absolute text-white bottom-1 left-[10] text-4xl"
-              fontWeight="900">
-              {match.awayScore}
-            </CustomText>
-          ))}
+        {match.status !== 'not_started' && (
+          <CustomText
+            className="absolute text-white bottom-1 left-[10] text-4xl"
+            fontWeight="900">
+            {match.awayScore}
+          </CustomText>
+        )}
       </View>
       <View className="absolute w-9 h-9 bg-white items-center justify-center rounded-full">
         <CustomText

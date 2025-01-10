@@ -4,9 +4,11 @@ import {MatchDetail} from 'apis/match/types';
 import {Page} from 'apis/types';
 
 export interface MeetDetail {
+  id: number;
   title: string;
   description: string;
-  meetType: 'LIVE' | 'BOOKING';
+  type: 'LIVE' | 'BOOKING';
+  chatRoom: ChatRoom;
   currentCount: number;
   max: number;
   hasTicket: boolean;
@@ -16,14 +18,15 @@ export interface MeetDetail {
   writer: Fan;
   match: MatchDetail;
   place: string | null;
+  isManager: boolean;
 }
 
 export interface MeetInfo {
   id: number;
   title: string;
   description: string;
-  meetType: 'LIVE' | 'BOOKING';
-  chatRoomDTO: ChatRoom;
+  type: 'LIVE' | 'BOOKING';
+  chatRoom: ChatRoom;
   currentCount: number;
   max: number;
   hasTicket: boolean;

@@ -1,35 +1,29 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import CustomText from 'components/common/CustomText';
-import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {useState} from 'react';
-import {Pressable, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useGetMeetById} from 'apis/meet/useMeets';
-import {useCreatePrivateChatRoom} from 'apis/chat/useChats';
 import CCHeader from 'components/common/CCHeader';
+import CustomText from 'components/common/CustomText';
+import MatchInfo from 'components/common/MatchInfo';
+import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import React from 'react';
+import {Pressable, View} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
-import MatchInfo from 'components/common/MatchInfo';
-import {useIsAgeAndGenderSet} from 'apis/user/useUsers';
-import AgeGenderModal from './community/meetTab/components/AgeGenderModal';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import ChatSvg from 'assets/images/chat-line-black.svg';
+import MemberSvg from 'assets/images/people-black.svg';
+import MemberAddSvg from 'assets/images/people-plus-black.svg';
 
-const MeetRecruitScreen = () => {
-  useDarkStatusBar();
+const MeetScreen = () => {
   const {meetId, community} =
-    useRoute<RouteProp<CommunityStackParamList, 'MeetRecruit'>>().params;
+    useRoute<RouteProp<CommunityStackParamList, 'Meet'>>().params;
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
-  const [isAgeGenderModalOpen, setIsAgeGenderModalOpen] = useState(false);
-
   const {data: meet} = useGetMeetById(meetId);
-  const {mutateAsync: register} = useCreatePrivateChatRoom();
-  const {refetch: isAgeGenderSetRefetch} = useIsAgeAndGenderSet();
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -38,16 +32,6 @@ const MeetRecruitScreen = () => {
     },
   });
 
-  const handleRegister = async () => {
-    const response = await isAgeGenderSetRefetch();
-    if (response.data) {
-      const data = await register({communityId: community.id, meetId});
-      navigation.navigate('ChatRoom', {chatRoomId: data.chatRoomId});
-    } else {
-      setIsAgeGenderModalOpen(true);
-    }
-  };
-
   if (!meet) {
     return null;
   }
@@ -55,7 +39,7 @@ const MeetRecruitScreen = () => {
   return (
     <View className="flex-1">
       <CCHeader
-        title="모임 참여하기"
+        title="모임 정보"
         scrollY={scrollY}
         community={community}
         onFirstPress={() => {
@@ -71,13 +55,37 @@ const MeetRecruitScreen = () => {
         <CustomText className="text-[19px]" fontWeight="500">
           {meet.title}
         </CustomText>
-        <View className="flex-row items-center mt-1">
-          <CustomText className="text-[13px] text-slate-500">20대</CustomText>
-          <View className="w-[1] h-3 bg-slate-400 mx-1" />
-          <CustomText className="text-[13px]  text-slate-500">남자</CustomText>
+        <View className="flex-row">
+          <Pressable
+            className="flex-1 items-center justify-center pt-5 pb-4"
+            onPress={() => {
+              navigation.navigate('ChatRoom', {chatRoomId: meet.chatRoom.id});
+            }}>
+            <ChatSvg width={22} height={22} />
+            <CustomText
+              className="text-gray-700 mt-[7] text-[13px]"
+              fontWeight="500">
+              단체대화
+            </CustomText>
+          </Pressable>
+          <Pressable className="flex-1 items-center justify-center pt-5 pb-4">
+            <MemberSvg width={22} height={22} />
+            <CustomText
+              className="text-gray-700 mt-[7] text-[13px]"
+              fontWeight="500">
+              멤버
+            </CustomText>
+          </Pressable>
+          <Pressable className="flex-1 items-center justify-center pt-5 pb-4">
+            <MemberAddSvg width={22} height={22} />
+            <CustomText
+              className="text-gray-700 mt-[7] text-[13px]"
+              fontWeight="500">
+              신청목록
+            </CustomText>
+          </Pressable>
         </View>
-
-        <View className="mt-3 border border-slate-300 rounded-md p-3">
+        <View className="border border-slate-300 rounded-md p-3">
           <Pressable
             className="mb-3"
             onPress={() => {
@@ -126,48 +134,12 @@ const MeetRecruitScreen = () => {
             )}
           </View>
         </View>
-
         <CustomText numberOfLines={999} className="mt-3 text-[15px]">
           {meet.description}
         </CustomText>
       </Animated.ScrollView>
-
-      {meet.isManager ? (
-        <Pressable
-          className="justify-center items-center bg-black mt-2 mx-2 p-3 rounded-md"
-          style={{marginBottom: insets.bottom + 8}}
-          onPress={() => {
-            navigation.navigate('Meet', {meetId: meet.id, community});
-          }}>
-          <CustomText className="text-white text-[17px]" fontWeight="500">
-            모임으로 이동하기
-          </CustomText>
-        </Pressable>
-      ) : (
-        <Pressable
-          className="justify-center items-center bg-black mt-2 mx-2 p-3 rounded-md"
-          style={{marginBottom: insets.bottom + 8}}
-          onPress={handleRegister}>
-          <CustomText className="text-white text-[17px]" fontWeight="500">
-            대화하기
-          </CustomText>
-        </Pressable>
-      )}
-
-      {isAgeGenderModalOpen && (
-        <AgeGenderModal
-          firstCallback={() => {
-            setIsAgeGenderModalOpen(false);
-          }}
-          secondCallback={async () => {
-            const data = await register({communityId: community.id, meetId});
-            navigation.navigate('ChatRoom', {chatRoomId: data.chatRoomId});
-            setIsAgeGenderModalOpen(false);
-          }}
-        />
-      )}
     </View>
   );
 };
 
-export default MeetRecruitScreen;
+export default MeetScreen;

@@ -68,3 +68,8 @@ export interface VersionInfo {
   iosUrl: string;
   aosUrl: string;
 }
+
+export interface SetAgeAndGenderPayload {
+  age: number;
+  gender: 'MALE' | 'FEMALE';
+}

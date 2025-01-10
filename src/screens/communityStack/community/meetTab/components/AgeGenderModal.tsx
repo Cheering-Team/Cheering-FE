@@ -4,15 +4,43 @@ import {Modal, Pressable, View} from 'react-native';
 import MaleSvg from 'assets/images/male-blue.svg';
 import FemaleSvg from 'assets/images/female-red.svg';
 import {Picker} from '@react-native-picker/picker';
+import {useSetAgeAndGender} from 'apis/user/useUsers';
+import {showTopToast} from 'utils/toast';
+import {toastConfig} from '../../../../../../App';
+import Toast from 'react-native-toast-message';
 
-const AgeGenderModal = () => {
+interface AgeGenderModalProps {
+  firstCallback: () => void;
+  secondCallback: () => void;
+}
+
+const AgeGenderModal = ({
+  firstCallback,
+  secondCallback,
+}: AgeGenderModalProps) => {
   const [gender, setGender] = useState<'MALE' | 'FEMALE' | null>(null);
   const [age, setAge] = useState<number>(20);
+
+  const {mutateAsync: setAgeAndGender} = useSetAgeAndGender();
+
+  const handleSetAgeAndGender = async () => {
+    if (gender === null) {
+      showTopToast({type: 'fail', message: '성별을 골라주세요'});
+      return;
+    }
+    await setAgeAndGender({age, gender});
+
+    showTopToast({type: 'success', message: '저장되었습니다'});
+
+    setTimeout(() => {
+      secondCallback();
+    }, 500);
+  };
 
   return (
     <Modal transparent={true}>
       <View className="w-full h-full bg-black/50 items-center justify-center">
-        <View className="bg-white w-[90%] rounded-2xl shadow-md py-6 px-6">
+        <View className="bg-white w-[90%] rounded-2xl shadow-md pt-6 pb-4 px-6">
           <CustomText fontWeight="600" className="text-[18px] mb-3">
             기본정보 입력
           </CustomText>
@@ -27,6 +55,12 @@ const AgeGenderModal = () => {
               {` 정보 입력`}
             </CustomText>
             이 필요합니다
+          </CustomText>
+          <CustomText
+            numberOfLines={3}
+            fontWeight="500"
+            className="text-red-500 leading-5 text-[14px] mt-[2]">
+            한번 저장한 후에는 수정할 수 없습니다
           </CustomText>
           <CustomText fontWeight="500" className="text-[15px] ml-[2] mt-5 mb-2">
             성별
@@ -71,15 +105,28 @@ const AgeGenderModal = () => {
             ))}
           </Picker>
           <View className="flex-row">
-            <Pressable className="flex-1 justify-center items-center">
-              <CustomText>취소</CustomText>
+            <Pressable
+              className="flex-1 justify-center items-center mr-1"
+              onPress={firstCallback}>
+              <CustomText fontWeight="500" className="text-gray-700">
+                취소
+              </CustomText>
             </Pressable>
-            <Pressable className="flex-1 justify-center items-center">
-              <CustomText>완료</CustomText>
+            <Pressable
+              className="flex-1 justify-center items-center py-3 rounded-xl ml-1"
+              style={{backgroundColor: gender === null ? '#e0e4ea' : '#1e293b'}}
+              onPress={handleSetAgeAndGender}
+              disabled={gender === null}>
+              <CustomText
+                fontWeight="500"
+                style={{color: gender === null ? '#acacac' : 'white'}}>
+                완료
+              </CustomText>
             </Pressable>
           </View>
         </View>
       </View>
+      <Toast config={toastConfig} />
     </Modal>
   );
 };
