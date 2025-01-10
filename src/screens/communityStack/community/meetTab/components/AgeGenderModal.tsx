@@ -28,7 +28,7 @@ const AgeGenderModal = ({
       showTopToast({type: 'fail', message: '성별을 골라주세요'});
       return;
     }
-    await setAgeAndGender({age, gender});
+    await setAgeAndGender({age: new Date().getFullYear() - age + 1, gender});
 
     showTopToast({type: 'success', message: '저장되었습니다'});
 
