@@ -20,6 +20,7 @@ import ScheduleScreen from 'screens/communityStack/schedule/ScheduleScreen';
 import CreateMeetScreen from 'screens/communityStack/CreateMeetScreen';
 import MeetRecruitScreen from 'screens/communityStack/MeetRecruitScreen';
 import MeetScreen from 'screens/communityStack/MeetScreen';
+import MeetPrivateChatListScreen from 'screens/communityStack/MeetPrivateChatListScreen';
 
 export type CommunityStackParamList = {
   Community: {communityId: number};
@@ -40,6 +41,7 @@ export type CommunityStackParamList = {
   CreateMeet: {community: Community};
   MeetRecruit: {meetId: number; community: Community};
   Meet: {meetId: number; community: Community};
+  MeetPrivateChatList: {meetId: number};
 };
 
 const CommunityStackNavigator = () => {
@@ -135,6 +137,11 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="Meet"
         component={MeetScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="MeetPrivateChatList"
+        component={MeetPrivateChatListScreen}
         options={{headerShown: false}}
       />
     </CommunityStack.Navigator>

@@ -1,5 +1,4 @@
 import {ChatRoom} from 'apis/chat/types';
-import {Fan} from 'apis/fan/types';
 import {MatchDetail} from 'apis/match/types';
 import {Page} from 'apis/types';
 
@@ -15,7 +14,11 @@ export interface MeetDetail {
   gender: 'ANY';
   minAge: number;
   maxAge: number;
-  writer: Fan;
+  writer: {
+    id: number;
+    age: number;
+    gender: 'MALE' | 'FEMLAE';
+  };
   match: MatchDetail;
   place: string | null;
   isManager: boolean;

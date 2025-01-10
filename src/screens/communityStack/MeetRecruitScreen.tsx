@@ -71,10 +71,14 @@ const MeetRecruitScreen = () => {
         <CustomText className="text-[19px]" fontWeight="500">
           {meet.title}
         </CustomText>
-        <View className="flex-row items-center mt-1">
-          <CustomText className="text-[13px] text-slate-500">20대</CustomText>
+        <View className="flex-row items-center mt-1 ml-[1]">
+          <CustomText className="text-[13px] text-slate-500">
+            {`${Math.floor(meet.writer.age / 10) * 10}대`}
+          </CustomText>
           <View className="w-[1] h-3 bg-slate-400 mx-1" />
-          <CustomText className="text-[13px]  text-slate-500">남자</CustomText>
+          <CustomText className="text-[13px]  text-slate-500">
+            {meet.writer.gender === 'MALE' ? '남자' : '여자'}
+          </CustomText>
         </View>
 
         <View className="mt-3 border border-slate-300 rounded-md p-3">
@@ -102,21 +106,14 @@ const MeetRecruitScreen = () => {
               <CustomText className="text-[15px]">{`${meet.gender === 'ANY' ? '성별 무관' : '남자만'}`}</CustomText>
             </View>
           </View>
-          <View className="flex-row mt-2">
+          <View className="flex-row mt-[6]">
             <View className="flex-1 flex-row items-center">
               <CustomText className="mr-2 text-slate-500" fontWeight="500">
                 선호 나이
               </CustomText>
               <CustomText className="text-[15px]">{`${meet.minAge}~${meet.maxAge}세`}</CustomText>
             </View>
-            {meet.type === 'BOOKING' ? (
-              <View className="flex-1 flex-row items-center">
-                <CustomText className="mr-2 text-slate-500" fontWeight="500">
-                  선호 위치
-                </CustomText>
-                <CustomText className="text-[15px]">{meet.place}</CustomText>
-              </View>
-            ) : (
+            {meet.type === 'LIVE' && (
               <View className="flex-1 flex-row items-center">
                 <CustomText className="mr-2 text-slate-500" fontWeight="500">
                   티켓 여부
@@ -124,6 +121,12 @@ const MeetRecruitScreen = () => {
                 <CustomText className="text-[15px]">{`${meet.hasTicket ? '있음' : '없음'}`}</CustomText>
               </View>
             )}
+          </View>
+          <View className="flex-1 flex-row items-center mt-[6]">
+            <CustomText className="mr-2 text-slate-500" fontWeight="500">
+              선호 위치
+            </CustomText>
+            <CustomText className="text-[15px]">{meet.place}</CustomText>
           </View>
         </View>
 

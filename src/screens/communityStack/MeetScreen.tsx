@@ -76,14 +76,20 @@ const MeetScreen = () => {
               멤버
             </CustomText>
           </Pressable>
-          <Pressable className="flex-1 items-center justify-center pt-5 pb-4">
-            <MemberAddSvg width={22} height={22} />
-            <CustomText
-              className="text-gray-700 mt-[7] text-[13px]"
-              fontWeight="500">
-              신청목록
-            </CustomText>
-          </Pressable>
+          {meet.isManager && (
+            <Pressable
+              className="flex-1 items-center justify-center pt-5 pb-4"
+              onPress={() => {
+                navigation.navigate('MeetPrivateChatList', {meetId: meet.id});
+              }}>
+              <MemberAddSvg width={22} height={22} />
+              <CustomText
+                className="text-gray-700 mt-[7] text-[13px]"
+                fontWeight="500">
+                신청목록
+              </CustomText>
+            </Pressable>
+          )}
         </View>
         <View className="border border-slate-300 rounded-md p-3">
           <Pressable

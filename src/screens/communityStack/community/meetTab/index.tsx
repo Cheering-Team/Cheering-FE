@@ -163,11 +163,11 @@ const MeetTab = ({
     return (
       <Pressable
         className="flex-row mx-[10] my-1 border border-gray-200 bg-white rounded-[4px] overflow-hidden"
-        style={{height: 87, width: WINDOW_WIDTH - 20}}
+        style={{height: 90, width: WINDOW_WIDTH - 20}}
         onPress={() =>
           navigation.navigate('MeetRecruit', {meetId: item.id, community})
         }>
-        <View className="flex-1 px-[10] pt-[9] pb-[7] justify-between">
+        <View className="flex-1 px-[10] py-2 justify-between">
           <View>
             <CustomText className="text-[15px]" fontWeight="500">
               {item.title}
@@ -178,7 +178,7 @@ const MeetTab = ({
           </View>
 
           <View className="flex-row items-center justify-between">
-            <View className="flex-row items-center">
+            <View className="flex-row items-center flex-1">
               <CustomText className="text-[13px] text-[#5d6674]">{`${item.ageMin}~${item.ageMax}세`}</CustomText>
               <View className="w-[1] h-3 bg-slate-400 mx-1" />
               <CustomText className="text-[13px] text-[#5d6674]">
@@ -189,7 +189,7 @@ const MeetTab = ({
               {item.type === 'BOOKING' && (
                 <>
                   <View className="w-[1] h-3 bg-slate-400 mx-1" />
-                  <View className="flex-row items-center">
+                  <View className="flex-row items-center flex-1 mr-3">
                     <LocationSvg />
                     <CustomText className="text-[13px] text-[#5d6674] ml-[1]">
                       {item.place}
