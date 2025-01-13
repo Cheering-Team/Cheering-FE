@@ -113,9 +113,9 @@ export const useReissuePlayerAccountPassword = () => {
   });
 };
 
-export const useIsAgeAndGenderSet = () => {
+export const useIsAgeAndGenderSet = (communityId: number) => {
   return useQuery({
-    queryKey: userKeys.isAgeGenderSet(),
+    queryKey: userKeys.isAgeGenderSet(communityId),
     queryFn: isAgeAndGenderSet,
     enabled: false,
   });

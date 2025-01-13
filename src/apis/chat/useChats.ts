@@ -11,6 +11,7 @@ import {
   getMyOfficialChatRooms,
   getOfficialChatRoom,
   getParticipants,
+  getPrivateChatRoomIdsForManager,
   getUnreadChats,
   updateExitTime,
 } from './index';
@@ -138,4 +139,11 @@ export const useGetUnreadChats = () => {
 
 export const useCreatePrivateChatRoom = () => {
   return useMutation({mutationFn: createPrivateChatRoom});
+};
+
+export const useGetPrivateChatRoomIdsForManager = (meetId: number) => {
+  return useQuery({
+    queryKey: chatRoomKeys.listByMeet(meetId),
+    queryFn: getPrivateChatRoomIdsForManager,
+  });
 };

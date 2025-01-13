@@ -160,3 +160,15 @@ export const createPrivateChatRoom = async (
   >(`/communities/${communityId}/meets/${meetId}/talk`);
   return response.data.result;
 };
+
+export const getPrivateChatRoomIdsForManager = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof chatRoomKeys.listByMeet>;
+}) => {
+  const [, , {meetId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<ChatRoom[]>>(
+    `/meets/${meetId}/private`,
+  );
+  return response.data.result;
+};

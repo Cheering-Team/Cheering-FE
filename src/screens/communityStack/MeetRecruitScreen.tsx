@@ -15,7 +15,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import MatchInfo from 'components/common/MatchInfo';
 import {useIsAgeAndGenderSet} from 'apis/user/useUsers';
-import AgeGenderModal from './community/meetTab/components/AgeGenderModal';
+import MeetProfileModal from './community/meetTab/components/MeetProfileModal';
 
 const MeetRecruitScreen = () => {
   useDarkStatusBar();
@@ -122,12 +122,14 @@ const MeetRecruitScreen = () => {
               </View>
             )}
           </View>
-          <View className="flex-1 flex-row items-center mt-[6]">
-            <CustomText className="mr-2 text-slate-500" fontWeight="500">
-              선호 위치
-            </CustomText>
-            <CustomText className="text-[15px]">{meet.place}</CustomText>
-          </View>
+          {meet.type === 'BOOKING' && (
+            <View className="flex-1 flex-row items-center mt-[6]">
+              <CustomText className="mr-2 text-slate-500" fontWeight="500">
+                선호 위치
+              </CustomText>
+              <CustomText className="text-[15px]">{meet.place}</CustomText>
+            </View>
+          )}
         </View>
 
         <CustomText numberOfLines={999} className="mt-3 text-[15px]">
@@ -158,7 +160,7 @@ const MeetRecruitScreen = () => {
       )}
 
       {isAgeGenderModalOpen && (
-        <AgeGenderModal
+        <MeetProfileModal
           firstCallback={() => {
             setIsAgeGenderModalOpen(false);
           }}

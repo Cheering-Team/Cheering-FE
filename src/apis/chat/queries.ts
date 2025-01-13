@@ -9,6 +9,8 @@ export const chatRoomKeys = {
   ) => [...chatRoomKeys.lists(), {communityId, type, sortBy, name}] as const,
   my: (type: 'OFFICIAL' | 'PUBLIC') =>
     [...chatRoomKeys.lists(), 'my', {type}] as const,
+  listByMeet: (meetId: number) =>
+    [...chatRoomKeys.lists(), {type: 'PRIVATE', meetId}] as const,
   details: () => [...chatRoomKeys.all, 'detail'] as const,
   detail: (chatRoomId: number) =>
     [...chatRoomKeys.details(), chatRoomId] as const,

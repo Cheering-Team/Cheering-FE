@@ -183,10 +183,15 @@ export const getVersionInfo = async () => {
   return response.data.result;
 };
 
-export const isAgeAndGenderSet = async () => {
-  const response = await axiosInstance.get<ApiResponse<boolean>>(
-    `/users/check-age-gender`,
-  );
+export const isAgeAndGenderSet = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof userKeys.isAgeGenderSet>;
+}) => {
+  const [, , communityId] = queryKey;
+  const response = await axiosInstance.get<
+    ApiResponse<'NEITHER' | 'NULL_PROFILE' | 'BOTH'>
+  >(`/users/communities/${communityId}/check-profile`);
   return response.data.result;
 };
 

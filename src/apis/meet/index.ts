@@ -1,7 +1,12 @@
 import {axiosInstance} from 'apis';
 import {ApiResponse, Id} from 'apis/types';
-import {CreateMeetPayload, GetMeetsResponse, MeetDetail} from './types';
-import {meetKeys} from './queries';
+import {
+  CreateMeetPayload,
+  GetMeetsResponse,
+  MeetDetail,
+  MeetMember,
+} from './types';
+import {meetFanKeys, meetKeys} from './queries';
 
 export const createMeet = async (data: CreateMeetPayload) => {
   const {communityId, ...rest} = data;
@@ -38,6 +43,32 @@ export const getAllMeetsByCommunity = async ({
   ] = queryKey;
   const response = await axiosInstance.get<ApiResponse<GetMeetsResponse>>(
     `/communities/${communityId}/meets?type=${type}&gender=${gender}&minAge=${minAge}&maxAge=${maxAge}&ticketOption=${ticketOption}${matchId ? `&matchId=${matchId}` : ''}&keyword=${keyword}&page=${pageParam}&size=20`,
+  );
+  return response.data.result;
+};
+
+export const getMeetMembers = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof meetFanKeys.list>;
+}) => {
+  const [, , {meetId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<MeetMember[]>>(
+    `/meets/${meetId}/members`,
+  );
+  return response.data.result;
+};
+
+export const findAllMyMeets = async ({
+  queryKey,
+  pageParam = 0,
+}: {
+  queryKey: ReturnType<typeof meetKeys.my>;
+  pageParam: number;
+}) => {
+  const [, , , {communityId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<GetMeetsResponse>>(
+    `/communities/${communityId}/meets/my-all?size=${10}&page=${pageParam}`,
   );
   return response.data.result;
 };

@@ -77,10 +77,6 @@ const ChatRoomScreen = () => {
   } = useGetChats(chatRoomId);
   const {mutate: updateExitTime} = useUpdateExitTime();
 
-  useEffect(() => {
-    console.log(JSON.stringify(chatRoom));
-  }, [chatRoom]);
-
   const handleNewMessage = useCallback((newMessage: ChatResponse) => {
     setMessages(prevMessages => {
       const firstGroup = prevMessages[0];
@@ -320,7 +316,7 @@ const ChatRoomScreen = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={-insets.bottom}>
         {(chatRoom.type === 'PRIVATE' || chatRoom.type === 'CONFIRM') && (
-          <PrivateChatRoomHeader chatRoom={chatRoom} />
+          <PrivateChatRoomHeader chatRoom={chatRoom} client={stompClient} />
         )}
         {chatRoom.type === 'OFFICIAL' ||
           (chatRoom.type === 'PUBLIC' && (

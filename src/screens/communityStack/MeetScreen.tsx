@@ -68,7 +68,14 @@ const MeetScreen = () => {
               단체대화
             </CustomText>
           </Pressable>
-          <Pressable className="flex-1 items-center justify-center pt-5 pb-4">
+          <Pressable
+            className="flex-1 items-center justify-center pt-5 pb-4"
+            onPress={() => {
+              navigation.navigate('MeetMeberList', {
+                meetId: meet.id,
+                community,
+              });
+            }}>
             <MemberSvg width={22} height={22} />
             <CustomText
               className="text-gray-700 mt-[7] text-[13px]"
@@ -80,7 +87,10 @@ const MeetScreen = () => {
             <Pressable
               className="flex-1 items-center justify-center pt-5 pb-4"
               onPress={() => {
-                navigation.navigate('MeetPrivateChatList', {meetId: meet.id});
+                navigation.navigate('MeetPrivateChatList', {
+                  meetId: meet.id,
+                  community,
+                });
               }}>
               <MemberAddSvg width={22} height={22} />
               <CustomText
@@ -123,14 +133,7 @@ const MeetScreen = () => {
               </CustomText>
               <CustomText className="text-[15px]">{`${meet.minAge}~${meet.maxAge}세`}</CustomText>
             </View>
-            {meet.type === 'BOOKING' ? (
-              <View className="flex-1 flex-row items-center">
-                <CustomText className="mr-2 text-slate-500" fontWeight="500">
-                  선호 위치
-                </CustomText>
-                <CustomText className="text-[15px]">{meet.place}</CustomText>
-              </View>
-            ) : (
+            {meet.type === 'LIVE' && (
               <View className="flex-1 flex-row items-center">
                 <CustomText className="mr-2 text-slate-500" fontWeight="500">
                   티켓 여부
@@ -139,6 +142,14 @@ const MeetScreen = () => {
               </View>
             )}
           </View>
+          {meet.type === 'BOOKING' && (
+            <View className="flex-1 flex-row items-center mt-[6]">
+              <CustomText className="mr-2 text-slate-500" fontWeight="500">
+                선호 위치
+              </CustomText>
+              <CustomText className="text-[15px]">{meet.place}</CustomText>
+            </View>
+          )}
         </View>
         <CustomText numberOfLines={999} className="mt-3 text-[15px]">
           {meet.description}

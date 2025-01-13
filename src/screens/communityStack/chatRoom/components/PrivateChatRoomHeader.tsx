@@ -3,24 +3,44 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {ChatRoom} from 'apis/chat/types';
 import CustomText from 'components/common/CustomText';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React from 'react';
+import React, {MutableRefObject, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChevronLeftSvg from 'assets/images/chevron-left.svg';
 import {useGetMeetById} from 'apis/meet/useMeets';
 import MatchInfo from 'components/common/MatchInfo';
 import ChevronRightSvg from 'assets/images/chevron-right-gray.svg';
+import TwoButtonModal from 'components/common/TwoButtonModal';
+import {Client} from '@stomp/stompjs';
 
 interface PrivateChatRoomHeader {
   chatRoom: ChatRoom;
+  client: MutableRefObject<Client | null>;
 }
 
-const PrivateChatRoomHeader = ({chatRoom}: PrivateChatRoomHeader) => {
+const PrivateChatRoomHeader = ({chatRoom, client}: PrivateChatRoomHeader) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const {data: meet} = useGetMeetById(chatRoom.meetId);
+
+  const handleCreateRequest = () => {
+    if (client.current && client.current.connected) {
+      client.current?.publish({
+        destination: `/app/chatRooms/${chatRoom.id}/join-message`,
+        body: JSON.stringify({
+          chatRoomType: chatRoom.type,
+          writerId: chatRoom.user?.id,
+          writerImage: chatRoom.user?.image,
+          writerName: chatRoom.user?.name,
+          content: '확정 신청',
+        }),
+      });
+    }
+  };
 
   return (
     <View
@@ -62,7 +82,9 @@ const PrivateChatRoomHeader = ({chatRoom}: PrivateChatRoomHeader) => {
             <CustomText className="color-[#757575] text-[13px]">
               {chatRoom.type === 'CONFIRM'
                 ? '모임 단체대화'
-                : '모임장과 1:1 대화'}
+                : meet?.isManager
+                  ? chatRoom.name
+                  : '모임장과 1:1 대화'}
             </CustomText>
             {chatRoom.type === 'CONFIRM' && (
               <>
@@ -93,6 +115,28 @@ const PrivateChatRoomHeader = ({chatRoom}: PrivateChatRoomHeader) => {
             )}
           </View>
         </View>
+        {chatRoom.type === 'PRIVATE' && meet?.isManager && (
+          <Pressable
+            className="h-[30] justify-center items-center px-[10] bg-black rounded-md mr-2"
+            onPress={() => setIsModalOpen(true)}>
+            <CustomText className="text-[13px] text-white" fontWeight="500">
+              멤버 확정
+            </CustomText>
+            {isModalOpen && (
+              <TwoButtonModal
+                title="멤버로 확정하시겠습니까?"
+                content="신청자1님을 멤버로 초대합니다"
+                firstCallback={() => {
+                  setIsModalOpen(false);
+                }}
+                secondCallback={() => {
+                  handleCreateRequest();
+                  setIsModalOpen(false);
+                }}
+              />
+            )}
+          </Pressable>
+        )}
       </View>
       {meet && (
         <View className="px-2 mt-1">
@@ -132,7 +176,9 @@ const PrivateChatRoomHeader = ({chatRoom}: PrivateChatRoomHeader) => {
                     fontWeight="500">
                     선호 위치
                   </CustomText>
-                  <CustomText className="text-[14px]">{meet.place}</CustomText>
+                  <CustomText className="text-[14px] flex-1">
+                    {meet.place}
+                  </CustomText>
                 </View>
               ) : (
                 <View className="flex-1 flex-row items-center">

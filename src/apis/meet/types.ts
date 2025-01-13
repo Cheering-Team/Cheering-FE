@@ -47,6 +47,15 @@ export interface MeetInfo {
   place: string | null;
 }
 
+export interface MeetMember {
+  meetFanId: number;
+  userId: number;
+  userAge: number;
+  userGender: 'MALE' | 'FEMALE';
+  role: string;
+  nickname: string;
+}
+
 // 요청
 export interface CreateMeetPayload {
   communityId: number;

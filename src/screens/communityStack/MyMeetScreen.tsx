@@ -1,27 +1,29 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useGetPrivateChatRoomIdsForManager} from 'apis/chat/useChats';
+import {MeetInfo} from 'apis/meet/types';
+import {useFindAllMyMeets} from 'apis/meet/useMeets';
 import CCHeader from 'components/common/CCHeader';
-import ChatCard from 'components/common/ChatCard';
-import CustomText from 'components/common/CustomText';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React from 'react';
-import {View} from 'react-native';
+import React, {useEffect} from 'react';
+import {ListRenderItem, View} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import MeetCard from './community/meetTab/components/MeetCard';
 
-const MeetPrivateChatListScreen = () => {
-  const {meetId, community} =
+const MyMeetScreen = () => {
+  useDarkStatusBar();
+  const {community} =
     useRoute<RouteProp<CommunityStackParamList, 'MeetPrivateChatList'>>()
       .params;
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
-  const {data: chatRooms} = useGetPrivateChatRoomIdsForManager(meetId);
+  const {data: meets} = useFindAllMyMeets(community.id);
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -30,10 +32,25 @@ const MeetPrivateChatListScreen = () => {
     },
   });
 
+  useEffect(() => {
+    console.log(JSON.stringify(meets));
+  }, [meets]);
+
+  const renderItem: ListRenderItem<MeetInfo> = ({item}) => {
+    return (
+      <MeetCard
+        meet={item}
+        onPress={() => {
+          navigation.navigate('Meet', {meetId: item.id, community});
+        }}
+      />
+    );
+  };
+
   return (
     <View className="flex-1">
       <CCHeader
-        title="신청 목록"
+        title="내 모임 목록"
         scrollY={scrollY}
         community={community}
         onFirstPress={() => {
@@ -41,24 +58,15 @@ const MeetPrivateChatListScreen = () => {
         }}
       />
       <Animated.FlatList
-        data={chatRooms || []}
+        data={meets?.pages.flatMap(page => page.meets)}
+        renderItem={renderItem}
         onScroll={scrollHandler}
         contentContainerStyle={{
           paddingTop: insets.top + 55 + 5,
-          paddingHorizontal: 12,
         }}
-        renderItem={({item}) => (
-          <ChatCard
-            chatRoom={item}
-            location="MY"
-            onPress={() => {
-              navigation.navigate('ChatRoom', {chatRoomId: item.id});
-            }}
-          />
-        )}
       />
     </View>
   );
 };
 
-export default MeetPrivateChatListScreen;
+export default MyMeetScreen;

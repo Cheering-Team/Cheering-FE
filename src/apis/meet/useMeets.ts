@@ -1,6 +1,12 @@
 import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
-import {meetKeys} from './queries';
-import {createMeet, getAllMeetsByCommunity, getMeetById} from '.';
+import {meetFanKeys, meetKeys} from './queries';
+import {
+  createMeet,
+  findAllMyMeets,
+  getAllMeetsByCommunity,
+  getMeetById,
+  getMeetMembers,
+} from '.';
 import {GetMeesPayload} from './types';
 
 export const useGetMeetById = (meedId: number | null) => {
@@ -19,6 +25,25 @@ export const useGetAllMeetsByCommunity = (filter: GetMeesPayload) => {
   return useInfiniteQuery({
     queryKey: meetKeys.list(filter),
     queryFn: getAllMeetsByCommunity,
+    initialPageParam: 0,
+    getNextPageParam: lastPage => {
+      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
+    },
+    retry: false,
+  });
+};
+
+export const useGetMeetMembers = (meetId: number) => {
+  return useQuery({
+    queryKey: meetFanKeys.list(meetId),
+    queryFn: getMeetMembers,
+  });
+};
+
+export const useFindAllMyMeets = (communityId: number) => {
+  return useInfiniteQuery({
+    queryKey: meetKeys.my(communityId),
+    queryFn: findAllMyMeets,
     initialPageParam: 0,
     getNextPageParam: lastPage => {
       return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
