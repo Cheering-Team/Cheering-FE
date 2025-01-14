@@ -1,34 +1,45 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Chat} from 'apis/chat/types';
+import {Chat, ChatRoom} from 'apis/chat/types';
+import {useGetCommunityById} from 'apis/community/useCommunities';
 import {useAcceptJoinRequest, useGetMeetById} from 'apis/meet/useMeets';
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_WIDTH} from 'constants/dimension';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React from 'react';
+import React, {useState} from 'react';
 import {Pressable, View} from 'react-native';
+import DuplicateMatchModal from 'screens/communityStack/community/meetTab/components/DuplicateMatchModal';
 import {formatAmPmTime} from 'utils/format';
 
 interface JoinRequestMessageProps {
   chat: Chat;
-  chatRoomId: number;
+  chatRoom: ChatRoom;
   meetId: number | null;
 }
 
 const JoinRequestMessage = ({
   chat,
-  chatRoomId,
+  chatRoom,
   meetId,
 }: JoinRequestMessageProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
 
+  const [isDuplicatedMatchModal, setIsDuplicatedMatchModal] = useState(false);
+
   const {data: meet} = useGetMeetById(meetId);
-  const {mutateAsync: acceptJoinRequest} = useAcceptJoinRequest(chatRoomId);
+  const {data: community} = useGetCommunityById(chatRoom.communityId);
+  const {mutateAsync: acceptJoinRequest} = useAcceptJoinRequest(chatRoom.id);
 
   const handleJoinAccept = async () => {
-    await acceptJoinRequest(chatRoomId);
+    try {
+      await acceptJoinRequest(chatRoom.id);
+    } catch (error: any) {
+      if (error.code === 2010) {
+        setIsDuplicatedMatchModal(true);
+      }
+    }
   };
 
   if (meet?.isManager) {
@@ -58,7 +69,6 @@ const JoinRequestMessage = ({
           }}>
           <Avatar uri={chat.writer.image} size={32} className="mt-[2]" />
         </Pressable>
-
         <View style={{marginLeft: 6, marginTop: 1}}>
           <Pressable>
             <CustomText
@@ -102,6 +112,13 @@ const JoinRequestMessage = ({
             </CustomText>
           </View>
         </View>
+        {isDuplicatedMatchModal && meet && community && (
+          <DuplicateMatchModal
+            match={meet?.match}
+            setIsModalOpen={setIsDuplicatedMatchModal}
+            community={community}
+          />
+        )}
       </View>
     );
   }

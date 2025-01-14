@@ -25,6 +25,7 @@ import FastImage from 'react-native-fast-image';
 import {MatchDetail} from 'apis/match/types';
 import CloseSvg from 'assets/images/close-black.svg';
 import MatchSelectModal from 'components/common/MatchSelectModal';
+import DuplicateMatchModal from './community/meetTab/components/DuplicateMatchModal';
 
 const AnimatedKeyboardAwareScrollView = Animated.createAnimatedComponent(
   KeyboardAwareScrollView,
@@ -50,6 +51,7 @@ const CreateMeetScreen = () => {
   const [ageMax, setAgeMax] = useState(45);
   const [place, setPlace] = useState<string>('');
   const [match, setMatch] = useState<MatchDetail | null>(null);
+  const [isDuplicatedMatchModal, setIsDuplicatedMatchModal] = useState(false);
 
   const {data: matches} = useGetTwoWeeksMatches(community.id);
   const {mutateAsync: createMeet} = useCreateMeet();
@@ -104,8 +106,12 @@ const CreateMeetScreen = () => {
         matchId: match.id,
         communityType: community.type,
       });
+      showTopToast({type: 'success', message: '모임을 생성하였습니다'});
+      navigation.replace('Meet', {meetId: data.id, communityId: community.id});
     } catch (error: any) {
-      //
+      if (error.code === 2010) {
+        setIsDuplicatedMatchModal(true);
+      }
     }
   };
 
@@ -336,6 +342,13 @@ const CreateMeetScreen = () => {
           setMatch(item);
         }}
       />
+      {isDuplicatedMatchModal && (
+        <DuplicateMatchModal
+          match={match}
+          setIsModalOpen={setIsDuplicatedMatchModal}
+          community={community}
+        />
+      )}
     </View>
   );
 };

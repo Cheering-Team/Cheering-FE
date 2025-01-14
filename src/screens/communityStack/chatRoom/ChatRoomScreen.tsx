@@ -152,7 +152,7 @@ const ChatRoomScreen = () => {
           return (
             <JoinRequestMessage
               chat={item}
-              chatRoomId={chatRoom.id}
+              chatRoom={chatRoom}
               meetId={chatRoom.meetId}
             />
           );

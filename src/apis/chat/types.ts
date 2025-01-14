@@ -21,7 +21,7 @@ export interface ChatRoom {
   meetId: number | null;
   opponentAge?: number;
   opponentGender?: 'MALE' | 'FEMALE';
-  communityId?: number;
+  communityId: number;
   isConfirmed?: boolean;
 }
 
