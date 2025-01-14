@@ -65,6 +65,7 @@ const ChatRoomScreen = () => {
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [participantCount, setParticipantCount] = useState(0);
+  const [isPrivateFirst, setIsPrivateFirst] = useState(false);
 
   const flatListRef = useRef<FlatList>(null);
 
@@ -322,6 +323,16 @@ const ChatRoomScreen = () => {
     navigation,
   ]);
 
+  // Private + 첫 채팅일 경우 MeetFan 생성
+  useEffect(() => {
+    if (chatRoom?.type === 'PRIVATE') {
+      const hasNoMessages = !messages.some(
+        message => message.type === 'MESSAGE',
+      );
+      setIsPrivateFirst(hasNoMessages);
+    }
+  }, [messages, chatRoom]);
+
   if (!chatRoom) {
     return null;
   }
@@ -381,6 +392,7 @@ const ChatRoomScreen = () => {
           chatRoom={chatRoom}
           flatListRef={flatListRef}
           isAtBottom={isAtBottom}
+          isPrivateFirst={isPrivateFirst}
         />
       </KeyboardAvoidingView>
     </Drawer>
