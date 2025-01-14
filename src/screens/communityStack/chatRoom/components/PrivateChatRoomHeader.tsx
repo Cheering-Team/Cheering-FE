@@ -69,23 +69,33 @@ const PrivateChatRoomHeader = ({chatRoom, client}: PrivateChatRoomHeader) => {
         <View style={{marginLeft: 6, flex: 1}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <CustomText fontWeight="600" style={{fontSize: 16}}>
-              {meet?.title}
+              {chatRoom.type === 'PRIVATE' ? chatRoom.name : meet?.title}
             </CustomText>
           </View>
 
           <View
-            className="flex-row items-center mt-[2]"
+            className="flex-row items-center mt-[1]"
             style={{
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            <CustomText className="color-[#757575] text-[13px]">
-              {chatRoom.type === 'CONFIRM'
-                ? '모임 단체대화'
-                : meet?.isManager
-                  ? chatRoom.name
-                  : '모임장과 1:1 대화'}
-            </CustomText>
+            {chatRoom.type === 'CONFIRM' && (
+              <CustomText className="color-[#757575] text-[13px]">
+                모임 단체대화
+              </CustomText>
+            )}
+            {chatRoom.type === 'PRIVATE' && chatRoom.opponentAge && (
+              <View className="flex-row items-center">
+                <CustomText className="color-[#757575] text-[13px]">
+                  {chatRoom.opponentGender === 'FEMALE' ? '여자' : '남자'}
+                </CustomText>
+                <View className="w-[2] h-[2] bg-[#a2a2a2] mx-[3] rounded-full" />
+                <CustomText className="color-[#757575] text-[13px]">
+                  {new Date().getFullYear() - chatRoom.opponentAge}
+                </CustomText>
+              </View>
+            )}
+
             {chatRoom.type === 'CONFIRM' && (
               <>
                 <View
@@ -115,34 +125,39 @@ const PrivateChatRoomHeader = ({chatRoom, client}: PrivateChatRoomHeader) => {
             )}
           </View>
         </View>
-        {chatRoom.type === 'PRIVATE' && meet?.isManager && (
-          <Pressable
-            className="h-[30] justify-center items-center px-[10] bg-black rounded-md mr-2"
-            onPress={() => setIsModalOpen(true)}>
-            <CustomText className="text-[13px] text-white" fontWeight="500">
-              멤버 확정
-            </CustomText>
-            {isModalOpen && (
-              <TwoButtonModal
-                title="멤버로 확정하시겠습니까?"
-                content="신청자1님을 멤버로 초대합니다"
-                firstCallback={() => {
-                  setIsModalOpen(false);
-                }}
-                secondCallback={() => {
-                  handleCreateRequest();
-                  setIsModalOpen(false);
-                }}
-              />
-            )}
-          </Pressable>
-        )}
+        {chatRoom.type === 'PRIVATE' &&
+          meet?.isManager &&
+          !chatRoom.isConfirmed && (
+            <Pressable
+              className="h-[30] justify-center items-center px-[10] bg-black rounded-md mr-2"
+              onPress={() => setIsModalOpen(true)}>
+              <CustomText className="text-[13px] text-white" fontWeight="500">
+                멤버 확정
+              </CustomText>
+              {isModalOpen && (
+                <TwoButtonModal
+                  title="멤버로 확정하시겠습니까?"
+                  content="신청자1님을 멤버로 초대합니다"
+                  firstCallback={() => {
+                    setIsModalOpen(false);
+                  }}
+                  secondCallback={() => {
+                    handleCreateRequest();
+                    setIsModalOpen(false);
+                  }}
+                />
+              )}
+            </Pressable>
+          )}
       </View>
       {meet && (
         <View className="px-2 mt-1">
           <MatchInfo match={meet.match} height={55} radius={3} />
           <View className="px-2 py-[6] border border-slate-200 bg-white mt-1 rounded-md shadow-sm shadow-gray-100">
-            <View className="flex-row">
+            <CustomText className="text-[15px] text-gray-700" fontWeight="500">
+              {meet.title}
+            </CustomText>
+            <View className="flex-row mt-[5]">
               <View className="flex-1 flex-row items-center">
                 <CustomText
                   className="mr-2 text-slate-500 text-[13px]"

@@ -169,7 +169,10 @@ const ChatTab = ({
             location="COMMUNITY"
             onPress={() => {
               item.isParticipating
-                ? navigation.navigate('ChatRoom', {chatRoomId: item.id})
+                ? navigation.navigate('ChatRoom', {
+                    chatRoomId: item.id,
+                    type: 'PUBLIC',
+                  })
                 : navigation.navigate('ChatRoomEnter', {chatRoomId: item.id});
             }}
           />

@@ -229,7 +229,10 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 if (community.officialRoomId !== null) {
                   navigation.navigate('CommunityStack', {
                     screen: 'ChatRoom',
-                    params: {chatRoomId: community.officialRoomId},
+                    params: {
+                      chatRoomId: community.officialRoomId,
+                      type: 'OFFICIAL',
+                    },
                   });
                 }
               }}>

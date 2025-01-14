@@ -30,7 +30,10 @@ export type CommunityStackParamList = {
   PostWrite: {community: Community; post?: Post};
   Post: {postId: number};
   Daily: {communityId: number; date: string; write: boolean; user: Fan};
-  ChatRoom: {chatRoomId: number};
+  ChatRoom: {
+    chatRoomId: number;
+    type: 'PRIVATE' | 'PUBLIC' | 'CONFIRM' | 'OFFICIAL';
+  };
   CreateChatRoom: {community: Community};
   ChatRoomEnter: {chatRoomId: number};
   Profile: {fanId: number};
@@ -42,7 +45,7 @@ export type CommunityStackParamList = {
   Match: {matchId: number; communityId: number};
   CreateMeet: {community: Community};
   MeetRecruit: {meetId: number; community: Community};
-  Meet: {meetId: number; community: Community};
+  Meet: {meetId: number; communityId: number};
   MeetPrivateChatList: {meetId: number; community: Community};
   MyMeet: {community: Community};
   MeetMeberList: {meetId: number; community: Community};

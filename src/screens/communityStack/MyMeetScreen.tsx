@@ -32,20 +32,16 @@ const MyMeetScreen = () => {
     },
   });
 
-  useEffect(() => {
-    console.log(JSON.stringify(meets));
-  }, [meets]);
-
-  const renderItem: ListRenderItem<MeetInfo> = ({item}) => {
-    return (
-      <MeetCard
-        meet={item}
-        onPress={() => {
-          navigation.navigate('Meet', {meetId: item.id, community});
-        }}
-      />
-    );
-  };
+  // const renderItem: ListRenderItem<MeetInfo> = ({item}) => {
+  //   return (
+  //     <MeetCard
+  //       meet={item}
+  //       onPress={() => {
+  //         navigation.navigate('Meet', {meetId: item.id, community});
+  //       }}
+  //     />
+  //   );
+  // };
 
   return (
     <View className="flex-1">
@@ -59,7 +55,7 @@ const MyMeetScreen = () => {
       />
       <Animated.FlatList
         data={meets?.pages.flatMap(page => page.meets)}
-        renderItem={renderItem}
+        renderItem={null}
         onScroll={scrollHandler}
         contentContainerStyle={{
           paddingTop: insets.top + 55 + 5,

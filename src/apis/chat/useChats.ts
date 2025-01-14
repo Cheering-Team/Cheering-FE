@@ -11,6 +11,7 @@ import {
   getMyOfficialChatRooms,
   getOfficialChatRoom,
   getParticipants,
+  getPrivateChatRoomById,
   getPrivateChatRoomIdsForManager,
   getUnreadChats,
   updateExitTime,
@@ -76,10 +77,14 @@ export const useGetMyChatRooms = () => {
 };
 
 // 채팅방 정보
-export const useGetChatRoomById = (chatRoomId: number, enabled: boolean) => {
+export const useGetChatRoomById = (
+  chatRoomId: number,
+  type: 'PRIVATE' | 'PUBLIC' | 'CONFIRM' | 'OFFICIAL',
+  enabled: boolean,
+) => {
   return useQuery({
     queryKey: chatRoomKeys.detail(chatRoomId),
-    queryFn: getChatRoomById,
+    queryFn: type === 'PRIVATE' ? getPrivateChatRoomById : getChatRoomById,
     enabled: enabled,
     retry: false,
   });

@@ -26,10 +26,11 @@ const MeetRecruitScreen = () => {
   const insets = useSafeAreaInsets();
 
   const [isAgeGenderModalOpen, setIsAgeGenderModalOpen] = useState(false);
+  const [initialStep, setInitialStep] = useState<'info' | 'profile'>('info');
 
   const {data: meet} = useGetMeetById(meetId);
   const {mutateAsync: register} = useCreatePrivateChatRoom();
-  const {refetch: isAgeGenderSetRefetch} = useIsAgeAndGenderSet();
+  const {refetch: isAgeGenderSetRefetch} = useIsAgeAndGenderSet(community.id);
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -40,10 +41,16 @@ const MeetRecruitScreen = () => {
 
   const handleRegister = async () => {
     const response = await isAgeGenderSetRefetch();
-    if (response.data) {
+    if (response.data === 'BOTH') {
       const data = await register({communityId: community.id, meetId});
-      navigation.navigate('ChatRoom', {chatRoomId: data.chatRoomId});
+      navigation.navigate('ChatRoom', {
+        chatRoomId: data.chatRoomId,
+        type: 'PRIVATE',
+      });
+    } else if (response.data === 'NEITHER') {
+      setIsAgeGenderModalOpen(true);
     } else {
+      setInitialStep('profile');
       setIsAgeGenderModalOpen(true);
     }
   };
@@ -142,7 +149,10 @@ const MeetRecruitScreen = () => {
           className="justify-center items-center bg-black mt-2 mx-2 p-3 rounded-md"
           style={{marginBottom: insets.bottom + 8}}
           onPress={() => {
-            navigation.navigate('Meet', {meetId: meet.id, community});
+            navigation.navigate('Meet', {
+              meetId: meet.id,
+              communityId: community.id,
+            });
           }}>
           <CustomText className="text-white text-[17px]" fontWeight="500">
             모임으로 이동하기
@@ -161,12 +171,17 @@ const MeetRecruitScreen = () => {
 
       {isAgeGenderModalOpen && (
         <MeetProfileModal
+          communityId={community.id}
+          initialStep={initialStep}
           firstCallback={() => {
             setIsAgeGenderModalOpen(false);
           }}
           secondCallback={async () => {
             const data = await register({communityId: community.id, meetId});
-            navigation.navigate('ChatRoom', {chatRoomId: data.chatRoomId});
+            navigation.navigate('ChatRoom', {
+              chatRoomId: data.chatRoomId,
+              type: 'PRIVATE',
+            });
             setIsAgeGenderModalOpen(false);
           }}
         />

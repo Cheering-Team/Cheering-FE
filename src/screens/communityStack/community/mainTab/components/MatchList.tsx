@@ -150,6 +150,7 @@ const MatchList = ({community, onTabPress, matches}: MatchListProps) => {
                 if (community.officialRoomId) {
                   navigation.navigate('ChatRoom', {
                     chatRoomId: community.officialRoomId,
+                    type: 'OFFICIAL',
                   });
                 }
               }}>

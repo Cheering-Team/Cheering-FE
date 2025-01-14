@@ -1,6 +1,12 @@
 import CustomText from 'components/common/CustomText';
 import React, {useState} from 'react';
-import {KeyboardAvoidingView, Modal, Pressable, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  View,
+} from 'react-native';
 import MaleSvg from 'assets/images/male-blue.svg';
 import FemaleSvg from 'assets/images/female-red.svg';
 import {Picker} from '@react-native-picker/picker';
@@ -9,14 +15,17 @@ import {showTopToast} from 'utils/toast';
 import {toastConfig} from '../../../../../../App';
 import Toast from 'react-native-toast-message';
 import BasicTextInput from 'components/common/BasicTextInput';
+import {NAME_REGEX} from 'constants/regex';
 
 interface MeetProfileModalProps {
+  communityId: number;
   initialStep: 'info' | 'profile';
   firstCallback: () => void;
   secondCallback: () => void;
 }
 
 const MeetProfileModal = ({
+  communityId,
   initialStep = 'info',
   firstCallback,
   secondCallback,
@@ -36,17 +45,32 @@ const MeetProfileModal = ({
     setStep('profile');
   };
 
-  const handleSetAgeAndGender = async () => {
-    setStep('profile');
-    // if (gender === null) {
-    //   showTopToast({type: 'fail', message: '성별을 골라주세요'});
-    //   return;
-    // }
-    // await setAgeAndGender({age: new Date().getFullYear() - age + 1, gender});
-    // showTopToast({type: 'success', message: '저장되었습니다'});
-    // setTimeout(() => {
-    //   secondCallback();
-    // }, 500);
+  const handleSetProfile = async () => {
+    if (name.length < 2 || name.length > 15) {
+      showTopToast({
+        type: 'fail',
+        message: '이름은 2자~15자여야 합니다',
+      });
+      return;
+    }
+    if (!NAME_REGEX.test(name)) {
+      showTopToast({
+        type: 'fail',
+        message: '한글 영어 숫자 . _ 만 사용 가능합니다',
+      });
+      return;
+    }
+    await setAgeAndGender({
+      communityId,
+      age: initialStep === 'info' ? age : null,
+      gender: initialStep === 'info' ? gender : null,
+      name,
+      status: initialStep === 'info' ? 'NEITHER' : 'NULL_PROFILE',
+    });
+    showTopToast({type: 'success', message: '저장되었습니다'});
+    setTimeout(() => {
+      secondCallback();
+    }, 500);
   };
 
   return (
@@ -211,7 +235,7 @@ const MeetProfileModal = ({
                   style={{
                     backgroundColor: name.length < 2 ? '#e0e4ea' : '#1e293b',
                   }}
-                  onPress={handleSetAgeAndGender}
+                  onPress={handleSetProfile}
                   disabled={name.length < 2}>
                   <CustomText
                     fontWeight="500"

@@ -19,10 +19,14 @@ export interface ChatRoom {
   lastMessageTime: string | null;
   unreadCount: number | null;
   meetId: number | null;
+  opponentAge?: number;
+  opponentGender?: 'MALE' | 'FEMALE';
+  communityId?: number;
+  isConfirmed?: boolean;
 }
 
 export interface Chat {
-  type: 'MESSAGE' | 'SYSTEM_ENTER' | 'SYSTEM_EXIT';
+  type: 'MESSAGE' | 'SYSTEM' | 'JOIN_REQUEST' | 'JOIN_ACCEPT';
   createdAt: string;
   writer: Fan;
   messages: string[];

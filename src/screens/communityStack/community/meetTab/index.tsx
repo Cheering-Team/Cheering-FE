@@ -586,6 +586,7 @@ const MeetTab = ({
       />
       {isAgeGenderModalOpen && (
         <MeetProfileModal
+          communityId={community.id}
           initialStep={initialStep}
           firstCallback={() => {
             setIsAgeGenderModalOpen(false);

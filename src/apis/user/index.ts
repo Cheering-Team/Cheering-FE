@@ -196,8 +196,9 @@ export const isAgeAndGenderSet = async ({
 };
 
 export const setAgeAndGender = async (data: SetAgeAndGenderPayload) => {
+  const {communityId, age, gender, name, status} = data;
   const response = await axiosInstance.post<ApiResponse<null>>(
-    `/users/age-gender`,
+    `/users/communities/${communityId}/set-profile`,
     data,
   );
   return response.data.result;

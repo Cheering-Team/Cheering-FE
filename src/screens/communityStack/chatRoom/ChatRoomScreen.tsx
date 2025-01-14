@@ -37,6 +37,8 @@ import {queryClient} from '../../../../App';
 import {chatRoomKeys} from 'apis/chat/queries';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 import PrivateChatRoomHeader from './components/PrivateChatRoomHeader';
+import JoinRequestMessage from './components/JoinRequestMessage';
+import JoinAcceptMessage from './components/JoinAcceptMessage';
 const TextEncodingPolyfill = require('text-encoding');
 
 Object.assign('global', {
@@ -46,7 +48,7 @@ Object.assign('global', {
 
 const ChatRoomScreen = () => {
   useDarkStatusBar();
-  const {chatRoomId} =
+  const {chatRoomId, type} =
     useRoute<RouteProp<CommunityStackParamList, 'ChatRoom'>>().params;
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
@@ -66,7 +68,11 @@ const ChatRoomScreen = () => {
 
   const flatListRef = useRef<FlatList>(null);
 
-  const {data: chatRoom, isError, error} = useGetChatRoomById(chatRoomId, true);
+  const {
+    data: chatRoom,
+    isError,
+    error,
+  } = useGetChatRoomById(chatRoomId, type, true);
   const {
     data: chats,
     refetch,
@@ -117,39 +123,64 @@ const ChatRoomScreen = () => {
 
   const renderChatMessage: ListRenderItem<Chat> = useCallback(
     ({item, index}) => {
-      if (item.type === 'MESSAGE') {
-        const currentMessageDate = new Date(item.createdAt).setHours(
-          0,
-          0,
-          0,
-          0,
-        );
-        const previousMessageDate =
-          index < messages.length - 1
-            ? new Date(messages[index + 1].createdAt).setHours(0, 0, 0, 0)
-            : null;
+      if (chatRoom) {
+        if (item.type === 'MESSAGE') {
+          const currentMessageDate = new Date(item.createdAt).setHours(
+            0,
+            0,
+            0,
+            0,
+          );
+          const previousMessageDate =
+            index < messages.length - 1
+              ? new Date(messages[index + 1].createdAt).setHours(0, 0, 0, 0)
+              : null;
 
-        const isFirst =
-          index === messages.length - 1 ||
-          currentMessageDate !== previousMessageDate;
+          const isFirst =
+            index === messages.length - 1 ||
+            currentMessageDate !== previousMessageDate;
 
-        return (
-          <ChatMessage
-            chat={item}
-            isMy={item.writer.id === chatRoom?.user?.id}
-            isFirst={isFirst}
-          />
-        );
-      } else {
-        return (
-          <View className="justify-center items-center mb-[15] mt-[5]">
-            <View className="bg-black/30 py-1 px-3 rounded-xl">
-              <CustomText fontWeight="500" className="text-white text-[13px]">
-                {item.messages[0]}
-              </CustomText>
+          return (
+            <ChatMessage
+              chat={item}
+              isMy={item.writer.id === chatRoom?.user?.id}
+              isFirst={isFirst}
+            />
+          );
+        } else if (item.type === 'JOIN_REQUEST') {
+          return (
+            <JoinRequestMessage
+              chat={item}
+              chatRoomId={chatRoom.id}
+              meetId={chatRoom.meetId}
+            />
+          );
+        } else if (item.type === 'JOIN_ACCEPT') {
+          return (
+            <JoinAcceptMessage
+              chat={item}
+              meetId={chatRoom.meetId}
+              communityId={chatRoom.communityId}
+            />
+          );
+        } else {
+          return (
+            <View className="justify-center items-center">
+              <View className="justify-center items-center mb-[15] mt-[5] max-w-[80%]">
+                <View className="bg-black/30 py-1 px-3 rounded-xl">
+                  <CustomText
+                    numberOfLines={999}
+                    fontWeight="500"
+                    className="text-white text-[13px] text-center">
+                    {item.messages[0]}
+                  </CustomText>
+                </View>
+              </View>
             </View>
-          </View>
-        );
+          );
+        }
+      } else {
+        return null;
       }
     },
     [chatRoom, messages],
@@ -193,7 +224,6 @@ const ChatRoomScreen = () => {
           const chatRoomSubscription = client.subscribe(
             `/topic/chatRoom/${chatRoomId}`,
             message => {
-              console.log(JSON.parse(message.body));
               handleNewMessage(JSON.parse(message.body));
             },
             {
@@ -332,7 +362,7 @@ const ChatRoomScreen = () => {
           automaticallyAdjustsScrollIndicatorInsets={true}
           ref={flatListRef}
           contentContainerStyle={{
-            paddingBottom: insets.top + 110,
+            paddingBottom: insets.top + 400,
             paddingHorizontal: 10,
           }}
           data={messages}

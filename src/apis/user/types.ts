@@ -70,6 +70,9 @@ export interface VersionInfo {
 }
 
 export interface SetAgeAndGenderPayload {
-  age: number;
-  gender: 'MALE' | 'FEMALE';
+  communityId: number;
+  age: number | null;
+  gender: 'MALE' | 'FEMALE' | null;
+  name: string;
+  status: 'NEITHER' | 'NULL_PROFILE';
 }

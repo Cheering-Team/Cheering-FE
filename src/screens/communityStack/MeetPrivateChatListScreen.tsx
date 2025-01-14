@@ -52,7 +52,10 @@ const MeetPrivateChatListScreen = () => {
             chatRoom={item}
             location="MY"
             onPress={() => {
-              navigation.navigate('ChatRoom', {chatRoomId: item.id});
+              navigation.navigate('ChatRoom', {
+                chatRoomId: item.id,
+                type: 'PRIVATE',
+              });
             }}
           />
         )}

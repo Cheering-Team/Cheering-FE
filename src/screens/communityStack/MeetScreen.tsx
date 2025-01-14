@@ -15,15 +15,17 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChatSvg from 'assets/images/chat-line-black.svg';
 import MemberSvg from 'assets/images/people-black.svg';
 import MemberAddSvg from 'assets/images/people-plus-black.svg';
+import {useGetCommunityById} from 'apis/community/useCommunities';
 
 const MeetScreen = () => {
-  const {meetId, community} =
+  const {meetId, communityId} =
     useRoute<RouteProp<CommunityStackParamList, 'Meet'>>().params;
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
   const {data: meet} = useGetMeetById(meetId);
+  const {data: community} = useGetCommunityById(communityId);
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -32,7 +34,7 @@ const MeetScreen = () => {
     },
   });
 
-  if (!meet) {
+  if (!meet || !community) {
     return null;
   }
 
@@ -59,7 +61,10 @@ const MeetScreen = () => {
           <Pressable
             className="flex-1 items-center justify-center pt-5 pb-4"
             onPress={() => {
-              navigation.navigate('ChatRoom', {chatRoomId: meet.chatRoom.id});
+              navigation.navigate('ChatRoom', {
+                chatRoomId: meet.chatRoom.id,
+                type: 'CONFIRM',
+              });
             }}>
             <ChatSvg width={22} height={22} />
             <CustomText

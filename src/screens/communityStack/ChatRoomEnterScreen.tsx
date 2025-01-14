@@ -80,7 +80,10 @@ const ChatRoomEnterScreen = ({route}) => {
                 message: '입장가능 인원을 초과하였습니다.',
               });
             } else {
-              navigation.replace('ChatRoom', {chatRoomId: chatRoom.id});
+              navigation.replace('ChatRoom', {
+                chatRoomId: chatRoom.id,
+                type: 'PUBLIC',
+              });
             }
           }}
         />

@@ -70,5 +70,13 @@ export const findAllMyMeets = async ({
   const response = await axiosInstance.get<ApiResponse<GetMeetsResponse>>(
     `/communities/${communityId}/meets/my-all?size=${10}&page=${pageParam}`,
   );
+
+  return response.data.result;
+};
+
+export const acceptJoinRequest = async (chatRoomId: number) => {
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/chatrooms/${chatRoomId}/accept`,
+  );
   return response.data.result;
 };

@@ -104,7 +104,6 @@ const CreateMeetScreen = () => {
         matchId: match.id,
         communityType: community.type,
       });
-      console.log(data);
     } catch (error: any) {
       //
     }

@@ -172,3 +172,15 @@ export const getPrivateChatRoomIdsForManager = async ({
   );
   return response.data.result;
 };
+
+export const getPrivateChatRoomById = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof chatRoomKeys.detail>;
+}) => {
+  const [, , chatRoomId] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<ChatRoom>>(
+    `/chatrooms/private/${chatRoomId}`,
+  );
+  return response.data.result;
+};

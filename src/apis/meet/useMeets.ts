@@ -1,6 +1,7 @@
 import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import {meetFanKeys, meetKeys} from './queries';
 import {
+  acceptJoinRequest,
   createMeet,
   findAllMyMeets,
   getAllMeetsByCommunity,
@@ -8,6 +9,8 @@ import {
   getMeetMembers,
 } from '.';
 import {GetMeesPayload} from './types';
+import {queryClient} from '../../../App';
+import {chatKeys} from 'apis/chat/queries';
 
 export const useGetMeetById = (meedId: number | null) => {
   return useQuery({
@@ -49,5 +52,14 @@ export const useFindAllMyMeets = (communityId: number) => {
       return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
     },
     retry: false,
+  });
+};
+
+export const useAcceptJoinRequest = (chatRoomId: number) => {
+  return useMutation({
+    mutationFn: acceptJoinRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: chatKeys.list(chatRoomId)});
+    },
   });
 };
