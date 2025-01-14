@@ -98,7 +98,17 @@ const MyMeetScreen = () => {
             {title}
           </CustomText>
         )}
-        renderItem={({item}) => <MeetCard meet={item} onPress={() => {}} />}
+        renderItem={({item}) => (
+          <MeetCard
+            meet={item}
+            onPress={() => {
+              navigation.navigate('Meet', {
+                meetId: item.id,
+                communityId: community.id,
+              });
+            }}
+          />
+        )}
         contentContainerStyle={{
           paddingTop: insets.top + 45,
           paddingBottom: 100,

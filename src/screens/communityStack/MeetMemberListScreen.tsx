@@ -13,6 +13,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CrownSvg from 'assets/images/crown-flat.svg';
+import Avatar from 'components/common/Avatar';
 
 const MeetMemberListScreen = () => {
   useDarkStatusBar();
@@ -44,21 +45,17 @@ const MeetMemberListScreen = () => {
       <Animated.FlatList
         data={members}
         renderItem={({item}) => (
-          <View className="flex-row items-center py-2">
-            {item.nickname === '모임장' ? (
-              <View
-                className="w-[52] h-[52] justify-center items-center rounded-full border border-gray-200"
-                style={{backgroundColor: 'white'}}>
-                <CrownSvg width={33} height={33} />
-              </View>
-            ) : (
-              <CustomText>{item.nickname}</CustomText>
-            )}
+          <View className="flex-row items-center py-[10]">
+            <Avatar size={42} />
 
             <View className="ml-3">
-              <CustomText fontWeight="500" className="text-[16px] mb-[2]">
-                {item.nickname}
-              </CustomText>
+              <View className="flex-row items-center">
+                <CustomText fontWeight="500" className="text-[15px] mb-[2]">
+                  {item.name}
+                </CustomText>
+                <CrownSvg width={15} height={15} className="ml-[3] mb-[2]" />
+              </View>
+
               <View className="flex-row items-center">
                 <CustomText className="text-gray-500">
                   {item.userAge}

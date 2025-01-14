@@ -53,7 +53,7 @@ export interface MeetMember {
   userAge: number;
   userGender: 'MALE' | 'FEMALE';
   role: string;
-  nickname: string;
+  name: string;
 }
 
 // 요청

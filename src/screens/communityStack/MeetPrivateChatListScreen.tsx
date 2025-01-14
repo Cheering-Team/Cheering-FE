@@ -45,7 +45,6 @@ const MeetPrivateChatListScreen = () => {
         onScroll={scrollHandler}
         contentContainerStyle={{
           paddingTop: insets.top + 55 + 5,
-          paddingHorizontal: 12,
         }}
         renderItem={({item}) => (
           <ChatCard
