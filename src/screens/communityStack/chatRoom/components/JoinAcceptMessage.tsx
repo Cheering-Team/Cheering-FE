@@ -5,25 +5,37 @@ import {useGetMeetById} from 'apis/meet/useMeets';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_WIDTH} from 'constants/dimension';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Pressable, View} from 'react-native';
 import {formatAmPmTime} from 'utils/format';
+import {queryClient} from '../../../../../App';
+import {chatRoomKeys} from 'apis/chat/queries';
 
 interface JoinAcceptMessageProps {
   chat: Chat;
   meetId: number | null;
+  chatRoomId: number;
   communityId?: number;
 }
 
 const JoinAcceptMessage = ({
   chat,
   meetId,
+  chatRoomId,
   communityId,
 }: JoinAcceptMessageProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
 
   const {data: meet} = useGetMeetById(meetId);
+
+  useEffect(() => {
+    if (meet?.isManager) {
+      queryClient.invalidateQueries({
+        queryKey: chatRoomKeys.detail(chatRoomId),
+      });
+    }
+  }, [chatRoomId, meet?.isManager]);
 
   if (meet?.isManager) {
     return (

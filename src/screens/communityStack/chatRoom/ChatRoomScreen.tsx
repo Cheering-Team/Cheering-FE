@@ -161,6 +161,7 @@ const ChatRoomScreen = () => {
             <JoinAcceptMessage
               chat={item}
               meetId={chatRoom.meetId}
+              chatRoomId={chatRoom.id}
               communityId={chatRoom.communityId}
             />
           );

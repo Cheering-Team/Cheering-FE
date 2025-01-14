@@ -87,3 +87,11 @@ export interface GetMeesPayload {
 export interface GetMeetsResponse extends Page {
   meets: MeetInfo[];
 }
+
+export interface GetMyMeetResponse extends Page {
+  meets: MeetSection[];
+}
+export interface MeetSection {
+  title: string;
+  data: MeetInfo[];
+}

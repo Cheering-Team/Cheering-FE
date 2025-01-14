@@ -3,6 +3,7 @@ import {ApiResponse, Id} from 'apis/types';
 import {
   CreateMeetPayload,
   GetMeetsResponse,
+  GetMyMeetResponse,
   MeetDetail,
   MeetMember,
 } from './types';
@@ -67,8 +68,8 @@ export const findAllMyMeets = async ({
   pageParam: number;
 }) => {
   const [, , , {communityId}] = queryKey;
-  const response = await axiosInstance.get<ApiResponse<GetMeetsResponse>>(
-    `/communities/${communityId}/meets/my-all?size=${10}&page=${pageParam}`,
+  const response = await axiosInstance.get<ApiResponse<GetMyMeetResponse>>(
+    `/communities/${communityId}/meets/my-all?size=10&page=${pageParam}`,
   );
 
   return response.data.result;
