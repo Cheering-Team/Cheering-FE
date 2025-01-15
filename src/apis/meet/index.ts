@@ -67,9 +67,9 @@ export const findAllMyMeets = async ({
   queryKey: ReturnType<typeof meetKeys.my>;
   pageParam: number;
 }) => {
-  const [, , , {communityId}] = queryKey;
+  const [, , , {communityId, pastFiltering}] = queryKey;
   const response = await axiosInstance.get<ApiResponse<GetMyMeetResponse>>(
-    `/communities/${communityId}/meets/my-all?size=10&page=${pageParam}`,
+    `/communities/${communityId}/meets/my-all?pastFiltering=${pastFiltering}&size=10&page=${pageParam}`,
   );
 
   return response.data.result;

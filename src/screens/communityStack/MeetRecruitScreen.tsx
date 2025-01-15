@@ -144,7 +144,7 @@ const MeetRecruitScreen = () => {
         </CustomText>
       </Animated.ScrollView>
 
-      {meet.isManager ? (
+      {meet.isMember ? (
         <Pressable
           className="justify-center items-center bg-black mt-2 mx-2 p-3 rounded-md"
           style={{marginBottom: insets.bottom + 8}}

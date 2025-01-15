@@ -5,7 +5,7 @@ import CCHeader from 'components/common/CCHeader';
 import CustomText from 'components/common/CustomText';
 import MatchInfo from 'components/common/MatchInfo';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React from 'react';
+import React, {useRef} from 'react';
 import {Pressable, View} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
@@ -16,6 +16,8 @@ import ChatSvg from 'assets/images/chat-line-black.svg';
 import MemberSvg from 'assets/images/people-black.svg';
 import MemberAddSvg from 'assets/images/people-plus-black.svg';
 import {useGetCommunityById} from 'apis/community/useCommunities';
+import OptionModal from 'components/common/OptionModal';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 
 const MeetScreen = () => {
   const {meetId, communityId} =
@@ -23,6 +25,7 @@ const MeetScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const {data: meet} = useGetMeetById(meetId);
   const {data: community} = useGetCommunityById(communityId);
@@ -46,6 +49,10 @@ const MeetScreen = () => {
         community={community}
         onFirstPress={() => {
           navigation.goBack();
+        }}
+        secondType="MORE"
+        onSecondPress={() => {
+          bottomSheetModalRef.current?.present();
         }}
       />
       <Animated.ScrollView
@@ -160,6 +167,33 @@ const MeetScreen = () => {
           {meet.description}
         </CustomText>
       </Animated.ScrollView>
+      {meet.isManager && (
+        <OptionModal
+          modalRef={bottomSheetModalRef}
+          firstText="모임 수정"
+          firstSvg="edit"
+          firstOnPress={() => {
+            //
+          }}
+          secondText="모임 삭제"
+          secondColor="#ff2626"
+          secondSvg="trash"
+          secondOnPress={() => {
+            //
+          }}
+        />
+      )}
+      {!meet.isManager && (
+        <OptionModal
+          modalRef={bottomSheetModalRef}
+          firstText="모임 탈퇴"
+          firstSvg="exit"
+          firstColor="#ff2626"
+          firstOnPress={() => {
+            //
+          }}
+        />
+      )}
     </View>
   );
 };

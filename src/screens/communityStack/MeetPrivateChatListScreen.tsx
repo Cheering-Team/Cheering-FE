@@ -5,7 +5,7 @@ import CCHeader from 'components/common/CCHeader';
 import ChatCard from 'components/common/ChatCard';
 import CustomText from 'components/common/CustomText';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,

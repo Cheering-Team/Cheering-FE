@@ -21,7 +21,12 @@ export const useGetMeetById = (meedId: number | null) => {
 };
 
 export const useCreateMeet = () => {
-  return useMutation({mutationFn: createMeet});
+  return useMutation({
+    mutationFn: createMeet,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: meetKeys.lists()});
+    },
+  });
 };
 
 export const useGetAllMeetsByCommunity = (filter: GetMeesPayload) => {
@@ -43,9 +48,12 @@ export const useGetMeetMembers = (meetId: number) => {
   });
 };
 
-export const useFindAllMyMeets = (communityId: number) => {
+export const useFindAllMyMeets = (
+  communityId: number,
+  pastFiltering: boolean,
+) => {
   return useInfiniteQuery({
-    queryKey: meetKeys.my(communityId),
+    queryKey: meetKeys.my(communityId, pastFiltering),
     queryFn: findAllMyMeets,
     initialPageParam: 0,
     getNextPageParam: lastPage => {

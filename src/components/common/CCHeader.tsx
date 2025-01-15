@@ -5,6 +5,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Community} from 'apis/community/types';
 import LeftSvg from 'assets/images/arrow-left.svg';
 import CheckSvg from 'assets/images/check-white.svg';
+import MoreSvg from 'assets/images/three-dots-black.svg';
 import {
   Extrapolation,
   interpolate,
@@ -16,7 +17,7 @@ interface CCHeaderProps {
   title: string;
   community: Community;
   scrollY: SharedValue<number>;
-  secondType?: 'COMPELETE';
+  secondType?: 'COMPELETE' | 'MORE';
   onFirstPress: () => void;
   onSecondPress?: () => void;
 }
@@ -62,16 +63,32 @@ const CCHeader = ({
         </CustomText>
       </View>
       {secondType && onSecondPress ? (
-        <Pressable
-          onPress={() => {
-            onSecondPress();
-          }}
-          className="rounded-full w-[38] h-[38] items-center justify-center shadow-sm shadow-gray-200 border border-white"
-          style={{
-            backgroundColor: community.color,
-          }}>
-          <CheckSvg width={17} height={17} />
-        </Pressable>
+        <>
+          {secondType === 'COMPELETE' && (
+            <Pressable
+              onPress={() => {
+                onSecondPress();
+              }}
+              className="rounded-full w-[38] h-[38] items-center justify-center shadow-sm shadow-gray-200 border border-white"
+              style={{
+                backgroundColor: community.color,
+              }}>
+              <CheckSvg width={17} height={17} />
+            </Pressable>
+          )}
+          {secondType === 'MORE' && (
+            <Pressable
+              onPress={() => {
+                onSecondPress();
+              }}
+              className="rounded-full bg-white w-[38] h-[38] items-center justify-center shadow-sm shadow-gray-200 border border-gray-200"
+              style={{
+                backgroundColor: 'white',
+              }}>
+              <MoreSvg width={14} height={14} />
+            </Pressable>
+          )}
+        </>
       ) : (
         <View className="w-[38]" />
       )}

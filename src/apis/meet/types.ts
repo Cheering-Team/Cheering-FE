@@ -22,6 +22,7 @@ export interface MeetDetail {
   match: MatchDetail;
   place: string | null;
   isManager: boolean;
+  isMember: boolean;
 }
 
 export interface MeetInfo {
@@ -29,6 +30,7 @@ export interface MeetInfo {
   title: string;
   description: string;
   type: 'LIVE' | 'BOOKING';
+  status: 'MANAGER' | 'CONFIRMED' | 'APPLIED';
   chatRoom: ChatRoom;
   currentCount: number;
   max: number;
@@ -54,6 +56,8 @@ export interface MeetMember {
   userGender: 'MALE' | 'FEMALE';
   role: string;
   name: string;
+  image: string;
+  isManager: boolean;
 }
 
 // 요청

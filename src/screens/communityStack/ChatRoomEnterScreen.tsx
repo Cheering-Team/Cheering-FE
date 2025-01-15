@@ -8,9 +8,11 @@ import CustomText from 'components/common/CustomText';
 import {showBottomToast} from 'utils/toast';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import StackHeader from 'components/common/StackHeader';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const ChatRoomEnterScreen = ({route}) => {
   const {chatRoomId} = route.params;
+  useDarkStatusBar();
 
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
@@ -19,7 +21,7 @@ const ChatRoomEnterScreen = ({route}) => {
     refetch,
     isError,
     error,
-  } = useGetChatRoomById(chatRoomId, true);
+  } = useGetChatRoomById(chatRoomId, 'PUBLIC', true);
 
   useEffect(() => {
     if (isError && error.message === '존재하지 않는 채팅방') {

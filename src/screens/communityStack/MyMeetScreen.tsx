@@ -1,12 +1,17 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {MeetInfo} from 'apis/meet/types';
 import {useFindAllMyMeets} from 'apis/meet/useMeets';
 import CCHeader from 'components/common/CCHeader';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {useEffect} from 'react';
-import {ListRenderItem, SectionList, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  ActivityIndicator,
+  Pressable,
+  RefreshControl,
+  SectionList,
+  View,
+} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -14,6 +19,7 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MeetCard from './community/meetTab/components/MeetCard';
 import CustomText from 'components/common/CustomText';
+import CheckSvg from 'assets/images/check-white.svg';
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
@@ -55,7 +61,16 @@ const MyMeetScreen = () => {
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
-  const {data: meets} = useFindAllMyMeets(community.id);
+  const [pastFiltering, setPastFiltering] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const {
+    data: meets,
+    fetchNextPage,
+    hasNextPage,
+    refetch,
+    isLoading,
+  } = useFindAllMyMeets(community.id, pastFiltering);
 
   const scrollY = useSharedValue(0);
 
@@ -65,18 +80,22 @@ const MyMeetScreen = () => {
     },
   });
 
-  const sections = getMergedSections(meets?.pages || []);
+  const loadMeets = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
 
-  // const renderItem: ListRenderItem<MeetInfo> = ({item}) => {
-  //   return (
-  //     <MeetCard
-  //       meet={item}
-  //       onPress={() => {
-  //         navigation.navigate('Meet', {meetId: item.id, community});
-  //       }}
-  //     />
-  //   );
-  // };
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    refetch();
+
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  };
+
+  const sections = getMergedSections(meets?.pages || []);
 
   return (
     <View className="flex-1">
@@ -91,21 +110,70 @@ const MyMeetScreen = () => {
       <AnimatedSectionList
         sections={sections}
         onScroll={scrollHandler}
+        scrollEventThrottle={16}
+        onEndReached={loadMeets}
+        onEndReachedThreshold={1}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            progressViewOffset={insets.top + 55}
+            onRefresh={handleRefresh}
+            colors={['#787878']}
+          />
+        }
+        ListHeaderComponent={
+          <View className="pr-4 pt-3">
+            <Pressable
+              className="self-end flex-row items-center"
+              onPress={() => {
+                setPastFiltering(prev => !prev);
+              }}>
+              <View
+                className="w-[15] h-[15] rounded-[4px] border mr-[5] justify-center items-center"
+                style={{
+                  backgroundColor: pastFiltering ? community.color : 'white',
+                  borderColor: pastFiltering ? community.color : '#9ca3af',
+                }}>
+                {pastFiltering && <CheckSvg />}
+              </View>
+              <CustomText
+                className="text-[15px] text-gray-600"
+                fontWeight="500">
+                지난 모임 보기
+              </CustomText>
+            </Pressable>
+          </View>
+        }
         renderSectionHeader={({section: {title}}) => (
           <CustomText
-            className="text-[16px] text-slate-800 mt-5 mb-2 mx-3"
+            className="text-[16px] text-slate-800 mt-3 mb-2 mx-3"
             fontWeight="600">
             {title}
           </CustomText>
         )}
+        ListEmptyComponent={
+          isLoading ? (
+            <View className="h-[150] justify-center items-center">
+              <ActivityIndicator />
+            </View>
+          ) : null
+        }
         renderItem={({item}) => (
           <MeetCard
             meet={item}
+            type="MY"
             onPress={() => {
-              navigation.navigate('Meet', {
-                meetId: item.id,
-                communityId: community.id,
-              });
+              if (item.status === 'MANAGER' || item.status === 'CONFIRMED') {
+                navigation.navigate('Meet', {
+                  meetId: item.id,
+                  communityId: community.id,
+                });
+              } else {
+                navigation.navigate('MeetRecruit', {
+                  meetId: item.id,
+                  community,
+                });
+              }
             }}
           />
         )}
