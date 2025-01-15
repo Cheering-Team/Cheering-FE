@@ -88,7 +88,7 @@ const JoinAcceptMessage = ({
               className="justify-center items-center py-[10] mt-3 bg-white rounded-lg border border-gray-200"
               onPress={() => {
                 if (communityId && meetId) {
-                  navigation.navigate('Meet', {meetId, communityId});
+                  navigation.replace('Meet', {meetId, communityId});
                 }
               }}>
               <CustomText>모임으로 이동</CustomText>
