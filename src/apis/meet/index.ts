@@ -88,3 +88,10 @@ export const deleteMeet = async (meetId: number) => {
   );
   return response.data.result;
 };
+
+export const leaveMeet = async (meetId: number) => {
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/meets/${meetId}/leave`,
+  );
+  return response.data.result;
+};

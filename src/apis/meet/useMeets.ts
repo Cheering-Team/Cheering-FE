@@ -8,6 +8,7 @@ import {
   getAllMeetsByCommunity,
   getMeetById,
   getMeetMembers,
+  leaveMeet,
 } from '.';
 import {GetMeesPayload} from './types';
 import {queryClient} from '../../../App';
@@ -76,5 +77,11 @@ export const useAcceptJoinRequest = (chatRoomId: number) => {
 export const useDeleteMeet = () => {
   return useMutation({
     mutationFn: deleteMeet,
+  });
+};
+
+export const useLeaveMeet = () => {
+  return useMutation({
+    mutationFn: leaveMeet,
   });
 };

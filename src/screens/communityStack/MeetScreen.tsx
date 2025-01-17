@@ -5,7 +5,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useDeleteMeet, useGetMeetById} from 'apis/meet/useMeets';
+import {useDeleteMeet, useGetMeetById, useLeaveMeet} from 'apis/meet/useMeets';
 import CCHeader from 'components/common/CCHeader';
 import CustomText from 'components/common/CustomText';
 import MatchInfo from 'components/common/MatchInfo';
@@ -35,10 +35,12 @@ const MeetScreen = () => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isLeaveOpen, setIsLeaveOpen] = useState(false);
 
   const {data: meet} = useGetMeetById(meetId);
   const {data: community} = useGetCommunityById(communityId);
   const {mutateAsync: deleteMeet} = useDeleteMeet();
+  const {mutateAsync: leaveMeet} = useLeaveMeet();
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -52,6 +54,29 @@ const MeetScreen = () => {
       await deleteMeet(meetId);
       setIsDeleteOpen(false);
       showTopToast({type: 'success', message: '모임이 삭제되었습니다'});
+      if (community) {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'Community',
+                params: {communityId, initialIndex: 4},
+              },
+            ],
+          }),
+        );
+      }
+    } catch (error: any) {
+      //
+    }
+  };
+
+  const handleLeaveMeet = async () => {
+    try {
+      await leaveMeet(meetId);
+      setIsLeaveOpen(false);
+      showTopToast({type: 'success', message: '모임에서 탈퇴하였습니다'});
       if (community) {
         navigation.dispatch(
           CommonActions.reset({
@@ -223,7 +248,7 @@ const MeetScreen = () => {
           firstSvg="exit"
           firstColor="#ff2626"
           firstOnPress={() => {
-            //
+            setIsLeaveOpen(true);
           }}
         />
       )}
@@ -238,6 +263,20 @@ const MeetScreen = () => {
           }}
           secondText="삭제"
           secondCallback={handleDeleteMeet}
+          secondButtonColor="#e65151"
+        />
+      )}
+      {isLeaveOpen && (
+        <TwoButtonModal
+          title="모임에서 탈퇴하시겠습니까?"
+          content={
+            '경기까지 이틀 이내로 남았다면 해당 경기에 대해서는 다른 모임에 참가할 수 없습니다'
+          }
+          firstCallback={() => {
+            setIsLeaveOpen(false);
+          }}
+          secondText="탈퇴"
+          secondCallback={handleLeaveMeet}
           secondButtonColor="#e65151"
         />
       )}
