@@ -12,7 +12,7 @@ import {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-export const useCommunity = (communityId: number) => {
+export const useCommunity = (communityId: number, initialIndex: number) => {
   const insets = useSafeAreaInsets();
   const HEADER_HEIGHT = 110 + insets.top;
 
@@ -26,8 +26,8 @@ export const useCommunity = (communityId: number) => {
     {key: 'meet', title: '모임'},
   ]);
 
-  const [tabIndex, setTabIndex] = useState(0);
-  const tabIndexRef = useRef(0);
+  const [tabIndex, setTabIndex] = useState(initialIndex);
+  const tabIndexRef = useRef(initialIndex);
   const isListGlidingRef = useRef(false);
   const listArrRef = useRef<
     {

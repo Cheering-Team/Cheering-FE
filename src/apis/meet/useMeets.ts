@@ -3,6 +3,7 @@ import {meetFanKeys, meetKeys} from './queries';
 import {
   acceptJoinRequest,
   createMeet,
+  deleteMeet,
   findAllMyMeets,
   getAllMeetsByCommunity,
   getMeetById,
@@ -69,5 +70,11 @@ export const useAcceptJoinRequest = (chatRoomId: number) => {
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: chatKeys.list(chatRoomId)});
     },
+  });
+};
+
+export const useDeleteMeet = () => {
+  return useMutation({
+    mutationFn: deleteMeet,
   });
 };

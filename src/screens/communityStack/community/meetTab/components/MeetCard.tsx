@@ -54,9 +54,9 @@ const MeetCard = ({meet, type = 'TAB', onPress}: MeetCardProps) => {
               )}
             </View>
           ) : (
-            <>
+            <View className="flex-row items-center">
               {meet.status === 'MANAGER' && (
-                <View className="bg-red-500 px-[5] py-[2] rounded-[4px]">
+                <View className="bg-green-600 px-[5] py-[2] rounded-[4px]">
                   <CustomText
                     className="text-white text-[13px]"
                     fontWeight="500">
@@ -65,7 +65,7 @@ const MeetCard = ({meet, type = 'TAB', onPress}: MeetCardProps) => {
                 </View>
               )}
               {meet.status === 'CONFIRMED' && (
-                <View className="bg-green-500 px-[5] py-[2] rounded-[4px]">
+                <View className="bg-black px-[5] py-[2] rounded-[4px]">
                   <CustomText
                     className="text-white text-[13px]"
                     fontWeight="500">
@@ -82,7 +82,25 @@ const MeetCard = ({meet, type = 'TAB', onPress}: MeetCardProps) => {
                   </CustomText>
                 </View>
               )}
-            </>
+              {meet.type === 'LIVE' && (
+                <View className="bg-red-500 px-[5] py-[2] rounded-[4px] ml-1">
+                  <CustomText
+                    className="text-white text-[13px]"
+                    fontWeight="500">
+                    직관
+                  </CustomText>
+                </View>
+              )}
+              {meet.type === 'BOOKING' && (
+                <View className="bg-blue-500 px-[5] py-[2] rounded-[4px] ml-1">
+                  <CustomText
+                    className="text-white text-[13px]"
+                    fontWeight="500">
+                    모관
+                  </CustomText>
+                </View>
+              )}
+            </View>
           )}
 
           <View className="flex-row items-center">

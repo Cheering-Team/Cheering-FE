@@ -83,6 +83,7 @@ const ChatRoomHeader = ({
                 if (chatRoom.community) {
                   navigation.navigate('Community', {
                     communityId: chatRoom.community?.id,
+                    initialIndex: 0,
                   });
                 }
               }}>

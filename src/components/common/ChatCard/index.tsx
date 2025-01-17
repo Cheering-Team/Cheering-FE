@@ -132,14 +132,18 @@ const ChatCard = (props: ChatCardProps) => {
               ellipsizeMode="tail">
               {chatRoom.name}
             </CustomText>
-            <CustomText
-              fontWeight="600"
-              className="color-[#888888] text-[14px] ml-2">
-              {`${chatRoom.count}`}
-            </CustomText>
-            <CustomText className="color-[#888888] text-[14px] flex-1">
-              {`/${chatRoom.max}`}
-            </CustomText>
+            {chatRoom.type === 'PUBLIC' && (
+              <>
+                <CustomText
+                  fontWeight="600"
+                  className="color-[#888888] text-[14px] ml-2">
+                  {`${chatRoom.count}`}
+                </CustomText>
+                <CustomText className="color-[#888888] text-[14px] flex-1">
+                  {`/${chatRoom.max}`}
+                </CustomText>
+              </>
+            )}
           </View>
           {chatRoom.lastMessage && (
             <CustomText

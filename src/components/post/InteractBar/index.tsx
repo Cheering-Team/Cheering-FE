@@ -91,7 +91,7 @@ const InteractBar = (props: InteractBarProps) => {
           onPress={() =>
             navigation.navigate('CommunityStack', {
               screen: 'Community',
-              params: {communityId: post.community.id},
+              params: {communityId: post.community.id, initialIndex: 0},
             })
           }
           style={{

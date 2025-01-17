@@ -40,7 +40,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         onPress={() =>
           navigation.navigate('CommunityStack', {
             screen: 'Community',
-            params: {communityId: community.id},
+            params: {communityId: community.id, initialIndex: 0},
           })
         }
         onLongPress={() => {
@@ -308,7 +308,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         secondOnPress={() => {
           navigation.navigate('CommunityStack', {
             screen: 'Community',
-            params: {communityId: community.id},
+            params: {communityId: community.id, initialIndex: 0},
           });
         }}
         thirdText="커뮤니티 탈퇴"

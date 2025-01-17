@@ -25,7 +25,7 @@ import MyMeetScreen from 'screens/communityStack/MyMeetScreen';
 import MeetMemberListScreen from 'screens/communityStack/MeetMemberListScreen';
 
 export type CommunityStackParamList = {
-  Community: {communityId: number};
+  Community: {communityId: number; initialIndex: number};
   Join: undefined;
   PostWrite: {community: Community; post?: Post};
   Post: {postId: number};

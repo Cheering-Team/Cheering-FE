@@ -35,7 +35,7 @@ import MeetTab from './meetTab';
 
 const CommunityScreen = () => {
   useLightStatusBar();
-  const {communityId} =
+  const {communityId, initialIndex} =
     useRoute<RouteProp<CommunityStackParamList, 'Community'>>().params;
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
@@ -64,7 +64,7 @@ const CommunityScreen = () => {
     onTabIndexChange,
     headerTranslateY,
     community,
-  } = useCommunity(communityId);
+  } = useCommunity(communityId, initialIndex);
 
   const {scrollY: tabScrollY, previousScrollY} = useMainTabScroll();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);

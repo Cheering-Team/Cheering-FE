@@ -99,7 +99,7 @@ const HomeMyScreen = () => {
           const {communityId} = remoteMessage.data;
           navigation.navigate('CommunityStack', {
             screen: 'Community',
-            params: {communityId: Number(communityId)},
+            params: {communityId: Number(communityId), initialIndex: 0},
           });
         }
       }

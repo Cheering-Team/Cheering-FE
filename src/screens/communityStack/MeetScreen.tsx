@@ -1,11 +1,16 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  CommonActions,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useGetMeetById} from 'apis/meet/useMeets';
+import {useDeleteMeet, useGetMeetById} from 'apis/meet/useMeets';
 import CCHeader from 'components/common/CCHeader';
 import CustomText from 'components/common/CustomText';
 import MatchInfo from 'components/common/MatchInfo';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
@@ -18,6 +23,8 @@ import MemberAddSvg from 'assets/images/people-plus-black.svg';
 import {useGetCommunityById} from 'apis/community/useCommunities';
 import OptionModal from 'components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import TwoButtonModal from 'components/common/TwoButtonModal';
+import {showTopToast} from 'utils/toast';
 
 const MeetScreen = () => {
   const {meetId, communityId} =
@@ -27,8 +34,11 @@ const MeetScreen = () => {
   const insets = useSafeAreaInsets();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   const {data: meet} = useGetMeetById(meetId);
   const {data: community} = useGetCommunityById(communityId);
+  const {mutateAsync: deleteMeet} = useDeleteMeet();
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -36,6 +46,29 @@ const MeetScreen = () => {
       scrollY.value = event.contentOffset.y;
     },
   });
+
+  const handleDeleteMeet = async () => {
+    try {
+      await deleteMeet(meetId);
+      setIsDeleteOpen(false);
+      showTopToast({type: 'success', message: '모임이 삭제되었습니다'});
+      if (community) {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [
+              {
+                name: 'Community',
+                params: {communityId, initialIndex: 4},
+              },
+            ],
+          }),
+        );
+      }
+    } catch (error: any) {
+      //
+    }
+  };
 
   if (!meet || !community) {
     return null;
@@ -179,7 +212,7 @@ const MeetScreen = () => {
           secondColor="#ff2626"
           secondSvg="trash"
           secondOnPress={() => {
-            //
+            setIsDeleteOpen(true);
           }}
         />
       )}
@@ -192,6 +225,20 @@ const MeetScreen = () => {
           firstOnPress={() => {
             //
           }}
+        />
+      )}
+      {isDeleteOpen && (
+        <TwoButtonModal
+          title="모임을 삭제하시겠습니까?"
+          content={
+            '복구할 수 없으며 모든 팀원들에게\n모임 취소에 대한 알림이 전송됩니다'
+          }
+          firstCallback={() => {
+            setIsDeleteOpen(false);
+          }}
+          secondText="삭제"
+          secondCallback={handleDeleteMeet}
+          secondButtonColor="#e65151"
         />
       )}
     </View>

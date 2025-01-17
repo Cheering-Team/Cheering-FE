@@ -6,14 +6,18 @@ interface TwoButtonModalProps {
   title: string;
   content?: string;
   firstCallback: () => void;
+  secondText: string;
   secondCallback: () => void;
+  secondButtonColor?: string;
 }
 
 const TwoButtonModal = ({
   title,
   content,
   firstCallback,
+  secondText = '완료',
   secondCallback,
+  secondButtonColor = '#1e293b',
 }: TwoButtonModalProps) => {
   return (
     <Modal transparent>
@@ -23,7 +27,9 @@ const TwoButtonModal = ({
             {title}
           </CustomText>
           {content && (
-            <CustomText className="text-gray-600 leading-5 text-[15px]">
+            <CustomText
+              className="text-gray-600 leading-5 text-[15px]"
+              numberOfLines={999}>
               {content}
             </CustomText>
           )}
@@ -38,9 +44,10 @@ const TwoButtonModal = ({
             </Pressable>
             <Pressable
               className="flex-grow-[2] justify-center items-center py-3 rounded-xl ml-2 bg-[#1e293b]"
-              onPress={secondCallback}>
+              onPress={secondCallback}
+              style={{backgroundColor: secondButtonColor}}>
               <CustomText fontWeight="500" className="text-white">
-                완료
+                {secondText}
               </CustomText>
             </Pressable>
           </View>

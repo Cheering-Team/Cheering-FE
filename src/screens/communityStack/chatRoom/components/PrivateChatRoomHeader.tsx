@@ -111,6 +111,7 @@ const PrivateChatRoomHeader = ({chatRoom, client}: PrivateChatRoomHeader) => {
                     if (chatRoom.community) {
                       navigation.navigate('Community', {
                         communityId: chatRoom.community?.id,
+                        initialIndex: 0,
                       });
                     }
                   }}

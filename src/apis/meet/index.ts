@@ -81,3 +81,10 @@ export const acceptJoinRequest = async (chatRoomId: number) => {
   );
   return response.data.result;
 };
+
+export const deleteMeet = async (meetId: number) => {
+  const response = await axiosInstance.delete<ApiResponse<null>>(
+    `/meets/${meetId}`,
+  );
+  return response.data.result;
+};
