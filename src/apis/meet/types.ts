@@ -99,3 +99,8 @@ export interface MeetSection {
   title: string;
   data: MeetInfo[];
 }
+
+export interface MemberSection {
+  title: string;
+  data: MeetMember[];
+}

@@ -5,7 +5,7 @@ import {
   GetMeetsResponse,
   GetMyMeetResponse,
   MeetDetail,
-  MeetMember,
+  MemberSection,
 } from './types';
 import {meetFanKeys, meetKeys} from './queries';
 
@@ -54,7 +54,7 @@ export const getMeetMembers = async ({
   queryKey: ReturnType<typeof meetFanKeys.list>;
 }) => {
   const [, , {meetId}] = queryKey;
-  const response = await axiosInstance.get<ApiResponse<MeetMember[]>>(
+  const response = await axiosInstance.get<ApiResponse<MemberSection[]>>(
     `/meets/${meetId}/members`,
   );
   return response.data.result;

@@ -4,7 +4,7 @@ import {useFindAllMyMeets} from 'apis/meet/useMeets';
 import CCHeader from 'components/common/CCHeader';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   ActivityIndicator,
   Pressable,
