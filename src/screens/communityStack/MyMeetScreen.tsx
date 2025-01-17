@@ -10,6 +10,7 @@ import {
   Pressable,
   RefreshControl,
   SectionList,
+  SectionListProps,
   View,
 } from 'react-native';
 import Animated, {
@@ -20,8 +21,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MeetCard from './community/meetTab/components/MeetCard';
 import CustomText from 'components/common/CustomText';
 import CheckSvg from 'assets/images/check-white.svg';
+import {MeetInfo} from 'apis/meet/types';
+import {useGetFanInfo} from 'apis/fan/useFans';
 
-const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
+const AnimatedSectionList =
+  Animated.createAnimatedComponent<SectionListProps<MeetInfo>>(SectionList);
 
 const mergeSectionsEfficiently = (existingSections, newPage) => {
   const firstNewSection = newPage.meets[0];
@@ -60,6 +64,12 @@ const MyMeetScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
+  const scrollY = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
 
   const [pastFiltering, setPastFiltering] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -71,14 +81,7 @@ const MyMeetScreen = () => {
     refetch,
     isLoading,
   } = useFindAllMyMeets(community.id, pastFiltering);
-
-  const scrollY = useSharedValue(0);
-
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: event => {
-      scrollY.value = event.contentOffset.y;
-    },
-  });
+  const {data: profile} = useGetFanInfo(community.curFan?.id);
 
   const loadMeets = () => {
     if (hasNextPage) {
@@ -106,6 +109,16 @@ const MyMeetScreen = () => {
         onFirstPress={() => {
           navigation.goBack();
         }}
+        secondType="PROFILE"
+        onSecondPress={() => {
+          if (community.curFan) {
+            navigation.navigate('ProfileEdit', {
+              fanId: community.curFan?.id,
+              type: 'MEET',
+            });
+          }
+        }}
+        secondImage={profile?.meetImage}
       />
       <AnimatedSectionList
         sections={sections}

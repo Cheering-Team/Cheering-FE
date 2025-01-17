@@ -12,14 +12,16 @@ import {
   SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
+import FastImage from 'react-native-fast-image';
 
 interface CCHeaderProps {
-  title: string;
-  community: Community;
+  title?: string;
+  community?: Community;
   scrollY: SharedValue<number>;
-  secondType?: 'COMPELETE' | 'MORE';
+  secondType?: 'COMPELETE' | 'MORE' | 'PROFILE';
   onFirstPress: () => void;
   onSecondPress?: () => void;
+  secondImage?: string;
 }
 
 const CCHeader = ({
@@ -29,6 +31,7 @@ const CCHeader = ({
   secondType,
   onFirstPress,
   onSecondPress,
+  secondImage,
 }: CCHeaderProps) => {
   const insets = useSafeAreaInsets();
 
@@ -49,19 +52,24 @@ const CCHeader = ({
         }}>
         <LeftSvg width={27} height={27} />
       </Pressable>
-      <View className="items-center">
-        <CustomText
-          className="text-[16px]"
-          fontWeight="500"
-          style={[animatedStyle]}>
-          {title}
-        </CustomText>
-        <CustomText
-          style={[{color: community.color}, animatedStyle]}
-          className="text-xs">
-          {community.koreanName}
-        </CustomText>
-      </View>
+      {title && (
+        <View className="items-center">
+          <CustomText
+            className="text-[16px]"
+            fontWeight="500"
+            style={[animatedStyle]}>
+            {title}
+          </CustomText>
+          {community && (
+            <CustomText
+              style={[{color: community.color}, animatedStyle]}
+              className="text-xs">
+              {community.koreanName}
+            </CustomText>
+          )}
+        </View>
+      )}
+
       {secondType && onSecondPress ? (
         <>
           {secondType === 'COMPELETE' && (
@@ -71,7 +79,7 @@ const CCHeader = ({
               }}
               className="rounded-full w-[38] h-[38] items-center justify-center shadow-sm shadow-gray-200 border border-white"
               style={{
-                backgroundColor: community.color,
+                backgroundColor: community?.color || 'black',
               }}>
               <CheckSvg width={17} height={17} />
             </Pressable>
@@ -86,6 +94,21 @@ const CCHeader = ({
                 backgroundColor: 'white',
               }}>
               <MoreSvg width={14} height={14} />
+            </Pressable>
+          )}
+          {secondType === 'PROFILE' && (
+            <Pressable
+              onPress={() => {
+                onSecondPress();
+              }}
+              className="rounded-full bg-white w-[38] h-[38] items-center justify-center shadow-sm shadow-gray-200 border border-gray-200"
+              style={{
+                backgroundColor: 'white',
+              }}>
+              <FastImage
+                source={{uri: secondImage}}
+                className="w-full h-full rounded-full border border-white"
+              />
             </Pressable>
           )}
         </>

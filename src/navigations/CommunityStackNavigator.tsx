@@ -37,8 +37,11 @@ export type CommunityStackParamList = {
   CreateChatRoom: {community: Community};
   ChatRoomEnter: {chatRoomId: number};
   Profile: {fanId: number};
-  ProfileEdit: {fanId: number};
-  EditName: {name: string; fanId: number | null};
+  ProfileEdit: {
+    fanId: number;
+    type: 'COMMUNITY' | 'MEET';
+  };
+  EditName: {name: string; type: 'COMMUNITY' | 'MEET'; fanId: number | null};
   DeleteFan: {fanId: number};
   BlockList: {playerUserId: number};
   Schedule: {communityId: number};
