@@ -6,6 +6,8 @@ export const meetKeys = {
   list: (filter: GetMeesPayload) => [...meetKeys.lists(), filter] as const,
   my: (communityId: number, pastFiltering: boolean) =>
     [...meetKeys.lists(), 'my', {communityId, pastFiltering}] as const,
+  randomFive: (communityId: number) =>
+    [...meetKeys.lists(), 'random', {communityId}] as const,
   details: () => [...meetKeys.all, 'detail'] as const,
   detail: (meetId: number | null) => [...meetKeys.details(), meetId] as const,
 };

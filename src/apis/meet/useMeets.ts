@@ -6,6 +6,7 @@ import {
   deleteMeet,
   editMeet,
   findAllMyMeets,
+  findRandomFiveMeetsByCondition,
   getAllMeetsByCommunity,
   getMeetById,
   getMeetMembers,
@@ -101,5 +102,12 @@ export const useEditMeet = () => {
       const {meetId} = variables;
       queryClient.invalidateQueries({queryKey: meetKeys.detail(meetId)});
     },
+  });
+};
+
+export const useFindRandomFiveMeetsByCondition = (communityId: number) => {
+  return useQuery({
+    queryKey: meetKeys.randomFive(communityId),
+    queryFn: findRandomFiveMeetsByCondition,
   });
 };

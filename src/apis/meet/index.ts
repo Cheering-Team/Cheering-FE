@@ -6,6 +6,7 @@ import {
   GetMeetsResponse,
   GetMyMeetResponse,
   MeetDetail,
+  MeetInfo,
   MemberSection,
   ReportMemberPayload,
 } from './types';
@@ -112,6 +113,18 @@ export const editMeet = async (data: EditMeetPayload) => {
   const response = await axiosInstance.put<ApiResponse<null>>(
     `/meets/${meetId}`,
     rest,
+  );
+  return response.data.result;
+};
+
+export const findRandomFiveMeetsByCondition = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof meetKeys.randomFive>;
+}) => {
+  const [, , , {communityId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<MeetInfo[]>>(
+    `/communities/${communityId}/meets/random`,
   );
   return response.data.result;
 };

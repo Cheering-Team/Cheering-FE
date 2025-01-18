@@ -11,7 +11,7 @@ import {formatMonthDayDay} from 'utils/format';
 
 interface MeetCardProps {
   meet: MeetInfo;
-  type?: 'MY' | 'TAB';
+  type?: 'MY' | 'TAB' | 'MAIN';
   onPress: () => void;
 }
 
@@ -23,37 +23,36 @@ const MeetCard = ({meet, type = 'TAB', onPress}: MeetCardProps) => {
       onPress={onPress}>
       <View className="flex-1 px-[10] py-2 justify-between">
         <View>
-          <CustomText className="text-[15px]" fontWeight="500">
-            {meet.title}
-          </CustomText>
+          <View className="flex-row items-center">
+            {(type === 'MY' || type === 'MAIN') && (
+              <>
+                {meet.type === 'LIVE' && (
+                  <CustomText
+                    className="text-[14px] text-gray-500 mr-[3]"
+                    fontWeight="600">
+                    {`[직관]`}
+                  </CustomText>
+                )}
+                {meet.type === 'BOOKING' && (
+                  <CustomText
+                    className="text-[14px] text-gray-500 mr-[3]"
+                    fontWeight="600">
+                    {`[모관]`}
+                  </CustomText>
+                )}
+              </>
+            )}
+            <CustomText className="text-[15px] flex-1" fontWeight="500">
+              {meet.title}
+            </CustomText>
+          </View>
           <CustomText className="text-[14px] mt-[3] text-gray-700">
             {meet.description}
           </CustomText>
         </View>
 
         <View className="flex-row items-center justify-between">
-          {type === 'TAB' ? (
-            <View className="flex-row items-center flex-1">
-              <CustomText className="text-[13px] text-[#5d6674]">{`${meet.ageMin}~${meet.ageMax}세`}</CustomText>
-              <View className="w-[1] h-3 bg-slate-400 mx-1" />
-              <CustomText className="text-[13px] text-[#5d6674]">
-                {meet.gender === 'MALE' && '남자'}
-                {meet.gender === 'ANY' && '성별 무관'}
-                {meet.gender === 'FEMALE' && '여자'}
-              </CustomText>
-              {meet.type === 'BOOKING' && (
-                <>
-                  <View className="w-[1] h-3 bg-slate-400 mx-1" />
-                  <View className="flex-row items-center flex-1 mr-3">
-                    <LocationSvg />
-                    <CustomText className="text-[13px] text-[#5d6674] ml-[1]">
-                      {meet.place}
-                    </CustomText>
-                  </View>
-                </>
-              )}
-            </View>
-          ) : (
+          {type === 'MY' ? (
             <View className="flex-row items-center">
               {meet.status === 'MANAGER' && (
                 <View className="bg-green-600 px-[5] py-[2] rounded-[4px]">
@@ -82,23 +81,26 @@ const MeetCard = ({meet, type = 'TAB', onPress}: MeetCardProps) => {
                   </CustomText>
                 </View>
               )}
-              {meet.type === 'LIVE' && (
-                <View className="bg-red-500 px-[5] py-[2] rounded-[4px] ml-1">
-                  <CustomText
-                    className="text-white text-[13px]"
-                    fontWeight="500">
-                    직관
-                  </CustomText>
-                </View>
-              )}
+            </View>
+          ) : (
+            <View className="flex-row items-center flex-1">
+              <CustomText className="text-[13px] text-[#5d6674]">{`${meet.ageMin}~${meet.ageMax}세`}</CustomText>
+              <View className="w-[1] h-3 bg-slate-400 mx-1" />
+              <CustomText className="text-[13px] text-[#5d6674]">
+                {meet.gender === 'MALE' && '남자'}
+                {meet.gender === 'ANY' && '성별 무관'}
+                {meet.gender === 'FEMALE' && '여자'}
+              </CustomText>
               {meet.type === 'BOOKING' && (
-                <View className="bg-blue-500 px-[5] py-[2] rounded-[4px] ml-1">
-                  <CustomText
-                    className="text-white text-[13px]"
-                    fontWeight="500">
-                    모관
-                  </CustomText>
-                </View>
+                <>
+                  <View className="w-[1] h-3 bg-slate-400 mx-1" />
+                  <View className="flex-row items-center flex-1 mr-3">
+                    <LocationSvg />
+                    <CustomText className="text-[13px] text-[#5d6674] ml-[1]">
+                      {meet.place}
+                    </CustomText>
+                  </View>
+                </>
               )}
             </View>
           )}

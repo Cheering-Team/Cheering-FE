@@ -23,6 +23,8 @@ import {useGetNearMatch} from 'apis/match/useMatches';
 import {useGetOfficialChatRoom} from 'apis/chat/useChats';
 import {useGetHotVote} from 'apis/vote/useVotes';
 import {useGetPosts} from 'apis/post/usePosts';
+import {useFindRandomFiveMeetsByCondition} from 'apis/meet/useMeets';
+import RandomMeets from './components/RandomMeets';
 
 interface MainListProps {
   scrollY: SharedValue<number>;
@@ -81,6 +83,11 @@ const MainTab = ({
     isLoading: postsIsLoading,
     refetch: postRefetch,
   } = useGetPosts(community.id, 'hot', community.curFan !== null);
+  const {
+    data: randomMeets,
+    isLoading: randomMeetsIsLoading,
+    refetch: randomMeetsRefetch,
+  } = useFindRandomFiveMeetsByCondition(community.id);
 
   const scrollHandler = useAnimatedScrollHandler(event => {
     const currentScrollY = event.contentOffset.y;
@@ -180,6 +187,12 @@ const MainTab = ({
         <OfficialChat officialChatRoom={officialChatRoom} />
         {/* 인기 투표 */}
         <HotVote community={community} vote={vote} />
+        {/* 추천 모임 */}
+        <RandomMeets
+          meets={randomMeets}
+          curUser={community.curFan}
+          communityId={community.id}
+        />
         {/* 인기 게시글 */}
         <HotPosts onTabPress={onTabPress} posts={posts} />
       </Animated.ScrollView>

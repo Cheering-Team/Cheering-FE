@@ -133,41 +133,77 @@ const ProfileEditScreen = () => {
             <CameraSvg width={27} height={27} />
           </ImageBackground>
         </Pressable>
-        <Pressable
+        <View
           style={{
             width: '100%',
             marginTop: 35,
             borderWidth: 1,
             borderColor: '#e5e5e5',
-            padding: 18,
-            flexDirection: 'row',
-            alignItems: 'center',
             justifyContent: 'space-between',
             borderRadius: 10,
-          }}
-          onPress={() =>
-            navigation.navigate('EditName', {
-              name: type === 'COMMUNITY' ? profile.name : profile.meetName,
-              type,
-              fanId: profile.id,
-            })
-          }>
-          <CustomText fontWeight="600" style={{fontSize: 18}}>
-            닉네임
-          </CustomText>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <CustomText
-              fontWeight="500"
-              style={{
-                color: '#a0a0a0',
-                fontSize: 17,
-                marginRight: 3,
-              }}>
-              {type === 'COMMUNITY' ? profile.name : profile.meetName}
+          }}>
+          <Pressable
+            className="flex-row items-center justify-between flex-1 p-[18]"
+            onPress={() =>
+              navigation.navigate('EditName', {
+                name: type === 'COMMUNITY' ? profile.name : profile.meetName,
+                type,
+                fanId: profile.id,
+              })
+            }>
+            <CustomText fontWeight="600" style={{fontSize: 18}}>
+              닉네임
             </CustomText>
-            <ChevronRightSvg width={13} height={13} />
-          </View>
-        </Pressable>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <CustomText
+                fontWeight="500"
+                style={{
+                  color: '#a0a0a0',
+                  fontSize: 17,
+                  marginRight: 3,
+                }}>
+                {type === 'COMMUNITY' ? profile.name : profile.meetName}
+              </CustomText>
+              <ChevronRightSvg width={13} height={13} />
+            </View>
+          </Pressable>
+          {type === 'MEET' && (
+            <>
+              <View className="flex-row items-center justify-between flex-1 p-[18]">
+                <CustomText fontWeight="600" style={{fontSize: 18}}>
+                  성별
+                </CustomText>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <CustomText
+                    fontWeight="500"
+                    style={{
+                      color: '#a0a0a0',
+                      fontSize: 17,
+                      marginRight: 3,
+                    }}>
+                    성별
+                  </CustomText>
+                </View>
+              </View>
+              <View className="flex-row items-center justify-between flex-1 p-[18]">
+                <CustomText fontWeight="600" style={{fontSize: 18}}>
+                  나이
+                </CustomText>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <CustomText
+                    fontWeight="500"
+                    style={{
+                      color: '#a0a0a0',
+                      fontSize: 17,
+                      marginRight: 3,
+                    }}>
+                    나이
+                  </CustomText>
+                </View>
+              </View>
+            </>
+          )}
+        </View>
       </Animated.ScrollView>
       {(type === 'COMMUNITY' &&
         profile.image ===
