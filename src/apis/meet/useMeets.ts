@@ -4,6 +4,7 @@ import {
   acceptJoinRequest,
   createMeet,
   deleteMeet,
+  editMeet,
   findAllMyMeets,
   getAllMeetsByCommunity,
   getMeetById,
@@ -90,5 +91,15 @@ export const useLeaveMeet = () => {
 export const useReportMember = () => {
   return useMutation({
     mutationFn: reportMember,
+  });
+};
+
+export const useEditMeet = () => {
+  return useMutation({
+    mutationFn: editMeet,
+    onSuccess: (_, variables) => {
+      const {meetId} = variables;
+      queryClient.invalidateQueries({queryKey: meetKeys.detail(meetId)});
+    },
   });
 };

@@ -231,7 +231,7 @@ const MeetScreen = () => {
           firstText="모임 수정"
           firstSvg="edit"
           firstOnPress={() => {
-            //
+            navigation.navigate('EditMeet', {communityId, meetId});
           }}
           secondText="모임 삭제"
           secondColor="#ff2626"

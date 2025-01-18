@@ -2,6 +2,7 @@ import {axiosInstance} from 'apis';
 import {ApiResponse, Id} from 'apis/types';
 import {
   CreateMeetPayload,
+  EditMeetPayload,
   GetMeetsResponse,
   GetMyMeetResponse,
   MeetDetail,
@@ -102,6 +103,15 @@ export const reportMember = async (data: ReportMemberPayload) => {
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/meets/${meetId}/members/report`,
     {reportedFanId, reason},
+  );
+  return response.data.result;
+};
+
+export const editMeet = async (data: EditMeetPayload) => {
+  const {meetId, ...rest} = data;
+  const response = await axiosInstance.put<ApiResponse<null>>(
+    `/meets/${meetId}`,
+    rest,
   );
   return response.data.result;
 };

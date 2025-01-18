@@ -94,6 +94,12 @@ export interface ReportMemberPayload {
   reason: string;
 }
 
+export interface EditMeetPayload {
+  meetId: number;
+  title: string;
+  description: string;
+}
+
 // 응답
 export interface GetMeetsResponse extends Page {
   meets: MeetInfo[];
