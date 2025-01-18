@@ -23,6 +23,7 @@ import CustomText from 'components/common/CustomText';
 import CheckSvg from 'assets/images/check-white.svg';
 import {MeetInfo} from 'apis/meet/types';
 import {useGetFanInfo} from 'apis/fan/useFans';
+import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 
 const AnimatedSectionList =
   Animated.createAnimatedComponent<SectionListProps<MeetInfo>>(SectionList);
@@ -169,7 +170,9 @@ const MyMeetScreen = () => {
             <View className="h-[150] justify-center items-center">
               <ActivityIndicator />
             </View>
-          ) : null
+          ) : (
+            <ListEmpty type="myMeet" />
+          )
         }
         renderItem={({item}) => (
           <MeetCard

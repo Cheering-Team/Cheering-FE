@@ -6,6 +6,7 @@ import {
   GetMyMeetResponse,
   MeetDetail,
   MemberSection,
+  ReportMemberPayload,
 } from './types';
 import {meetFanKeys, meetKeys} from './queries';
 
@@ -92,6 +93,15 @@ export const deleteMeet = async (meetId: number) => {
 export const leaveMeet = async (meetId: number) => {
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/meets/${meetId}/leave`,
+  );
+  return response.data.result;
+};
+
+export const reportMember = async (data: ReportMemberPayload) => {
+  const {meetId, reportedFanId, reason} = data;
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/meets/${meetId}/members/report`,
+    {reportedFanId, reason},
   );
   return response.data.result;
 };

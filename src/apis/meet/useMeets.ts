@@ -9,6 +9,7 @@ import {
   getMeetById,
   getMeetMembers,
   leaveMeet,
+  reportMember,
 } from '.';
 import {GetMeesPayload} from './types';
 import {queryClient} from '../../../App';
@@ -83,5 +84,11 @@ export const useDeleteMeet = () => {
 export const useLeaveMeet = () => {
   return useMutation({
     mutationFn: leaveMeet,
+  });
+};
+
+export const useReportMember = () => {
+  return useMutation({
+    mutationFn: reportMember,
   });
 };

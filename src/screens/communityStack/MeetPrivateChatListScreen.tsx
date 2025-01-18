@@ -3,9 +3,9 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useGetPrivateChatRoomIdsForManager} from 'apis/chat/useChats';
 import CCHeader from 'components/common/CCHeader';
 import ChatCard from 'components/common/ChatCard';
-import CustomText from 'components/common/CustomText';
+import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
@@ -21,7 +21,8 @@ const MeetPrivateChatListScreen = () => {
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
-  const {data: chatRooms} = useGetPrivateChatRoomIdsForManager(meetId);
+  const {data: chatRooms, isLoading} =
+    useGetPrivateChatRoomIdsForManager(meetId);
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -58,6 +59,7 @@ const MeetPrivateChatListScreen = () => {
             }}
           />
         )}
+        ListEmptyComponent={isLoading ? null : <ListEmpty type="meetPrivate" />}
       />
     </View>
   );

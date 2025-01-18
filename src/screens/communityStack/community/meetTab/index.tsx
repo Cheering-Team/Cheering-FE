@@ -43,6 +43,7 @@ import {debounce} from 'lodash';
 import MeetProfileModal from './components/MeetProfileModal';
 import {useIsAgeAndGenderSet} from 'apis/user/useUsers';
 import MeetCard from './components/MeetCard';
+import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 
 interface MeetTabProps {
   scrollY: SharedValue<number>;
@@ -106,6 +107,7 @@ const MeetTab = ({
     fetchNextPage,
     hasNextPage,
     refetch,
+    isLoading,
   } = useGetAllMeetsByCommunity({
     communityId: community.id,
     type,
@@ -542,6 +544,13 @@ const MeetTab = ({
         }
         onEndReached={loadMeets}
         onEndReachedThreshold={1}
+        ListEmptyComponent={
+          isLoading ? null : type === 'BOOKING' ? (
+            <ListEmpty type="booking" />
+          ) : (
+            <ListEmpty type="live" />
+          )
+        }
       />
       <Animated.View style={{opacity: buttonOpacity}}>
         <Pressable

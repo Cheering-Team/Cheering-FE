@@ -52,6 +52,7 @@ export interface MeetInfo {
 export interface MeetMember {
   meetFanId: number;
   userId: number;
+  fanId: number;
   userAge: number;
   userGender: 'MALE' | 'FEMALE';
   role: string;
@@ -85,6 +86,12 @@ export interface GetMeesPayload {
   ticketOption: 'ALL' | 'HAS' | 'NOT';
   matchId: number | null;
   keyword: string;
+}
+
+export interface ReportMemberPayload {
+  meetId: number;
+  reportedFanId: number;
+  reason: string;
 }
 
 // 응답

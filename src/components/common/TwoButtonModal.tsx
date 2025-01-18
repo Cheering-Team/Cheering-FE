@@ -1,14 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Modal, Pressable, View} from 'react-native';
 import CustomText from './CustomText';
+import BasicTextInput from './BasicTextInput';
 
 interface TwoButtonModalProps {
   title: string;
   content?: string;
   firstCallback: () => void;
   secondText: string;
-  secondCallback: () => void;
+  secondCallback?: () => void;
+  textInputSecondCallback?: (text: string) => void;
   secondButtonColor?: string;
+  textInputLabel?: string;
+  textInputPlaceholder?: string;
 }
 
 const TwoButtonModal = ({
@@ -17,12 +21,18 @@ const TwoButtonModal = ({
   firstCallback,
   secondText = '완료',
   secondCallback,
+  textInputSecondCallback,
   secondButtonColor = '#1e293b',
+  textInputLabel,
+  textInputPlaceholder,
 }: TwoButtonModalProps) => {
+  const [text, setText] = useState('');
   return (
-    <Modal transparent>
+    <Modal transparent animationType="fade">
       <View className="w-full h-full bg-black/50 justify-center items-center">
-        <View className="bg-white w-[80%] rounded-2xl shadow-md px-6 pt-6 pb-4">
+        <View
+          className="bg-white w-[80%] rounded-2xl shadow-md px-6 pt-6 pb-4"
+          style={{width: textInputLabel ? '92%' : '80%'}}>
           <CustomText fontWeight="600" className="text-[18px] mb-3">
             {title}
           </CustomText>
@@ -32,6 +42,16 @@ const TwoButtonModal = ({
               numberOfLines={999}>
               {content}
             </CustomText>
+          )}
+          {textInputLabel && (
+            <BasicTextInput
+              label={textInputLabel}
+              multiline={true}
+              height={100}
+              placeholder={textInputPlaceholder || textInputLabel}
+              value={text}
+              onChangeText={setText}
+            />
           )}
 
           <View className="flex-row mt-6">
@@ -44,7 +64,13 @@ const TwoButtonModal = ({
             </Pressable>
             <Pressable
               className="flex-grow-[2] justify-center items-center py-3 rounded-xl ml-2 bg-[#1e293b]"
-              onPress={secondCallback}
+              onPress={() => {
+                if (textInputLabel) {
+                  textInputSecondCallback?.(text);
+                } else {
+                  secondCallback?.();
+                }
+              }}
               style={{backgroundColor: secondButtonColor}}>
               <CustomText fontWeight="500" className="text-white">
                 {secondText}
