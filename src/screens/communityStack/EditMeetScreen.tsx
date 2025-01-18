@@ -51,7 +51,7 @@ const EditMeetScreen = () => {
   const handleEditMeet = async () => {
     try {
       await editMeet({meetId, title, description});
-      navigation.replace('Meet', {meetId, communityId});
+      navigation.pop();
       showTopToast({type: 'success', message: '모임 수정 완료'});
     } catch (error: any) {
       //
