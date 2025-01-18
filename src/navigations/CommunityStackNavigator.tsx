@@ -16,7 +16,7 @@ import ProfileEditScreen from 'screens/communityStack/ProfileEditScreen';
 import EditNameScreen from 'screens/moreStack/EditNameScreen';
 import DeletePlayerUserScreen from 'screens/communityStack/DeleteFanScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
-import ScheduleScreen from 'screens/communityStack/schedule/ScheduleScreen';
+
 import CreateMeetScreen from 'screens/communityStack/CreateMeetScreen';
 import MeetRecruitScreen from 'screens/communityStack/MeetRecruitScreen';
 import MeetScreen from 'screens/communityStack/MeetScreen';
@@ -24,6 +24,7 @@ import MeetPrivateChatListScreen from 'screens/communityStack/MeetPrivateChatLis
 import MyMeetScreen from 'screens/communityStack/MyMeetScreen';
 import MeetMemberListScreen from 'screens/communityStack/MeetMemberListScreen';
 import EditMeetScreen from 'screens/communityStack/EditMeetScreen';
+import ScheduleScreen from 'screens/communityStack/Schedule/ScheduleScreen';
 
 export type CommunityStackParamList = {
   Community: {communityId: number; initialIndex: number};

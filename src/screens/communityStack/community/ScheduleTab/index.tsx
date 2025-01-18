@@ -17,13 +17,13 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import CustomDay from 'screens/communityStack/schedule/components/CustomDay';
 import {formatBarDate} from 'utils/format';
 import LeftSvg from 'assets/images/calendar-left.svg';
 import RightSvg from 'assets/images/calendar-right.svg';
 import {queryClient} from '../../../../../App';
 import {matchKeys} from 'apis/match/queries';
 import {getMatchSchedule} from 'apis/match';
+import CustomDay from '../../Schedule/components/CustomDay';
 
 interface YearMonth {
   year: number;

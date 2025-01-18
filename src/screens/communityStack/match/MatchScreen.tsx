@@ -9,11 +9,11 @@ import {Tabs} from 'react-native-collapsible-tab-view';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BackSvg from 'assets/images/chevron-left.svg';
 import {CommunityTabBar} from 'components/community/CommunityTabBar/CommunityTabBar';
-import VoteList from '../schedule/match/components/VoteList';
 import {useGetCommunityById} from 'apis/community/useCommunities';
 import CheerTab from './CheerTab';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 import MatchInfo from 'components/common/MatchInfo';
+import VoteList from '../Schedule/match/components/VoteList';
 
 const MatchScreen = () => {
   useDarkStatusBar();

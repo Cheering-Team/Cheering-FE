@@ -191,7 +191,7 @@ const MainTab = ({
         <RandomMeets
           meets={randomMeets}
           curUser={community.curFan}
-          communityId={community.id}
+          community={community}
         />
         {/* 인기 게시글 */}
         <HotPosts onTabPress={onTabPress} posts={posts} />
