@@ -5,6 +5,7 @@ import {
   checkCodeSocial,
   connectSocial,
   deleteUser,
+  getAgeAndGender,
   getPlayerAccount,
   getUserInfo,
   isAgeAndGenderSet,
@@ -124,5 +125,13 @@ export const useIsAgeAndGenderSet = (communityId: number) => {
 export const useSetAgeAndGender = () => {
   return useMutation({
     mutationFn: setAgeAndGender,
+  });
+};
+
+export const useGetAgeAndGender = (enabled: boolean) => {
+  return useQuery({
+    queryKey: userKeys.ageGender(),
+    queryFn: getAgeAndGender,
+    enabled,
   });
 };

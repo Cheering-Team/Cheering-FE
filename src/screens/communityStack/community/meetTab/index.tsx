@@ -164,6 +164,18 @@ const MeetTab = ({
     }
   };
 
+  const handleMyButton = async () => {
+    const response = await isAgeGenderSetRefetch();
+    if (response.data === 'BOTH') {
+      navigation.navigate('MyMeet', {community});
+    } else if (response.data === 'NEITHER') {
+      setIsAgeGenderModalOpen(true);
+    } else {
+      setInitialStep('profile');
+      setIsAgeGenderModalOpen(true);
+    }
+  };
+
   const renderItem: ListRenderItem<MeetInfo> = ({item}) => {
     return (
       <MeetCard
@@ -554,9 +566,7 @@ const MeetTab = ({
       />
       <Animated.View style={{opacity: buttonOpacity}}>
         <Pressable
-          onPress={() => {
-            navigation.navigate('MyMeet', {community});
-          }}
+          onPress={handleMyButton}
           className="absolute rounded-full z-50 w-[43] h-[43] justify-center items-center border border-gray-200 shadow-sm shadow-gray-200"
           style={{
             backgroundColor: 'white',

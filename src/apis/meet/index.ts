@@ -128,3 +128,15 @@ export const findRandomFiveMeetsByCondition = async ({
   );
   return response.data.result;
 };
+
+export const findClosestMeets = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof meetKeys.randomFive>;
+}) => {
+  const [, , , {communityId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<MeetInfo[]>>(
+    `/communities/${communityId}/meets/random`,
+  );
+  return response.data.result;
+};

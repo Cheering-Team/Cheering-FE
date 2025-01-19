@@ -1,6 +1,7 @@
 import {axiosInstance} from '../index';
 import {ApiResponse} from '../types';
 import {
+  AgeGender,
   CheckCodePayload,
   CheckCodeSocialPayload,
   ConnectSocialPayload,
@@ -196,10 +197,16 @@ export const isAgeAndGenderSet = async ({
 };
 
 export const setAgeAndGender = async (data: SetAgeAndGenderPayload) => {
-  const {communityId, age, gender, name, status} = data;
+  const {communityId, ...rest} = data;
   const response = await axiosInstance.post<ApiResponse<null>>(
     `/users/communities/${communityId}/set-profile`,
-    data,
+    rest,
   );
+  return response.data.result;
+};
+
+export const getAgeAndGender = async () => {
+  const response =
+    await axiosInstance.get<ApiResponse<AgeGender>>(`/users/age-gender`);
   return response.data.result;
 };

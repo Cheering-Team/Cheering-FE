@@ -19,6 +19,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useGetAgeAndGender} from 'apis/user/useUsers';
 
 const ProfileEditScreen = () => {
   useDarkStatusBar();
@@ -38,6 +39,7 @@ const ProfileEditScreen = () => {
   const [imageLoding, setImageLoding] = useState(false);
 
   const {data: profile, isLoading} = useGetFanInfo(fanId);
+  const {data: ageGender} = useGetAgeAndGender(type === 'MEET');
 
   const {mutate} = useUpdateFanImage();
 
@@ -181,7 +183,7 @@ const ProfileEditScreen = () => {
                       fontSize: 17,
                       marginRight: 3,
                     }}>
-                    성별
+                    {ageGender?.gender === 'FEMALE' ? '여자' : '남자'}
                   </CustomText>
                 </View>
               </View>
@@ -197,7 +199,7 @@ const ProfileEditScreen = () => {
                       fontSize: 17,
                       marginRight: 3,
                     }}>
-                    나이
+                    {ageGender?.currentAge}
                   </CustomText>
                 </View>
               </View>

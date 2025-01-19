@@ -5,4 +5,5 @@ export const userKeys = {
     [...userKeys.all, 'playerAccount', playerId] as const,
   isAgeGenderSet: (communityId: number) =>
     [...userKeys.all, 'isAgeGenderSet', communityId] as const,
+  ageGender: () => [...userKeys.all, 'ageGender'] as const,
 };

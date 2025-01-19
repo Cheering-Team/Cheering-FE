@@ -76,3 +76,11 @@ export interface SetAgeAndGenderPayload {
   name: string;
   status: 'NEITHER' | 'NULL_PROFILE';
 }
+
+// 응답
+
+export interface AgeGender {
+  userId: number;
+  currentAge: number;
+  gender: 'MALE' | 'FEMALE';
+}

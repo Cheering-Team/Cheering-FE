@@ -80,12 +80,18 @@ export const useAcceptJoinRequest = (chatRoomId: number) => {
 export const useDeleteMeet = () => {
   return useMutation({
     mutationFn: deleteMeet,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: meetKeys.lists()});
+    },
   });
 };
 
 export const useLeaveMeet = () => {
   return useMutation({
     mutationFn: leaveMeet,
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: meetKeys.lists()});
+    },
   });
 };
 
@@ -105,9 +111,13 @@ export const useEditMeet = () => {
   });
 };
 
-export const useFindRandomFiveMeetsByCondition = (communityId: number) => {
+export const useFindRandomFiveMeetsByCondition = (
+  communityId: number,
+  enabled: boolean,
+) => {
   return useQuery({
     queryKey: meetKeys.randomFive(communityId),
     queryFn: findRandomFiveMeetsByCondition,
+    enabled,
   });
 };

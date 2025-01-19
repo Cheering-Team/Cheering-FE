@@ -16,6 +16,7 @@ import NoticeSvg from '../../assets/images/megaphone-black.svg';
 import LockSvg from '../../assets/images/lock.svg';
 import StackHeader from 'components/common/StackHeader';
 import ApplySvg from 'assets/images/apply-black.svg';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 type MoreScreenNavigationProp = NativeStackNavigationProp<
   MoreStackParamList,
@@ -23,6 +24,8 @@ type MoreScreenNavigationProp = NativeStackNavigationProp<
 >;
 
 const MoreScreen = ({navigation}: {navigation: MoreScreenNavigationProp}) => {
+  useDarkStatusBar();
+
   const {data, isLoading} = useGetUserInfo();
 
   if (isLoading) {
@@ -31,7 +34,6 @@ const MoreScreen = ({navigation}: {navigation: MoreScreenNavigationProp}) => {
 
   return (
     <SafeAreaView className="flex-1">
-      <StatusBar barStyle={'dark-content'} />
       <StackHeader title="계정 및 설정" type="none" />
       <ScrollView className="flex-1">
         <View className="pt-3 px-3 bg-white">

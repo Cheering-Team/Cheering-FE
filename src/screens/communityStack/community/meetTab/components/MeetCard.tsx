@@ -28,14 +28,14 @@ const MeetCard = ({meet, type = 'TAB', onPress}: MeetCardProps) => {
               <>
                 {meet.type === 'LIVE' && (
                   <CustomText
-                    className="text-[14px] text-gray-500 mr-[3]"
+                    className="text-[14px] text-gray-500 mr-[2]"
                     fontWeight="600">
                     {`[직관]`}
                   </CustomText>
                 )}
                 {meet.type === 'BOOKING' && (
                   <CustomText
-                    className="text-[14px] text-gray-500 mr-[3]"
+                    className="text-[14px] text-gray-500 mr-[2]"
                     fontWeight="600">
                     {`[모관]`}
                   </CustomText>

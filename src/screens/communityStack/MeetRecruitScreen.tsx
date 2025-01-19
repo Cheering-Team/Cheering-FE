@@ -75,9 +75,26 @@ const MeetRecruitScreen = () => {
           paddingTop: insets.top + 55 + 5,
           paddingHorizontal: 12,
         }}>
-        <CustomText className="text-[19px]" fontWeight="500">
-          {meet.title}
-        </CustomText>
+        <View className="flex-row items-center">
+          {meet.type === 'LIVE' && (
+            <CustomText
+              className="text-[17px] text-gray-500 mr-[3]"
+              fontWeight="600">
+              {`[직관]`}
+            </CustomText>
+          )}
+          {meet.type === 'BOOKING' && (
+            <CustomText
+              className="text-[17px] text-gray-500 mr-[3]"
+              fontWeight="600">
+              {`[모관]`}
+            </CustomText>
+          )}
+          <CustomText className="text-[19px]" fontWeight="500">
+            {meet.title}
+          </CustomText>
+        </View>
+
         <View className="flex-row items-center mt-1 ml-[1]">
           <CustomText className="text-[13px] text-slate-500">
             {`${Math.floor(meet.writer.age / 10) * 10}대`}

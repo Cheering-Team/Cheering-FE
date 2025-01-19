@@ -23,157 +23,228 @@ const MatchList = ({community, onTabPress, matches}: MatchListProps) => {
 
   const renderItem: ListRenderItem<MatchDetail> = ({item}) => {
     return (
-      <Pressable
-        onPress={() => {
-          navigation.navigate('Match', {
-            matchId: item.id,
-            communityId: community.id,
-          });
-        }}
-        className="bg-white py-[9] px-2 rounded-sm"
-        style={{
-          shadowColor: '#000000',
-          shadowOffset: {
-            width: 0,
-            height: 0,
-          },
-          shadowOpacity: 0.03,
-          shadowRadius: 3,
-          elevation: 0.2,
-          width: WINDOW_WIDTH * 0.67,
-          marginHorizontal: 4,
-          borderWidth: 1,
-          borderColor:
-            formatTodayOrDate(item.time) === '오늘'
-              ? community.color
-              : '#eeeeee',
-        }}>
-        <View
-          className="flex-row items-center justify-between"
-          style={{opacity: item.status === 'closed' ? 0.5 : 1}}>
-          <View className="flex-row items-center">
-            {formatTodayOrDate(item.time) !== '오늘' ? (
-              <CustomText className="text-gray-900">
-                {formatTodayOrDate(item.time)}
-              </CustomText>
-            ) : (
-              <CustomText className="text-[15px]" fontWeight="600">
-                오늘
-              </CustomText>
-            )}
+      <View style={{width: WINDOW_WIDTH * 0.67, marginHorizontal: 4}}>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('Match', {
+              matchId: item.id,
+              communityId: community.id,
+            });
+          }}
+          className="bg-white py-[9] px-2 rounded-sm"
+          style={{
+            shadowColor: '#000000',
+            shadowOffset: {
+              width: 0,
+              height: 0,
+            },
+            shadowOpacity: 0.03,
+            shadowRadius: 3,
+            elevation: 0.2,
+            borderWidth: 1,
+            borderColor:
+              formatTodayOrDate(item.time) === '오늘'
+                ? community.color
+                : '#eeeeee',
+          }}>
+          <View
+            className="flex-row items-center justify-between"
+            style={{opacity: item.status === 'closed' ? 0.5 : 1}}>
+            <View className="flex-row items-center">
+              {formatTodayOrDate(item.time) !== '오늘' ? (
+                <CustomText className="text-gray-900">
+                  {formatTodayOrDate(item.time)}
+                </CustomText>
+              ) : (
+                <CustomText className="text-[15px]" fontWeight="600">
+                  오늘
+                </CustomText>
+              )}
 
-            {formatTodayOrDate(item.time) !== '오늘' && (
-              <CustomText fontWeight="600" className="ml-1">
-                {formatDOW(item.time)}
-              </CustomText>
+              {formatTodayOrDate(item.time) !== '오늘' && (
+                <CustomText fontWeight="600" className="ml-1">
+                  {formatDOW(item.time)}
+                </CustomText>
+              )}
+            </View>
+            {item.status === 'closed' && <CustomText>경기종료</CustomText>}
+            {item.status === 'not_started' && (
+              <CustomText fontWeight="500">{formatTime(item.time)}</CustomText>
             )}
           </View>
-          {item.status === 'closed' && <CustomText>경기종료</CustomText>}
-          {item.status === 'not_started' && (
-            <CustomText fontWeight="500">{formatTime(item.time)}</CustomText>
-          )}
-        </View>
-        <View
-          className="flex-row items-center mt-4 rounded-sm pl-1 pr-2"
-          style={{opacity: item.status === 'closed' ? 0.5 : 1}}>
-          <View className="flex-1 flex-row items-center">
+          <View
+            className="flex-row items-center mt-4 rounded-sm pl-1 pr-2"
+            style={{opacity: item.status === 'closed' ? 0.5 : 1}}>
+            <View className="flex-1 flex-row items-center">
+              <FastImage
+                source={{uri: item.homeTeam.image}}
+                className="w-[30] h-[30]"
+              />
+              <CustomText
+                className="ml-1 text-[13px]"
+                fontWeight={
+                  item.homeTeam.id === community.id ||
+                  item.homeTeam.koreanName === community.firstTeamName
+                    ? '500'
+                    : '400'
+                }
+                style={{
+                  color:
+                    item.homeTeam.id === community.id ||
+                    item.homeTeam.koreanName === community.firstTeamName
+                      ? community.color
+                      : '#232323',
+                }}>
+                {item.homeTeam.shortName}
+              </CustomText>
+              <View
+                className="justify-center items-center rounded-[3px] ml-1 p-[2]"
+                style={{backgroundColor: item.homeTeam.color}}>
+                <CustomText fontWeight="600" className="text-[11px] text-white">
+                  홈
+                </CustomText>
+              </View>
+            </View>
+
+            <CustomText>{item.homeScore}</CustomText>
+          </View>
+          <View
+            className="flex-row items-center rounded-sm pl-1 pr-2"
+            style={{opacity: item.status === 'closed' ? 0.5 : 1}}>
             <FastImage
-              source={{uri: item.homeTeam.image}}
+              source={{uri: item.awayTeam.image}}
               className="w-[30] h-[30]"
             />
             <CustomText
-              className="ml-1 text-[13px]"
+              className="ml-1 text-[13px] flex-1"
               fontWeight={
-                item.homeTeam.id === community.id ||
-                item.homeTeam.koreanName === community.firstTeamName
+                item.awayTeam.id === community.id ||
+                item.awayTeam.koreanName === community.firstTeamName
                   ? '500'
                   : '400'
               }
               style={{
                 color:
-                  item.homeTeam.id === community.id ||
-                  item.homeTeam.koreanName === community.firstTeamName
+                  item.awayTeam.id === community.id ||
+                  item.awayTeam.koreanName === community.firstTeamName
                     ? community.color
                     : '#232323',
               }}>
-              {item.homeTeam.shortName}
+              {item.awayTeam.shortName}
             </CustomText>
-            <View
-              className="justify-center items-center rounded-[3px] ml-1 p-[2]"
-              style={{backgroundColor: item.homeTeam.color}}>
-              <CustomText fontWeight="600" className="text-[11px] text-white">
-                홈
-              </CustomText>
-            </View>
+            <CustomText>{item.awayScore}</CustomText>
           </View>
-
-          <CustomText>{item.homeScore}</CustomText>
-        </View>
-        <View
-          className="flex-row items-center rounded-sm pl-1 pr-2"
-          style={{opacity: item.status === 'closed' ? 0.5 : 1}}>
-          <FastImage
-            source={{uri: item.awayTeam.image}}
-            className="w-[30] h-[30]"
-          />
-          <CustomText
-            className="ml-1 text-[13px] flex-1"
-            fontWeight={
-              item.awayTeam.id === community.id ||
-              item.awayTeam.koreanName === community.firstTeamName
-                ? '500'
-                : '400'
-            }
-            style={{
-              color:
-                item.awayTeam.id === community.id ||
-                item.awayTeam.koreanName === community.firstTeamName
-                  ? community.color
-                  : '#232323',
-            }}>
-            {item.awayTeam.shortName}
-          </CustomText>
-          <CustomText>{item.awayScore}</CustomText>
-        </View>
-        {item.status === 'not_started' && (
-          <View className="mt-1 border-t border-gray-100 pt-2">
-            <View className="justify-center items-center">
-              <CustomText>응원하기</CustomText>
+          {item.status === 'not_started' && (
+            <View className="mt-1 border-t border-gray-100 pt-2">
+              <View className="justify-center items-center">
+                <CustomText>응원하기</CustomText>
+              </View>
             </View>
-          </View>
-        )}
-        {item.status === 'live' && (
-          <View className="mt-1 border-t border-gray-100 pt-2">
-            <Pressable
-              className="justify-center items-center"
-              onPress={() => {
-                if (community.officialRoomId) {
-                  navigation.navigate('ChatRoom', {
-                    chatRoomId: community.officialRoomId,
-                    type: 'OFFICIAL',
+          )}
+          {item.status === 'live' && (
+            <View className="mt-1 border-t border-gray-100 pt-2">
+              <Pressable
+                className="justify-center items-center"
+                onPress={() => {
+                  if (community.officialRoomId) {
+                    navigation.navigate('ChatRoom', {
+                      chatRoomId: community.officialRoomId,
+                      type: 'OFFICIAL',
+                    });
+                  }
+                }}>
+                <CustomText className="text-rose-600" fontWeight="500">
+                  실시간 응원
+                </CustomText>
+              </Pressable>
+            </View>
+          )}
+          {item.status === 'closed' && (
+            <View className="mt-1 flex-row border-t border-gray-100 pt-2">
+              <Pressable className="justify-center items-center flex-1">
+                <CustomText style={{color: community.color}} fontWeight="500">
+                  MVP 투표
+                </CustomText>
+              </Pressable>
+              <View className="w-[1] h-full bg-gray-100" />
+              <Pressable className="justify-center items-center flex-1">
+                <CustomText>공유하기</CustomText>
+              </Pressable>
+            </View>
+          )}
+        </Pressable>
+        {item.meet !== null && (
+          <Pressable
+            onPress={() => {
+              if (item.meet) {
+                if (
+                  item.meet.status === null ||
+                  item.meet.status === 'APPLIED'
+                ) {
+                  navigation.navigate('MeetRecruit', {
+                    meetId: item.meet.id,
+                    community,
+                  });
+                } else {
+                  navigation.navigate('Meet', {
+                    meetId: item.meet.id,
+                    communityId: community.id,
                   });
                 }
-              }}>
-              <CustomText className="text-rose-600" fontWeight="500">
-                실시간 응원
+              }
+            }}
+            className="bg-white mt-[2] py-[9] px-2 rounded-sm"
+            style={{
+              shadowColor: '#000000',
+              shadowOffset: {
+                width: 0,
+                height: 0,
+              },
+              shadowOpacity: 0.03,
+              shadowRadius: 3,
+              elevation: 0.2,
+              borderWidth: 1,
+              borderColor:
+                formatTodayOrDate(item.time) === '오늘'
+                  ? community.color
+                  : '#eeeeee',
+            }}>
+            {item.meet.status === null ? (
+              <CustomText
+                className="text-[13px] text-gray-500 mb-1 ml-[2]"
+                fontWeight="500">
+                추천 모임
               </CustomText>
-            </Pressable>
-          </View>
-        )}
-        {item.status === 'closed' && (
-          <View className="mt-1 flex-row border-t border-gray-100 pt-2">
-            <Pressable className="justify-center items-center flex-1">
-              <CustomText style={{color: community.color}} fontWeight="500">
-                MVP 투표
+            ) : (
+              <CustomText
+                className="text-[13px] mb-1 ml-[2]"
+                style={{color: community.color}}
+                fontWeight="500">
+                예정된 모임
               </CustomText>
-            </Pressable>
-            <View className="w-[1] h-full bg-gray-100" />
-            <Pressable className="justify-center items-center flex-1">
-              <CustomText>공유하기</CustomText>
-            </Pressable>
-          </View>
+            )}
+            <View className="flex-row items-center">
+              {item.meet.type === 'LIVE' && (
+                <CustomText
+                  className="text-[13px] text-gray-500 mr-[3] ml-[1]"
+                  fontWeight="600">
+                  {`[직관]`}
+                </CustomText>
+              )}
+              {item.meet.type === 'BOOKING' && (
+                <CustomText
+                  className="text-[13px] text-gray-500 mr-[3] ml-[1]"
+                  fontWeight="600">
+                  {`[모관]`}
+                </CustomText>
+              )}
+              <CustomText className="text-[14px] flex-1" fontWeight="500">
+                {item.meet?.title}
+              </CustomText>
+            </View>
+          </Pressable>
         )}
-      </Pressable>
+      </View>
     );
   };
 
