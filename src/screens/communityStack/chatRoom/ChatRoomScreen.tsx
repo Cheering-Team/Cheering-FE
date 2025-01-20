@@ -39,6 +39,7 @@ import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 import PrivateChatRoomHeader from './components/PrivateChatRoomHeader';
 import JoinRequestMessage from './components/JoinRequestMessage';
 import JoinAcceptMessage from './components/JoinAcceptMessage';
+import OneButtonModal from 'components/common/OneButtonModal';
 const TextEncodingPolyfill = require('text-encoding');
 
 Object.assign('global', {
@@ -66,6 +67,7 @@ const ChatRoomScreen = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [participantCount, setParticipantCount] = useState(0);
   const [isPrivateFirst, setIsPrivateFirst] = useState(false);
+  const [isExceeded, setIsExceeded] = useState(false);
 
   const flatListRef = useRef<FlatList>(null);
 
@@ -85,6 +87,14 @@ const ChatRoomScreen = () => {
   const {mutate: updateExitTime} = useUpdateExitTime();
 
   const handleNewMessage = useCallback((newMessage: ChatResponse) => {
+    if (newMessage.type === 'ERROR') {
+      if (newMessage.content === '2015') {
+        if (chatRoom?.user && newMessage.writerId === chatRoom?.user.id) {
+          setIsExceeded(true);
+        }
+        return;
+      }
+    }
     setMessages(prevMessages => {
       const firstGroup = prevMessages[0];
 
@@ -154,6 +164,7 @@ const ChatRoomScreen = () => {
               chat={item}
               chatRoom={chatRoom}
               meetId={chatRoom.meetId}
+              client={stompClient}
             />
           );
         } else if (item.type === 'JOIN_ACCEPT') {
@@ -396,6 +407,15 @@ const ChatRoomScreen = () => {
           isPrivateFirst={isPrivateFirst}
         />
       </KeyboardAvoidingView>
+      {isExceeded && (
+        <OneButtonModal
+          title="인원 초과"
+          content="모임의 인원이 이미 가득 찼습니다"
+          onButtonPress={() => {
+            setIsExceeded(false);
+          }}
+        />
+      )}
     </Drawer>
   );
 };
