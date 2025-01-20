@@ -20,6 +20,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChatSvg from 'assets/images/chat-line-black.svg';
 import MemberSvg from 'assets/images/people-black.svg';
 import MemberAddSvg from 'assets/images/people-plus-black.svg';
+import CrownSvg from 'assets/images/crown-black.svg';
 import {useGetCommunityById} from 'apis/community/useCommunities';
 import OptionModal from 'components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
@@ -153,7 +154,7 @@ const MeetScreen = () => {
               멤버
             </CustomText>
           </Pressable>
-          {meet.isManager && (
+          {meet.isManager ? (
             <Pressable
               className="flex-1 items-center justify-center pt-5 pb-4"
               onPress={() => {
@@ -167,6 +168,22 @@ const MeetScreen = () => {
                 className="text-gray-700 mt-[7] text-[13px]"
                 fontWeight="500">
                 신청목록
+              </CustomText>
+            </Pressable>
+          ) : (
+            <Pressable
+              className="flex-1 items-center justify-center pt-5 pb-4"
+              onPress={() => {
+                navigation.navigate('ChatRoom', {
+                  chatRoomId: meet.privateChatRoomId,
+                  type: 'PRIVATE',
+                });
+              }}>
+              <CrownSvg width={20} height={22} />
+              <CustomText
+                className="text-gray-700 mt-[7] text-[13px]"
+                fontWeight="500">
+                모임장과 대화
               </CustomText>
             </Pressable>
           )}

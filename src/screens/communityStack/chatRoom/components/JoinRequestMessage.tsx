@@ -37,7 +37,7 @@ const JoinRequestMessage = ({
   const handleJoinAccept = async () => {
     if (client.current && client.current.connected && chatRoom.user) {
       client.current?.publish({
-        destination: `/app/fans/${chatRoom.user.id}/chatrooms/${chatRoom.id}/accept`,
+        destination: `/app/chatRooms/${chatRoom.id}/accept`,
         body: JSON.stringify({
           chatRoomType: chatRoom.type,
           writerId: chatRoom.user?.id,
