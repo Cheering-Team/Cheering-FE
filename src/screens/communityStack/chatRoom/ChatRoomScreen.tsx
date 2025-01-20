@@ -156,6 +156,7 @@ const ChatRoomScreen = () => {
               chat={item}
               isMy={item.writer.id === chatRoom?.user?.id}
               isFirst={isFirst}
+              chatRoom={chatRoom}
             />
           );
         } else if (item.type === 'JOIN_REQUEST') {
@@ -276,7 +277,7 @@ const ChatRoomScreen = () => {
   useFocusEffect(
     useCallback(() => {
       return () => {
-        if (isConnected && chatRoom?.type !== 'OFFICIAL') {
+        if (isConnected && chatRoom?.type !== 'PRIVATE') {
           updateExitTime({chatRoomId});
         }
         if (
@@ -371,14 +372,13 @@ const ChatRoomScreen = () => {
         {(chatRoom.type === 'PRIVATE' || chatRoom.type === 'CONFIRM') && (
           <PrivateChatRoomHeader chatRoom={chatRoom} client={stompClient} />
         )}
-        {chatRoom.type === 'OFFICIAL' ||
-          (chatRoom.type === 'PUBLIC' && (
-            <ChatRoomHeader
-              chatRoom={chatRoom}
-              setIsDrawerOpen={setIsDrawerOpen}
-              participantCount={participantCount}
-            />
-          ))}
+        {(chatRoom.type === 'OFFICIAL' || chatRoom.type === 'PUBLIC') && (
+          <ChatRoomHeader
+            chatRoom={chatRoom}
+            setIsDrawerOpen={setIsDrawerOpen}
+            participantCount={participantCount}
+          />
+        )}
 
         <FlatList
           inverted

@@ -70,10 +70,7 @@ const JoinRequestMessage = ({
           maxWidth: WINDOW_WIDTH / 1.5,
           marginBottom: 7,
         }}>
-        <Pressable
-          onPress={() => {
-            navigation.navigate('Profile', {fanId: chat.writer.id});
-          }}>
+        <Pressable>
           <Avatar uri={chat.writer.image} size={32} className="mt-[2]" />
         </Pressable>
         <View style={{marginLeft: 6, marginTop: 1}}>
