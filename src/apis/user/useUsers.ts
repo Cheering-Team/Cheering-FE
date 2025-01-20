@@ -5,13 +5,16 @@ import {
   checkCodeSocial,
   connectSocial,
   deleteUser,
+  getAgeAndGender,
   getPlayerAccount,
   getUserInfo,
+  isAgeAndGenderSet,
   kakaoSignIn,
   naverSignIn,
   registerManagerAccount,
   reissuePlayerAccountPassword,
   sendSMS,
+  setAgeAndGender,
   signIn,
   signUp,
   updateUserName,
@@ -108,5 +111,27 @@ export const useReissuePlayerAccountPassword = () => {
         queryKey: userKeys.playerAccount(playerId),
       });
     },
+  });
+};
+
+export const useIsAgeAndGenderSet = (communityId: number) => {
+  return useQuery({
+    queryKey: userKeys.isAgeGenderSet(communityId),
+    queryFn: isAgeAndGenderSet,
+    enabled: false,
+  });
+};
+
+export const useSetAgeAndGender = () => {
+  return useMutation({
+    mutationFn: setAgeAndGender,
+  });
+};
+
+export const useGetAgeAndGender = (enabled: boolean) => {
+  return useQuery({
+    queryKey: userKeys.ageGender(),
+    queryFn: getAgeAndGender,
+    enabled,
   });
 };

@@ -9,7 +9,7 @@ export interface ChatRoom {
   image: string;
   description: string;
   max: number;
-  type: 'OFFICIAL' | 'PUBLIC';
+  type: 'OFFICIAL' | 'PUBLIC' | 'PRIVATE' | 'CONFIRM';
   count: number;
   user: Fan | null;
   community: Community | null;
@@ -18,10 +18,15 @@ export interface ChatRoom {
   lastMessage: string | null;
   lastMessageTime: string | null;
   unreadCount: number | null;
+  meetId: number | null;
+  opponentAge?: number;
+  opponentGender?: 'MALE' | 'FEMALE';
+  communityId: number;
+  isConfirmed?: boolean;
 }
 
 export interface Chat {
-  type: 'MESSAGE' | 'SYSTEM_ENTER' | 'SYSTEM_EXIT';
+  type: 'MESSAGE' | 'SYSTEM' | 'JOIN_REQUEST' | 'JOIN_ACCEPT';
   createdAt: string;
   writer: Fan;
   messages: string[];
@@ -38,9 +43,19 @@ export interface ChatResponse {
   groupKey: string;
 }
 
+export interface IdWithConditionResponse {
+  chatRoomId: number;
+  isConditionMatched: boolean;
+}
+
 // 요청
 export interface ChatRoomIdPayload {
   chatRoomId: number;
+}
+
+export interface CreatePrivateChatRoomPayload {
+  communityId: number;
+  meetId: number;
 }
 
 export interface CreateChatRoomPayload {

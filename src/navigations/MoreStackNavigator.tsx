@@ -9,7 +9,6 @@ import SetNotificationScreen from '../screens/moreStack/SetNotificationScreen';
 import NoticeListScreen from 'screens/moreStack/NoticeListScreen';
 import NoticeScreen from 'screens/moreStack/NoticeScreen';
 import PrivacyPolicyScreen from 'screens/moreStack/PrivacyPolicyScreen';
-import PlayerAccountScreen from 'screens/moreStack/PlayerAccountScreen';
 import CommunityApplyListScreen from 'screens/moreStack/CommunityApplyList/CommunityApplyListScreen';
 
 export type MoreStackParamList = {

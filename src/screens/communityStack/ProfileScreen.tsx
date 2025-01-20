@@ -1,16 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {
-  Dimensions,
-  Platform,
-  Pressable,
-  RefreshControl,
-  SafeAreaView,
-  StatusBar,
-  View,
-} from 'react-native';
-import CloseSvg from '../../assets/images/close-black.svg';
-import MoreSvg from '../../assets/images/three-dots-black.svg';
-import {FlatList} from 'react-native-gesture-handler';
+import {Dimensions, Pressable, RefreshControl, View} from 'react-native';
 import Avatar from '../../components/common/Avatar';
 import CustomText from '../../components/common/CustomText';
 import FeedPost from '../../components/community/FeedPost';
@@ -25,20 +14,29 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import Viewer from 'components/post/Viewer';
-
-import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import NotFound from 'components/notfound';
 import {useBlockUser, useGetFanInfo} from 'apis/fan/useFans';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
+import CCHeader from 'components/common/CCHeader';
+import Animated, {
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from 'react-native-reanimated';
 
 const ProfileScreen = () => {
   useDarkStatusBar();
   const navigation =
-    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const {fanId} =
     useRoute<RouteProp<CommunityStackParamList, 'Profile'>>().params;
-
   const insets = useSafeAreaInsets();
+  const scrollY = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
+
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -81,50 +79,26 @@ const ProfileScreen = () => {
 
   if (profile) {
     return (
-      <SafeAreaView style={{flex: 1}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            height: 45,
-            paddingLeft: 8,
-            paddingRight: 11,
-            marginTop: Platform.OS === 'android' ? insets.top : undefined,
-          }}>
-          <Pressable onPress={() => navigation.goBack()}>
-            <CloseSvg width={30} height={30} />
-          </Pressable>
-          <View style={{flexDirection: 'row'}}>
-            <CustomText
-              fontWeight="500"
-              style={{
-                fontSize: 17,
-              }}>
-              {profile.communityKoreanName}
-            </CustomText>
-            {profile.communityEnglishName &&
-              profile.communityEnglishName.length < 20 && (
-                <CustomText
-                  fontWeight="500"
-                  style={{
-                    fontSize: 17,
-                  }}>
-                  {` / ${profile.communityEnglishName}`}
-                </CustomText>
-              )}
-          </View>
-          {profile.isUser ? (
-            <Pressable onPress={() => bottomSheetModalRef.current?.present()}>
-              <MoreSvg width={18} height={18} />
-            </Pressable>
-          ) : (
-            <View style={{width: 18, height: 18}} />
-          )}
-        </View>
-        <FlatList
+      <View style={{flex: 1}}>
+        <CCHeader
+          scrollY={scrollY}
+          onFirstPress={() => {
+            navigation.goBack();
+          }}
+          secondType="MORE"
+          onSecondPress={
+            profile.isUser
+              ? () => bottomSheetModalRef.current?.present()
+              : undefined
+          }
+        />
+        <Animated.FlatList
           showsVerticalScrollIndicator={true}
-          contentContainerStyle={{paddingBottom: 50}}
+          onScroll={scrollHandler}
+          contentContainerStyle={{
+            paddingTop: insets.top + 45,
+            paddingBottom: 50,
+          }}
           ListHeaderComponent={
             <View
               style={{
@@ -138,11 +112,11 @@ const ProfileScreen = () => {
                   alignItems: 'center',
                 }}>
                 <Pressable onPress={() => setIsViewerOpen(true)}>
-                  <Avatar uri={profile.fan.image} size={68} />
+                  <Avatar uri={profile.image} size={68} />
                 </Pressable>
                 <View style={{marginLeft: 15, marginTop: 3}}>
                   <CustomText fontWeight="500" style={{fontSize: 22}}>
-                    {profile.fan.name}
+                    {profile.name}
                   </CustomText>
                 </View>
               </View>
@@ -161,6 +135,7 @@ const ProfileScreen = () => {
                     onPress={() =>
                       navigation.navigate('ProfileEdit', {
                         fanId: fanId,
+                        type: 'COMMUNITY',
                       })
                     }>
                     <CustomText fontWeight="500" style={{fontSize: 16}}>
@@ -271,12 +246,12 @@ const ProfileScreen = () => {
           />
         )}
         <Viewer
-          images={[{path: profile.fan.image, type: 'IMAGE'}]}
+          images={[{path: profile.image, type: 'IMAGE'}]}
           isViewerOpen={isViewerOpen}
           setIsViewerOpen={setIsViewerOpen}
           viewIndex={0}
         />
-      </SafeAreaView>
+      </View>
     );
   }
 };

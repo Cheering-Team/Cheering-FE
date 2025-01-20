@@ -5,16 +5,28 @@ export interface Fan {
   image: string;
 }
 
+export interface FanProfile {
+  id: number;
+  type: 'TEAM' | 'PLAYER' | 'ADMIN';
+  name: string;
+  image: string;
+  meetName: string;
+  meetImage: string;
+  isUser: boolean;
+}
+
 // 요청
 export interface FanIdPayload {
   fanId: number;
 }
 
 export interface UpdateFanImagePayload extends FanIdPayload {
+  type: 'COMMUNITY' | 'MEET';
   image: {uri: string; name: string; type: string} | null;
 }
 
 export interface UpdateFanNamePayload extends FanIdPayload {
+  type: 'COMMUNITY' | 'MEET';
   name: string;
 }
 

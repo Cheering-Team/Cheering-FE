@@ -3103,6 +3103,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ptomasroos/react-native-multi-slider@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "@ptomasroos/react-native-multi-slider@npm:2.2.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/eb286b16aec36b92048b9e51f0c2198d6fc6c0011c531405e17a64d0fcd75062384622bc9f58d80ff5524b1d5ea4196b7a84054158b58ff968c6eb193b7e9f05
+  languageName: node
+  linkType: hard
+
 "@react-native-camera-roll/camera-roll@npm:^7.8.4":
   version: 7.8.4
   resolution: "@react-native-camera-roll/camera-roll@npm:7.8.4"
@@ -4977,6 +4987,7 @@ __metadata:
     "@gorhom/bottom-sheet": "npm:^5.0.2"
     "@invertase/react-native-apple-authentication": "npm:^2.4.0"
     "@likashefqet/react-native-image-zoom": "npm:^4.2.0"
+    "@ptomasroos/react-native-multi-slider": "npm:^2.2.2"
     "@react-native-camera-roll/camera-roll": "npm:^7.8.4"
     "@react-native-community/blur": "npm:^4.4.1"
     "@react-native-firebase/app": "npm:^20.4.0"

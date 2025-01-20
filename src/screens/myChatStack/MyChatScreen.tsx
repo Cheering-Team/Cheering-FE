@@ -62,7 +62,7 @@ const MyChatScreen = () => {
           onPress={() => {
             navigation.navigate('CommunityStack', {
               screen: 'ChatRoom',
-              params: {chatRoomId: item.id},
+              params: {chatRoomId: item.id, type: 'OFFICIAL'},
             });
           }}
         />
@@ -81,7 +81,7 @@ const MyChatScreen = () => {
           onPress={() => {
             navigation.navigate('CommunityStack', {
               screen: 'ChatRoom',
-              params: {chatRoomId: item.id},
+              params: {chatRoomId: item.id, type: 'PUBLIC'},
             });
           }}
         />

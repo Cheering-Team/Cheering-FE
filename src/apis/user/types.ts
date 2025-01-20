@@ -68,3 +68,19 @@ export interface VersionInfo {
   iosUrl: string;
   aosUrl: string;
 }
+
+export interface SetAgeAndGenderPayload {
+  communityId: number;
+  age: number | null;
+  gender: 'MALE' | 'FEMALE' | null;
+  name: string;
+  status: 'NEITHER' | 'NULL_PROFILE';
+}
+
+// 응답
+
+export interface AgeGender {
+  userId: number;
+  currentAge: number;
+  gender: 'MALE' | 'FEMALE';
+}

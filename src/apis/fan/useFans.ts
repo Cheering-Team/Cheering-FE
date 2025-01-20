@@ -19,7 +19,7 @@ import {notificationKeys} from 'apis/notification/queries';
 import {communityKeys} from 'apis/community/queries';
 
 // 커뮤니티 유저 정보 불러오기
-export const useGetFanInfo = (fanId: number) => {
+export const useGetFanInfo = (fanId: number | undefined) => {
   return useQuery({
     queryKey: fanKeys.detail(fanId),
     queryFn: getFanInfo,

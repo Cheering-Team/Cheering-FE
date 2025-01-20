@@ -111,6 +111,7 @@ const CheerTab = ({match, community}: CheerTabProps) => {
               if (community.officialRoomId) {
                 navigation.navigate('ChatRoom', {
                   chatRoomId: community.officialRoomId,
+                  type: 'OFFICIAL',
                 });
               }
             }}

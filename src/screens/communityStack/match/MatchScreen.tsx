@@ -4,22 +4,16 @@ import {useGetMatchDetail} from 'apis/match/useMatches';
 import CustomText from 'components/common/CustomText';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import React from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StatusBar,
-  View,
-} from 'react-native';
+import {KeyboardAvoidingView, Platform, Pressable, View} from 'react-native';
 import {Tabs} from 'react-native-collapsible-tab-view';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BackSvg from 'assets/images/chevron-left.svg';
-import MatchInfo from './components/MatchInfo';
 import {CommunityTabBar} from 'components/community/CommunityTabBar/CommunityTabBar';
-import VoteList from '../schedule/match/components/VoteList';
 import {useGetCommunityById} from 'apis/community/useCommunities';
 import CheerTab from './CheerTab';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
+import MatchInfo from 'components/common/MatchInfo';
+import VoteList from '../Schedule/match/components/VoteList';
 
 const MatchScreen = () => {
   useDarkStatusBar();
@@ -62,7 +56,7 @@ const MatchScreen = () => {
         <View className="w-[25]" />
       </View>
       <Tabs.Container
-        renderHeader={() => <MatchInfo match={match} community={community} />}
+        renderHeader={() => <MatchInfo match={match} height={130} />}
         renderTabBar={props => (
           <CommunityTabBar
             {...props}

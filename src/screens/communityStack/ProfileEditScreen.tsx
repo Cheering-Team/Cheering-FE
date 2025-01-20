@@ -1,12 +1,11 @@
 import React, {useRef, useState} from 'react';
-import {ImageBackground, Pressable, SafeAreaView, View} from 'react-native';
+import {ImageBackground, Pressable, View} from 'react-native';
 import CustomText from '../../components/common/CustomText';
 import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
 import CameraSvg from '../../assets/images/camera-01.svg';
 import OptionModal from '../../components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import StackHeader from 'components/common/StackHeader';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
@@ -14,17 +13,33 @@ import {Image} from 'react-native-compressor';
 import LoadingOverlay from 'components/common/LoadingOverlay';
 import {useGetFanInfo, useUpdateFanImage} from 'apis/fan/useFans';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
+import CCHeader from 'components/common/CCHeader';
+import Animated, {
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from 'react-native-reanimated';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useGetAgeAndGender} from 'apis/user/useUsers';
 
-const ProfileEditScreen = ({route}) => {
+const ProfileEditScreen = () => {
   useDarkStatusBar();
-  const {fanId} = route.params;
+  const {fanId, type} =
+    useRoute<RouteProp<CommunityStackParamList, 'ProfileEdit'>>().params;
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
+  const insets = useSafeAreaInsets();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const scrollY = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
 
   const [imageLoding, setImageLoding] = useState(false);
 
   const {data: profile, isLoading} = useGetFanInfo(fanId);
+  const {data: ageGender} = useGetAgeAndGender(type === 'MEET');
 
   const {mutate} = useUpdateFanImage();
 
@@ -52,6 +67,7 @@ const ProfileEditScreen = ({route}) => {
 
       mutate({
         fanId: fanId,
+        type,
         image: {
           uri: result,
           name: response.fileName || '',
@@ -68,58 +84,73 @@ const ProfileEditScreen = ({route}) => {
   const imageDelete = async () => {
     mutate({
       fanId: fanId,
+      type,
       image: null,
     });
   };
 
-  if (isLoading) {
+  if (isLoading || !profile) {
     return null;
   }
 
-  if (profile) {
-    return (
-      <SafeAreaView style={{flex: 1}}>
-        <LoadingOverlay isLoading={imageLoding} type="LOADING" />
-        <StackHeader title="내 정보 수정" type="back" />
-        <View style={{padding: 20, alignItems: 'center'}}>
-          <Pressable
-            onPress={() => {
-              bottomSheetModalRef.current?.present();
+  return (
+    <View style={{flex: 1}}>
+      <LoadingOverlay isLoading={imageLoding} type="LOADING" />
+      <CCHeader
+        title={
+          type === 'COMMUNITY' ? '커뮤니티 프로필 수정' : '모임 프로필 수정'
+        }
+        scrollY={scrollY}
+        onFirstPress={() => {
+          navigation.goBack();
+        }}
+      />
+      <Animated.ScrollView
+        onScroll={scrollHandler}
+        contentContainerStyle={{
+          paddingTop: insets.top + 60,
+          paddingHorizontal: 20,
+          alignItems: 'center',
+        }}>
+        <Pressable
+          onPress={() => {
+            bottomSheetModalRef.current?.present();
+          }}
+          style={{
+            borderRadius: 95,
+            backgroundColor: 'white',
+          }}
+          className="border border-gray-200">
+          <ImageBackground
+            source={{
+              uri: type === 'COMMUNITY' ? profile.image : profile.meetImage,
             }}
             style={{
-              borderRadius: 95,
-              backgroundColor: '#7fb677',
-            }}>
-            <ImageBackground
-              source={{
-                uri: profile.fan.image,
-              }}
-              style={{
-                width: 95,
-                height: 95,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              imageStyle={{borderRadius: 95}}>
-              <CameraSvg width={27} height={27} />
-            </ImageBackground>
-          </Pressable>
-          <Pressable
-            style={{
-              width: '100%',
-              marginTop: 35,
-              borderWidth: 1,
-              borderColor: '#e5e5e5',
-              padding: 18,
-              flexDirection: 'row',
+              width: 95,
+              height: 95,
               alignItems: 'center',
-              justifyContent: 'space-between',
-              borderRadius: 10,
+              justifyContent: 'center',
             }}
+            imageStyle={{borderRadius: 95}}>
+            <CameraSvg width={27} height={27} />
+          </ImageBackground>
+        </Pressable>
+        <View
+          style={{
+            width: '100%',
+            marginTop: 35,
+            borderWidth: 1,
+            borderColor: '#e5e5e5',
+            justifyContent: 'space-between',
+            borderRadius: 10,
+          }}>
+          <Pressable
+            className="flex-row items-center justify-between flex-1 p-[18]"
             onPress={() =>
               navigation.navigate('EditName', {
-                name: profile.fan.name,
-                fanId: profile.fan.id,
+                name: type === 'COMMUNITY' ? profile.name : profile.meetName,
+                type,
+                fanId: profile.id,
               })
             }>
             <CustomText fontWeight="600" style={{fontSize: 18}}>
@@ -133,32 +164,72 @@ const ProfileEditScreen = ({route}) => {
                   fontSize: 17,
                   marginRight: 3,
                 }}>
-                {profile.fan.name}
+                {type === 'COMMUNITY' ? profile.name : profile.meetName}
               </CustomText>
               <ChevronRightSvg width={13} height={13} />
             </View>
           </Pressable>
+          {type === 'MEET' && (
+            <>
+              <View className="flex-row items-center justify-between flex-1 p-[18]">
+                <CustomText fontWeight="600" style={{fontSize: 18}}>
+                  성별
+                </CustomText>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <CustomText
+                    fontWeight="500"
+                    style={{
+                      color: '#a0a0a0',
+                      fontSize: 17,
+                      marginRight: 3,
+                    }}>
+                    {ageGender?.gender === 'FEMALE' ? '여자' : '남자'}
+                  </CustomText>
+                </View>
+              </View>
+              <View className="flex-row items-center justify-between flex-1 p-[18]">
+                <CustomText fontWeight="600" style={{fontSize: 18}}>
+                  나이
+                </CustomText>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <CustomText
+                    fontWeight="500"
+                    style={{
+                      color: '#a0a0a0',
+                      fontSize: 17,
+                      marginRight: 3,
+                    }}>
+                    {ageGender?.currentAge}
+                  </CustomText>
+                </View>
+              </View>
+            </>
+          )}
         </View>
-        {profile.fan.image ===
-        'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/profile-image.jpg' ? (
-          <OptionModal
-            modalRef={bottomSheetModalRef}
-            firstText="내 사진 선택"
-            firstOnPress={imageUpload}
-          />
-        ) : (
-          <OptionModal
-            modalRef={bottomSheetModalRef}
-            firstText="내 사진 선택"
-            secondText="현재 사진 삭제"
-            secondColor="#fe6363"
-            firstOnPress={imageUpload}
-            secondOnPress={imageDelete}
-          />
-        )}
-      </SafeAreaView>
-    );
-  }
+      </Animated.ScrollView>
+      {(type === 'COMMUNITY' &&
+        profile.image ===
+          'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/profile-image.jpg') ||
+      (type === 'MEET' &&
+        profile.meetImage ===
+          'https://cheering-bucket.s3.ap-northeast-2.amazonaws.com/profile-image.jpg') ? (
+        <OptionModal
+          modalRef={bottomSheetModalRef}
+          firstText="내 사진 선택"
+          firstOnPress={imageUpload}
+        />
+      ) : (
+        <OptionModal
+          modalRef={bottomSheetModalRef}
+          firstText="내 사진 선택"
+          secondText="현재 사진 삭제"
+          secondColor="#fe6363"
+          firstOnPress={imageUpload}
+          secondOnPress={imageDelete}
+        />
+      )}
+    </View>
+  );
 };
 
 export default ProfileEditScreen;

@@ -2,7 +2,7 @@ import {axiosInstance} from 'apis';
 import {
   Fan,
   FanIdPayload,
-  GetFanInfoResponse,
+  FanProfile,
   UpdateFanImagePayload,
   UpdateFanNamePayload,
 } from './types';
@@ -16,7 +16,7 @@ export const getFanInfo = async ({
   queryKey: ReturnType<typeof fanKeys.detail>;
 }) => {
   const [, , fanId] = queryKey;
-  const response = await axiosInstance.get<ApiResponse<GetFanInfoResponse>>(
+  const response = await axiosInstance.get<ApiResponse<FanProfile>>(
     `/fans/${fanId}`,
   );
   return response.data.result;
@@ -24,7 +24,7 @@ export const getFanInfo = async ({
 
 // 팬 이미지 변경
 export const updateFanImage = async (data: UpdateFanImagePayload) => {
-  const {fanId, image} = data;
+  const {fanId, type, image} = data;
 
   const formData = new FormData();
   formData.append('dummy', 'dummy');
@@ -33,7 +33,7 @@ export const updateFanImage = async (data: UpdateFanImagePayload) => {
     formData.append('image', image);
   }
   const response = await axiosInstance.put<ApiResponse<null>>(
-    `/fans/${fanId}/image`,
+    `/fans/${fanId}/image?type=${type}`,
     formData,
     {
       headers: {
@@ -46,9 +46,9 @@ export const updateFanImage = async (data: UpdateFanImagePayload) => {
 
 // 팬 이름 변경
 export const updateFanName = async (data: UpdateFanNamePayload) => {
-  const {fanId, name} = data;
+  const {fanId, type, name} = data;
   const response = await axiosInstance.put<ApiResponse<null>>(
-    `/fans/${fanId}/name`,
+    `/fans/${fanId}/name?type=${type}`,
     {name},
   );
   return response.data.result;

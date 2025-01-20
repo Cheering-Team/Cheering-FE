@@ -35,7 +35,7 @@ const RandomCommunityCard = () => {
         onPress={() =>
           navigation.navigate('CommunityStack', {
             screen: 'Community',
-            params: {communityId: community.id},
+            params: {communityId: community.id, initialIndex: 0},
           })
         }>
         <View className="flex-row justify-between items-start z-10">

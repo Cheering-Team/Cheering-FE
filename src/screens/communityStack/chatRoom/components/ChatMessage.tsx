@@ -5,7 +5,7 @@ import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_WIDTH} from 'constants/dimension';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {memo} from 'react';
+import React from 'react';
 import {Pressable, View} from 'react-native';
 import {formatDay, formatAmPmTime} from 'utils/format';
 

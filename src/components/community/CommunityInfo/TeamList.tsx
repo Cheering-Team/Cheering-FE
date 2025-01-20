@@ -26,7 +26,12 @@ const TeamList = ({playerId}: TeamListProps) => {
       {teams.map(team => (
         <Pressable
           key={team.id.toString()}
-          onPress={() => navigation.push('Community', {communityId: team.id})}>
+          onPress={() =>
+            navigation.push('Community', {
+              communityId: team.id,
+              initialIndex: 0,
+            })
+          }>
           <FastImage source={{uri: team.image}} className="w-[60] h-[60]" />
         </Pressable>
       ))}

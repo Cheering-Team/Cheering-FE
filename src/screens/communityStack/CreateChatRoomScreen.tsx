@@ -111,7 +111,7 @@ const CreateChatRoomScreen = ({navigation, route}) => {
         max: formData.max,
       });
       showTopToast({message: '생성 완료'});
-      navigation.replace('ChatRoom', {chatRoomId: data.id});
+      navigation.replace('ChatRoom', {chatRoomId: data.id, type: 'PUBLIC'});
     } catch (error: any) {
       //
     }

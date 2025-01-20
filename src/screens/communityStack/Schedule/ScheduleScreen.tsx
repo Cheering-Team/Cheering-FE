@@ -6,8 +6,9 @@ import React from 'react';
 import {Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CloseSvg from 'assets/images/close-black.svg';
-import ScheduleList from 'screens/communityStack/schedule/components/ScheduleList';
+
 import {useGetCommunityById} from 'apis/community/useCommunities';
+import ScheduleList from './components/ScheduleList';
 
 const ScheduleScreen = () => {
   const {communityId} =

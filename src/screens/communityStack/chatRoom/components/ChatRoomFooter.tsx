@@ -12,6 +12,7 @@ interface ChatRoomFooterProps {
   chatRoom: ChatRoom;
   flatListRef: RefObject<FlatList<any>>;
   isAtBottom: boolean;
+  isPrivateFirst?: boolean;
 }
 
 const ChatRoomFooter = ({
@@ -19,6 +20,7 @@ const ChatRoomFooter = ({
   chatRoom,
   flatListRef,
   isAtBottom,
+  isPrivateFirst = false,
 }: ChatRoomFooterProps) => {
   const insets = useSafeAreaInsets();
 
@@ -30,6 +32,11 @@ const ChatRoomFooter = ({
     }
 
     if (client.current && client.current.connected) {
+      if (chatRoom.type === 'PRIVATE' && isPrivateFirst) {
+        client.current?.publish({
+          destination: `/app/fans/${chatRoom.user?.id}/chatRooms/${chatRoom.id}/join-applier`,
+        });
+      }
       client.current?.publish({
         destination: `/app/chatRooms/${chatRoom.id}/sendMessage`,
         body: JSON.stringify({
