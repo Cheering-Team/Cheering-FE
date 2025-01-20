@@ -607,6 +607,7 @@ const MeetTab = ({
         <MeetProfileModal
           communityId={community.id}
           initialStep={initialStep}
+          initialName={community.curFan?.name}
           firstCallback={() => {
             setIsAgeGenderModalOpen(false);
           }}
