@@ -62,7 +62,7 @@ const MeetProfileModal = ({
     }
     await setAgeAndGender({
       communityId,
-      age: initialStep === 'info' ? age : null,
+      age: initialStep === 'info' ? new Date().getFullYear() - age + 1 : null,
       gender: initialStep === 'info' ? gender : null,
       name,
       status: initialStep === 'info' ? 'NEITHER' : 'NULL_PROFILE',

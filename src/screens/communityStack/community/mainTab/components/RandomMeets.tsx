@@ -29,7 +29,13 @@ const RandomMeets = ({
     <View className="mt-3">
       <View className="flex-row items-center justify-between mx-[14] mb-1">
         <CustomText className="text-lg flex-1" fontWeight="500">
-          {`${curUser?.name}님을 위한 추천 모임`}
+          <CustomText
+            className="text-lg flex-1"
+            fontWeight="500"
+            style={{color: community.color}}>
+            {curUser?.name}
+          </CustomText>
+          {` 님을 위한 추천 모임`}
         </CustomText>
         <Pressable
           className="border-b border-b-gray-600"

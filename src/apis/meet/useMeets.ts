@@ -119,5 +119,6 @@ export const useFindRandomFiveMeetsByCondition = (
     queryKey: meetKeys.randomFive(communityId),
     queryFn: findRandomFiveMeetsByCondition,
     enabled,
+    retry: false,
   });
 };

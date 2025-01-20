@@ -173,7 +173,7 @@ const MatchList = ({community, onTabPress, matches}: MatchListProps) => {
             </View>
           )}
         </Pressable>
-        {item.meet !== null && (
+        {item.meet && (
           <Pressable
             onPress={() => {
               if (item.meet) {
