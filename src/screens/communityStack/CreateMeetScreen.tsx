@@ -306,6 +306,7 @@ const CreateMeetScreen = () => {
             placeholder="선호하는 지역을 입력해주세요"
             value={place}
             onChangeText={setPlace}
+            isRequired
           />
         )}
 
