@@ -1,17 +1,23 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useGetPrivateChatRoomIdsForManager} from 'apis/chat/useChats';
 import CCHeader from 'components/common/CCHeader';
 import ChatCard from 'components/common/ChatCard';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useIsMutating} from '@tanstack/react-query';
 
 const MeetPrivateChatListScreen = () => {
   const {meetId, community} =
@@ -21,8 +27,12 @@ const MeetPrivateChatListScreen = () => {
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
-  const {data: chatRooms, isLoading} =
-    useGetPrivateChatRoomIdsForManager(meetId);
+  const {
+    data: chatRooms,
+    isLoading,
+    refetch,
+  } = useGetPrivateChatRoomIdsForManager(meetId);
+  const isMutating = useIsMutating();
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -30,6 +40,14 @@ const MeetPrivateChatListScreen = () => {
       scrollY.value = event.contentOffset.y;
     },
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!isMutating) {
+        refetch();
+      }
+    }, [refetch, isMutating]),
+  );
 
   return (
     <View className="flex-1">
