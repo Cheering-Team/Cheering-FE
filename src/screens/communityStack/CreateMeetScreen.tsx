@@ -26,6 +26,7 @@ import {MatchDetail} from 'apis/match/types';
 import CloseSvg from 'assets/images/close-black.svg';
 import MatchSelectModal from 'components/common/MatchSelectModal';
 import DuplicateMatchModal from './community/meetTab/components/DuplicateMatchModal';
+import OneButtonModal from 'components/common/OneButtonModal';
 
 const AnimatedKeyboardAwareScrollView = Animated.createAnimatedComponent(
   KeyboardAwareScrollView,
@@ -52,6 +53,7 @@ const CreateMeetScreen = () => {
   const [place, setPlace] = useState<string>('');
   const [match, setMatch] = useState<MatchDetail | null>(null);
   const [isDuplicatedMatchModal, setIsDuplicatedMatchModal] = useState(false);
+  const [isRestrictedMatchModal, setIsRestrictedMatchModal] = useState(false);
 
   const {data: matches} = useGetTwoWeeksMatches(community.id);
   const {mutateAsync: createMeet} = useCreateMeet();
@@ -111,6 +113,11 @@ const CreateMeetScreen = () => {
     } catch (error: any) {
       if (error.code === 2010) {
         setIsDuplicatedMatchModal(true);
+        return;
+      }
+      if (error.code === 2013) {
+        setIsRestrictedMatchModal(true);
+        return;
       }
     }
   };
@@ -348,6 +355,13 @@ const CreateMeetScreen = () => {
           match={match}
           setIsModalOpen={setIsDuplicatedMatchModal}
           community={community}
+        />
+      )}
+      {isRestrictedMatchModal && (
+        <OneButtonModal
+          title="모임 생성 제한"
+          content="해당 경기 시작 48시간전에 취소한 모임이 있기 때문에 해당 경기 모임을 생성할 수 없습니다."
+          onButtonPress={() => setIsRestrictedMatchModal(false)}
         />
       )}
     </View>
