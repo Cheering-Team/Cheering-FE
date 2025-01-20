@@ -20,6 +20,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChatSvg from 'assets/images/chat-line-black.svg';
 import MemberSvg from 'assets/images/people-black.svg';
 import MemberAddSvg from 'assets/images/people-plus-black.svg';
+import CrownSvg from 'assets/images/crown-black.svg';
 import {useGetCommunityById} from 'apis/community/useCommunities';
 import OptionModal from 'components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
@@ -153,7 +154,7 @@ const MeetScreen = () => {
               멤버
             </CustomText>
           </Pressable>
-          {meet.isManager && (
+          {meet.isManager ? (
             <Pressable
               className="flex-1 items-center justify-center pt-5 pb-4"
               onPress={() => {
@@ -167,6 +168,22 @@ const MeetScreen = () => {
                 className="text-gray-700 mt-[7] text-[13px]"
                 fontWeight="500">
                 신청목록
+              </CustomText>
+            </Pressable>
+          ) : (
+            <Pressable
+              className="flex-1 items-center justify-center pt-5 pb-4"
+              onPress={() => {
+                navigation.navigate('ChatRoom', {
+                  chatRoomId: meet.privateChatRoomId,
+                  type: 'PRIVATE',
+                });
+              }}>
+              <CrownSvg width={20} height={22} />
+              <CustomText
+                className="text-gray-700 mt-[7] text-[13px]"
+                fontWeight="500">
+                모임장과 대화
               </CustomText>
             </Pressable>
           )}
@@ -256,7 +273,10 @@ const MeetScreen = () => {
         <TwoButtonModal
           title="모임을 삭제하시겠습니까?"
           content={
-            '복구할 수 없으며 모든 팀원들에게\n모임 취소에 대한 알림이 전송됩니다'
+            new Date(meet.match.time).getTime() - new Date().getTime() <
+              2 * 24 * 60 * 60 * 1000 && meet.currentCount > 1
+              ? '경기 시작이 48시간 이내이기 때문에\n해당 경기에 대해서는 다른 모임에 참가할 수 없습니다.'
+              : '복구할 수 없으며 멤버들에게 모임 취소에 대한 알림이 전송됩니다.'
           }
           firstCallback={() => {
             setIsDeleteOpen(false);
@@ -270,7 +290,10 @@ const MeetScreen = () => {
         <TwoButtonModal
           title="모임에서 탈퇴하시겠습니까?"
           content={
-            '경기까지 이틀 이내로 남았다면 해당 경기에 대해서는 다른 모임에 참가할 수 없습니다'
+            new Date(meet.match.time).getTime() - new Date().getTime() <
+            2 * 24 * 60 * 60 * 1000
+              ? '경기 시작이 48시간 이내이기 때문에\n해당 경기에 대해서는 다른 모임에 참가할 수 없습니다.'
+              : '탈퇴한 후에는 해당 모임에 다시 참여할 수 없습니다.'
           }
           firstCallback={() => {
             setIsLeaveOpen(false);

@@ -10,6 +10,7 @@ import {Pressable, View} from 'react-native';
 import {formatAmPmTime} from 'utils/format';
 import {queryClient} from '../../../../../App';
 import {chatRoomKeys} from 'apis/chat/queries';
+import {matchKeys} from 'apis/match/queries';
 
 interface JoinAcceptMessageProps {
   chat: Chat;
@@ -34,8 +35,12 @@ const JoinAcceptMessage = ({
       queryClient.invalidateQueries({
         queryKey: chatRoomKeys.detail(chatRoomId),
       });
+    } else if (communityId) {
+      queryClient.invalidateQueries({
+        queryKey: matchKeys.nearList(communityId),
+      });
     }
-  }, [chatRoomId, meet?.isManager]);
+  }, [chatRoomId, communityId, meet?.isManager]);
 
   if (meet?.isManager) {
     return (

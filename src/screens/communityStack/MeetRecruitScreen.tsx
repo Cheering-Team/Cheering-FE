@@ -29,6 +29,7 @@ const MeetRecruitScreen = () => {
   const [isAgeGenderModalOpen, setIsAgeGenderModalOpen] = useState(false);
   const [isExceeded, setIsExceeded] = useState(false);
   const [initialStep, setInitialStep] = useState<'info' | 'profile'>('info');
+  const [isRestrictedMatchModal, setIsRestrictedMatchModal] = useState(false);
 
   const {data: meet} = useGetMeetById(meetId);
   const {mutateAsync: register} = useCreatePrivateChatRoom();
@@ -53,6 +54,10 @@ const MeetRecruitScreen = () => {
       } catch (error: any) {
         if (error.code === 2015) {
           setIsExceeded(true);
+        }
+        if (error.code === 2013) {
+          setIsRestrictedMatchModal(true);
+          return;
         }
       }
     } else if (response.data === 'NEITHER') {
@@ -198,6 +203,7 @@ const MeetRecruitScreen = () => {
         <MeetProfileModal
           communityId={community.id}
           initialStep={initialStep}
+          initialName={community.curFan?.name}
           firstCallback={() => {
             setIsAgeGenderModalOpen(false);
           }}
@@ -213,6 +219,10 @@ const MeetRecruitScreen = () => {
               if (error.code === 2015) {
                 setIsExceeded(true);
               }
+              if (error.code === 2013) {
+                setIsRestrictedMatchModal(true);
+                return;
+              }
             }
           }}
         />
@@ -224,6 +234,13 @@ const MeetRecruitScreen = () => {
           onButtonPress={() => {
             setIsExceeded(false);
           }}
+        />
+      )}
+      {isRestrictedMatchModal && (
+        <OneButtonModal
+          title="모임 참여 제한"
+          content="해당 경기 시작 48시간전에 취소한 모임이 있기 때문에 해당 경기 모임에 참여할 수 없습니다."
+          onButtonPress={() => setIsRestrictedMatchModal(false)}
         />
       )}
     </View>

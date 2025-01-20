@@ -20,6 +20,7 @@ import {NAME_REGEX} from 'constants/regex';
 interface MeetProfileModalProps {
   communityId: number;
   initialStep: 'info' | 'profile';
+  initialName?: string;
   firstCallback: () => void;
   secondCallback: () => void;
 }
@@ -29,11 +30,12 @@ const MeetProfileModal = ({
   initialStep = 'info',
   firstCallback,
   secondCallback,
+  initialName,
 }: MeetProfileModalProps) => {
   const [step, setStep] = useState<'info' | 'profile'>(initialStep);
   const [gender, setGender] = useState<'MALE' | 'FEMALE' | null>(null);
   const [age, setAge] = useState<number>(20);
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string | undefined>(initialName);
 
   const {mutateAsync: setAgeAndGender} = useSetAgeAndGender();
 

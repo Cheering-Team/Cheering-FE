@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Chat} from 'apis/chat/types';
+import {Chat, ChatRoom} from 'apis/chat/types';
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_WIDTH} from 'constants/dimension';
@@ -13,9 +13,10 @@ interface ChatMessageProps {
   isMy: boolean;
   chat: Chat;
   isFirst: boolean;
+  chatRoom: ChatRoom;
 }
 
-const ChatMessage = ({isMy, chat, isFirst}: ChatMessageProps) => {
+const ChatMessage = ({isMy, chat, isFirst, chatRoom}: ChatMessageProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
 
@@ -72,7 +73,9 @@ const ChatMessage = ({isMy, chat, isFirst}: ChatMessageProps) => {
           }}>
           <Pressable
             onPress={() => {
-              navigation.navigate('Profile', {fanId: chat.writer.id});
+              if (chatRoom.type === 'OFFICIAL' || chatRoom.type === 'PUBLIC') {
+                navigation.navigate('Profile', {fanId: chat.writer.id});
+              }
             }}>
             <Avatar uri={chat.writer.image} size={32} className="mt-[2]" />
           </Pressable>

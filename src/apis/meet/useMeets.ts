@@ -16,6 +16,7 @@ import {
 import {GetMeesPayload} from './types';
 import {queryClient} from '../../../App';
 import {chatKeys} from 'apis/chat/queries';
+import {matchKeys} from 'apis/match/queries';
 
 export const useGetMeetById = (meedId: number | null) => {
   return useQuery({
@@ -28,8 +29,11 @@ export const useGetMeetById = (meedId: number | null) => {
 export const useCreateMeet = () => {
   return useMutation({
     mutationFn: createMeet,
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({queryKey: meetKeys.lists()});
+      queryClient.invalidateQueries({
+        queryKey: matchKeys.nearList(variables.communityId),
+      });
     },
   });
 };

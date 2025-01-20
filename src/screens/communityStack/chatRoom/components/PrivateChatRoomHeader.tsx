@@ -138,7 +138,7 @@ const PrivateChatRoomHeader = ({chatRoom, client}: PrivateChatRoomHeader) => {
               {isModalOpen && (
                 <TwoButtonModal
                   title="멤버로 확정하시겠습니까?"
-                  content="신청자1님을 멤버로 초대합니다"
+                  content={`${chatRoom.name}님을 멤버로 초대합니다`}
                   firstCallback={() => {
                     setIsModalOpen(false);
                   }}
@@ -146,6 +146,7 @@ const PrivateChatRoomHeader = ({chatRoom, client}: PrivateChatRoomHeader) => {
                     handleCreateRequest();
                     setIsModalOpen(false);
                   }}
+                  secondText="확인"
                 />
               )}
             </Pressable>

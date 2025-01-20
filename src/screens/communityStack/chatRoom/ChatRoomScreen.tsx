@@ -68,6 +68,7 @@ const ChatRoomScreen = () => {
   const [participantCount, setParticipantCount] = useState(0);
   const [isPrivateFirst, setIsPrivateFirst] = useState(false);
   const [isExceeded, setIsExceeded] = useState(false);
+  const [isRestrictedMatchModal, setIsRestrictedMatchModal] = useState(false);
 
   const flatListRef = useRef<FlatList>(null);
 
@@ -91,6 +92,12 @@ const ChatRoomScreen = () => {
       if (newMessage.content === '2015') {
         if (chatRoom?.user && newMessage.writerId === chatRoom?.user.id) {
           setIsExceeded(true);
+        }
+        return;
+      }
+      if (newMessage.content === '2013') {
+        if (chatRoom?.user && newMessage.writerId === chatRoom?.user.id) {
+          setIsRestrictedMatchModal(true);
         }
         return;
       }
@@ -156,6 +163,7 @@ const ChatRoomScreen = () => {
               chat={item}
               isMy={item.writer.id === chatRoom?.user?.id}
               isFirst={isFirst}
+              chatRoom={chatRoom}
             />
           );
         } else if (item.type === 'JOIN_REQUEST') {
@@ -371,14 +379,13 @@ const ChatRoomScreen = () => {
         {(chatRoom.type === 'PRIVATE' || chatRoom.type === 'CONFIRM') && (
           <PrivateChatRoomHeader chatRoom={chatRoom} client={stompClient} />
         )}
-        {chatRoom.type === 'OFFICIAL' ||
-          (chatRoom.type === 'PUBLIC' && (
-            <ChatRoomHeader
-              chatRoom={chatRoom}
-              setIsDrawerOpen={setIsDrawerOpen}
-              participantCount={participantCount}
-            />
-          ))}
+        {(chatRoom.type === 'OFFICIAL' || chatRoom.type === 'PUBLIC') && (
+          <ChatRoomHeader
+            chatRoom={chatRoom}
+            setIsDrawerOpen={setIsDrawerOpen}
+            participantCount={participantCount}
+          />
+        )}
 
         <FlatList
           inverted
@@ -414,6 +421,13 @@ const ChatRoomScreen = () => {
           onButtonPress={() => {
             setIsExceeded(false);
           }}
+        />
+      )}
+      {isRestrictedMatchModal && (
+        <OneButtonModal
+          title="모임 생성 제한"
+          content="해당 경기 시작 48시간전에 취소한 모임이 있기 때문에 해당 경기 모임을 생성할 수 없습니다."
+          onButtonPress={() => setIsRestrictedMatchModal(false)}
         />
       )}
     </Drawer>

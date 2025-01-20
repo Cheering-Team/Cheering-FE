@@ -23,6 +23,7 @@ export interface MeetDetail {
   place: string | null;
   isManager: boolean;
   isMember: boolean;
+  privateChatRoomId: number;
 }
 
 export interface MeetInfo {
