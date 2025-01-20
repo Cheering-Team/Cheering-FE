@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {Client} from '@stomp/stompjs';
 import {Chat, ChatRoom} from 'apis/chat/types';
 import {useGetCommunityById} from 'apis/community/useCommunities';
 import {useAcceptJoinRequest, useGetMeetById} from 'apis/meet/useMeets';
@@ -7,7 +8,7 @@ import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_WIDTH} from 'constants/dimension';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {useState} from 'react';
+import React, {MutableRefObject, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import DuplicateMatchModal from 'screens/communityStack/community/meetTab/components/DuplicateMatchModal';
 import {formatAmPmTime} from 'utils/format';
@@ -16,12 +17,14 @@ interface JoinRequestMessageProps {
   chat: Chat;
   chatRoom: ChatRoom;
   meetId: number | null;
+  client: MutableRefObject<Client | null>;
 }
 
 const JoinRequestMessage = ({
   chat,
   chatRoom,
   meetId,
+  client,
 }: JoinRequestMessageProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
@@ -30,15 +33,19 @@ const JoinRequestMessage = ({
 
   const {data: meet} = useGetMeetById(meetId);
   const {data: community} = useGetCommunityById(chatRoom.communityId);
-  const {mutateAsync: acceptJoinRequest} = useAcceptJoinRequest(chatRoom.id);
 
   const handleJoinAccept = async () => {
-    try {
-      await acceptJoinRequest(chatRoom.id);
-    } catch (error: any) {
-      if (error.code === 2010) {
-        setIsDuplicatedMatchModal(true);
-      }
+    if (client.current && client.current.connected && chatRoom.user) {
+      client.current?.publish({
+        destination: `/app/fans/${chatRoom.user.id}/chatrooms/${chatRoom.id}/accept`,
+        body: JSON.stringify({
+          chatRoomType: chatRoom.type,
+          writerId: chatRoom.user?.id,
+          writerImage: chatRoom.user?.image,
+          writerName: chatRoom.user?.name,
+          content: '확정 신청',
+        }),
+      });
     }
   };
 

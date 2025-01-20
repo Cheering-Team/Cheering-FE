@@ -26,7 +26,7 @@ export interface ChatRoom {
 }
 
 export interface Chat {
-  type: 'MESSAGE' | 'SYSTEM' | 'JOIN_REQUEST' | 'JOIN_ACCEPT';
+  type: 'MESSAGE' | 'SYSTEM' | 'JOIN_REQUEST' | 'JOIN_ACCEPT' | 'ERROR';
   createdAt: string;
   writer: Fan;
   messages: string[];
@@ -34,7 +34,7 @@ export interface Chat {
 }
 
 export interface ChatResponse {
-  type: 'MESSAGE' | 'SYSTEM_ENTER' | 'SYSTEM_EXIT';
+  type: 'MESSAGE' | 'SYSTEM' | 'JOIN_REQUEST' | 'JOIN_ACCEPT' | 'ERROR';
   content: string;
   createdAt: string;
   writerId: number;
