@@ -91,7 +91,7 @@ const PrivateChatRoomHeader = ({chatRoom, client}: PrivateChatRoomHeader) => {
                 </CustomText>
                 <View className="w-[2] h-[2] bg-[#a2a2a2] mx-[3] rounded-full" />
                 <CustomText className="color-[#757575] text-[13px]">
-                  {new Date().getFullYear() - chatRoom.opponentAge}
+                  {new Date().getFullYear() - chatRoom.opponentAge + 1}
                 </CustomText>
               </View>
             )}

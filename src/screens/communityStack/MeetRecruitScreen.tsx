@@ -16,6 +16,7 @@ import Animated, {
 import MatchInfo from 'components/common/MatchInfo';
 import {useIsAgeAndGenderSet} from 'apis/user/useUsers';
 import MeetProfileModal from './community/meetTab/components/MeetProfileModal';
+import OneButtonModal from 'components/common/OneButtonModal';
 
 const MeetRecruitScreen = () => {
   useDarkStatusBar();
@@ -26,6 +27,7 @@ const MeetRecruitScreen = () => {
   const insets = useSafeAreaInsets();
 
   const [isAgeGenderModalOpen, setIsAgeGenderModalOpen] = useState(false);
+  const [isExceeded, setIsExceeded] = useState(false);
   const [initialStep, setInitialStep] = useState<'info' | 'profile'>('info');
 
   const {data: meet} = useGetMeetById(meetId);
@@ -42,11 +44,17 @@ const MeetRecruitScreen = () => {
   const handleRegister = async () => {
     const response = await isAgeGenderSetRefetch();
     if (response.data === 'BOTH') {
-      const data = await register({communityId: community.id, meetId});
-      navigation.navigate('ChatRoom', {
-        chatRoomId: data.chatRoomId,
-        type: 'PRIVATE',
-      });
+      try {
+        const data = await register({communityId: community.id, meetId});
+        navigation.navigate('ChatRoom', {
+          chatRoomId: data.chatRoomId,
+          type: 'PRIVATE',
+        });
+      } catch (error: any) {
+        if (error.code === 2015) {
+          setIsExceeded(true);
+        }
+      }
     } else if (response.data === 'NEITHER') {
       setIsAgeGenderModalOpen(true);
     } else {
@@ -194,12 +202,27 @@ const MeetRecruitScreen = () => {
             setIsAgeGenderModalOpen(false);
           }}
           secondCallback={async () => {
-            const data = await register({communityId: community.id, meetId});
-            navigation.navigate('ChatRoom', {
-              chatRoomId: data.chatRoomId,
-              type: 'PRIVATE',
-            });
-            setIsAgeGenderModalOpen(false);
+            try {
+              const data = await register({communityId: community.id, meetId});
+              navigation.navigate('ChatRoom', {
+                chatRoomId: data.chatRoomId,
+                type: 'PRIVATE',
+              });
+              setIsAgeGenderModalOpen(false);
+            } catch (error: any) {
+              if (error.code === 2015) {
+                setIsExceeded(true);
+              }
+            }
+          }}
+        />
+      )}
+      {isExceeded && (
+        <OneButtonModal
+          title="인원 초과"
+          content="모임의 인원이 이미 가득 찼습니다"
+          onButtonPress={() => {
+            setIsExceeded(false);
           }}
         />
       )}
