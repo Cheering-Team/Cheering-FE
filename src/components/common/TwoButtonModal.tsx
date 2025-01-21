@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Modal, Pressable, View} from 'react-native';
 import CustomText from './CustomText';
 import BasicTextInput from './BasicTextInput';
+import LoadingOverlay from './LoadingOverlay';
 
 interface TwoButtonModalProps {
   title: string;
@@ -13,6 +14,7 @@ interface TwoButtonModalProps {
   secondButtonColor?: string;
   textInputLabel?: string;
   textInputPlaceholder?: string;
+  isLoading?: boolean;
 }
 
 const TwoButtonModal = ({
@@ -25,6 +27,7 @@ const TwoButtonModal = ({
   secondButtonColor = '#1e293b',
   textInputLabel,
   textInputPlaceholder,
+  isLoading = false,
 }: TwoButtonModalProps) => {
   const [text, setText] = useState('');
   return (
@@ -79,6 +82,7 @@ const TwoButtonModal = ({
           </View>
         </View>
       </View>
+      {isLoading && <LoadingOverlay type="LOADING" />}
     </Modal>
   );
 };

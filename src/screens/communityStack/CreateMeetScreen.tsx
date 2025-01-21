@@ -1,7 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import CustomText from 'components/common/CustomText';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Keyboard, Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
@@ -27,6 +27,7 @@ import CloseSvg from 'assets/images/close-black.svg';
 import MatchSelectModal from 'components/common/MatchSelectModal';
 import DuplicateMatchModal from './community/meetTab/components/DuplicateMatchModal';
 import OneButtonModal from 'components/common/OneButtonModal';
+import LoadingOverlay from 'components/common/LoadingOverlay';
 
 const AnimatedKeyboardAwareScrollView = Animated.createAnimatedComponent(
   KeyboardAwareScrollView,
@@ -54,6 +55,7 @@ const CreateMeetScreen = () => {
   const [match, setMatch] = useState<MatchDetail | null>(null);
   const [isDuplicatedMatchModal, setIsDuplicatedMatchModal] = useState(false);
   const [isRestrictedMatchModal, setIsRestrictedMatchModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {data: matches} = useGetTwoWeeksMatches(community.id);
   const {mutateAsync: createMeet} = useCreateMeet();
@@ -94,6 +96,7 @@ const CreateMeetScreen = () => {
     }
 
     try {
+      setIsLoading(true);
       const data = await createMeet({
         communityId: community.id,
         type,
@@ -108,6 +111,7 @@ const CreateMeetScreen = () => {
         matchId: match.id,
         communityType: community.type,
       });
+      setIsLoading(false);
       showTopToast({type: 'success', message: '모임을 생성하였습니다'});
       navigation.replace('Meet', {meetId: data.id, communityId: community.id});
     } catch (error: any) {
@@ -119,6 +123,8 @@ const CreateMeetScreen = () => {
         setIsRestrictedMatchModal(true);
         return;
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -364,6 +370,7 @@ const CreateMeetScreen = () => {
           onButtonPress={() => setIsRestrictedMatchModal(false)}
         />
       )}
+      {isLoading && <LoadingOverlay type="LOADING" />}
     </View>
   );
 };
