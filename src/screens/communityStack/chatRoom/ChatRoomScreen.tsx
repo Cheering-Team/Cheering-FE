@@ -287,7 +287,7 @@ const ChatRoomScreen = () => {
   useFocusEffect(
     useCallback(() => {
       return () => {
-        if (isConnected && chatRoom?.type !== 'PRIVATE') {
+        if (isConnected && chatRoom?.type !== 'OFFICIAL') {
           updateExitTime({chatRoomId});
         }
         if (
