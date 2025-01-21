@@ -107,7 +107,7 @@ const HomeHotScreen = () => {
                     onPress={() =>
                       navigation.navigate('CommunityStack', {
                         screen: 'Community',
-                        params: {communityId: item.id},
+                        params: {communityId: item.id, initialIndex: 0},
                       })
                     }
                     className="items-center border border-slate-100 p-2 rounded-[4px]"
@@ -149,7 +149,7 @@ const HomeHotScreen = () => {
                     onPress={() =>
                       navigation.navigate('CommunityStack', {
                         screen: 'Community',
-                        params: {communityId: item.id},
+                        params: {communityId: item.id, initialIndex: 0},
                       })
                     }
                     className="items-center border border-slate-100 p-2 rounded-[4px]"

@@ -31,10 +31,11 @@ import {useMainTabScroll} from 'context/useMainTabScroll';
 import MainTab from './mainTab';
 import ScheduleTab from './ScheduleTab';
 import {useLightStatusBar} from 'hooks/useLightStatusBar';
+import MeetTab from './meetTab';
 
 const CommunityScreen = () => {
   useLightStatusBar();
-  const {communityId} =
+  const {communityId, initialIndex} =
     useRoute<RouteProp<CommunityStackParamList, 'Community'>>().params;
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
@@ -63,7 +64,7 @@ const CommunityScreen = () => {
     onTabIndexChange,
     headerTranslateY,
     community,
-  } = useCommunity(communityId);
+  } = useCommunity(communityId, initialIndex);
 
   const {scrollY: tabScrollY, previousScrollY} = useMainTabScroll();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -123,7 +124,7 @@ const CommunityScreen = () => {
                 <CustomText
                   fontWeight={index === tabIndex ? '700' : '400'}
                   className="text-[15px] text-gray-50"
-                  style={{color: index === tabIndex ? 'white' : '#cfcfcf'}}>
+                  style={{color: index === tabIndex ? 'white' : '#fbfbfb'}}>
                   {item.title}
                 </CustomText>
               </View>
@@ -194,6 +195,19 @@ const CommunityScreen = () => {
                 community={community}
               />
             );
+          case 'meet':
+            return (
+              <MeetTab
+                scrollY={scrollY}
+                isTabFocused={isFocused}
+                onMomentumScrollBegin={onMomentumScrollBegin}
+                listArrRef={listArrRef}
+                tabRoute={route}
+                onMomentumScrollEnd={onMomentumScrollEnd}
+                onScrollEndDrag={onScrollEndDrag}
+                community={community}
+              />
+            );
           default:
             return null;
         }
@@ -234,7 +248,9 @@ const CommunityScreen = () => {
   return (
     <View
       className="flex-1"
-      style={{backgroundColor: tabIndex === 1 ? 'white' : '#F5F4F5'}}>
+      style={{
+        backgroundColor: tabIndex === 1 || tabIndex === 4 ? 'white' : '#F5F4F5',
+      }}>
       <CommunityHeader community={community} scrollY={scrollY} />
       <TabView
         navigationState={{index: tabIndex, routes: tabRoutes}}

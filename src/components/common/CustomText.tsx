@@ -1,4 +1,4 @@
-import {Platform, StyleSheet, TextProps} from 'react-native';
+import {StyleSheet, TextProps} from 'react-native';
 import React from 'react';
 import Animated from 'react-native-reanimated';
 

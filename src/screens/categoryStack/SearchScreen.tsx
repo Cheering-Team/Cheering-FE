@@ -80,7 +80,7 @@ const SearchScreen = ({
         onPress={() =>
           navigation.navigate('CommunityStack', {
             screen: 'Community',
-            params: {communityId: item.id},
+            params: {communityId: item.id, initialIndex: 0},
           })
         }
         className="flex-1 m-[2] mb-1 rounded-[5px] overflow-hidden">

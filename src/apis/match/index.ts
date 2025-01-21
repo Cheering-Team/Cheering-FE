@@ -75,3 +75,15 @@ export const editMatch = async (data: EditMatchPayload) => {
   );
   return response.data.result;
 };
+
+export const getTwoWeeksMatches = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof matchKeys.twoWeeksList>;
+}) => {
+  const [, , , {communityId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<MatchDetail[]>>(
+    `/communities/${communityId}/matches/twoweeks`,
+  );
+  return response.data.result;
+};

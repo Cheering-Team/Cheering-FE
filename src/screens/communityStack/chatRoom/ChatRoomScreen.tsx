@@ -36,6 +36,10 @@ import CustomText from 'components/common/CustomText';
 import {queryClient} from '../../../../App';
 import {chatRoomKeys} from 'apis/chat/queries';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
+import PrivateChatRoomHeader from './components/PrivateChatRoomHeader';
+import JoinRequestMessage from './components/JoinRequestMessage';
+import JoinAcceptMessage from './components/JoinAcceptMessage';
+import OneButtonModal from 'components/common/OneButtonModal';
 const TextEncodingPolyfill = require('text-encoding');
 
 Object.assign('global', {
@@ -45,7 +49,7 @@ Object.assign('global', {
 
 const ChatRoomScreen = () => {
   useDarkStatusBar();
-  const {chatRoomId} =
+  const {chatRoomId, type} =
     useRoute<RouteProp<CommunityStackParamList, 'ChatRoom'>>().params;
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
@@ -62,10 +66,17 @@ const ChatRoomScreen = () => {
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [participantCount, setParticipantCount] = useState(0);
+  const [isPrivateFirst, setIsPrivateFirst] = useState(false);
+  const [isExceeded, setIsExceeded] = useState(false);
+  const [isRestrictedMatchModal, setIsRestrictedMatchModal] = useState(false);
 
   const flatListRef = useRef<FlatList>(null);
 
-  const {data: chatRoom, isError, error} = useGetChatRoomById(chatRoomId, true);
+  const {
+    data: chatRoom,
+    isError,
+    error,
+  } = useGetChatRoomById(chatRoomId, type, true);
   const {
     data: chats,
     refetch,
@@ -77,6 +88,20 @@ const ChatRoomScreen = () => {
   const {mutate: updateExitTime} = useUpdateExitTime();
 
   const handleNewMessage = useCallback((newMessage: ChatResponse) => {
+    if (newMessage.type === 'ERROR') {
+      if (newMessage.content === '2015') {
+        if (chatRoom?.user && newMessage.writerId === chatRoom?.user.id) {
+          setIsExceeded(true);
+        }
+        return;
+      }
+      if (newMessage.content === '2013') {
+        if (chatRoom?.user && newMessage.writerId === chatRoom?.user.id) {
+          setIsRestrictedMatchModal(true);
+        }
+        return;
+      }
+    }
     setMessages(prevMessages => {
       const firstGroup = prevMessages[0];
 
@@ -116,39 +141,67 @@ const ChatRoomScreen = () => {
 
   const renderChatMessage: ListRenderItem<Chat> = useCallback(
     ({item, index}) => {
-      if (item.type === 'MESSAGE') {
-        const currentMessageDate = new Date(item.createdAt).setHours(
-          0,
-          0,
-          0,
-          0,
-        );
-        const previousMessageDate =
-          index < messages.length - 1
-            ? new Date(messages[index + 1].createdAt).setHours(0, 0, 0, 0)
-            : null;
+      if (chatRoom) {
+        if (item.type === 'MESSAGE') {
+          const currentMessageDate = new Date(item.createdAt).setHours(
+            0,
+            0,
+            0,
+            0,
+          );
+          const previousMessageDate =
+            index < messages.length - 1
+              ? new Date(messages[index + 1].createdAt).setHours(0, 0, 0, 0)
+              : null;
 
-        const isFirst =
-          index === messages.length - 1 ||
-          currentMessageDate !== previousMessageDate;
+          const isFirst =
+            index === messages.length - 1 ||
+            currentMessageDate !== previousMessageDate;
 
-        return (
-          <ChatMessage
-            chat={item}
-            isMy={item.writer.id === chatRoom?.user?.id}
-            isFirst={isFirst}
-          />
-        );
-      } else {
-        return (
-          <View className="justify-center items-center mb-[15] mt-[5]">
-            <View className="bg-black/30 py-1 px-3 rounded-xl">
-              <CustomText fontWeight="500" className="text-white text-[13px]">
-                {item.messages[0]}
-              </CustomText>
+          return (
+            <ChatMessage
+              chat={item}
+              isMy={item.writer.id === chatRoom?.user?.id}
+              isFirst={isFirst}
+              chatRoom={chatRoom}
+            />
+          );
+        } else if (item.type === 'JOIN_REQUEST') {
+          return (
+            <JoinRequestMessage
+              chat={item}
+              chatRoom={chatRoom}
+              meetId={chatRoom.meetId}
+              client={stompClient}
+            />
+          );
+        } else if (item.type === 'JOIN_ACCEPT') {
+          return (
+            <JoinAcceptMessage
+              chat={item}
+              meetId={chatRoom.meetId}
+              chatRoomId={chatRoom.id}
+              communityId={chatRoom.communityId}
+            />
+          );
+        } else {
+          return (
+            <View className="justify-center items-center">
+              <View className="justify-center items-center mb-[15] mt-[5] max-w-[80%]">
+                <View className="bg-black/30 py-1 px-3 rounded-xl">
+                  <CustomText
+                    numberOfLines={999}
+                    fontWeight="500"
+                    className="text-white text-[13px] text-center">
+                    {item.messages[0]}
+                  </CustomText>
+                </View>
+              </View>
             </View>
-          </View>
-        );
+          );
+        }
+      } else {
+        return null;
       }
     },
     [chatRoom, messages],
@@ -198,6 +251,7 @@ const ChatRoomScreen = () => {
               Authorization: `Bearer ${accessToken}`,
             },
           );
+
           subscriptionRefs.current.chatRoom = chatRoomSubscription;
         }
       };
@@ -230,7 +284,7 @@ const ChatRoomScreen = () => {
   useFocusEffect(
     useCallback(() => {
       return () => {
-        if (isConnected && chatRoom?.type === 'PUBLIC') {
+        if (isConnected && chatRoom?.type !== 'PRIVATE') {
           updateExitTime({chatRoomId});
         }
         if (
@@ -289,6 +343,16 @@ const ChatRoomScreen = () => {
     navigation,
   ]);
 
+  // Private + 첫 채팅일 경우 MeetFan 생성
+  useEffect(() => {
+    if (chatRoom?.type === 'PRIVATE') {
+      const hasNoMessages = !messages.some(
+        message => message.type === 'MESSAGE',
+      );
+      setIsPrivateFirst(hasNoMessages);
+    }
+  }, [messages, chatRoom]);
+
   if (!chatRoom) {
     return null;
   }
@@ -312,17 +376,23 @@ const ChatRoomScreen = () => {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={-insets.bottom}>
-        <ChatRoomHeader
-          chatRoom={chatRoom}
-          setIsDrawerOpen={setIsDrawerOpen}
-          participantCount={participantCount}
-        />
+        {(chatRoom.type === 'PRIVATE' || chatRoom.type === 'CONFIRM') && (
+          <PrivateChatRoomHeader chatRoom={chatRoom} client={stompClient} />
+        )}
+        {(chatRoom.type === 'OFFICIAL' || chatRoom.type === 'PUBLIC') && (
+          <ChatRoomHeader
+            chatRoom={chatRoom}
+            setIsDrawerOpen={setIsDrawerOpen}
+            participantCount={participantCount}
+          />
+        )}
+
         <FlatList
           inverted
           automaticallyAdjustsScrollIndicatorInsets={true}
           ref={flatListRef}
           contentContainerStyle={{
-            paddingBottom: insets.top + 110,
+            paddingBottom: insets.top + 400,
             paddingHorizontal: 10,
           }}
           data={messages}
@@ -341,8 +411,25 @@ const ChatRoomScreen = () => {
           chatRoom={chatRoom}
           flatListRef={flatListRef}
           isAtBottom={isAtBottom}
+          isPrivateFirst={isPrivateFirst}
         />
       </KeyboardAvoidingView>
+      {isExceeded && (
+        <OneButtonModal
+          title="인원 초과"
+          content="모임의 인원이 이미 가득 찼습니다"
+          onButtonPress={() => {
+            setIsExceeded(false);
+          }}
+        />
+      )}
+      {isRestrictedMatchModal && (
+        <OneButtonModal
+          title="모임 생성 제한"
+          content="해당 경기 시작 48시간전에 취소한 모임이 있기 때문에 해당 경기 모임을 생성할 수 없습니다."
+          onButtonPress={() => setIsRestrictedMatchModal(false)}
+        />
+      )}
     </Drawer>
   );
 };

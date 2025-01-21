@@ -17,7 +17,7 @@ const SuccessToast = (params: ToastConfigParams<any>) => {
           marginTop: insets.top - 20,
           overflow: 'hidden',
           width: '85%',
-          height: 65,
+          height: 55,
           borderRadius: 10,
         }}>
         <BlurView
@@ -44,9 +44,9 @@ const SuccessToast = (params: ToastConfigParams<any>) => {
             fontWeight="500"
             style={{
               color: 'white',
-              fontSize: 16,
+              fontSize: 15,
               textAlign: 'center',
-              lineHeight: 65,
+              lineHeight: 55,
             }}>
             {params.text1}
           </CustomText>

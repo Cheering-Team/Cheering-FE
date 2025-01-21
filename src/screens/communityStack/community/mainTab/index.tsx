@@ -23,6 +23,8 @@ import {useGetNearMatch} from 'apis/match/useMatches';
 import {useGetOfficialChatRoom} from 'apis/chat/useChats';
 import {useGetHotVote} from 'apis/vote/useVotes';
 import {useGetPosts} from 'apis/post/usePosts';
+import {useFindRandomFiveMeetsByCondition} from 'apis/meet/useMeets';
+import RandomMeets from './components/RandomMeets';
 
 interface MainListProps {
   scrollY: SharedValue<number>;
@@ -70,7 +72,7 @@ const MainTab = ({
     data: officialChatRoom,
     isLoading: officialChatRoomIsLoading,
     refetch: officialChatRoomRefetch,
-  } = useGetOfficialChatRoom(community.id, community.curFan !== null);
+  } = useGetOfficialChatRoom(community.id, true);
   const {
     data: vote,
     isLoading: voteIsLoading,
@@ -81,6 +83,14 @@ const MainTab = ({
     isLoading: postsIsLoading,
     refetch: postRefetch,
   } = useGetPosts(community.id, 'hot', community.curFan !== null);
+  const {
+    data: randomMeets,
+    isLoading: randomMeetsIsLoading,
+    refetch: randomMeetsRefetch,
+  } = useFindRandomFiveMeetsByCondition(
+    community.id,
+    community.curFan !== null,
+  );
 
   const scrollHandler = useAnimatedScrollHandler(event => {
     const currentScrollY = event.contentOffset.y;
@@ -105,6 +115,7 @@ const MainTab = ({
     officialChatRoomRefetch();
     voteRefetch();
     postRefetch();
+    randomMeetsRefetch();
 
     setTimeout(() => {
       setIsRefreshing(false);
@@ -115,7 +126,8 @@ const MainTab = ({
     matchesIsLoading ||
     officialChatRoomIsLoading ||
     voteIsLoading ||
-    postsIsLoading
+    postsIsLoading ||
+    randomMeetsIsLoading
   ) {
     return (
       <View
@@ -123,7 +135,7 @@ const MainTab = ({
         style={{
           height: WINDOW_HEIGHT - insets.bottom - 38 - 45,
         }}>
-        <ActivityIndicator color={'#bababa'} size={'small'} />
+        <ActivityIndicator color={'#828282'} size={'small'} />
       </View>
     );
   }
@@ -180,6 +192,15 @@ const MainTab = ({
         <OfficialChat officialChatRoom={officialChatRoom} />
         {/* 인기 투표 */}
         <HotVote community={community} vote={vote} />
+        {/* 추천 모임 */}
+        {randomMeets && community.curFan && (
+          <RandomMeets
+            meets={randomMeets}
+            curUser={community.curFan}
+            community={community}
+            onTabPress={onTabPress}
+          />
+        )}
         {/* 인기 게시글 */}
         <HotPosts onTabPress={onTabPress} posts={posts} />
       </Animated.ScrollView>

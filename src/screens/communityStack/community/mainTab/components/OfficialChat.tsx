@@ -30,6 +30,7 @@ const OfficialChat = ({officialChatRoom}: OfficialChatProps) => {
         onPress={() =>
           navigation.navigate('ChatRoom', {
             chatRoomId: officialChatRoom.id,
+            type: 'OFFICIAL',
           })
         }
       />

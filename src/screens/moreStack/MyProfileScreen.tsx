@@ -47,7 +47,7 @@ const MyProfileScreen = ({
             <ChevronRightSvg width={13} height={13} />
           </View>
         </Pressable>
-        <View className="flex-row justify-center mt-7">
+        <View className="flex-row items-center justify-center mt-7">
           <Pressable onPress={() => navigation.replace('SignOut')}>
             <CustomText className="text-gray-400 text-base">
               로그아웃

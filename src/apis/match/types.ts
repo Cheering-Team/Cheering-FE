@@ -1,4 +1,5 @@
 import {Community} from 'apis/community/types';
+import {MeetInfo} from 'apis/meet/types';
 import {Team} from 'apis/team/types';
 import {Page} from 'apis/types';
 
@@ -18,6 +19,7 @@ export interface MatchDetail {
   homeTeam: Team;
   awayTeam: Team;
   sportName: string;
+  meet: MeetInfo | null;
 }
 
 export type MatchStatus =

@@ -364,7 +364,11 @@ const MakeVote = ({community, setIsVote, vote, setVote}: MakeVoteProps) => {
           onEndReached={loadPlayers}
         />
       </BottomSheetModal>
-      <BottomSheetModal ref={matchModalRef} backdropComponent={renderBackdrop}>
+      <BottomSheetModal
+        ref={matchModalRef}
+        backdropComponent={renderBackdrop}
+        enableDynamicSizing={false}
+        snapPoints={snapPoints}>
         <BottomSheetFlatList
           data={matches || []}
           contentContainerStyle={{paddingHorizontal: 10, paddingBottom: 10}}

@@ -1,9 +1,4 @@
-import {
-  keepPreviousData,
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-} from '@tanstack/react-query';
+import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import {
   changeCommunityOrder,
   getCommunityById,

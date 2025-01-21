@@ -5,6 +5,8 @@ export const matchKeys = {
     [...matchKeys.lists(), {communityId, year, month}] as const,
   nextList: (communityId: number) =>
     [...matchKeys.lists(), 'next', {communityId}] as const,
+  twoWeeksList: (communityId: number) =>
+    [...matchKeys.lists(), 'twoweeks', {communityId}] as const,
   nearList: (communityId: number) =>
     [...matchKeys.lists(), 'near', {communityId}] as const,
   unfinishedList: () => [...matchKeys.lists(), 'unfinished'] as const,

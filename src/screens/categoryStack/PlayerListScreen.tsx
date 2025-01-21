@@ -95,7 +95,7 @@ const PlayerListScreen = ({
         onPress={() =>
           navigation.navigate('CommunityStack', {
             screen: 'Community',
-            params: {communityId: item.id},
+            params: {communityId: item.id, initialIndex: 0},
           })
         }
         className="flex-1 m-[2] mb-1 rounded-[5px] overflow-hidden">
@@ -199,7 +199,7 @@ const PlayerListScreen = ({
           onPress={() =>
             navigation.navigate('CommunityStack', {
               screen: 'Community',
-              params: {communityId: team.id},
+              params: {communityId: team.id, initialIndex: 0},
             })
           }
           className="pl-7 pr-4 py-[7] rounded-xl flex-row items-center"

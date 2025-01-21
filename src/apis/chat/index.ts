@@ -8,6 +8,8 @@ import {
   ChatRoomIdPayload,
   ChatRoomListResponse,
   CreateChatRoomPayload,
+  CreatePrivateChatRoomPayload,
+  IdWithConditionResponse,
 } from './types';
 
 // 채팅방 생성
@@ -146,5 +148,39 @@ export const updateExitTime = async (data: ChatRoomIdPayload) => {
 export const getUnreadChats = async () => {
   const response =
     await axiosInstance.get<ApiResponse<number>>(`/chats/unread`);
+  return response.data.result;
+};
+
+export const createPrivateChatRoom = async (
+  data: CreatePrivateChatRoomPayload,
+) => {
+  const {communityId, meetId} = data;
+  const response = await axiosInstance.post<
+    ApiResponse<IdWithConditionResponse>
+  >(`/communities/${communityId}/meets/${meetId}/talk`);
+  return response.data.result;
+};
+
+export const getPrivateChatRoomIdsForManager = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof chatRoomKeys.listByMeet>;
+}) => {
+  const [, , {meetId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<ChatRoom[]>>(
+    `/meets/${meetId}/private`,
+  );
+  return response.data.result;
+};
+
+export const getPrivateChatRoomById = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof chatRoomKeys.detail>;
+}) => {
+  const [, , chatRoomId] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<ChatRoom>>(
+    `/chatrooms/private/${chatRoomId}`,
+  );
   return response.data.result;
 };

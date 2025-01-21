@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  View,
+} from 'react-native';
 import {NAME_REGEX} from '../../constants/regex';
 import CustomText from '../../components/common/CustomText';
 import CustomTextInput from '../../components/common/CustomTextInput';
@@ -11,23 +17,32 @@ import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
 import StackHeader from 'components/common/StackHeader';
 import {useUpdateFanName} from 'apis/fan/useFans';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
+import {
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from 'react-native-reanimated';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import CCHeader from 'components/common/CCHeader';
 
-type EditNicknameScreenNavigationProp = NativeStackNavigationProp<
-  CommunityStackParamList,
-  'EditName'
->;
-
-const EditNameScreen = ({
-  navigation,
-  route,
-}: {
-  navigation: EditNicknameScreenNavigationProp;
-  route: any;
-}) => {
+const EditNameScreen = () => {
   useDarkStatusBar();
-  const {fanId} = route.params;
+  const {
+    name: fanName,
+    fanId,
+    type,
+  } = useRoute<RouteProp<CommunityStackParamList, 'EditName'>>().params;
+  const navigation =
+    useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
+  const insets = useSafeAreaInsets();
+  const scrollY = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
 
-  const [name, setName] = useState(route.params.name);
+  const [name, setName] = useState(fanName);
   const [isNameValid, setIsNameValid] = useState(true);
   const [nameInvalidMessage, setNameInvalidMessage] = useState('');
 
@@ -37,7 +52,7 @@ const EditNameScreen = ({
   const handlePlayerUserNickname = async () => {
     try {
       fanId
-        ? await updateFanName({fanId: fanId, name: name})
+        ? await updateFanName({fanId: fanId, type, name: name})
         : await updateUserName({name: name});
       showTopToast({message: '변경 완료'});
       navigation.pop();
@@ -58,9 +73,22 @@ const EditNameScreen = ({
   }, [name]);
 
   return (
-    <SafeAreaView className="flex-1">
-      <StackHeader title="닉네임 변경" type="back" />
-      <View className="flex-1 p-4">
+    <KeyboardAvoidingView
+      style={{flex: 1}}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <CCHeader
+        title={'닉네임 수정'}
+        scrollY={scrollY}
+        onFirstPress={() => {
+          navigation.goBack();
+        }}
+      />
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{
+          paddingTop: insets.top + 60,
+          paddingHorizontal: 15,
+        }}>
         <CustomText fontWeight="500" className="text-[17px] mb-4">
           새로운 닉네임을 입력해주세요
         </CustomText>
@@ -74,16 +102,16 @@ const EditNameScreen = ({
           isValid={isNameValid}
           inValidMessage={nameInvalidMessage}
         />
-      </View>
-      <View className="p-4">
+      </ScrollView>
+      <View className="p-[15]">
         <CustomButton
           type="normal"
           text="변경 완료"
-          disabled={!isNameValid || name === route.params.name}
+          disabled={!isNameValid || name === fanName}
           onPress={handlePlayerUserNickname}
         />
       </View>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

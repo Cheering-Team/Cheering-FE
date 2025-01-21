@@ -27,8 +27,6 @@ const ChatRoomHeader = ({
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
 
-  // const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
-
   return (
     <View
       style={{
@@ -85,6 +83,7 @@ const ChatRoomHeader = ({
                 if (chatRoom.community) {
                   navigation.navigate('Community', {
                     communityId: chatRoom.community?.id,
+                    initialIndex: 0,
                   });
                 }
               }}>
@@ -99,6 +98,7 @@ const ChatRoomHeader = ({
             <ChevronRightSvg width={9} height={9} />
           </View>
         </View>
+
         {chatRoom.type === 'OFFICIAL' ? (
           <></>
         ) : (

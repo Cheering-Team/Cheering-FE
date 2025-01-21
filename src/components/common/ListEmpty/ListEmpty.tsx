@@ -17,7 +17,11 @@ interface ListEmptyProps {
     | 'myChat'
     | 'apply'
     | 'hot'
-    | 'vote';
+    | 'vote'
+    | 'booking'
+    | 'live'
+    | 'myMeet'
+    | 'meetPrivate';
 }
 
 const ListEmpty = (props: ListEmptyProps) => {
@@ -42,6 +46,10 @@ const ListEmpty = (props: ListEmptyProps) => {
         {type === 'hot' && '아직 인기 게시글이 없네요'}
         {type === 'myChat' && '아직 참여중인 채팅방이 없어요'}
         {type === 'vote' && '아직 투표가 없어요'}
+        {type === 'booking' && '아직 모관 모임이 없어요'}
+        {type === 'live' && '아직 직관 모임이 없어요'}
+        {type === 'myMeet' && '아직 가입한 모임이 없어요'}
+        {type === 'meetPrivate' && '아직 신청자가 없어요'}
       </CustomText>
       <CustomText className="text-[13px] text-gray-500">
         {type === 'feed' && '가장 먼저 글을 작성해보세요'}
@@ -53,6 +61,10 @@ const ListEmpty = (props: ListEmptyProps) => {
         {type === 'hot' && '직접 글을 작성해보세요'}
         {type === 'myChat' && '채팅방에서 함께 응원해보세요'}
         {type === 'vote' && '가장 먼저 글을 작성해보세요'}
+        {(type === 'booking' || type === 'live') &&
+          '가장 먼저 모임을 만들어보세요'}
+        {type === 'myMeet' && '사람들과 모임 약속을 잡아보세요'}
+        {type === 'meetPrivate' && ''}
       </CustomText>
     </View>
   );

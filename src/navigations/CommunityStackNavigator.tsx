@@ -16,24 +16,45 @@ import ProfileEditScreen from 'screens/communityStack/ProfileEditScreen';
 import EditNameScreen from 'screens/moreStack/EditNameScreen';
 import DeletePlayerUserScreen from 'screens/communityStack/DeleteFanScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
-import ScheduleScreen from 'screens/communityStack/schedule/ScheduleScreen';
+
+import CreateMeetScreen from 'screens/communityStack/CreateMeetScreen';
+import MeetRecruitScreen from 'screens/communityStack/MeetRecruitScreen';
+import MeetScreen from 'screens/communityStack/MeetScreen';
+import MeetPrivateChatListScreen from 'screens/communityStack/MeetPrivateChatListScreen';
+import MyMeetScreen from 'screens/communityStack/MyMeetScreen';
+import MeetMemberListScreen from 'screens/communityStack/MeetMemberListScreen';
+import EditMeetScreen from 'screens/communityStack/EditMeetScreen';
+import ScheduleScreen from 'screens/communityStack/Schedule/ScheduleScreen';
 
 export type CommunityStackParamList = {
-  Community: {communityId: number};
+  Community: {communityId: number; initialIndex: number};
   Join: undefined;
   PostWrite: {community: Community; post?: Post};
   Post: {postId: number};
   Daily: {communityId: number; date: string; write: boolean; user: Fan};
-  ChatRoom: {chatRoomId: number};
+  ChatRoom: {
+    chatRoomId: number;
+    type: 'PRIVATE' | 'PUBLIC' | 'CONFIRM' | 'OFFICIAL';
+  };
   CreateChatRoom: {community: Community};
   ChatRoomEnter: {chatRoomId: number};
   Profile: {fanId: number};
-  ProfileEdit: {fanId: number};
-  EditName: {name: string; fanId: number | null};
+  ProfileEdit: {
+    fanId: number;
+    type: 'COMMUNITY' | 'MEET';
+  };
+  EditName: {name: string; type: 'COMMUNITY' | 'MEET'; fanId: number | null};
   DeleteFan: {fanId: number};
   BlockList: {playerUserId: number};
   Schedule: {communityId: number};
   Match: {matchId: number; communityId: number};
+  CreateMeet: {community: Community};
+  EditMeet: {communityId: number; meetId: number};
+  MeetRecruit: {meetId: number; community: Community};
+  Meet: {meetId: number; communityId: number};
+  MeetPrivateChatList: {meetId: number; community: Community};
+  MyMeet: {community: Community};
+  MeetMeberList: {meetId: number; community: Community};
 };
 
 const CommunityStackNavigator = () => {
@@ -112,6 +133,45 @@ const CommunityStackNavigator = () => {
       <CommunityStack.Screen
         name="Match"
         component={MatchScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="CreateMeet"
+        component={CreateMeetScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <CommunityStack.Screen
+        name="EditMeet"
+        component={EditMeetScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <CommunityStack.Screen
+        name="MeetRecruit"
+        component={MeetRecruitScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="Meet"
+        component={MeetScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="MeetPrivateChatList"
+        component={MeetPrivateChatListScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="MyMeet"
+        component={MyMeetScreen}
+        options={{headerShown: false}}
+      />
+      <CommunityStack.Screen
+        name="MeetMeberList"
+        component={MeetMemberListScreen}
         options={{headerShown: false}}
       />
     </CommunityStack.Navigator>

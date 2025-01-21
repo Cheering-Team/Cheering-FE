@@ -50,7 +50,6 @@ const AuthSwitch = () => {
         setVersionInfo(data);
         const currentVersion = VersionCheck.getCurrentVersion();
         const accessToken = await EncryptedStorage.getItem('accessToken');
-
         VersionCheck.needUpdate({
           currentVersion,
           latestVersion: data.minSupportedVersion,

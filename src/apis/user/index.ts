@@ -1,6 +1,7 @@
 import {axiosInstance} from '../index';
 import {ApiResponse} from '../types';
 import {
+  AgeGender,
   CheckCodePayload,
   CheckCodeSocialPayload,
   ConnectSocialPayload,
@@ -8,6 +9,7 @@ import {
   RegisterManagerAccountPayload,
   SaveFCMTokenPayload,
   SendSMSPayload,
+  SetAgeAndGenderPayload,
   SignUpPayload,
   Token,
   TokenPayload,
@@ -179,5 +181,32 @@ export const isFirstLogin = async () => {
 export const getVersionInfo = async () => {
   const response =
     await axiosInstance.get<ApiResponse<VersionInfo>>('/version');
+  return response.data.result;
+};
+
+export const isAgeAndGenderSet = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof userKeys.isAgeGenderSet>;
+}) => {
+  const [, , communityId] = queryKey;
+  const response = await axiosInstance.get<
+    ApiResponse<'NEITHER' | 'NULL_PROFILE' | 'BOTH'>
+  >(`/users/communities/${communityId}/check-profile`);
+  return response.data.result;
+};
+
+export const setAgeAndGender = async (data: SetAgeAndGenderPayload) => {
+  const {communityId, ...rest} = data;
+  const response = await axiosInstance.post<ApiResponse<null>>(
+    `/users/communities/${communityId}/set-profile`,
+    rest,
+  );
+  return response.data.result;
+};
+
+export const getAgeAndGender = async () => {
+  const response =
+    await axiosInstance.get<ApiResponse<AgeGender>>(`/users/age-gender`);
   return response.data.result;
 };
