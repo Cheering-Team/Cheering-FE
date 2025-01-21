@@ -29,13 +29,12 @@ const MainTabNavigator = () => {
         }}
       />
       {/* <Tab.Screen
-        name="HotStack"
+        name="NotificationStack"
         component={CategoryStackNavigator}
         options={{
           headerShown: false,
         }}
       /> */}
-
       <Tab.Screen
         name="MyChatStack"
         component={MyChatStackNavigator}

@@ -21,7 +21,8 @@ const DeletePlayerUserScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <LoadingOverlay isLoading={isPending} type="OVERLAY" />
+      {isPending && <LoadingOverlay type="OVERLAY" />}
+
       <View
         style={{
           flexDirection: 'row',

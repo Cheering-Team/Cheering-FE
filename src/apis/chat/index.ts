@@ -184,3 +184,17 @@ export const getPrivateChatRoomById = async ({
   );
   return response.data.result;
 };
+
+export const enableNotification = async (chatRoomId: number) => {
+  const response = await axiosInstance.patch<ApiResponse<null>>(
+    `/chatrooms/${chatRoomId}/enable`,
+  );
+  return response.data.result;
+};
+
+export const disableNotification = async (chatRoomId: number) => {
+  const response = await axiosInstance.patch<ApiResponse<null>>(
+    `/chatrooms/${chatRoomId}/disable`,
+  );
+  return response.data.result;
+};
