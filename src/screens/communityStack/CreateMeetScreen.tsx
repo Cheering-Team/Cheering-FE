@@ -1,7 +1,7 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import CustomText from 'components/common/CustomText';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Keyboard, Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
@@ -55,10 +55,9 @@ const CreateMeetScreen = () => {
   const [match, setMatch] = useState<MatchDetail | null>(null);
   const [isDuplicatedMatchModal, setIsDuplicatedMatchModal] = useState(false);
   const [isRestrictedMatchModal, setIsRestrictedMatchModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const {data: matches} = useGetTwoWeeksMatches(community.id);
-  const {mutateAsync: createMeet} = useCreateMeet();
+  const {mutateAsync: createMeet, isPending} = useCreateMeet();
 
   const scrollY = useSharedValue(0);
 
@@ -96,7 +95,6 @@ const CreateMeetScreen = () => {
     }
 
     try {
-      setIsLoading(true);
       const data = await createMeet({
         communityId: community.id,
         type,
@@ -111,9 +109,13 @@ const CreateMeetScreen = () => {
         matchId: match.id,
         communityType: community.type,
       });
-      setIsLoading(false);
       showTopToast({type: 'success', message: '모임을 생성하였습니다'});
-      navigation.replace('Meet', {meetId: data.id, communityId: community.id});
+      setTimeout(() => {
+        navigation.replace('Meet', {
+          meetId: data.id,
+          communityId: community.id,
+        });
+      }, 0);
     } catch (error: any) {
       if (error.code === 2010) {
         setIsDuplicatedMatchModal(true);
@@ -123,8 +125,6 @@ const CreateMeetScreen = () => {
         setIsRestrictedMatchModal(true);
         return;
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -370,7 +370,7 @@ const CreateMeetScreen = () => {
           onButtonPress={() => setIsRestrictedMatchModal(false)}
         />
       )}
-      {isLoading && <LoadingOverlay type="LOADING" />}
+      {isPending && <LoadingOverlay type="LOADING" />}
     </View>
   );
 };

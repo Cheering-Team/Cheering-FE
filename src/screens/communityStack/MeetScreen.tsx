@@ -10,7 +10,7 @@ import CCHeader from 'components/common/CCHeader';
 import CustomText from 'components/common/CustomText';
 import MatchInfo from 'components/common/MatchInfo';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
@@ -26,7 +26,6 @@ import OptionModal from 'components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import TwoButtonModal from 'components/common/TwoButtonModal';
 import {showTopToast} from 'utils/toast';
-import LoadingOverlay from 'components/common/LoadingOverlay';
 
 const MeetScreen = () => {
   const {meetId, communityId} =
@@ -41,8 +40,8 @@ const MeetScreen = () => {
 
   const {data: meet} = useGetMeetById(meetId);
   const {data: community} = useGetCommunityById(communityId);
-  const {mutateAsync: deleteMeet, isPending: isDeletePending} = useDeleteMeet();
-  const {mutateAsync: leaveMeet, isPending: isLeavePending} = useLeaveMeet();
+  const {mutate: deleteMeet} = useDeleteMeet();
+  const {mutate: leaveMeet} = useLeaveMeet();
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -51,47 +50,51 @@ const MeetScreen = () => {
     },
   });
 
-  const handleDeleteMeet = async () => {
+  const handleDeleteMeet = () => {
     try {
-      await deleteMeet(meetId);
+      deleteMeet(meetId);
       setIsDeleteOpen(false);
       showTopToast({type: 'success', message: '모임이 삭제되었습니다'});
-      if (community) {
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'Community',
-                params: {communityId, initialIndex: 4},
-              },
-            ],
-          }),
-        );
-      }
+      setTimeout(() => {
+        if (community) {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'Community',
+                  params: {communityId, initialIndex: 4},
+                },
+              ],
+            }),
+          );
+        }
+      }, 0);
     } catch (error: any) {
       //
     }
   };
 
-  const handleLeaveMeet = async () => {
+  const handleLeaveMeet = () => {
     try {
-      await leaveMeet(meetId);
+      leaveMeet(meetId);
       setIsLeaveOpen(false);
       showTopToast({type: 'success', message: '모임에서 탈퇴하였습니다'});
-      if (community) {
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'Community',
-                params: {communityId, initialIndex: 4},
-              },
-            ],
-          }),
-        );
-      }
+      setTimeout(() => {
+        if (community) {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'Community',
+                  params: {communityId, initialIndex: 4},
+                },
+              ],
+            }),
+          );
+        }
+      }, 0);
     } catch (error: any) {
       //
     }
@@ -285,7 +288,6 @@ const MeetScreen = () => {
           secondText="삭제"
           secondCallback={handleDeleteMeet}
           secondButtonColor="#e65151"
-          isLoading={isDeletePending}
         />
       )}
       {isLeaveOpen && (
@@ -303,7 +305,6 @@ const MeetScreen = () => {
           secondText="탈퇴"
           secondCallback={handleLeaveMeet}
           secondButtonColor="#e65151"
-          isLoading={isLeavePending}
         />
       )}
     </View>
