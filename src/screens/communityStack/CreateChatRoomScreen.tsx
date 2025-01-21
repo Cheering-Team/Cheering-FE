@@ -19,9 +19,11 @@ import {openPicker} from '@baronha/react-native-multiple-image-picker';
 import {Image} from 'react-native-compressor';
 import LoadingOverlay from 'components/common/LoadingOverlay';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const CreateChatRoomScreen = ({navigation, route}) => {
   const {community} = route.params;
+  useDarkStatusBar();
 
   const insets = useSafeAreaInsets();
 
@@ -120,7 +122,8 @@ const CreateChatRoomScreen = ({navigation, route}) => {
   return (
     <SafeAreaView className="flex-1">
       <StatusBar barStyle={'dark-content'} />
-      <LoadingOverlay isLoading={imageLoding} type="LOADING" />
+      {imageLoding && <LoadingOverlay type="LOADING" />}
+
       <View
         style={{
           flexDirection: 'row',

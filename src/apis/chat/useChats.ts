@@ -4,6 +4,8 @@ import {
   createChatRoom,
   createPrivateChatRoom,
   deleteChatRoom,
+  disableNotification,
+  enableNotification,
   getChatRoomById,
   getChatRooms,
   getChats,
@@ -17,6 +19,7 @@ import {
   updateExitTime,
 } from './index';
 import {queryClient} from '../../../App';
+import {ChatRoom} from './types';
 
 // 채팅방 개설
 export const useCreateChatRoom = () => {
@@ -150,5 +153,41 @@ export const useGetPrivateChatRoomIdsForManager = (meetId: number) => {
   return useQuery({
     queryKey: chatRoomKeys.listByMeet(meetId),
     queryFn: getPrivateChatRoomIdsForManager,
+  });
+};
+
+export const useEnableNotification = (chatRoomId: number) => {
+  return useMutation({
+    mutationFn: enableNotification,
+    onMutate: () => {
+      queryClient.setQueryData(
+        chatRoomKeys.detail(chatRoomId),
+        (data: ChatRoom) => {
+          if (!data) return data;
+          return {
+            ...data,
+            notificationsEnabled: true,
+          };
+        },
+      );
+    },
+  });
+};
+
+export const useDisableNotification = (chatRoomId: number) => {
+  return useMutation({
+    mutationFn: disableNotification,
+    onMutate: () => {
+      queryClient.setQueryData(
+        chatRoomKeys.detail(chatRoomId),
+        (data: ChatRoom) => {
+          if (!data) return data;
+          return {
+            ...data,
+            notificationsEnabled: false,
+          };
+        },
+      );
+    },
   });
 };

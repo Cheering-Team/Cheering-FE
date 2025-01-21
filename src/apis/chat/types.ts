@@ -23,6 +23,7 @@ export interface ChatRoom {
   opponentGender?: 'MALE' | 'FEMALE';
   communityId: number;
   isConfirmed?: boolean;
+  notificationsEnabled: boolean;
 }
 
 export interface Chat {

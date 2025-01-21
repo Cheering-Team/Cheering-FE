@@ -1,2 +1,2 @@
-ENV=staging
-API_URL=https:/$()/stardium-server.store
+ENV=local
+API_URL=http:/$()/172.30.1.47:8080

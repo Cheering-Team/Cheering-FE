@@ -95,7 +95,8 @@ const ProfileEditScreen = () => {
 
   return (
     <View style={{flex: 1}}>
-      <LoadingOverlay isLoading={imageLoding} type="LOADING" />
+      {imageLoding && <LoadingOverlay type="LOADING" />}
+
       <CCHeader
         title={
           type === 'COMMUNITY' ? '커뮤니티 프로필 수정' : '모임 프로필 수정'

@@ -11,7 +11,11 @@ import React, {
 import {FlatList, Platform, Pressable, SafeAreaView, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {ChatRoom} from 'apis/chat/types';
-import {useGetParticipants} from 'apis/chat/useChats';
+import {
+  useDisableNotification,
+  useEnableNotification,
+  useGetParticipants,
+} from 'apis/chat/useChats';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
@@ -21,6 +25,8 @@ import ExitSvg from 'assets/images/exit-gray.svg';
 import {deleteChatRoom} from 'apis/chat';
 import {showTopToast} from 'utils/toast';
 import * as StompJs from '@stomp/stompjs';
+import BellSvg from 'assets/images/bell-gray-fill.svg';
+import BellMuteSvg from 'assets/images/bell-mute-gray.svg';
 
 interface ChatRoomDrawerContentProps {
   chatRoom: ChatRoom;
@@ -45,11 +51,21 @@ const ChatRoomDrawerContent = ({
     isError: participantIsError,
     error: participantError,
   } = useGetParticipants(chatRoom.id);
+  const {mutate: enable} = useEnableNotification(chatRoom.id);
+  const {mutate: disable} = useDisableNotification(chatRoom.id);
 
   const handleDeleteChatRoom = async () => {
     await deleteChatRoom({chatRoomId: chatRoom.id});
     showTopToast({message: '삭제 완료'});
     navigation.goBack();
+  };
+
+  const handleEnableNotification = () => {
+    enable(chatRoom.id);
+  };
+
+  const handleDisableNotification = () => {
+    disable(chatRoom.id);
   };
 
   useEffect(() => {
@@ -81,7 +97,7 @@ const ChatRoomDrawerContent = ({
               <View className="items-center mb-7 px-7">
                 <FastImage
                   source={{uri: chatRoom.image}}
-                  className="w-[70] h-[70]"
+                  className="w-[70] h-[70] rounded-[13px]"
                 />
                 <CustomText
                   className="text-xl text-center"
@@ -148,20 +164,35 @@ const ChatRoomDrawerContent = ({
         />
       )}
 
-      <Pressable
-        className="h-[48] border-t border-t-[#eeeeee] items-center px-4 flex-row-reverse"
-        onPress={() =>
-          chatRoom.manager?.id === chatRoom.user?.id
-            ? setIsDeleteAlertOpen(true)
-            : setIsExitAlertOpen(true)
-        }>
-        <ExitSvg width={24} height={24} />
-        <CustomText fontWeight="600" className="mr-3 text-gray-500 text-base">
-          {chatRoom.manager?.id === chatRoom.user?.id
-            ? '채팅방 삭제'
-            : '채팅방 나가기'}
-        </CustomText>
-      </Pressable>
+      <View className="h-[48] border-t border-t-[#eeeeee] justify-between items-center pl-2 pr-4 flex-row">
+        <Pressable
+          className="p-2"
+          onPress={
+            chatRoom.notificationsEnabled
+              ? handleDisableNotification
+              : handleEnableNotification
+          }>
+          {chatRoom.notificationsEnabled ? (
+            <BellSvg width={24} height={24} />
+          ) : (
+            <BellMuteSvg width={24} height={24} />
+          )}
+        </Pressable>
+        <Pressable
+          className="flex-row items-center"
+          onPress={() =>
+            chatRoom.manager?.id === chatRoom.user?.id
+              ? setIsDeleteAlertOpen(true)
+              : setIsExitAlertOpen(true)
+          }>
+          <CustomText fontWeight="600" className="mr-3 text-gray-500 text-base">
+            {chatRoom.manager?.id === chatRoom.user?.id
+              ? '채팅방 삭제'
+              : '채팅방 나가기'}
+          </CustomText>
+          <ExitSvg width={24} height={24} />
+        </Pressable>
+      </View>
       {chatRoom.manager?.id === chatRoom.user?.id ? (
         <AlertModal
           isModalOpen={isDeleteAlertOpen}

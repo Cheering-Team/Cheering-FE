@@ -57,7 +57,7 @@ const JoinProfile = (props: Props) => {
 
   return (
     <View className="w-[90%] mt-1">
-      <LoadingOverlay isLoading={isPending} type="OVERLAY" />
+      {isPending && <LoadingOverlay type="OVERLAY" />}
 
       <View className="w-full">
         <CustomText fontWeight="800" className="text-[22px] mt-2 mb-1 ml-[2]">
