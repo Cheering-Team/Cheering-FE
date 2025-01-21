@@ -27,6 +27,7 @@ import CloseSvg from 'assets/images/close-black.svg';
 import MatchSelectModal from 'components/common/MatchSelectModal';
 import DuplicateMatchModal from './community/meetTab/components/DuplicateMatchModal';
 import OneButtonModal from 'components/common/OneButtonModal';
+import LoadingOverlay from 'components/common/LoadingOverlay';
 
 const AnimatedKeyboardAwareScrollView = Animated.createAnimatedComponent(
   KeyboardAwareScrollView,
@@ -56,7 +57,7 @@ const CreateMeetScreen = () => {
   const [isRestrictedMatchModal, setIsRestrictedMatchModal] = useState(false);
 
   const {data: matches} = useGetTwoWeeksMatches(community.id);
-  const {mutateAsync: createMeet} = useCreateMeet();
+  const {mutateAsync: createMeet, isPending} = useCreateMeet();
 
   const scrollY = useSharedValue(0);
 
@@ -109,7 +110,12 @@ const CreateMeetScreen = () => {
         communityType: community.type,
       });
       showTopToast({type: 'success', message: '모임을 생성하였습니다'});
-      navigation.replace('Meet', {meetId: data.id, communityId: community.id});
+      setTimeout(() => {
+        navigation.replace('Meet', {
+          meetId: data.id,
+          communityId: community.id,
+        });
+      }, 0);
     } catch (error: any) {
       if (error.code === 2010) {
         setIsDuplicatedMatchModal(true);
@@ -364,6 +370,7 @@ const CreateMeetScreen = () => {
           onButtonPress={() => setIsRestrictedMatchModal(false)}
         />
       )}
+      {isPending && <LoadingOverlay type="LOADING" />}
     </View>
   );
 };

@@ -40,8 +40,8 @@ const MeetScreen = () => {
 
   const {data: meet} = useGetMeetById(meetId);
   const {data: community} = useGetCommunityById(communityId);
-  const {mutateAsync: deleteMeet} = useDeleteMeet();
-  const {mutateAsync: leaveMeet} = useLeaveMeet();
+  const {mutate: deleteMeet} = useDeleteMeet();
+  const {mutate: leaveMeet} = useLeaveMeet();
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -50,47 +50,51 @@ const MeetScreen = () => {
     },
   });
 
-  const handleDeleteMeet = async () => {
+  const handleDeleteMeet = () => {
     try {
-      await deleteMeet(meetId);
+      deleteMeet(meetId);
       setIsDeleteOpen(false);
       showTopToast({type: 'success', message: '모임이 삭제되었습니다'});
-      if (community) {
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'Community',
-                params: {communityId, initialIndex: 4},
-              },
-            ],
-          }),
-        );
-      }
+      setTimeout(() => {
+        if (community) {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'Community',
+                  params: {communityId, initialIndex: 4},
+                },
+              ],
+            }),
+          );
+        }
+      }, 0);
     } catch (error: any) {
       //
     }
   };
 
-  const handleLeaveMeet = async () => {
+  const handleLeaveMeet = () => {
     try {
-      await leaveMeet(meetId);
+      leaveMeet(meetId);
       setIsLeaveOpen(false);
       showTopToast({type: 'success', message: '모임에서 탈퇴하였습니다'});
-      if (community) {
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'Community',
-                params: {communityId, initialIndex: 4},
-              },
-            ],
-          }),
-        );
-      }
+      setTimeout(() => {
+        if (community) {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [
+                {
+                  name: 'Community',
+                  params: {communityId, initialIndex: 4},
+                },
+              ],
+            }),
+          );
+        }
+      }, 0);
     } catch (error: any) {
       //
     }
