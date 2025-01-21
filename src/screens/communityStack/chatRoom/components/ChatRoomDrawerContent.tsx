@@ -11,7 +11,11 @@ import React, {
 import {FlatList, Platform, Pressable, SafeAreaView, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {ChatRoom} from 'apis/chat/types';
-import {useGetParticipants} from 'apis/chat/useChats';
+import {
+  useDisableNotification,
+  useEnableNotification,
+  useGetParticipants,
+} from 'apis/chat/useChats';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
@@ -47,11 +51,21 @@ const ChatRoomDrawerContent = ({
     isError: participantIsError,
     error: participantError,
   } = useGetParticipants(chatRoom.id);
+  const {mutate: enable} = useEnableNotification(chatRoom.id);
+  const {mutate: disable} = useDisableNotification(chatRoom.id);
 
   const handleDeleteChatRoom = async () => {
     await deleteChatRoom({chatRoomId: chatRoom.id});
     showTopToast({message: '삭제 완료'});
     navigation.goBack();
+  };
+
+  const handleEnableNotification = () => {
+    enable(chatRoom.id);
+  };
+
+  const handleDisableNotification = () => {
+    disable(chatRoom.id);
   };
 
   useEffect(() => {
@@ -150,10 +164,19 @@ const ChatRoomDrawerContent = ({
         />
       )}
 
-      <View className="h-[48] border-t border-t-[#eeeeee] justify-between items-center px-4 flex-row">
-        <Pressable>
-          <BellSvg width={24} height={24} />
-          {/* <BellMuteSvg width={24} height={24} /> */}
+      <View className="h-[48] border-t border-t-[#eeeeee] justify-between items-center pl-2 pr-4 flex-row">
+        <Pressable
+          className="p-2"
+          onPress={
+            chatRoom.notificationsEnabled
+              ? handleDisableNotification
+              : handleEnableNotification
+          }>
+          {chatRoom.notificationsEnabled ? (
+            <BellSvg width={24} height={24} />
+          ) : (
+            <BellMuteSvg width={24} height={24} />
+          )}
         </Pressable>
         <Pressable
           className="flex-row items-center"

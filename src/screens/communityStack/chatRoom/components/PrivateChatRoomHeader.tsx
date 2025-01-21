@@ -14,6 +14,10 @@ import TwoButtonModal from 'components/common/TwoButtonModal';
 import {Client} from '@stomp/stompjs';
 import BellSvg from 'assets/images/bell-gray-fill.svg';
 import BellMuteSvg from 'assets/images/bell-mute-gray.svg';
+import {
+  useDisableNotification,
+  useEnableNotification,
+} from 'apis/chat/useChats';
 
 interface PrivateChatRoomHeader {
   chatRoom: ChatRoom;
@@ -28,6 +32,8 @@ const PrivateChatRoomHeader = ({chatRoom, client}: PrivateChatRoomHeader) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {data: meet} = useGetMeetById(chatRoom.meetId);
+  const {mutate: enable} = useEnableNotification(chatRoom.id);
+  const {mutate: disable} = useDisableNotification(chatRoom.id);
 
   const handleCreateRequest = () => {
     if (client.current && client.current.connected) {
@@ -42,6 +48,14 @@ const PrivateChatRoomHeader = ({chatRoom, client}: PrivateChatRoomHeader) => {
         }),
       });
     }
+  };
+
+  const handleEnableNotification = () => {
+    enable(chatRoom.id);
+  };
+
+  const handleDisableNotification = () => {
+    disable(chatRoom.id);
   };
 
   return (
@@ -153,9 +167,18 @@ const PrivateChatRoomHeader = ({chatRoom, client}: PrivateChatRoomHeader) => {
               )}
             </Pressable>
           )}
-        <Pressable className="mx-1 h-full justify-center items-center px-2">
-          <BellSvg width={24} height={24} />
-          {/* <BellMuteSvg width={24} height={24} /> */}
+        <Pressable
+          className="mx-1 h-full justify-center items-center px-2"
+          onPress={
+            chatRoom.notificationsEnabled
+              ? handleDisableNotification
+              : handleEnableNotification
+          }>
+          {chatRoom.notificationsEnabled ? (
+            <BellSvg width={24} height={24} />
+          ) : (
+            <BellMuteSvg width={24} height={24} />
+          )}
         </Pressable>
       </View>
       {meet && (
