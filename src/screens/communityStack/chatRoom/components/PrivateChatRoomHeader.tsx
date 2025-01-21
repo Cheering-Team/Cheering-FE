@@ -12,6 +12,8 @@ import MatchInfo from 'components/common/MatchInfo';
 import ChevronRightSvg from 'assets/images/chevron-right-gray.svg';
 import TwoButtonModal from 'components/common/TwoButtonModal';
 import {Client} from '@stomp/stompjs';
+import BellSvg from 'assets/images/bell-gray-fill.svg';
+import BellMuteSvg from 'assets/images/bell-mute-gray.svg';
 
 interface PrivateChatRoomHeader {
   chatRoom: ChatRoom;
@@ -130,7 +132,7 @@ const PrivateChatRoomHeader = ({chatRoom, client}: PrivateChatRoomHeader) => {
           meet?.isManager &&
           !chatRoom.isConfirmed && (
             <Pressable
-              className="h-[30] justify-center items-center px-[10] bg-black rounded-md mr-2"
+              className="h-[30] justify-center items-center px-[10] bg-black rounded-md"
               onPress={() => setIsModalOpen(true)}>
               <CustomText className="text-[13px] text-white" fontWeight="500">
                 멤버 확정
@@ -151,6 +153,10 @@ const PrivateChatRoomHeader = ({chatRoom, client}: PrivateChatRoomHeader) => {
               )}
             </Pressable>
           )}
+        <Pressable className="mx-1 h-full justify-center items-center px-2">
+          <BellSvg width={24} height={24} />
+          {/* <BellMuteSvg width={24} height={24} /> */}
+        </Pressable>
       </View>
       {meet && (
         <View className="px-2 mt-1">

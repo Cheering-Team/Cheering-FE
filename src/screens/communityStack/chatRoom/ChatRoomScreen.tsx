@@ -87,49 +87,52 @@ const ChatRoomScreen = () => {
   } = useGetChats(chatRoomId);
   const {mutate: updateExitTime} = useUpdateExitTime();
 
-  const handleNewMessage = useCallback((newMessage: ChatResponse) => {
-    if (newMessage.type === 'ERROR') {
-      if (newMessage.content === '2015') {
-        if (chatRoom?.user && newMessage.writerId === chatRoom?.user.id) {
-          setIsExceeded(true);
+  const handleNewMessage = useCallback(
+    (newMessage: ChatResponse) => {
+      if (newMessage.type === 'ERROR') {
+        if (newMessage.content === '2015') {
+          if (chatRoom?.user && newMessage.writerId === chatRoom?.user.id) {
+            setIsExceeded(true);
+          }
+          return;
         }
-        return;
-      }
-      if (newMessage.content === '2013') {
-        if (chatRoom?.user && newMessage.writerId === chatRoom?.user.id) {
-          setIsRestrictedMatchModal(true);
+        if (newMessage.content === '2013') {
+          if (chatRoom?.user && newMessage.writerId === chatRoom?.user.id) {
+            setIsRestrictedMatchModal(true);
+          }
+          return;
         }
-        return;
       }
-    }
-    setMessages(prevMessages => {
-      const firstGroup = prevMessages[0];
+      setMessages(prevMessages => {
+        const firstGroup = prevMessages[0];
 
-      if (
-        newMessage.type === 'MESSAGE' &&
-        firstGroup &&
-        firstGroup.groupKey === newMessage.groupKey
-      ) {
-        const updatedMessages = [...prevMessages];
-        updatedMessages[0].messages.push(newMessage.content);
-        return updatedMessages;
-      }
-      return [
-        {
-          type: newMessage.type,
-          createdAt: newMessage.createdAt,
-          writer: {
-            id: newMessage.writerId,
-            name: newMessage.writerName,
-            image: newMessage.writerImage,
+        if (
+          newMessage.type === 'MESSAGE' &&
+          firstGroup &&
+          firstGroup.groupKey === newMessage.groupKey
+        ) {
+          const updatedMessages = [...prevMessages];
+          updatedMessages[0].messages.push(newMessage.content);
+          return updatedMessages;
+        }
+        return [
+          {
+            type: newMessage.type,
+            createdAt: newMessage.createdAt,
+            writer: {
+              id: newMessage.writerId,
+              name: newMessage.writerName,
+              image: newMessage.writerImage,
+            },
+            messages: [newMessage.content],
+            groupKey: newMessage.groupKey,
           },
-          messages: [newMessage.content],
-          groupKey: newMessage.groupKey,
-        },
-        ...prevMessages,
-      ];
-    });
-  }, []);
+          ...prevMessages,
+        ];
+      });
+    },
+    [chatRoom?.user],
+  );
 
   const handleScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -204,7 +207,7 @@ const ChatRoomScreen = () => {
         return null;
       }
     },
-    [chatRoom, messages],
+    [chatRoom, messages, stompClient],
   );
 
   const loadChat = useCallback(() => {
