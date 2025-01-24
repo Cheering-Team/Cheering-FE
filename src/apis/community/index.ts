@@ -99,3 +99,11 @@ export const getPopularPlayers = async () => {
     await axiosInstance.get<ApiResponse<Community[]>>(`/players/popular`);
   return response.data.result;
 };
+
+// 커뮤니티 탈퇴
+export const leaveCommunity = async (communityId: number) => {
+  const response = await axiosInstance.delete<ApiResponse<null>>(
+    `/communities/${communityId}/leave`,
+  );
+  return response.data.result;
+};

@@ -42,10 +42,10 @@ const HomeScreen = () => {
         </Pressable>
       </View>
       <ScrollView>
-        <View className="flex-row-reverse justify-between items-center px-6 mt-[6] mb-[5]">
+        <View className="flex-row-reverse justify-between items-center px-6 mt-[4] mb-[5]">
           <Pressable
             className="border-b border-b-gray-600"
-            onPress={() => navigation.navigate('MyCommunityEdit')}>
+            onPress={() => navigation.navigate('EditMyCommunity')}>
             <CustomText className="text-gray-600 text-[13.5px]">
               수정하기
             </CustomText>

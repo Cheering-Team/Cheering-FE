@@ -14,7 +14,7 @@ import CreateChatRoomScreen from 'screens/communityStack/CreateChatRoomScreen';
 import ChatRoomEnterScreen from 'screens/communityStack/ChatRoomEnterScreen';
 import ProfileEditScreen from 'screens/communityStack/ProfileEditScreen';
 import EditNameScreen from 'screens/moreStack/EditNameScreen';
-import DeletePlayerUserScreen from 'screens/communityStack/DeleteFanScreen';
+import LeaveCommunityScreen from 'navigations/authSwitch/mainTab/categoryStack/screens/leaveCommunity/LeaveCommunityScreen';
 import BlockListScreen from 'screens/communityStack/BlockListScreen';
 
 import CreateMeetScreen from 'screens/communityStack/CreateMeetScreen';
@@ -44,7 +44,7 @@ export type CommunityStackParamList = {
     type: 'COMMUNITY' | 'MEET';
   };
   EditName: {name: string; type: 'COMMUNITY' | 'MEET'; fanId: number | null};
-  DeleteFan: {fanId: number};
+  LeaveCommunity: {communityId: number};
   BlockList: {playerUserId: number};
   Schedule: {communityId: number};
   Match: {matchId: number; communityId: number};
@@ -116,8 +116,8 @@ const CommunityStackNavigator = () => {
         options={{headerShown: false}}
       />
       <CommunityStack.Screen
-        name="DeleteFan"
-        component={DeletePlayerUserScreen}
+        name="LeaveCommunity"
+        component={LeaveCommunityScreen}
         options={{headerShown: false}}
       />
       <CommunityStack.Screen

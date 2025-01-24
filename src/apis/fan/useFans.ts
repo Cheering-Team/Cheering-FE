@@ -66,21 +66,6 @@ export const useUpdateFanName = () => {
   });
 };
 
-// 커뮤니티 탈퇴하기
-export const useDeleteFan = () => {
-  const navigation = useNavigation();
-  return useMutation({
-    mutationFn: deleteFan,
-    onSuccess: () => {
-      showTopToast({message: '탈퇴 완료'});
-      navigation.navigate('HomeStack', {
-        screen: 'HomeTab',
-      });
-      queryClient.invalidateQueries();
-    },
-  });
-};
-
 // 커뮤니티 유저 차단하기
 export const useBlockUser = () => {
   const navigation = useNavigation();

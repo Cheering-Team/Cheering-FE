@@ -7,12 +7,15 @@ import {
   getRandomCommunity,
   joinCommunities,
   joinCommunity,
+  leaveCommunity,
   searchPlayers,
 } from './index';
 import {communityKeys} from './queries';
 import {queryClient} from '../../../App';
 import {useNavigation} from '@react-navigation/native';
 import {showTopToast} from 'utils/toast';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {HomeStackParamList} from 'navigations/authSwitch/mainTab/homeStack/HomeStackNavigator';
 
 // 커뮤니티 조회
 export const useGetCommunityById = (communityId: number) => {
@@ -100,5 +103,19 @@ export const useGetPopularPlayers = () => {
   return useQuery({
     queryKey: communityKeys.popularList(),
     queryFn: getPopularPlayers,
+  });
+};
+
+// 커뮤니티 탈퇴하기
+export const useLeaveCommunity = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+  return useMutation({
+    mutationFn: leaveCommunity,
+    onSuccess: () => {
+      showTopToast({message: '탈퇴 완료'});
+      navigation.navigate('Home');
+      queryClient.invalidateQueries();
+    },
   });
 };

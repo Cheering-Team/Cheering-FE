@@ -313,8 +313,8 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         thirdOnPress={() => {
           if (community.curFan) {
             navigation.navigate('CommunityStack', {
-              screen: 'DeleteFan',
-              params: {fanId: community.curFan.id},
+              screen: 'LeaveCommunity',
+              params: {communityId: community.id},
             });
           }
         }}

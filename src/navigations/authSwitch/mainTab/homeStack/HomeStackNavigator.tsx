@@ -9,12 +9,12 @@ import AdminStackNavigator, {
   AdminStackParamList,
 } from 'navigations/adminStack/AdminStackNavigator';
 import {NavigationPropType} from 'navigations/types';
-import MyCommunityEditScreen from './screens/myCommunityEdit/MyCommunityEditScreen';
+import EditMyCommunityScreen from './screens/myCommunityEdit/EditMyCommunityScreen';
 
 export type HomeStackParamList = {
   Home: undefined;
   Notification: undefined;
-  MyCommunityEdit: undefined;
+  EditMyCommunity: undefined;
   CommunityStack: NavigationPropType<CommunityStackParamList>;
   AdminStack: NavigationPropType<AdminStackParamList>;
 };
@@ -39,8 +39,8 @@ const HomeStackNavigator = () => {
         }}
       />
       <HomeStack.Screen
-        name="MyCommunityEdit"
-        component={MyCommunityEditScreen}
+        name="EditMyCommunity"
+        component={EditMyCommunityScreen}
         options={{
           headerShown: false,
         }}

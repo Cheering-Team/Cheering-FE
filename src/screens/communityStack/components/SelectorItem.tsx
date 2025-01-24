@@ -18,7 +18,7 @@ const SelectorItem = ({community, setIsOpen}: SelectorItem) => {
 
   return (
     <Pressable
-      className="flex-row self-end items-center my-2 pr-[15]"
+      className="flex-row self-end items-center my-[8] pr-[13]"
       onPress={() => {
         setIsOpen(false);
       }}>

@@ -25,6 +25,12 @@ const MeetRecruitScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
+  const scrollY = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      scrollY.value = event.contentOffset.y;
+    },
+  });
 
   const [isAgeGenderModalOpen, setIsAgeGenderModalOpen] = useState(false);
   const [isExceeded, setIsExceeded] = useState(false);
@@ -34,13 +40,6 @@ const MeetRecruitScreen = () => {
   const {data: meet} = useGetMeetById(meetId);
   const {mutateAsync: register} = useCreatePrivateChatRoom();
   const {refetch: isAgeGenderSetRefetch} = useIsAgeAndGenderSet(community.id);
-
-  const scrollY = useSharedValue(0);
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: event => {
-      scrollY.value = event.contentOffset.y;
-    },
-  });
 
   const handleRegister = async () => {
     const response = await isAgeGenderSetRefetch();

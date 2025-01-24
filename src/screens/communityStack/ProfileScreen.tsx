@@ -225,8 +225,8 @@ const ProfileScreen = () => {
             secondColor="#ff2626"
             secondSvg="exit"
             secondOnPress={() => {
-              navigation.navigate('DeleteFan', {
-                fanId: fanId,
+              navigation.navigate('LeaveCommunity', {
+                communityId: profile.communityId,
               });
             }}
           />

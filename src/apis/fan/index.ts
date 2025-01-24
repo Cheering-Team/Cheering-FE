@@ -54,15 +54,6 @@ export const updateFanName = async (data: UpdateFanNamePayload) => {
   return response.data.result;
 };
 
-// 커뮤니티 탈퇴
-export const deleteFan = async (data: FanIdPayload) => {
-  const {fanId} = data;
-  const response = await axiosInstance.delete<ApiResponse<null>>(
-    `/fans/${fanId}`,
-  );
-  return response.data.result;
-};
-
 // 팬 차단
 export const blockFan = async (data: FanIdPayload) => {
   const {fanId} = data;

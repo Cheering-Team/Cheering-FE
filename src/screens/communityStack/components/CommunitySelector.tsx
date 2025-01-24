@@ -48,13 +48,13 @@ const CommunitySelector = ({community}: CommunitySelectorProps) => {
               inverted
               data={communities?.filter(value => value.id !== community.id)}
               contentContainerStyle={{
-                paddingTop: insets.bottom + 115,
+                paddingTop: insets.bottom + 114,
               }}
               renderItem={renderItem}
             />
             <View
               className="flex-row items-center absolute"
-              style={{bottom: insets.bottom + 61, right: 15}}>
+              style={{bottom: insets.bottom + 61, right: 13}}>
               <CustomText
                 className="text-white text-[15.5px] mr-3"
                 fontWeight="600">
@@ -75,7 +75,7 @@ const CommunitySelector = ({community}: CommunitySelectorProps) => {
               className="w-[51] h-[51] border-[2.5px] absolute rounded-full"
               style={{
                 bottom: insets.bottom + 57,
-                right: 11,
+                right: 9,
                 borderColor: 'white',
               }}
             />

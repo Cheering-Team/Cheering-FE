@@ -52,7 +52,7 @@ function CustomTabBar({state, descriptors, navigation}) {
           routeName === 'Post' ||
           routeName === 'Search' ||
           routeName === 'EditName' ||
-          routeName === 'DeleteUser' ||
+          routeName === 'LeaveCommunity' ||
           routeName === 'Profile' ||
           routeName === 'ProfileEdit' ||
           routeName === 'DeleteFan' ||

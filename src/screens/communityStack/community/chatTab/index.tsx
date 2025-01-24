@@ -280,7 +280,7 @@ const ChatTab = ({
           style={{
             backgroundColor: community.color,
             bottom: insets.bottom + 112,
-            right: 12,
+            right: 13,
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.3,
