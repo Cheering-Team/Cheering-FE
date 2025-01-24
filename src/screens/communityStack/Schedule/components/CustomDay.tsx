@@ -52,13 +52,13 @@ const CustomDay = ({data, dateString, day, community}: CustomDayProps) => {
               });
             }}
             key={match.id}
-            className="rounded-[3px]"
+            className="rounded-[8px]"
             style={{
               backgroundColor: match.isHome
-                ? `${community.color}40`
+                ? `${community.color}0C`
                 : undefined,
               borderWidth: match.isHome ? 1 : 0,
-              borderColor: `${community.color}60`,
+              borderColor: `${community.color}`,
             }}>
             <FastImage
               source={{uri: match.opponentImage}}
