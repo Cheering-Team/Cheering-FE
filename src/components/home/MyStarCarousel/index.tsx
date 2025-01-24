@@ -42,7 +42,7 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
         data={communities}
         mode="parallax"
         width={WINDOW_WIDTH}
-        height={WINDOW_HEIGHT - 50 - insets.top - insets.bottom - 45}
+        height={250}
         onProgressChange={progress}
         modeConfig={{
           parallaxScrollingScale: 0.87,
@@ -50,7 +50,7 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
         }}
         renderItem={renderItem}
       />
-      <Pagination.Basic
+      {/* <Pagination.Basic
         progress={progress}
         data={communities}
         dotStyle={{
@@ -70,7 +70,7 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
             43,
         }}
         horizontal
-      />
+      /> */}
     </>
   );
 };
