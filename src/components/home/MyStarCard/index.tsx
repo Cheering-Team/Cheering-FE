@@ -1,6 +1,6 @@
 import CustomText from 'components/common/CustomText';
 import React, {useRef} from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MoreSvg from '../../../assets/images/three-dots-vertical-white.svg';
 import FastImage from 'react-native-fast-image';
@@ -10,9 +10,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from 'components/common/OptionModal';
-import {useGetNextMatch} from 'apis/match/useMatches';
 import {Community} from 'apis/community/types';
-import {formatDate} from 'utils/format';
 interface MyStarCardProps {
   community: Community;
 }
@@ -23,13 +21,11 @@ const MyStarCard = ({community}: MyStarCardProps) => {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {data: match} = useGetNextMatch(community.id);
-
   return (
     <>
       <TouchableOpacity
         activeOpacity={1}
-        className="bg-white rounded-2xl p-5 w-full h-full justify-between"
+        className="bg-white rounded-2xl p-[17] w-full h-full justify-between"
         style={{
           shadowColor: '#464646',
           shadowOffset: {width: 2, height: 2},
@@ -50,13 +46,13 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           <View className="flex-1">
             {community.type === 'PLAYER' ? (
               <CustomText
-                className="text-white text-[16px] ml-[2] mb-[5]"
+                className="text-white text-[15px] mb-[4]"
                 fontWeight="600">
                 {community.englishName}
               </CustomText>
             ) : (
               <CustomText
-                className="text-white text-[16px] ml-[2] mb-[5]"
+                className="text-white text-[15px] mb-[4]"
                 fontWeight="600">
                 {`${community.sportName} / ${community.leagueName}`}
               </CustomText>
@@ -65,7 +61,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
             <View className="flex-row items-center">
               <CustomText
                 numberOfLines={2}
-                className="text-white text-[26px]"
+                className="text-white text-[23px]"
                 style={{bottom: 3}}
                 type="titleCenter">
                 {community.koreanName}
@@ -283,7 +279,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           />
         )}
         <LinearGradient
-          colors={['rgba(0, 0, 0, 0.6)', 'rgba(0, 0, 0, 0.6)']}
+          colors={['rgba(0, 0, 0, 0.65)', 'rgba(0, 0, 0, 0.65)']}
           className="rounded-2xl"
           style={{
             ...StyleSheet.absoluteFillObject,

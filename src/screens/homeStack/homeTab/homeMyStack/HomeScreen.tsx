@@ -6,8 +6,10 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MyStarCarousel from 'components/home/MyStarCarousel';
 import {useGetMyCommunities} from 'apis/community/useCommunities';
 import CustomText from 'components/common/CustomText';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
-const CollectScreen = () => {
+const HomeScreen = () => {
+  useDarkStatusBar();
   const insets = useSafeAreaInsets();
 
   const {data: communities} = useGetMyCommunities(true);
@@ -35,4 +37,4 @@ const CollectScreen = () => {
   );
 };
 
-export default CollectScreen;
+export default HomeScreen;

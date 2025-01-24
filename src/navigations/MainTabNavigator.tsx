@@ -28,13 +28,6 @@ const MainTabNavigator = () => {
           headerShown: false,
         }}
       />
-      {/* <Tab.Screen
-        name="NotificationStack"
-        component={CategoryStackNavigator}
-        options={{
-          headerShown: false,
-        }}
-      /> */}
       <Tab.Screen
         name="MyChatStack"
         component={MyChatStackNavigator}

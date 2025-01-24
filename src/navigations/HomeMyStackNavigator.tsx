@@ -1,7 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import ChangeOrderScreen from 'screens/homeStack/homeTab/homeMyStack/ChangeOrderScreen';
-import HomeMyScreen from 'screens/homeStack/homeTab/homeMyStack/HomeMyScreen';
+import HomeMyScreen from 'screens/homeStack/homeTab/homeMyStack/HomeScreen';
 
 const HomeMyStack = createNativeStackNavigator<HomeMyStackParamList>();
 

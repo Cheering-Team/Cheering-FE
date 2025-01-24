@@ -6,7 +6,7 @@ import CommunityStackNavigator, {
 import {NavigationPropType} from './types';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AdminStackNavigator, {AdminStackParamList} from './AdminStackNavigator';
-import HomeMyScreen from 'screens/homeStack/homeTab/homeMyStack/HomeMyScreen';
+import HomeScreen from 'screens/homeStack/homeTab/homeMyStack/HomeScreen';
 
 export type HomeStackParamList = {
   Home: undefined;
@@ -22,7 +22,7 @@ const HomeStackNavigator = () => {
     <HomeStack.Navigator screenOptions={{animation: 'ios_from_right'}}>
       <HomeStack.Screen
         name="Home"
-        component={HomeMyScreen}
+        component={HomeScreen}
         options={{
           headerShown: false,
         }}

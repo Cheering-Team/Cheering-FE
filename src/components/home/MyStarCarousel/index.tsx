@@ -1,4 +1,4 @@
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
+import {WINDOW_WIDTH} from 'constants/dimension';
 import React, {useEffect} from 'react';
 import {useSharedValue} from 'react-native-reanimated';
 import Carousel, {Pagination} from 'react-native-reanimated-carousel';
@@ -7,14 +7,12 @@ import MyStarCard from '../MyStarCard';
 import {queryClient} from '../../../../App';
 import {communityKeys} from 'apis/community/queries';
 import {Community} from 'apis/community/types';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface MyStarCarouselProps {
   communities: Community[];
 }
 
 const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
-  const insets = useSafeAreaInsets();
   const progress = useSharedValue<number>(0);
 
   const handleConfigurePanGesture = (panGesture: PanGesture) => {
@@ -42,15 +40,15 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
         data={communities}
         mode="parallax"
         width={WINDOW_WIDTH}
-        height={250}
+        height={200}
         onProgressChange={progress}
         modeConfig={{
-          parallaxScrollingScale: 0.87,
-          parallaxScrollingOffset: 62,
+          parallaxScrollingScale: 0.9,
+          parallaxScrollingOffset: 48,
         }}
         renderItem={renderItem}
       />
-      {/* <Pagination.Basic
+      <Pagination.Basic
         progress={progress}
         data={communities}
         dotStyle={{
@@ -65,12 +63,10 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
         }}
         containerStyle={{
           gap: 5,
-          bottom:
-            (WINDOW_HEIGHT - 50 - insets.top - insets.bottom - 45) * 0.0325 +
-            43,
+          top: 5,
         }}
         horizontal
-      /> */}
+      />
     </>
   );
 };
