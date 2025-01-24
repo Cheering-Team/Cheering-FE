@@ -2,7 +2,6 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {AuthStackParamList} from 'navigations/authStack/AuthStackNavigator';
 import CustomButton from 'components/common/CustomButton';
 import FastImage from 'react-native-fast-image';
 import Carousel, {Pagination} from 'react-native-reanimated-carousel';
@@ -12,6 +11,7 @@ import {
   interpolate,
   useSharedValue,
 } from 'react-native-reanimated';
+import {AuthStackParamList} from '../AuthStackNavigator';
 
 const images = [
   {id: '1', source: require('assets/images/appstore_1.png')},
@@ -33,78 +33,80 @@ const IntroScreen = ({navigation}: {navigation: IntroScreenNavigationProp}) => {
   const paginationProgress = useSharedValue<number>(0);
 
   return (
-    <View
-      style={[
-        styles.main,
-        {paddingTop: insets.top, paddingBottom: insets.bottom + 15},
-      ]}>
-      <Carousel
-        data={images}
-        loop={false}
-        width={WINDOW_WIDTH}
-        height={WINDOW_HEIGHT - insets.bottom - 145 - insets.top}
-        onProgressChange={paginationProgress}
-        renderItem={({item}) => (
-          <FastImage
-            source={item.source}
-            className="h-full"
-            resizeMode="contain"
-          />
-        )}
-      />
-      <Pagination.Custom
-        progress={paginationProgress}
-        data={images}
-        size={20}
-        dotStyle={{
-          width: 6,
-          height: 6,
-          borderRadius: 100,
-          backgroundColor: '#d7d7d7',
-        }}
-        activeDotStyle={{
-          borderRadius: 100,
-          width: 8,
-          height: 8,
-          overflow: 'hidden',
-          backgroundColor: '#383838',
-        }}
-        containerStyle={{
-          gap: 8,
-          alignItems: 'center',
-          height: 10,
-          bottom: 30,
-        }}
-        horizontal
-        customReanimatedStyle={(progress, index, length) => {
-          let val = Math.abs(progress - index);
-          if (index === 0 && progress > length - 1) {
-            val = Math.abs(progress - length);
-          }
+    <>
+      <View
+        style={[
+          styles.main,
+          {paddingTop: insets.top, paddingBottom: insets.bottom + 15},
+        ]}>
+        <Carousel
+          data={images}
+          loop={false}
+          width={WINDOW_WIDTH}
+          height={WINDOW_HEIGHT - insets.bottom - 145 - insets.top}
+          onProgressChange={paginationProgress}
+          renderItem={({item}) => (
+            <FastImage
+              source={item.source}
+              className="h-full"
+              resizeMode="contain"
+            />
+          )}
+        />
+        <Pagination.Custom
+          progress={paginationProgress}
+          data={images}
+          size={20}
+          dotStyle={{
+            width: 6,
+            height: 6,
+            borderRadius: 100,
+            backgroundColor: '#d7d7d7',
+          }}
+          activeDotStyle={{
+            borderRadius: 100,
+            width: 8,
+            height: 8,
+            overflow: 'hidden',
+            backgroundColor: '#383838',
+          }}
+          containerStyle={{
+            gap: 8,
+            alignItems: 'center',
+            height: 10,
+            bottom: 30,
+          }}
+          horizontal
+          customReanimatedStyle={(progress, index, length) => {
+            let val = Math.abs(progress - index);
+            if (index === 0 && progress > length - 1) {
+              val = Math.abs(progress - length);
+            }
 
-          return {
-            transform: [
-              {
-                translateY: interpolate(
-                  val,
-                  [0, 1],
-                  [0, 0],
-                  Extrapolation.CLAMP,
-                ),
-              },
-            ],
-          };
-        }}
-      />
-
-      <CustomButton
-        text="시작하기"
-        type="normal"
-        onPress={() => {
-          navigation.navigate('SignIn');
-        }}
-      />
-    </View>
+            return {
+              transform: [
+                {
+                  translateY: interpolate(
+                    val,
+                    [0, 1],
+                    [0, 0],
+                    Extrapolation.CLAMP,
+                  ),
+                },
+              ],
+            };
+          }}
+        />
+      </View>
+      <View className="px-2" style={{paddingBottom: insets.bottom + 8}}>
+        <CustomButton
+          text="시작하기"
+          onPress={() => {
+            navigation.navigate('SignIn');
+          }}
+        />
+      </View>
+    </>
   );
 };
 

@@ -105,7 +105,6 @@ const EditNameScreen = () => {
       </ScrollView>
       <View className="p-[15]">
         <CustomButton
-          type="normal"
           text="변경 완료"
           disabled={!isNameValid || name === fanName}
           onPress={handlePlayerUserNickname}

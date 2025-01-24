@@ -31,7 +31,7 @@ const MatchList = ({community, onTabPress, matches}: MatchListProps) => {
               communityId: community.id,
             });
           }}
-          className="bg-white py-[9] px-2 rounded-sm"
+          className="bg-white py-[9] px-2 rounded-lg"
           style={{
             shadowColor: '#000000',
             shadowOffset: {
@@ -193,7 +193,7 @@ const MatchList = ({community, onTabPress, matches}: MatchListProps) => {
                 }
               }
             }}
-            className="bg-white mt-[2] py-[9] px-2 rounded-sm"
+            className="bg-white mt-1 py-[9] px-2 rounded-lg"
             style={{
               shadowColor: '#000000',
               shadowOffset: {

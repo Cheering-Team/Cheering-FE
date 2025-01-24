@@ -255,7 +255,6 @@ const PhoneVerify = (props: PhoneVerifyProps) => {
       )}
       {status === 'phone' && (
         <CustomButton
-          type="normal"
           text={'시작하기'}
           onPress={handleSendCode}
           isLoading={isPending}

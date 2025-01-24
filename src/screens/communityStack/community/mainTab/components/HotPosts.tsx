@@ -29,7 +29,7 @@ const HotPosts = ({onTabPress, posts}: HotPostsProps) => {
       </View>
 
       <View
-        className={`px-[14] ${posts?.pages.flatMap(page => page.posts).length !== 0 && 'rounded-sm border border-[#eeeeee]'}`}>
+        className={`mx-[14] ${posts?.pages.flatMap(page => page.posts).length !== 0 && 'rounded-lg overflow-hidden border border-[#eeeeee]'}`}>
         {posts?.pages
           .flatMap(page => page.posts)
           .slice(0, 3)

@@ -83,12 +83,15 @@ const LeaveCommunityScreen = () => {
           </CustomText>
         </View>
       </View>
-      <CustomButton
-        text="커뮤니티 탈퇴"
-        isLoading={isPending}
-        disabled={!isAgree}
-        onPress={handleDeleteUser}
-      />
+      <View className="px-2 mt-2" style={{paddingBottom: insets.bottom + 8}}>
+        <CustomButton
+          text="커뮤니티 탈퇴"
+          isLoading={isPending}
+          disabled={!isAgree}
+          onPress={handleDeleteUser}
+        />
+      </View>
+
       {isPending && <LoadingOverlay type="OVERLAY" />}
     </View>
   );

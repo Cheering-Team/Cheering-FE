@@ -246,8 +246,8 @@ const MyStarCard = ({community}: MyStarCardProps) => {
               onPress={() => {
                 if (community.curFan) {
                   navigation.navigate('CommunityStack', {
-                    screen: 'Schedule',
-                    params: {communityId: community.id},
+                    screen: 'Community',
+                    params: {communityId: community.id, initialIndex: 3},
                   });
                 }
               }}>

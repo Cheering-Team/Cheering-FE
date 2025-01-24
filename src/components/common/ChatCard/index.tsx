@@ -22,7 +22,7 @@ const ChatCard = (props: ChatCardProps) => {
           paddingHorizontal: location === 'COMMUNITY' ? 6 : 8,
           paddingVertical: location === 'COMMUNITY' ? 9 : 12,
           borderColor: location === 'COMMUNITY' ? '#eeeeee' : '#e7e7e7',
-          borderRadius: location === 'COMMUNITY' ? 3 : 7,
+          borderRadius: location === 'COMMUNITY' ? 8 : 7,
           shadowColor: '#000000',
           shadowOffset: {
             width: 0,

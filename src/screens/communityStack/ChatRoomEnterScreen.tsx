@@ -72,7 +72,6 @@ const ChatRoomEnterScreen = ({route}) => {
           </View>
         </View>
         <CustomButton
-          type="normal"
           text="입장하기"
           onPress={() => {
             refetch();

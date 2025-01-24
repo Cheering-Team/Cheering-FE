@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, View} from 'react-native';
+import {FlatList, Pressable, View} from 'react-native';
 import {ScrollView} from 'react-native';
 import LogoSvg from 'assets/images/logo-text.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -11,6 +11,9 @@ import AlertSvg from 'assets/images/alert-black.svg';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/authSwitch/mainTab/homeStack/HomeStackNavigator';
+import {useGetMyHotPosts} from 'apis/post/usePosts';
+import FeedPost from 'components/community/FeedPost';
+import RandomCommunityCard from '../components/RandomCommunityCard';
 
 const HomeScreen = () => {
   useDarkStatusBar();
@@ -19,6 +22,7 @@ const HomeScreen = () => {
   const insets = useSafeAreaInsets();
 
   const {data: communities} = useGetMyCommunities(true);
+  const {data: posts} = useGetMyHotPosts();
 
   if (!communities) {
     return null;
@@ -41,21 +45,34 @@ const HomeScreen = () => {
           <AlertSvg width={22} height={22} />
         </Pressable>
       </View>
-      <ScrollView>
-        <View className="flex-row-reverse justify-between items-center px-6 mt-[4] mb-[5]">
-          <Pressable
-            className="border-b border-b-gray-600"
-            onPress={() => navigation.navigate('EditMyCommunity')}>
-            <CustomText className="text-gray-600 text-[13.5px]">
-              수정하기
-            </CustomText>
-          </Pressable>
-        </View>
-        <MyStarCarousel communities={communities} />
-        <View className="justify-center items-center h-[200]">
-          <CustomText>나머지 모아보기 내용</CustomText>
-        </View>
-      </ScrollView>
+      {communities.length !== 0 ? (
+        <FlatList
+          data={posts?.pages.flatMap(page => page.posts)}
+          contentContainerStyle={{paddingBottom: insets.bottom + 60}}
+          renderItem={({item}) => <FeedPost feed={item} type="community" />}
+          ListHeaderComponent={
+            <>
+              <View className="flex-row-reverse justify-between items-center px-6 mt-[4] mb-[5]">
+                <Pressable
+                  className="border-b border-b-gray-600"
+                  onPress={() => navigation.navigate('EditMyCommunity')}>
+                  <CustomText className="text-gray-600 text-[13.5px]">
+                    수정하기
+                  </CustomText>
+                </Pressable>
+              </View>
+              <MyStarCarousel communities={communities} />
+              <CustomText
+                className="text-lg mt-7 mb-2 ml-[14]"
+                fontWeight="500">
+                인기 게시글
+              </CustomText>
+            </>
+          }
+        />
+      ) : (
+        <RandomCommunityCard />
+      )}
     </View>
   );
 };
