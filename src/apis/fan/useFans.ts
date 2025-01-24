@@ -1,7 +1,6 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   blockFan,
-  deleteFan,
   getBlockedFans,
   getFanInfo,
   unblockFan,

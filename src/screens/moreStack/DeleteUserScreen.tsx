@@ -6,9 +6,9 @@ import CustomText from '../../components/common/CustomText';
 import CustomButton from '../../components/common/CustomButton';
 import CheckBox from '../../components/common/CheckBox';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {MoreStackParamList} from 'navigations/MoreStackNavigator';
 import {useDeleteUser} from 'apis/user/useUsers';
 import {showTopToast} from 'utils/toast';
+import {MoreStackParamList} from 'navigations/authSwitch/mainTab/moreStack/MoreStackNavigator';
 
 type DeleteUserNavigationProp = NativeStackNavigationProp<
   MoreStackParamList,
@@ -65,7 +65,6 @@ const DeleteUserScreen = ({
           </CustomText>
         </View>
         <CustomButton
-          type="normal"
           text="계정 삭제하기"
           disabled={!isAgree || isPending}
           onPress={handleDeleteUser}
