@@ -23,6 +23,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 
 const AnimatedDraggableFlatList =
   Animated.createAnimatedComponent<DraggableFlatListProps<Community>>(
@@ -30,6 +31,7 @@ const AnimatedDraggableFlatList =
   );
 
 const EditMyCommunityScreen = () => {
+  useDarkStatusBar();
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const insets = useSafeAreaInsets();

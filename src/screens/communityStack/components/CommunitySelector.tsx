@@ -7,6 +7,12 @@ import FastImage from 'react-native-fast-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import SelectorItem from './SelectorItem';
 
+export interface CommunityOption {
+  id: number;
+  koreanName: string;
+  image: string;
+}
+
 interface CommunitySelectorProps {
   community: Community;
 }
@@ -18,7 +24,7 @@ const CommunitySelector = ({community}: CommunitySelectorProps) => {
 
   const {data: communities = []} = useGetMyCommunities(true);
 
-  const renderItem: ListRenderItem<Community> = ({item}) => {
+  const renderItem: ListRenderItem<CommunityOption> = ({item}) => {
     return <SelectorItem community={item} setIsOpen={setIsOpen} />;
   };
 
@@ -46,7 +52,10 @@ const CommunitySelector = ({community}: CommunitySelectorProps) => {
             }}>
             <FlatList
               inverted
-              data={communities?.filter(value => value.id !== community.id)}
+              data={[
+                ...communities.filter(value => value.id !== community.id),
+                {id: 0, koreanName: '수정하기', image: ''},
+              ]}
               contentContainerStyle={{
                 paddingTop: insets.bottom + 114,
               }}
