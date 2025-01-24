@@ -178,7 +178,7 @@ const ChatTab = ({
           />
         )}
         contentContainerStyle={{
-          backgroundColor: '#F5F4F5',
+          backgroundColor: 'white',
           marginTop: HEADER_HEIGHT,
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
           paddingBottom: insets.bottom + 200,

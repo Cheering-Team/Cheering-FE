@@ -17,20 +17,12 @@ const ChatCard = (props: ChatCardProps) => {
     return (
       <Pressable
         onPress={onPress}
-        className="flex-row items-center bg-white border"
+        className="flex-row items-center bg-white border shadow-sm shadow-gray-100"
         style={{
           paddingHorizontal: location === 'COMMUNITY' ? 6 : 8,
           paddingVertical: location === 'COMMUNITY' ? 9 : 12,
           borderColor: location === 'COMMUNITY' ? '#eeeeee' : '#e7e7e7',
           borderRadius: location === 'COMMUNITY' ? 8 : 7,
-          shadowColor: '#000000',
-          shadowOffset: {
-            width: 0,
-            height: 0,
-          },
-          shadowOpacity: 0.03,
-          shadowRadius: 3,
-          elevation: 0.2,
         }}>
         <FastImage
           source={{uri: chatRoom.image}}

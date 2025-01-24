@@ -31,16 +31,8 @@ const MatchList = ({community, onTabPress, matches}: MatchListProps) => {
               communityId: community.id,
             });
           }}
-          className="bg-white py-[9] px-2 rounded-lg"
+          className="bg-white py-[9] px-2 rounded-lg shadow-sm shadow-gray-100"
           style={{
-            shadowColor: '#000000',
-            shadowOffset: {
-              width: 0,
-              height: 0,
-            },
-            shadowOpacity: 0.03,
-            shadowRadius: 3,
-            elevation: 0.2,
             borderWidth: 1,
             borderColor:
               formatTodayOrDate(item.time) === '오늘'
@@ -193,16 +185,8 @@ const MatchList = ({community, onTabPress, matches}: MatchListProps) => {
                 }
               }
             }}
-            className="bg-white mt-1 py-[9] px-2 rounded-lg"
+            className="bg-white mt-1 py-[9] px-2 rounded-lg shadow-sm shadow-gray-200"
             style={{
-              shadowColor: '#000000',
-              shadowOffset: {
-                width: 0,
-                height: 0,
-              },
-              shadowOpacity: 0.03,
-              shadowRadius: 3,
-              elevation: 0.2,
               borderWidth: 1,
               borderColor:
                 formatTodayOrDate(item.time) === '오늘'
