@@ -4,7 +4,7 @@ import {Community} from 'apis/community/types';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
 import {useMainTabScroll} from 'context/useMainTabScroll';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {MutableRefObject, useRef, useState} from 'react';
 import {
   FlatList,
@@ -571,7 +571,7 @@ const MeetTab = ({
           style={{
             backgroundColor: 'white',
             bottom: insets.bottom + 162,
-            right: 14.5,
+            right: 11.5,
           }}>
           <CustomText
             fontWeight="600"
@@ -586,7 +586,7 @@ const MeetTab = ({
           style={{
             backgroundColor: community.color,
             bottom: insets.bottom + 112,
-            right: 15,
+            right: 12,
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.3,

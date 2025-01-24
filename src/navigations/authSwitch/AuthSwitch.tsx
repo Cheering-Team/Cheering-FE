@@ -1,11 +1,9 @@
 import * as React from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import AuthStackNavigator from './AuthStackNavigator';
-import MainTabNavigator from './MainTabNavigator';
 import {deleteFCMToken, getVersionInfo} from 'apis/user';
-import {queryClient} from '../../App';
+import {queryClient} from '../../../App';
 import DeviceInfo from 'react-native-device-info';
-import SplashScreen from 'screens/auth/SplashScreen';
+import SplashScreen from 'navigations/authSwitch/screens/SplashScreen';
 import {Linking, Platform} from 'react-native';
 import VersionCheck from 'react-native-version-check';
 import NativeSplash from 'react-native-splash-screen';
@@ -13,6 +11,8 @@ import {useGetMyCommunities} from 'apis/community/useCommunities';
 import FastImage from 'react-native-fast-image';
 import OneButtonModal from 'components/common/OneButtonModal';
 import {VersionInfo} from 'apis/user/types';
+import AuthStackNavigator from './authStack/AuthStackNavigator';
+import MainTabNavigator from './mainTab/MainTabNavigator';
 
 interface AuthState {
   isLoading: boolean;

@@ -2,7 +2,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useGetMatchDetail} from 'apis/match/useMatches';
 import CustomText from 'components/common/CustomText';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React from 'react';
 import {KeyboardAvoidingView, Platform, Pressable, View} from 'react-native';
 import {Tabs} from 'react-native-collapsible-tab-view';

@@ -29,7 +29,7 @@ const CommunitySelector = ({community}: CommunitySelectorProps) => {
           setIsOpen(true);
         }}
         className="absolute shadow-md shadow-gray-300 bg-white rounded-full"
-        style={{bottom: insets.bottom + 60, right: 14}}>
+        style={{bottom: insets.bottom + 60, right: 12}}>
         <FastImage
           source={{uri: community.image}}
           className="bg-white w-[45] h-[45] rounded-full border border-gray-200"

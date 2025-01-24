@@ -2,8 +2,8 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {AuthStackParamList} from '../../navigations/AuthStackNavigator';
-import CustomButton from '../../components/common/CustomButton';
+import {AuthStackParamList} from 'navigations/authStack/AuthStackNavigator';
+import CustomButton from 'components/common/CustomButton';
 import FastImage from 'react-native-fast-image';
 import Carousel, {Pagination} from 'react-native-reanimated-carousel';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
@@ -14,12 +14,12 @@ import {
 } from 'react-native-reanimated';
 
 const images = [
-  {id: '1', source: require('../../assets/images/appstore_1.png')},
-  {id: '2', source: require('../../assets/images/appstore_2.png')},
-  {id: '3', source: require('../../assets/images/appstore_3.png')},
-  {id: '4', source: require('../../assets/images/appstore_4.png')},
-  {id: '5', source: require('../../assets/images/appstore_5.png')},
-  {id: '6', source: require('../../assets/images/appstore_6.png')},
+  {id: '1', source: require('assets/images/appstore_1.png')},
+  {id: '2', source: require('assets/images/appstore_2.png')},
+  {id: '3', source: require('assets/images/appstore_3.png')},
+  {id: '4', source: require('assets/images/appstore_4.png')},
+  {id: '5', source: require('assets/images/appstore_5.png')},
+  {id: '6', source: require('assets/images/appstore_6.png')},
 ];
 
 type IntroScreenNavigationProp = NativeStackNavigationProp<

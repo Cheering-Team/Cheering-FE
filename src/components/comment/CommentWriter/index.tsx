@@ -15,7 +15,7 @@ import {
 import {Comment, ReComment} from '../../../apis/comment/types';
 import {showTopToast} from 'utils/toast';
 import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import CrownSvg from 'assets/images/crown.svg';
 

@@ -1,15 +1,15 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import MoreScreen from '../screens/moreStack/MoreScreen';
-import MyProfileScreen from '../screens/moreStack/MyProfileScreen';
-import SignOutScreen from '../screens/moreStack/SignOutScreen';
-import EditNameScreen from '../screens/moreStack/EditNameScreen';
-import DeleteUserScreen from '../screens/moreStack/DeleteUserScreen';
-import SetNotificationScreen from '../screens/moreStack/SetNotificationScreen';
 import NoticeListScreen from 'screens/moreStack/NoticeListScreen';
 import NoticeScreen from 'screens/moreStack/NoticeScreen';
 import PrivacyPolicyScreen from 'screens/moreStack/PrivacyPolicyScreen';
 import CommunityApplyListScreen from 'screens/moreStack/CommunityApplyList/CommunityApplyListScreen';
+import MoreScreen from 'screens/moreStack/MoreScreen';
+import MyProfileScreen from 'screens/moreStack/MyProfileScreen';
+import EditNameScreen from 'screens/moreStack/EditNameScreen';
+import DeleteUserScreen from 'screens/moreStack/DeleteUserScreen';
+import SetNotificationScreen from 'screens/moreStack/SetNotificationScreen';
+import SignOutScreen from 'screens/moreStack/SignOutScreen';
 
 export type MoreStackParamList = {
   More: undefined;

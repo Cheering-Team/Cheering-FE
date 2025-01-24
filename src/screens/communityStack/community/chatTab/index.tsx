@@ -27,7 +27,7 @@ import {debounce} from 'lodash';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import PlusSvg from 'assets/images/plus-white.svg';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import ChatRoomSkeleton from 'components/skeleton/ChatRoomSkeleton';
@@ -280,7 +280,7 @@ const ChatTab = ({
           style={{
             backgroundColor: community.color,
             bottom: insets.bottom + 112,
-            right: 15,
+            right: 12,
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.3,

@@ -7,7 +7,7 @@ import OptionModal from '../../components/common/OptionModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {openPicker} from '@baronha/react-native-multiple-image-picker';
 import {Image} from 'react-native-compressor';
 import LoadingOverlay from 'components/common/LoadingOverlay';

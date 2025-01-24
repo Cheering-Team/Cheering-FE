@@ -21,7 +21,7 @@ import React, {
 } from 'react';
 import {LayoutAnimation, Pressable, TextInput, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {SignInScreenNavigationProp} from 'screens/auth/SignInScreen';
+import {SignInScreenNavigationProp} from 'navigations/authStack/screens/SignInScreen';
 import {showTopToast} from 'utils/toast';
 
 interface PhoneVerifyProps {

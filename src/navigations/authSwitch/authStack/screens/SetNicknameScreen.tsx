@@ -1,17 +1,17 @@
 import React, {useContext, useState} from 'react';
 import {KeyboardAvoidingView, Platform} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import Close from '../../hooks/Close';
+import Close from 'hooks/Close';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {AuthStackParamList} from '../../navigations/AuthStackNavigator';
 import {RouteProp} from '@react-navigation/native';
-import {NAME_REGEX} from '../../constants/regex';
-import {AuthContext} from '../../navigations/AuthSwitch';
-import CustomText from '../../components/common/CustomText';
-import CustomTextInput from '../../components/common/CustomTextInput';
-import CustomButton from '../../components/common/CustomButton';
+import {NAME_REGEX} from 'constants/regex';
+import {AuthContext} from 'navigations/authSwitch/AuthSwitch';
+import CustomText from 'components/common/CustomText';
+import CustomTextInput from 'components/common/CustomTextInput';
+import CustomButton from 'components/common/CustomButton';
 import {useSignUp} from 'apis/user/useUsers';
 import {showTopToast} from 'utils/toast';
+import {AuthStackParamList} from '../AuthStackNavigator';
 
 type SetNicknameScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,

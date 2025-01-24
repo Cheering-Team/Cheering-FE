@@ -19,7 +19,7 @@ import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import PenSvg from 'assets/images/pencil-white.svg';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 
 interface VoteListProps {
   matchId: number;

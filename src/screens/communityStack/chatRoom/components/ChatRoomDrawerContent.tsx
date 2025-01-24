@@ -18,7 +18,7 @@ import {
 } from 'apis/chat/useChats';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {useNavigation} from '@react-navigation/native';
 import CloseSvg from 'assets/images/close-black.svg';
 import ExitSvg from 'assets/images/exit-gray.svg';

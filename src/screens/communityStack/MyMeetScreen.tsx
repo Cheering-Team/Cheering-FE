@@ -3,7 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useFindAllMyMeets} from 'apis/meet/useMeets';
 import CCHeader from 'components/common/CCHeader';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {useState} from 'react';
 import {
   ActivityIndicator,

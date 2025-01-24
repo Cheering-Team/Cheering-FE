@@ -13,7 +13,7 @@ import CustomButton from '../../components/common/CustomButton';
 import {showTopToast} from '../../utils/toast';
 import {useUpdateUserName} from 'apis/user/useUsers';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import StackHeader from 'components/common/StackHeader';
 import {useUpdateFanName} from 'apis/fan/useFans';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';

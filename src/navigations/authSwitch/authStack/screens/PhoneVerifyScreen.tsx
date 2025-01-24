@@ -1,12 +1,12 @@
 import React, {useContext, useRef, useState} from 'react';
-import BackClose from '../../hooks/BackClose';
+import BackClose from 'hooks/BackClose';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import CustomText from '../../components/common/CustomText';
+import CustomText from 'components/common/CustomText';
 import {View} from 'react-native';
-import {AuthContext} from '../../navigations/AuthSwitch';
+import {AuthContext} from 'navigations/authSwitch/AuthSwitch';
 import PhoneVerify from 'components/auth/phoneVerify';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {AuthStackParamList} from 'navigations/AuthStackNavigator';
+import {AuthStackParamList} from 'navigations/authStack/AuthStackNavigator';
 import {RouteProp} from '@react-navigation/native';
 
 type PhoneVerifyScreenNavigationProp = NativeStackNavigationProp<

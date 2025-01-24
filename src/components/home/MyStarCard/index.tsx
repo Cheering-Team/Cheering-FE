@@ -7,10 +7,10 @@ import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from 'components/common/OptionModal';
 import {Community} from 'apis/community/types';
+import {HomeStackParamList} from 'navigations/authSwitch/mainTab/homeStack/HomeStackNavigator';
 interface MyStarCardProps {
   community: Community;
 }
@@ -25,7 +25,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
     <>
       <TouchableOpacity
         activeOpacity={1}
-        className="bg-white rounded-2xl p-[17] w-full h-full justify-between"
+        className="bg-white rounded-2xl p-4 w-full h-full justify-between"
         style={{
           shadowColor: '#464646',
           shadowOffset: {width: 2, height: 2},
@@ -46,14 +46,14 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           <View className="flex-1">
             {community.type === 'PLAYER' ? (
               <CustomText
-                className="text-white text-[15px] mb-[4]"
-                fontWeight="600">
+                className="text-white text-[14px] mb-[4]"
+                fontWeight="500">
                 {community.englishName}
               </CustomText>
             ) : (
               <CustomText
-                className="text-white text-[15px] mb-[4]"
-                fontWeight="600">
+                className="text-white text-[14px] mb-[4]"
+                fontWeight="500">
                 {`${community.sportName} / ${community.leagueName}`}
               </CustomText>
             )}

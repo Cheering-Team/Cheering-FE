@@ -4,13 +4,13 @@ import {Platform, Pressable, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {login} from '@react-native-seoul/kakao-login';
 import NaverLogin from '@react-native-seoul/naver-login';
-import {AuthStackParamList} from 'navigations/AuthStackNavigator';
+import {AuthStackParamList} from 'navigations/authStack/AuthStackNavigator';
 import Close from 'hooks/Close';
 import CustomText from 'components/common/CustomText';
-import KakaoSvg from '../../assets/images/kakao.svg';
-import NaverSvg from '../../assets/images/naver.svg';
-import AppleSvg from '../../assets/images/apple.svg';
-import {AuthContext} from 'navigations/AuthSwitch';
+import KakaoSvg from 'assets/images/kakao.svg';
+import NaverSvg from 'assets/images/naver.svg';
+import AppleSvg from 'assets/images/apple.svg';
+import {AuthContext} from 'navigations/authSwitch/AuthSwitch';
 import {
   useAppleSignIn,
   useKakaoSignIn,

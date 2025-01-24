@@ -12,7 +12,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import Viewer from 'components/post/Viewer';
 import NotFound from 'components/notfound';
 import {useBlockUser, useGetFanInfo} from 'apis/fan/useFans';

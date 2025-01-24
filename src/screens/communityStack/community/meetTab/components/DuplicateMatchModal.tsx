@@ -4,7 +4,7 @@ import {Community} from 'apis/community/types';
 import {MatchDetail} from 'apis/match/types';
 import CustomText from 'components/common/CustomText';
 import MatchInfo from 'components/common/MatchInfo';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {Dispatch, SetStateAction} from 'react';
 import {Modal, Pressable, View} from 'react-native';
 

@@ -2,7 +2,7 @@ import CheckBox from 'components/common/CheckBox';
 import CustomText from 'components/common/CustomText';
 import React, {useState} from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
-import ChevronRightSvg from '../../assets/images/chevron-right-gray.svg';
+import ChevronRightSvg from 'assets/images/chevron-right-gray.svg';
 import Close from 'hooks/Close';
 import CustomButton from 'components/common/CustomButton';
 

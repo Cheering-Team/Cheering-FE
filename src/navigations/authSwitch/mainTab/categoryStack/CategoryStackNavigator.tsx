@@ -1,12 +1,12 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import CategoryScreen from '../screens/categoryStack/CategoryScreen';
+import {NavigationPropType} from 'navigations/types';
 import React from 'react';
-import PlayerListScreen from '../screens/categoryStack/PlayerListScreen';
-import SearchScreen from '../screens/categoryStack/SearchScreen';
 import CommunityStackNavigator, {
   CommunityStackParamList,
-} from './CommunityStackNavigator';
-import {NavigationPropType} from './types';
+} from '../CommunityStackNavigator';
+import CategoryScreen from 'screens/categoryStack/CategoryScreen';
+import SearchScreen from 'screens/categoryStack/SearchScreen';
+import PlayerListScreen from 'screens/categoryStack/PlayerListScreen';
 
 export type CategoryStackParamList = {
   Category: {teamId: number};

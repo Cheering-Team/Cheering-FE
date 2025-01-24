@@ -4,7 +4,7 @@ import {Community} from 'apis/community/types';
 import {MatchDetail} from 'apis/match/types';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_WIDTH} from 'constants/dimension';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {useEffect, useRef} from 'react';
 import {FlatList, ListRenderItem, Pressable, View} from 'react-native';
 import FastImage from 'react-native-fast-image';

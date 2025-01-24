@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
 import BackSvg from '../../assets/images/arrow-left.svg';
-import {AuthContext} from '../../navigations/AuthSwitch';
+import {AuthContext} from '../../navigations/authSwitch/AuthSwitch';
 import CustomText from '../../components/common/CustomText';
 import CustomButton from '../../components/common/CustomButton';
 import CheckBox from '../../components/common/CheckBox';

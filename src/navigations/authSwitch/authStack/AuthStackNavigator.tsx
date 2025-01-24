@@ -1,14 +1,14 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import IntroScreen from '../screens/auth/IntroScreen';
-import SignInScreen from '../screens/auth/SignInScreen';
-import SetNickNameScreen from '../screens/auth/SetNicknameScreen';
-import PhoneVerifyScreen from '../screens/auth/PhoneVerifyScreen';
-import SocialConnectScreen from '../screens/auth/SocialConnectScreen';
+import SignInScreen from './screens/SignInScreen';
 import {User} from 'apis/user/types';
-import LogoSvg from '../assets/images/logo-text.svg';
-import AgreeTermScreen from 'screens/auth/AgreeTermScreen';
+import LogoSvg from 'assets/images/logo-text.svg';
 import PrivacyPolicyScreen from 'screens/moreStack/PrivacyPolicyScreen';
+import IntroScreen from './screens/IntroScreen';
+import SetNickNameScreen from './screens/SetNicknameScreen';
+import PhoneVerifyScreen from './screens/PhoneVerifyScreen';
+import SocialConnectScreen from './screens/SocialConnectScreen';
+import AgreeTermScreen from './screens/AgreeTermScreen';
 
 export type AuthStackParamList = {
   Intro: undefined;
@@ -31,7 +31,7 @@ export type AuthStackParamList = {
   PrivacyPolicy: undefined;
 };
 
-const AuthStack = () => {
+const AuthStackNavigator = () => {
   const Stack = createNativeStackNavigator<AuthStackParamList>();
 
   return (
@@ -117,4 +117,4 @@ const AuthStack = () => {
   );
 };
 
-export default AuthStack;
+export default AuthStackNavigator;

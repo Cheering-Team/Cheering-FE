@@ -9,7 +9,7 @@ import {useDeleteMeet, useGetMeetById, useLeaveMeet} from 'apis/meet/useMeets';
 import CCHeader from 'components/common/CCHeader';
 import CustomText from 'components/common/CustomText';
 import MatchInfo from 'components/common/MatchInfo';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {useRef, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import Animated, {

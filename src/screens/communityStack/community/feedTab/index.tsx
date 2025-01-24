@@ -22,7 +22,7 @@ import PenSvg from 'assets/images/pencil-white.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import {useMainTabScroll} from 'context/useMainTabScroll';
@@ -183,7 +183,7 @@ const FeedTab = ({
           style={{
             backgroundColor: community.color,
             bottom: insets.bottom + 112,
-            right: 15,
+            right: 12,
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.3,

@@ -4,7 +4,7 @@ import {Chat} from 'apis/chat/types';
 import {useGetMeetById} from 'apis/meet/useMeets';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_WIDTH} from 'constants/dimension';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {useEffect} from 'react';
 import {Pressable, View} from 'react-native';
 import {formatAmPmTime} from 'utils/format';

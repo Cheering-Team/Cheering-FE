@@ -3,7 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Community} from 'apis/community/types';
 import {MatchSchedule} from 'apis/match/types';
 import CustomText from 'components/common/CustomText';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {memo} from 'react';
 import {Dimensions, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';

@@ -47,12 +47,13 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
           parallaxScrollingOffset: 48,
         }}
         renderItem={renderItem}
+        style={{top: -3}}
       />
       <Pagination.Basic
         progress={progress}
         data={communities}
         dotStyle={{
-          width: Math.floor((WINDOW_WIDTH * 0.4) / communities.length),
+          width: (WINDOW_WIDTH * 0.4) / communities.length,
           height: 4,
           backgroundColor: '#ebebeb',
           borderRadius: 1,
@@ -63,7 +64,7 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
         }}
         containerStyle={{
           gap: 5,
-          top: 5,
+          top: 2,
         }}
         horizontal
       />

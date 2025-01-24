@@ -5,7 +5,7 @@ import React from 'react';
 import {Pressable, View} from 'react-native';
 import MeetCard from '../../meetTab/components/MeetCard';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {useNavigation} from '@react-navigation/native';
 import {Community} from 'apis/community/types';
 

@@ -8,7 +8,7 @@ import CustomText from 'components/common/CustomText';
 import CommunityHeader from 'components/community/CommunityInfo/CommunityHeader';
 import CommunityProfile from 'components/community/CommunityInfo/CommunityProfile';
 import FeedTab from 'screens/communityStack/community/feedTab';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {useCallback, useEffect, useRef} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import Animated from 'react-native-reanimated';

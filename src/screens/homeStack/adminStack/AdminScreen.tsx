@@ -3,7 +3,7 @@ import React from 'react';
 import {FlatList, Pressable, SafeAreaView} from 'react-native';
 import ChevronRightSvg from 'assets/images/chevron-right-gray.svg';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {AdminStackParamList} from 'navigations/AdminStackNavigator';
+import {AdminStackParamList} from 'navigations/adminStack/AdminStackNavigator';
 import {useNavigation} from '@react-navigation/native';
 import StackHeader from 'components/common/StackHeader';
 

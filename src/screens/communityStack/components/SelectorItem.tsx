@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Community} from 'apis/community/types';
 import CustomText from 'components/common/CustomText';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {Dispatch, SetStateAction} from 'react';
 import {Pressable} from 'react-native';
 import FastImage from 'react-native-fast-image';

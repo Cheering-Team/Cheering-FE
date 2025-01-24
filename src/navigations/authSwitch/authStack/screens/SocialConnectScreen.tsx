@@ -1,13 +1,13 @@
 import React, {useContext} from 'react';
-import Close from '../../hooks/Close';
+import Close from 'hooks/Close';
 import {SafeAreaView, View} from 'react-native';
-import CustomText from '../../components/common/CustomText';
-import CustomButton from '../../components/common/CustomButton';
-import {AuthContext} from '../../navigations/AuthSwitch';
+import CustomText from 'components/common/CustomText';
+import CustomButton from 'components/common/CustomButton';
+import {AuthContext} from 'navigations/authSwitch/AuthSwitch';
 import {useConnectSocial} from 'apis/user/useUsers';
 import {showTopToast} from 'utils/toast';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {AuthStackParamList} from 'navigations/AuthStackNavigator';
+import {AuthStackParamList} from 'navigations/authStack/AuthStackNavigator';
 import {RouteProp} from '@react-navigation/native';
 
 type SocialConnectScreenNavigationProp = NativeStackNavigationProp<
