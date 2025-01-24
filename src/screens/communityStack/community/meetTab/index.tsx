@@ -567,11 +567,11 @@ const MeetTab = ({
       <Animated.View style={{opacity: buttonOpacity}}>
         <Pressable
           onPress={handleMyButton}
-          className="absolute rounded-full z-50 w-[43] h-[43] justify-center items-center border border-gray-200 shadow-sm shadow-gray-200"
+          className="absolute rounded-full z-50 w-[44] h-[44] justify-center items-center border border-gray-200 shadow-sm shadow-gray-200"
           style={{
             backgroundColor: 'white',
-            bottom: insets.bottom + 112,
-            right: 12,
+            bottom: insets.bottom + 162,
+            right: 14.5,
           }}>
           <CustomText
             fontWeight="600"
@@ -585,8 +585,8 @@ const MeetTab = ({
           className="absolute rounded-full z-50 w-[43] h-[43] justify-center items-center"
           style={{
             backgroundColor: community.color,
-            bottom: insets.bottom + 57,
-            right: 12,
+            bottom: insets.bottom + 112,
+            right: 15,
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.3,

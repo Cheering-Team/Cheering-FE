@@ -179,11 +179,11 @@ const FeedTab = ({
       <Animated.View style={{opacity: buttonOpacity}}>
         <Pressable
           onPress={() => navigation.navigate('PostWrite', {community})}
-          className="absolute p-[11] rounded-full z-50"
+          className="absolute w-[43] h-[43] justify-center items-center rounded-full z-50"
           style={{
             backgroundColor: community.color,
-            bottom: insets.bottom + 57,
-            right: 12,
+            bottom: insets.bottom + 112,
+            right: 15,
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.3,

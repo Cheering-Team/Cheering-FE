@@ -1,15 +1,15 @@
 import React from 'react';
 import NotificationScreen from 'screens/homeStack/NotificaitonScreen';
-import HomeTabNavigator, {HomeTabParamList} from './HomeTabNavigator';
 import CommunityStackNavigator, {
   CommunityStackParamList,
 } from './CommunityStackNavigator';
 import {NavigationPropType} from './types';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AdminStackNavigator, {AdminStackParamList} from './AdminStackNavigator';
+import HomeMyScreen from 'screens/homeStack/homeTab/homeMyStack/HomeMyScreen';
 
 export type HomeStackParamList = {
-  HomeTab: NavigationPropType<HomeTabParamList>;
+  Home: undefined;
   Notification: undefined;
   CommunityStack: NavigationPropType<CommunityStackParamList>;
   AdminStack: NavigationPropType<AdminStackParamList>;
@@ -21,8 +21,8 @@ const HomeStackNavigator = () => {
   return (
     <HomeStack.Navigator screenOptions={{animation: 'ios_from_right'}}>
       <HomeStack.Screen
-        name="HomeTab"
-        component={HomeTabNavigator}
+        name="Home"
+        component={HomeMyScreen}
         options={{
           headerShown: false,
         }}

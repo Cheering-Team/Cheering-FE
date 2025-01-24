@@ -32,6 +32,7 @@ import MainTab from './mainTab';
 import ScheduleTab from './ScheduleTab';
 import {useLightStatusBar} from 'hooks/useLightStatusBar';
 import MeetTab from './meetTab';
+import CommunitySelector from '../components/CommunitySelector';
 
 const CommunityScreen = () => {
   useLightStatusBar();
@@ -283,6 +284,7 @@ const CommunityScreen = () => {
           />
         </BottomSheetView>
       </BottomSheetModal>
+      <CommunitySelector community={community} />
     </View>
   );
 };
