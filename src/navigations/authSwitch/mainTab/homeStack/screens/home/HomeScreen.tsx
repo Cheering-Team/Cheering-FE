@@ -13,7 +13,8 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/authSwitch/mainTab/homeStack/HomeStackNavigator';
 import {useGetMyHotPosts} from 'apis/post/usePosts';
 import FeedPost from 'components/community/FeedPost';
-import RandomCommunityCard from '../components/RandomCommunityCard';
+import RandomCommunityCard from '../../../../../../screens/homeStack/homeTab/components/RandomCommunityCard';
+import TodayMatches from './components/TodayMatches';
 
 const HomeScreen = () => {
   useDarkStatusBar();
@@ -62,8 +63,9 @@ const HomeScreen = () => {
                 </Pressable>
               </View>
               <MyStarCarousel communities={communities} />
+              <TodayMatches />
               <CustomText
-                className="text-lg mt-7 mb-2 ml-[14]"
+                className="text-lg mt-5 mb-2 ml-[14]"
                 fontWeight="500">
                 인기 게시글
               </CustomText>

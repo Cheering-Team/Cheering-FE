@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Post} from 'apis/post/types';
 import {Fan} from 'apis/fan/types';
 import {Community} from 'apis/community/types';
-import MatchScreen from 'screens/communityStack/match/MatchScreen';
+import MatchScreen from 'navigations/authSwitch/mainTab/categoryStack/screens/match/MatchScreen';
 import CommunityScreen from 'screens/communityStack/community/CommunityScreen';
 import ProfileScreen from 'screens/communityStack/ProfileScreen';
 import PostWriteScreen from 'screens/communityStack/postWrite/PostWriteScreen';

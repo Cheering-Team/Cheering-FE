@@ -147,6 +147,7 @@ const CreateMeetScreen = () => {
           paddingTop: insets.top + 55 + 15,
           paddingBottom: 40,
         }}
+        keyboardShouldPersistTaps="handled"
         onScroll={scrollHandler}>
         <View className="flex-row">
           <RadioButton

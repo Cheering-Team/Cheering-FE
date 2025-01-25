@@ -87,3 +87,15 @@ export const getTwoWeeksMatches = async ({
   );
   return response.data.result;
 };
+
+export const getMatchesByDate = async ({
+  queryKey,
+}: {
+  queryKey: ReturnType<typeof matchKeys.listByDate>;
+}) => {
+  const [, , {year, month, day}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<MatchDetail[]>>(
+    `/matches/date?year=${year}&month=${month}&day=${day}`,
+  );
+  return response.data.result;
+};

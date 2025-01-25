@@ -10,10 +10,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import BackSvg from 'assets/images/chevron-left.svg';
 import {CommunityTabBar} from 'components/community/CommunityTabBar/CommunityTabBar';
 import {useGetCommunityById} from 'apis/community/useCommunities';
-import CheerTab from './CheerTab';
+import CheerTab from '../../../../../../screens/communityStack/match/CheerTab';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 import MatchInfo from 'components/common/MatchInfo';
-import VoteList from '../Schedule/match/components/VoteList';
+import VoteList from '../../../../../../screens/communityStack/Schedule/match/components/VoteList';
+import MatchMeetTab from './components/MatchMeetTab';
 
 const MatchScreen = () => {
   useDarkStatusBar();
@@ -72,6 +73,9 @@ const MatchScreen = () => {
         </Tabs.Tab>
         <Tabs.Tab name="투표">
           <VoteList matchId={matchId} community={community} />
+        </Tabs.Tab>
+        <Tabs.Tab name="모임">
+          <MatchMeetTab matchId={matchId} community={community} />
         </Tabs.Tab>
       </Tabs.Container>
     </KeyboardAvoidingView>

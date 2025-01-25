@@ -1,7 +1,7 @@
 import React from 'react';
 import NotificationScreen from 'screens/homeStack/NotificaitonScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from 'screens/homeStack/homeTab/homeMyStack/HomeScreen';
+import HomeScreen from 'navigations/authSwitch/mainTab/homeStack/screens/home/HomeScreen';
 import CommunityStackNavigator, {
   CommunityStackParamList,
 } from '../CommunityStackNavigator';

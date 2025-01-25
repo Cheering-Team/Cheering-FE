@@ -9,6 +9,8 @@ export const matchKeys = {
     [...matchKeys.lists(), 'twoweeks', {communityId}] as const,
   nearList: (communityId: number) =>
     [...matchKeys.lists(), 'near', {communityId}] as const,
+  listByDate: (year: number, month: number, day: number) =>
+    [...matchKeys.lists(), {year, month, day}] as const,
   unfinishedList: () => [...matchKeys.lists(), 'unfinished'] as const,
   details: () => [...matchKeys.all, 'detail'] as const,
   detail: (matchId: number | null) =>
