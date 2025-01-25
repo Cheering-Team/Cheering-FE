@@ -15,8 +15,8 @@ const TodayMatches = () => {
 
   return (
     <>
-      <CustomText className="text-lg mt-6 mb-2 ml-[14]" fontWeight="500">
-        오늘의 경기 일정
+      <CustomText className="text-lg mt-6 mb-2 ml-4" fontWeight="500">
+        오늘 우리팀 경기
       </CustomText>
       <View className="mx-[14]">
         {matches?.map(match => {
