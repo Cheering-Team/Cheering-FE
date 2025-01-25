@@ -1,7 +1,7 @@
 import {useGetMatchesByDate} from 'apis/match/useMatches';
 import CustomText from 'components/common/CustomText';
 import MatchInfo from 'components/common/MatchInfo';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Pressable, View} from 'react-native';
 
 const TodayMatches = () => {
@@ -15,7 +15,7 @@ const TodayMatches = () => {
 
   return (
     <>
-      <CustomText className="text-lg mt-7 mb-[5] ml-[14]" fontWeight="500">
+      <CustomText className="text-lg mt-6 mb-2 ml-[14]" fontWeight="500">
         오늘의 경기 일정
       </CustomText>
       <View className="mx-[14]">

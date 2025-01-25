@@ -65,7 +65,7 @@ const HomeScreen = () => {
               <MyStarCarousel communities={communities} />
               <TodayMatches />
               <CustomText
-                className="text-lg mt-5 mb-2 ml-[14]"
+                className="text-lg mt-6 mb-2 ml-[14]"
                 fontWeight="500">
                 인기 게시글
               </CustomText>
