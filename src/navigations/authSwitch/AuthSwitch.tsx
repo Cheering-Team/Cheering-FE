@@ -13,6 +13,10 @@ import OneButtonModal from 'components/common/OneButtonModal';
 import {VersionInfo} from 'apis/user/types';
 import AuthStackNavigator from './authStack/AuthStackNavigator';
 import MainTabNavigator from './mainTab/MainTabNavigator';
+import {communityKeys} from 'apis/community/queries';
+import {matchKeys} from 'apis/match/queries';
+import {getMyCommunities} from 'apis/community';
+import {getMatchesByDate} from 'apis/match';
 
 interface AuthState {
   isLoading: boolean;
@@ -40,7 +44,6 @@ const AuthSwitch = () => {
   const [versionInfo, setVersionInfo] = React.useState<VersionInfo | null>(
     null,
   );
-  const {data: communities, refetch} = useGetMyCommunities(false);
 
   React.useEffect(() => {
     NativeSplash.hide();
@@ -58,16 +61,23 @@ const AuthSwitch = () => {
             setIsUpdate(true);
           } else {
             if (accessToken) {
-              refetch();
-
-              setTimeout(() => {
-                setIsLoading(false);
-              }, 1500);
-            } else {
-              setTimeout(() => {
-                setIsLoading(false);
-              }, 1500);
+              const today = new Date();
+              queryClient.prefetchQuery({
+                queryKey: communityKeys.listByMy(),
+                queryFn: getMyCommunities,
+              });
+              queryClient.prefetchQuery({
+                queryKey: matchKeys.listByDate(
+                  today.getFullYear(),
+                  today.getMonth() + 1,
+                  today.getDate(),
+                ),
+                queryFn: getMatchesByDate,
+              });
             }
+            setTimeout(() => {
+              setIsLoading(false);
+            }, 1500);
           }
         });
       } catch (error) {
@@ -76,7 +86,7 @@ const AuthSwitch = () => {
     };
 
     checkVersion();
-  }, [refetch]);
+  }, []);
 
   // React.useEffect(() => {
   //   if (communities) {

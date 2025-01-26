@@ -1,31 +1,46 @@
-import {useGetMatchesByDate} from 'apis/match/useMatches';
+import {MatchDetail} from 'apis/match/types';
 import CustomText from 'components/common/CustomText';
-import MatchInfo from 'components/common/MatchInfo';
+import MatchCard from 'components/match/MatchCard';
 import React from 'react';
 import {Pressable, View} from 'react-native';
 
-const TodayMatches = () => {
-  const today = new Date();
+interface TodayMatchesProps {
+  matches: MatchDetail[];
+}
 
-  const {data: matches} = useGetMatchesByDate(
-    today.getFullYear(),
-    today.getMonth() + 1,
-    today.getDate(),
-  );
-
+const TodayMatches = ({matches}: TodayMatchesProps) => {
   return (
     <>
-      <CustomText className="text-lg mt-6 mb-2 ml-4" fontWeight="500">
+      <CustomText className="text-[18px] mt-8 mb-3 ml-4" fontWeight="500">
         오늘 우리팀 경기
       </CustomText>
       <View className="mx-[14]">
         {matches?.map(match => {
           return (
-            <Pressable className="my-[2]">
-              <MatchInfo match={match} radius={3} height={80} />
-            </Pressable>
+            <MatchCard
+              key={match.id}
+              match={match}
+              onPress={() => {
+                //
+              }}
+              liveOnPress={() => {
+                //
+              }}
+            />
           );
         })}
+        {matches?.length === 0 && (
+          <Pressable
+            className="bg-white py-[9] px-2 rounded-lg shadow-sm shadow-gray-100 justify-center items-center h-[110]"
+            style={{
+              borderWidth: 1,
+              borderColor: '#e5e7eb',
+            }}>
+            <CustomText className="text-slate-700 text-[14px]">
+              오늘 하루는 심심할지도..
+            </CustomText>
+          </Pressable>
+        )}
       </View>
     </>
   );

@@ -4,7 +4,7 @@ import {useGetMyHotPosts} from 'apis/post/usePosts';
 import {useGetPopularTeams} from 'apis/team/useTeams';
 import CustomText from 'components/common/CustomText';
 import FeedPost from 'components/community/FeedPost';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   ListRenderItem,

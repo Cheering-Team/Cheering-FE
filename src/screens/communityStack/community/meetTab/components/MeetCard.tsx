@@ -1,6 +1,5 @@
 import {MeetInfo} from 'apis/meet/types';
 import CustomText from 'components/common/CustomText';
-import {WINDOW_WIDTH} from 'constants/dimension';
 import React from 'react';
 import {Pressable, View} from 'react-native';
 import LocationSvg from 'assets/images/location-slate.svg';
@@ -18,8 +17,8 @@ interface MeetCardProps {
 const MeetCard = ({meet, type = 'TAB', onPress}: MeetCardProps) => {
   return (
     <Pressable
-      className="flex-row mx-[10] my-1 border border-gray-200 bg-white rounded-lg overflow-hidden"
-      style={{height: 90, width: WINDOW_WIDTH - 20}}
+      className="flex-row my-1 border border-gray-200 bg-white rounded-lg overflow-hidden shadow-sm shadow-gray-100"
+      style={{height: 90}}
       onPress={onPress}>
       <View className="flex-1 px-[10] py-2 justify-between">
         <View>

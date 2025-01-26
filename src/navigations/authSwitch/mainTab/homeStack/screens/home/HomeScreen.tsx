@@ -1,6 +1,5 @@
 import React from 'react';
-import {FlatList, Pressable, View} from 'react-native';
-import {ScrollView} from 'react-native';
+import {ActivityIndicator, FlatList, Pressable, View} from 'react-native';
 import LogoSvg from 'assets/images/logo-text.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MyStarCarousel from 'components/home/MyStarCarousel';
@@ -15,14 +14,22 @@ import {useGetMyHotPosts} from 'apis/post/usePosts';
 import FeedPost from 'components/community/FeedPost';
 import RandomCommunityCard from '../../../../../../screens/homeStack/homeTab/components/RandomCommunityCard';
 import TodayMatches from './components/TodayMatches';
+import RecommendMeets from './components/RecommendMeets';
+import {useGetMatchesByDate} from 'apis/match/useMatches';
 
 const HomeScreen = () => {
   useDarkStatusBar();
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const insets = useSafeAreaInsets();
+  const today = new Date();
 
   const {data: communities} = useGetMyCommunities(true);
+  const {data: matches} = useGetMatchesByDate(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    today.getDate(),
+  );
   const {data: posts} = useGetMyHotPosts();
 
   if (!communities) {
@@ -63,7 +70,8 @@ const HomeScreen = () => {
                 </Pressable>
               </View>
               <MyStarCarousel communities={communities} />
-              <TodayMatches />
+              <TodayMatches matches={matches} />
+              <RecommendMeets />
               <CustomText
                 className="text-lg mt-6 mb-2 ml-[14]"
                 fontWeight="500">

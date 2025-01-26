@@ -181,7 +181,10 @@ const MeetTab = ({
       <MeetCard
         meet={item}
         onPress={() => {
-          navigation.navigate('MeetRecruit', {meetId: item.id, community});
+          navigation.navigate('MeetRecruit', {
+            meetId: item.id,
+            communityId: community.id,
+          });
         }}
       />
     );
@@ -215,6 +218,7 @@ const MeetTab = ({
           marginTop: HEADER_HEIGHT,
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
           paddingBottom: insets.bottom + 200,
+          paddingHorizontal: 10,
         }}
         scrollIndicatorInsets={{
           top: 110 + insets.top,
@@ -240,7 +244,7 @@ const MeetTab = ({
         }
         ListHeaderComponent={
           <View>
-            <View className="bg-[#ececec] mx-[10] my-2 border border-slate-300 rounded-t-[6px] rounded-b-[6px]">
+            <View className="bg-[#ececec] my-2 border border-slate-300 rounded-t-[6px] rounded-b-[6px]">
               <View className="flex-row">
                 <Pressable
                   className="flex-1 justify-center items-center py-[3] border-r border-slate-300 rounded-tl-[4px]"
@@ -315,7 +319,6 @@ const MeetTab = ({
               style={{marginBottom: 5}}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{
-                paddingHorizontal: 10,
                 alignItems: 'center',
               }}>
               {(match ||

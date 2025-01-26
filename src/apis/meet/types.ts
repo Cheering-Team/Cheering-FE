@@ -48,6 +48,7 @@ export interface MeetInfo {
     time: string;
   };
   place: string | null;
+  communityId: number;
 }
 
 export interface MeetMember {

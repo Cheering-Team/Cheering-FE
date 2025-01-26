@@ -73,7 +73,10 @@ const MatchMeetTab = ({matchId, community}: MatchMeetTabProps) => {
     <MeetCard
       meet={item}
       onPress={() => {
-        navigation.navigate('MeetRecruit', {meetId: item.id, community});
+        navigation.navigate('MeetRecruit', {
+          meetId: item.id,
+          communityId: community.id,
+        });
       }}
     />
   );

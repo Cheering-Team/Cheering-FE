@@ -46,16 +46,22 @@ const RandomMeets = ({
         </Pressable>
       </View>
 
-      {meets?.slice(0, 3).map(meet => (
-        <MeetCard
-          key={meet.id}
-          meet={meet}
-          type="MAIN"
-          onPress={() => {
-            navigation.navigate('MeetRecruit', {meetId: meet.id, community});
-          }}
-        />
-      ))}
+      <View className="mx-[14]">
+        {meets?.slice(0, 3).map(meet => (
+          <MeetCard
+            key={meet.id}
+            meet={meet}
+            type="MAIN"
+            onPress={() => {
+              navigation.navigate('MeetRecruit', {
+                meetId: meet.id,
+                communityId: community.id,
+              });
+            }}
+          />
+        ))}
+      </View>
+
       {meets?.length === 0 && (
         <View className="h-[80] justify-center items-center">
           <CustomText className="text-slate-700">

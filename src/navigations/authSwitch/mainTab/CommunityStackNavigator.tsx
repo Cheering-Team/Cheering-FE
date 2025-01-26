@@ -50,7 +50,7 @@ export type CommunityStackParamList = {
   Match: {matchId: number; communityId: number};
   CreateMeet: {community: Community};
   EditMeet: {communityId: number; meetId: number};
-  MeetRecruit: {meetId: number; community: Community};
+  MeetRecruit: {meetId: number; communityId: number};
   Meet: {meetId: number; communityId: number};
   MeetPrivateChatList: {meetId: number; community: Community};
   MyMeet: {community: Community};

@@ -187,7 +187,7 @@ const MyMeetScreen = () => {
               } else {
                 navigation.navigate('MeetRecruit', {
                   meetId: item.id,
-                  community,
+                  communityId: community.id,
                 });
               }
             }}
