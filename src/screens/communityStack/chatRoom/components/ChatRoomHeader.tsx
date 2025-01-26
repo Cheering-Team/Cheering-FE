@@ -4,7 +4,7 @@ import {ChatRoom} from 'apis/chat/types';
 import CustomText from 'components/common/CustomText';
 import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {Dispatch, SetStateAction} from 'react';
-import {Pressable, View} from 'react-native';
+import {Keyboard, Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChevronLeftSvg from 'assets/images/chevron-left.svg';
 import OfficialSvg from 'assets/images/official.svg';
@@ -102,7 +102,11 @@ const ChatRoomHeader = ({
         {chatRoom.type === 'OFFICIAL' ? (
           <></>
         ) : (
-          <Pressable onPress={() => setIsDrawerOpen(true)}>
+          <Pressable
+            onPress={() => {
+              Keyboard.dismiss();
+              setIsDrawerOpen(true);
+            }}>
             <DrawerSvg width={27} height={27} style={{marginRight: 5}} />
           </Pressable>
         )}
