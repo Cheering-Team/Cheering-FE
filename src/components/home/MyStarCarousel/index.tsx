@@ -1,27 +1,21 @@
 import {WINDOW_WIDTH} from 'constants/dimension';
-import React, {useEffect} from 'react';
-import {useSharedValue} from 'react-native-reanimated';
-import Carousel, {Pagination} from 'react-native-reanimated-carousel';
-import {PanGesture} from 'react-native-gesture-handler';
+import React, {useEffect, useRef, useState} from 'react';
 import MyStarCard from '../MyStarCard';
 import {queryClient} from '../../../../App';
 import {communityKeys} from 'apis/community/queries';
 import {Community} from 'apis/community/types';
+import {Animated, ListRenderItem, View} from 'react-native';
 
 interface MyStarCarouselProps {
   communities: Community[];
 }
 
 const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
-  const progress = useSharedValue<number>(0);
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const [curIndex, setCurIndex] = useState(0);
 
-  const handleConfigurePanGesture = (panGesture: PanGesture) => {
-    panGesture.activeOffsetX([-10, 10]);
-    panGesture.failOffsetY([-15, 15]);
-  };
-
-  const renderItem = ({item}) => {
-    return <MyStarCard community={item} />;
+  const renderItem: ListRenderItem<Community> = ({item, index}) => {
+    return <MyStarCard community={item} index={index} scrollX={scrollX} />;
   };
 
   useEffect(() => {
@@ -34,40 +28,57 @@ const MyStarCarousel = ({communities}: MyStarCarouselProps) => {
 
   return (
     <>
-      <Carousel
-        onConfigurePanGesture={handleConfigurePanGesture}
-        loop={false}
+      <Animated.FlatList
+        automaticallyAdjustContentInsets={false}
+        contentContainerStyle={{
+          paddingHorizontal: (WINDOW_WIDTH * 0.1) / 2,
+          paddingVertical: 10,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
         data={communities}
-        mode="parallax"
-        width={WINDOW_WIDTH}
-        height={200}
-        onProgressChange={progress}
-        modeConfig={{
-          parallaxScrollingScale: 0.9,
-          parallaxScrollingOffset: 48,
-        }}
-        renderItem={renderItem}
-        style={{top: -3}}
-      />
-      <Pagination.Basic
-        progress={progress}
-        data={communities}
-        dotStyle={{
-          width: (WINDOW_WIDTH * 0.4) / communities.length,
-          height: 4,
-          backgroundColor: '#ebebeb',
-          borderRadius: 1,
-        }}
-        activeDotStyle={{
-          overflow: 'hidden',
-          backgroundColor: '#393939',
-        }}
-        containerStyle={{
-          gap: 5,
-          top: 2,
-        }}
+        decelerationRate={'fast'}
         horizontal
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {x: scrollX}}}],
+          {
+            useNativeDriver: true,
+            listener: (event: any) => {
+              setCurIndex(
+                Math.round(
+                  event.nativeEvent.contentOffset.x / (WINDOW_WIDTH * 0.9),
+                ),
+              );
+            },
+          },
+        )}
+        scrollEventThrottle={16}
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        renderItem={renderItem}
+        bounces={false}
+        style={{height: 200}}
+        snapToAlignment={'start'}
+        snapToInterval={WINDOW_WIDTH * 0.9}
       />
+      <View className="flex-row justify-center items-center mt-[3]">
+        {communities.map((_, index) => {
+          if (index === curIndex) {
+            return (
+              <View
+                key={index}
+                className="w-[7] h-[7] bg-gray-600 rounded-full mx-[3]"
+              />
+            );
+          }
+          return (
+            <View
+              key={index}
+              className="w-[5] h-[5] bg-gray-300 rounded-full mx-[3]"
+            />
+          );
+        })}
+      </View>
     </>
   );
 };

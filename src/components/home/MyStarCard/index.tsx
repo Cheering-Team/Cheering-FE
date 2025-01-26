@@ -1,6 +1,6 @@
 import CustomText from 'components/common/CustomText';
 import React, {useRef} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Animated, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MoreSvg from '../../../assets/images/three-dots-vertical-white.svg';
 import FastImage from 'react-native-fast-image';
@@ -11,27 +11,41 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from 'components/common/OptionModal';
 import {Community} from 'apis/community/types';
 import {HomeStackParamList} from 'navigations/authSwitch/mainTab/homeStack/HomeStackNavigator';
+import {WINDOW_WIDTH} from 'constants/dimension';
 interface MyStarCardProps {
   community: Community;
+  index: number;
+  scrollX: Animated.Value;
 }
 
-const MyStarCard = ({community}: MyStarCardProps) => {
+const MyStarCard = ({community, index, scrollX}: MyStarCardProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
-
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
+  const inputRange = [
+    (index - 1) * (WINDOW_WIDTH * 0.9),
+    index * (WINDOW_WIDTH * 0.9),
+    (index + 1) * (WINDOW_WIDTH * 0.9),
+  ];
+
+  const scale = scrollX.interpolate({
+    inputRange,
+    outputRange: [0.95, 1, 0.95],
+  });
+
   return (
-    <>
+    <Animated.View style={[{transform: [{scale}]}]}>
       <TouchableOpacity
         activeOpacity={1}
-        className="bg-white rounded-2xl p-4 w-full h-full justify-between"
+        className="bg-white rounded-2xl p-[14] pb-[10] w-full h-full justify-between"
         style={{
           shadowColor: '#464646',
           shadowOffset: {width: 2, height: 2},
           shadowOpacity: 0.7,
           shadowRadius: 4,
           elevation: 5,
+          width: WINDOW_WIDTH * 0.9,
         }}
         onPress={() =>
           navigation.navigate('CommunityStack', {
@@ -46,13 +60,13 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           <View className="flex-1">
             {community.type === 'PLAYER' ? (
               <CustomText
-                className="text-white text-[14px] mb-[4]"
+                className="text-white text-[13px] mb-[4]"
                 fontWeight="500">
                 {community.englishName}
               </CustomText>
             ) : (
               <CustomText
-                className="text-white text-[14px] mb-[4]"
+                className="text-white text-[13px] mb-[4]"
                 fontWeight="500">
                 {`${community.sportName} / ${community.leagueName}`}
               </CustomText>
@@ -61,7 +75,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
             <View className="flex-row items-center">
               <CustomText
                 numberOfLines={2}
-                className="text-white text-[23px]"
+                className="text-white text-[20px]"
                 style={{bottom: 3}}
                 type="titleCenter">
                 {community.koreanName}
@@ -212,7 +226,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 })
               }>
               <CustomText
-                className="text-white text-center text-base"
+                className="text-white text-center text-[14px]"
                 fontWeight="500">
                 글 작성
               </CustomText>
@@ -233,7 +247,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 }
               }}>
               <CustomText
-                className="text-white text-center text-base"
+                className="text-white text-center text-[14px]"
                 fontWeight="500">
                 대표 채팅
               </CustomText>
@@ -252,7 +266,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 }
               }}>
               <CustomText
-                className="text-white text-center text-base"
+                className="text-white text-center text-[14px]"
                 fontWeight="500">
                 경기 일정
               </CustomText>
@@ -319,7 +333,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           }
         }}
       />
-    </>
+    </Animated.View>
   );
 };
 

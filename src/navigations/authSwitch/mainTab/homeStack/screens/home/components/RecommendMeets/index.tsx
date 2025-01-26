@@ -21,7 +21,7 @@ const RecommendMeets = () => {
 
   return (
     <>
-      <CustomText className="text-lg mt-6 mb-1 ml-4" fontWeight="500">
+      <CustomText className="text-lg mt-5 mb-1 ml-4" fontWeight="500">
         {`${user?.name} 님을 위한 추천 모임`}
       </CustomText>
       <View className="mx-[14]">

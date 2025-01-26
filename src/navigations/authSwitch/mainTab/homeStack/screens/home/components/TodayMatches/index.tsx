@@ -1,4 +1,5 @@
 import {MatchDetail} from 'apis/match/types';
+import {useGetMatchesByDate} from 'apis/match/useMatches';
 import CustomText from 'components/common/CustomText';
 import MatchCard from 'components/match/MatchCard';
 import React from 'react';
@@ -8,7 +9,14 @@ interface TodayMatchesProps {
   matches: MatchDetail[];
 }
 
-const TodayMatches = ({matches}: TodayMatchesProps) => {
+const TodayMatches = () => {
+  const today = new Date();
+
+  const {data: matches} = useGetMatchesByDate(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    today.getDate(),
+  );
   return (
     <>
       <CustomText className="text-[18px] mt-8 mb-3 ml-4" fontWeight="500">

@@ -1,22 +1,25 @@
 import * as React from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {deleteFCMToken, getVersionInfo} from 'apis/user';
+import {deleteFCMToken, getUserInfo, getVersionInfo} from 'apis/user';
 import {queryClient} from '../../../App';
 import DeviceInfo from 'react-native-device-info';
 import SplashScreen from 'navigations/authSwitch/screens/SplashScreen';
 import {Linking, Platform} from 'react-native';
 import VersionCheck from 'react-native-version-check';
 import NativeSplash from 'react-native-splash-screen';
-import {useGetMyCommunities} from 'apis/community/useCommunities';
-import FastImage from 'react-native-fast-image';
 import OneButtonModal from 'components/common/OneButtonModal';
 import {VersionInfo} from 'apis/user/types';
 import AuthStackNavigator from './authStack/AuthStackNavigator';
 import MainTabNavigator from './mainTab/MainTabNavigator';
 import {communityKeys} from 'apis/community/queries';
 import {matchKeys} from 'apis/match/queries';
-import {getMyCommunities} from 'apis/community';
+import {getMyCommunities, getPopularPlayers} from 'apis/community';
 import {getMatchesByDate} from 'apis/match';
+import {userKeys} from 'apis/user/queries';
+import {meetKeys} from 'apis/meet/queries';
+import {findRandomFiveMeetsByCondition} from 'apis/meet';
+import {teamKeys} from 'apis/team/queries';
+import {getPopularTeams} from 'apis/team';
 
 interface AuthState {
   isLoading: boolean;
@@ -56,28 +59,51 @@ const AuthSwitch = () => {
         VersionCheck.needUpdate({
           currentVersion,
           latestVersion: data.minSupportedVersion,
-        }).then(res => {
+        }).then(async res => {
           if (res.isNeeded) {
             setIsUpdate(true);
           } else {
             if (accessToken) {
               const today = new Date();
-              queryClient.prefetchQuery({
-                queryKey: communityKeys.listByMy(),
-                queryFn: getMyCommunities,
-              });
-              queryClient.prefetchQuery({
-                queryKey: matchKeys.listByDate(
-                  today.getFullYear(),
-                  today.getMonth() + 1,
-                  today.getDate(),
-                ),
-                queryFn: getMatchesByDate,
-              });
-            }
-            setTimeout(() => {
+              try {
+                await Promise.all([
+                  queryClient.prefetchQuery({
+                    queryKey: communityKeys.listByMy(),
+                    queryFn: getMyCommunities,
+                  }),
+                  queryClient.prefetchQuery({
+                    queryKey: matchKeys.listByDate(
+                      today.getFullYear(),
+                      today.getMonth() + 1,
+                      today.getDate(),
+                    ),
+                    queryFn: getMatchesByDate,
+                  }),
+                  queryClient.prefetchQuery({
+                    queryKey: userKeys.detail(),
+                    queryFn: getUserInfo,
+                  }),
+                  queryClient.prefetchQuery({
+                    queryKey: meetKeys.randomFive(0),
+                    queryFn: findRandomFiveMeetsByCondition,
+                  }),
+                  queryClient.prefetchQuery({
+                    queryKey: teamKeys.popularList(),
+                    queryFn: getPopularTeams,
+                  }),
+                  queryClient.prefetchQuery({
+                    queryKey: communityKeys.popularList(),
+                    queryFn: getPopularPlayers,
+                  }),
+                ]);
+              } catch (error: any) {
+                //
+              } finally {
+                setIsLoading(false);
+              }
+            } else {
               setIsLoading(false);
-            }, 1500);
+            }
           }
         });
       } catch (error) {

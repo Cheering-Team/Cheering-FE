@@ -1,5 +1,11 @@
-import React from 'react';
-import {ActivityIndicator, FlatList, Pressable, View} from 'react-native';
+import React, {useState} from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  RefreshControl,
+  View,
+} from 'react-native';
 import LogoSvg from 'assets/images/logo-text.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MyStarCarousel from 'components/home/MyStarCarousel';
@@ -15,22 +21,91 @@ import FeedPost from 'components/community/FeedPost';
 import RandomCommunityCard from '../../../../../../screens/homeStack/homeTab/components/RandomCommunityCard';
 import TodayMatches from './components/TodayMatches';
 import RecommendMeets from './components/RecommendMeets';
-import {useGetMatchesByDate} from 'apis/match/useMatches';
+import HotTeams from './components/HotTeams';
+import HotPlayers from './components/HotPlayers';
+import {useMainTabScroll} from 'context/useMainTabScroll';
+import Animated, {
+  useAnimatedScrollHandler,
+  withTiming,
+} from 'react-native-reanimated';
+import {queryClient} from '../../../../../../../App';
+import {communityKeys} from 'apis/community/queries';
+import {matchKeys} from 'apis/match/queries';
+import {userKeys} from 'apis/user/queries';
+import {meetKeys} from 'apis/meet/queries';
+import {teamKeys} from 'apis/team/queries';
 
 const HomeScreen = () => {
   useDarkStatusBar();
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const insets = useSafeAreaInsets();
-  const today = new Date();
+  const {scrollY: tabScrollY, previousScrollY} = useMainTabScroll();
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const {data: communities} = useGetMyCommunities(true);
-  const {data: matches} = useGetMatchesByDate(
-    today.getFullYear(),
-    today.getMonth() + 1,
-    today.getDate(),
-  );
-  const {data: posts} = useGetMyHotPosts();
+  const {
+    data: posts,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetMyHotPosts();
+
+  const loadPosts = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const handleRefresh = async () => {
+    const today = new Date();
+    setIsRefreshing(true);
+    refetch();
+    await Promise.all([
+      queryClient.refetchQueries({
+        queryKey: communityKeys.listByMy(),
+      }),
+      queryClient.refetchQueries({
+        queryKey: matchKeys.listByDate(
+          today.getFullYear(),
+          today.getMonth() + 1,
+          today.getDate(),
+        ),
+      }),
+      queryClient.refetchQueries({
+        queryKey: userKeys.detail(),
+      }),
+      queryClient.refetchQueries({
+        queryKey: meetKeys.randomFive(0),
+      }),
+      queryClient.refetchQueries({
+        queryKey: teamKeys.popularList(),
+      }),
+      queryClient.refetchQueries({
+        queryKey: communityKeys.popularList(),
+      }),
+    ]);
+
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  };
+
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    const currentScrollY = event.contentOffset.y;
+
+    if (currentScrollY > previousScrollY.value + 2 && currentScrollY > 0) {
+      tabScrollY.value = withTiming(50);
+    } else if (
+      currentScrollY < previousScrollY.value - 2 &&
+      currentScrollY > 0
+    ) {
+      tabScrollY.value = withTiming(0);
+    }
+    previousScrollY.value = currentScrollY;
+  });
 
   if (!communities) {
     return null;
@@ -54,10 +129,24 @@ const HomeScreen = () => {
         </Pressable>
       </View>
       {communities.length !== 0 ? (
-        <FlatList
+        <Animated.FlatList
           data={posts?.pages.flatMap(page => page.posts)}
           contentContainerStyle={{paddingBottom: insets.bottom + 60}}
           renderItem={({item}) => <FeedPost feed={item} type="community" />}
+          onScroll={scrollHandler}
+          scrollEventThrottle={16}
+          onEndReached={loadPosts}
+          onEndReachedThreshold={1}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+              colors={['#787878']}
+            />
+          }
+          ListFooterComponent={
+            isFetchingNextPage ? <ActivityIndicator /> : null
+          }
           ListHeaderComponent={
             <>
               <View className="flex-row-reverse justify-between items-center px-6 mt-[4] mb-[5]">
@@ -70,13 +159,17 @@ const HomeScreen = () => {
                 </Pressable>
               </View>
               <MyStarCarousel communities={communities} />
-              <TodayMatches matches={matches} />
+              <TodayMatches />
               <RecommendMeets />
-              <CustomText
-                className="text-lg mt-6 mb-2 ml-[14]"
-                fontWeight="500">
-                인기 게시글
-              </CustomText>
+              <HotTeams />
+              <HotPlayers />
+              {posts?.pages.flatMap(page => page.posts).length !== 0 && (
+                <CustomText
+                  className="text-lg mt-5 mb-[10] ml-4"
+                  fontWeight="500">
+                  인기 게시글
+                </CustomText>
+              )}
             </>
           }
         />
