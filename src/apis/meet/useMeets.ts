@@ -8,6 +8,7 @@ import {
   findAllMyMeets,
   findRandomFiveMeetsByCondition,
   getAllMeetsByCommunity,
+  getAllMeetsByCommunityAndMatch,
   getMeetById,
   getMeetMembers,
   leaveMeet,
@@ -42,6 +43,21 @@ export const useGetAllMeetsByCommunity = (filter: GetMeesPayload) => {
   return useInfiniteQuery({
     queryKey: meetKeys.list(filter),
     queryFn: getAllMeetsByCommunity,
+    initialPageParam: 0,
+    getNextPageParam: lastPage => {
+      return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;
+    },
+    retry: false,
+  });
+};
+
+export const useGetAllMeetsByCommunityAndMatch = (
+  communityId: number,
+  matchId: number,
+) => {
+  return useInfiniteQuery({
+    queryKey: meetKeys.listByCommunityAndMatch(communityId, matchId),
+    queryFn: getAllMeetsByCommunityAndMatch,
     initialPageParam: 0,
     getNextPageParam: lastPage => {
       return lastPage.hasNext ? lastPage.pageNumber + 1 : undefined;

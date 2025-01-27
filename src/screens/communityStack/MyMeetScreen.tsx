@@ -160,7 +160,7 @@ const MyMeetScreen = () => {
         }
         renderSectionHeader={({section: {title}}) => (
           <CustomText
-            className="text-[16px] text-slate-800 mt-3 mb-2 mx-3"
+            className="text-[16px] text-slate-800 mt-3 mb-2 mx-1"
             fontWeight="600">
             {title}
           </CustomText>
@@ -196,6 +196,7 @@ const MyMeetScreen = () => {
         contentContainerStyle={{
           paddingTop: insets.top + 45,
           paddingBottom: 100,
+          paddingHorizontal: 10,
         }}
       />
     </View>

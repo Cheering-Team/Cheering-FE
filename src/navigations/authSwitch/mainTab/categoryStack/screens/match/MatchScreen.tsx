@@ -75,7 +75,7 @@ const MatchScreen = () => {
           <VoteList matchId={matchId} community={community} />
         </Tabs.Tab>
         <Tabs.Tab name="모임">
-          <MatchMeetTab matchId={matchId} community={community} />
+          <MatchMeetTab match={match} community={community} />
         </Tabs.Tab>
       </Tabs.Container>
     </KeyboardAvoidingView>

@@ -71,9 +71,7 @@ const VoteList = ({matchId, community}: VoteListProps) => {
         contentContainerStyle={{paddingBottom: insets.bottom + 100}}
         onEndReachedThreshold={1}
         ListHeaderComponent={
-          posts?.pages.flatMap(page => page.posts).length === 0 ? (
-            <View className="h-[52]" />
-          ) : (
+          posts?.pages.flatMap(page => page.posts).length === 0 ? null : (
             <View>
               <Pressable
                 className="flex-row self-end items-center mr-4 mt-3"

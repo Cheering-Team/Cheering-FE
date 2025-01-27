@@ -1,7 +1,4 @@
 import {Community} from 'apis/community/types';
-import {Post} from 'apis/post/types';
-import {useGetVotes} from 'apis/post/usePosts';
-import FeedPost from 'components/community/FeedPost';
 import React, {useState} from 'react';
 import {
   ActivityIndicator,
@@ -11,25 +8,24 @@ import {
   View,
 } from 'react-native';
 import {Tabs} from 'react-native-collapsible-tab-view';
-import SortSvg from 'assets/images/sort.svg';
-import CustomText from 'components/common/CustomText';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
-import PenSvg from 'assets/images/pencil-white.svg';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
-import {useGetAllMeetsByCommunity} from 'apis/meet/useMeets';
+import {useGetAllMeetsByCommunityAndMatch} from 'apis/meet/useMeets';
 import {MeetInfo} from 'apis/meet/types';
 import MeetCard from 'screens/communityStack/community/meetTab/components/MeetCard';
+import {MatchDetail} from 'apis/match/types';
+import PlusSvg from 'assets/images/plus-white.svg';
 
 interface MatchMeetTabProps {
-  matchId: number;
+  match: MatchDetail;
   community: Community;
 }
 
-const MatchMeetTab = ({matchId, community}: MatchMeetTabProps) => {
+const MatchMeetTab = ({match, community}: MatchMeetTabProps) => {
   const insets = useSafeAreaInsets();
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
@@ -43,18 +39,9 @@ const MatchMeetTab = ({matchId, community}: MatchMeetTabProps) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetAllMeetsByCommunity({
-    communityId: community.id,
-    type: 'LIVE',
-    gender: 'ANY',
-    minAge: 13,
-    maxAge: 45,
-    ticketOption: 'ALL',
-    matchId,
-    keyword: '',
-  });
+  } = useGetAllMeetsByCommunityAndMatch(community.id, match.id);
 
-  const loadPosts = () => {
+  const loadMeets = () => {
     if (hasNextPage) {
       fetchNextPage();
     }
@@ -86,8 +73,11 @@ const MatchMeetTab = ({matchId, community}: MatchMeetTabProps) => {
       <Tabs.FlatList
         data={meets?.pages.flatMap(page => page.meets) || []}
         renderItem={renderItem}
-        onEndReached={loadPosts}
-        contentContainerStyle={{paddingBottom: insets.bottom + 100}}
+        onEndReached={loadMeets}
+        contentContainerStyle={{
+          paddingBottom: insets.bottom + 100,
+          paddingHorizontal: 10,
+        }}
         onEndReachedThreshold={1}
         refreshControl={
           <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
@@ -99,8 +89,23 @@ const MatchMeetTab = ({matchId, community}: MatchMeetTabProps) => {
             <ListEmpty type="booking" />
           )
         }
+        ListHeaderComponent={<View className="h-2" />}
         ListFooterComponent={isFetchingNextPage ? <ActivityIndicator /> : null}
       />
+      <Pressable
+        onPress={() => navigation.navigate('CreateMeet', {community})}
+        className="absolute p-[11] rounded-full z-50"
+        style={{
+          backgroundColor: community.color,
+          bottom: insets.bottom + 15,
+          right: 12,
+          shadowColor: '#000',
+          shadowOffset: {width: 0, height: 0},
+          shadowOpacity: 0.3,
+          shadowRadius: 2,
+        }}>
+        <PlusSvg width={23} height={23} />
+      </Pressable>
     </>
   );
 };
