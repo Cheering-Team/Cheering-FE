@@ -8,6 +8,7 @@ import {BottomSheetModalMethods} from '@gorhom/bottom-sheet/lib/typescript/types
 import LoadingOverlay from 'components/common/LoadingOverlay';
 import {Community} from 'apis/community/types';
 import {useJoinCommunity} from 'apis/community/useCommunities';
+import {useGetUserInfo} from 'apis/user/useUsers';
 
 interface Props {
   community: Community;
@@ -22,6 +23,13 @@ const JoinProfile = (props: Props) => {
   const [nicknameInvalidMessage, setNicknameInvalidMessage] = useState('');
 
   const {mutateAsync: joinCommunity, isPending} = useJoinCommunity();
+  const {data: profile} = useGetUserInfo();
+
+  useEffect(() => {
+    if (profile) {
+      setNickname(profile?.name);
+    }
+  }, [profile]);
 
   const handleJoinCommunity = async () => {
     if (!NAME_REGEX.test(nickname)) {

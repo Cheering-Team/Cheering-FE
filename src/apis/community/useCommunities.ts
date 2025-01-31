@@ -1,4 +1,9 @@
-import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueries,
+  useQuery,
+} from '@tanstack/react-query';
 import {
   changeCommunityOrder,
   getCommunityById,
@@ -26,6 +31,16 @@ export const useGetCommunityById = (communityId: number) => {
     queryKey: communityKeys.detail(communityId),
     queryFn: getCommunityById,
     retry: false,
+  });
+};
+
+export const useGetCommunitiesByIds = (communityIds: number[] | null) => {
+  return useQueries({
+    queries: (communityIds ?? []).map(id => ({
+      queryKey: communityKeys.detail(id),
+      queryFn: getCommunityById,
+      retry: false,
+    })),
   });
 };
 
