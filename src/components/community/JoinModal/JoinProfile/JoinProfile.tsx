@@ -35,7 +35,7 @@ const JoinProfile = (props: Props) => {
     if (!NAME_REGEX.test(nickname)) {
       setIsValid(false);
       setNicknameInvalidMessage(
-        '2자~10자, 한글 영어 숫자 . _ 만 사용 가능합니다.',
+        '2자~15자, 한글 영어 숫자 . _ 만 사용 가능합니다.',
       );
       return;
     }
@@ -81,7 +81,7 @@ const JoinProfile = (props: Props) => {
           value={nickname}
           isValid={isValid}
           inValidMessage={nicknameInvalidMessage}
-          maxLength={10}
+          maxLength={15}
           length
           curLength={nickname.length}
           onChangeText={e => {

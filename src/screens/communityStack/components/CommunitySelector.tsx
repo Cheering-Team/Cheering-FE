@@ -6,6 +6,7 @@ import {FlatList, ListRenderItem, Modal, Pressable, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import SelectorItem from './SelectorItem';
+import {WINDOW_HEIGHT} from 'constants/dimension';
 
 export interface CommunityOption {
   id: number;
@@ -52,12 +53,16 @@ const CommunitySelector = ({community}: CommunitySelectorProps) => {
             }}>
             <FlatList
               inverted
+              style={{
+                bottom: insets.bottom + 114,
+              }}
               data={[
                 ...communities.filter(value => value.id !== community.id),
                 {id: 0, koreanName: '수정하기', image: ''},
               ]}
+              showsVerticalScrollIndicator={false}
               contentContainerStyle={{
-                paddingTop: insets.bottom + 114,
+                paddingBottom: insets.top + 150,
               }}
               renderItem={renderItem}
             />

@@ -147,6 +147,7 @@ export const useLeaveCommunity = () => {
     onSuccess: () => {
       showTopToast({message: '탈퇴 완료'});
       navigation.navigate('Home');
+      queryClient.removeQueries({queryKey: communityKeys.details()});
       queryClient.invalidateQueries();
     },
   });
