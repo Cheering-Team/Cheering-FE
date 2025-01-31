@@ -48,11 +48,45 @@ const AuthSwitch = () => {
     null,
   );
 
+  const [state, dispatch] = React.useReducer(
+    (prevState: AuthState, action: AuthAction): AuthState => {
+      switch (action.type) {
+        case 'RESTORE_TOKEN':
+          return {
+            ...prevState,
+            accessToken: action.access,
+            refreshToken: action.refresh,
+            isLoading: false,
+          };
+        case 'SIGN_IN':
+          return {
+            ...prevState,
+            isSignout: false,
+            isLoading: false,
+            accessToken: action.access,
+            refreshToken: action.refresh,
+          };
+        case 'SIGN_OUT':
+          return {
+            ...prevState,
+            accessToken: null,
+            refreshToken: null,
+            isLoading: false,
+            isSignout: true,
+          };
+        default:
+          return prevState;
+      }
+    },
+    {isLoading: true, isSignout: false, accessToken: null, refreshToken: null},
+  );
+
   React.useEffect(() => {
     NativeSplash.hide();
     const checkVersion = async () => {
       try {
         const data = await getVersionInfo();
+
         setVersionInfo(data);
         const currentVersion = VersionCheck.getCurrentVersion();
         const accessToken = await EncryptedStorage.getItem('accessToken');
@@ -107,62 +141,14 @@ const AuthSwitch = () => {
           }
         });
       } catch (error) {
-        console.error(error);
+        //
+      } finally {
+        setIsLoading(false);
       }
     };
 
     checkVersion();
   }, []);
-
-  // React.useEffect(() => {
-  //   if (communities) {
-  //     if (communities.length) {
-  //       if (communities[0].backgroundImage) {
-  //         FastImage.preload([{uri: communities[0].backgroundImage}]);
-  //       }
-  //       if (communities[0].image) {
-  //         FastImage.preload([{uri: communities[0].image}]);
-  //       }
-  //     }
-
-  //     setTimeout(() => {
-  //       setIsLoading(false);
-  //     }, 1500);
-  //   }
-  // }, [communities]);
-
-  const [state, dispatch] = React.useReducer(
-    (prevState: AuthState, action: AuthAction): AuthState => {
-      switch (action.type) {
-        case 'RESTORE_TOKEN':
-          return {
-            ...prevState,
-            accessToken: action.access,
-            refreshToken: action.refresh,
-            isLoading: false,
-          };
-        case 'SIGN_IN':
-          return {
-            ...prevState,
-            isSignout: false,
-            isLoading: false,
-            accessToken: action.access,
-            refreshToken: action.refresh,
-          };
-        case 'SIGN_OUT':
-          return {
-            ...prevState,
-            accessToken: null,
-            refreshToken: null,
-            isLoading: false,
-            isSignout: true,
-          };
-        default:
-          return prevState;
-      }
-    },
-    {isLoading: true, isSignout: false, accessToken: null, refreshToken: null},
-  );
 
   React.useEffect(() => {
     const restoreTokenAsync = async () => {
@@ -204,11 +190,12 @@ const AuthSwitch = () => {
         try {
           const deviceId = await DeviceInfo.getUniqueId();
           await deleteFCMToken({deviceId});
+        } catch (e) {
+          //
+        } finally {
           queryClient.removeQueries();
           await EncryptedStorage.removeItem('accessToken');
           await EncryptedStorage.removeItem('refreshToken');
-        } catch (e) {
-          // 에러 처리
         }
         dispatch({type: 'SIGN_OUT'});
       },

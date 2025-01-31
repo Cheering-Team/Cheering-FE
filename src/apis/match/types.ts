@@ -20,6 +20,7 @@ export interface MatchDetail {
   awayTeam: Team;
   sportName: string;
   meet: MeetInfo | null;
+  relatedCommunityIds: number[];
 }
 
 export type MatchStatus =
