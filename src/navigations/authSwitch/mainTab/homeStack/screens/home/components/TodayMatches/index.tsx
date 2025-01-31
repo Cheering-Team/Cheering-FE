@@ -1,13 +1,8 @@
-import {MatchDetail} from 'apis/match/types';
 import {useGetMatchesByDate} from 'apis/match/useMatches';
 import CustomText from 'components/common/CustomText';
 import MatchCard from 'components/match/MatchCard';
 import React from 'react';
 import {Pressable, View} from 'react-native';
-
-interface TodayMatchesProps {
-  matches: MatchDetail[];
-}
 
 const TodayMatches = () => {
   const today = new Date();

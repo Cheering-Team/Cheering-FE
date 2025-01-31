@@ -16,6 +16,9 @@ import {useNavigation} from '@react-navigation/native';
 import {showTopToast} from 'utils/toast';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from 'navigations/authSwitch/mainTab/homeStack/HomeStackNavigator';
+import {matchKeys} from 'apis/match/queries';
+import {meetKeys} from 'apis/meet/queries';
+import {postKeys} from 'apis/post/queries';
 
 // 커뮤니티 조회
 export const useGetCommunityById = (communityId: number) => {
@@ -49,9 +52,23 @@ export const useJoinCommunity = () => {
   return useMutation({
     mutationFn: joinCommunity,
     onSuccess: (_, {communityId}) => {
+      const today = new Date();
       queryClient.invalidateQueries({queryKey: communityKeys.lists()});
       queryClient.invalidateQueries({
         queryKey: communityKeys.detail(communityId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: matchKeys.listByDate(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate(),
+        ),
+      });
+      queryClient.invalidateQueries({
+        queryKey: meetKeys.randomFive(0),
+      });
+      queryClient.invalidateQueries({
+        queryKey: postKeys.listMyHot(),
       });
     },
   });

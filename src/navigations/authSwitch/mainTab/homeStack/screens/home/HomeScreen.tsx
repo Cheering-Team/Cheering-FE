@@ -1,11 +1,5 @@
 import React, {useState} from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  RefreshControl,
-  View,
-} from 'react-native';
+import {ActivityIndicator, Pressable, RefreshControl, View} from 'react-native';
 import LogoSvg from 'assets/images/logo-text.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MyStarCarousel from 'components/home/MyStarCarousel';
