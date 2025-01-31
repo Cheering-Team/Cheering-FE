@@ -4,7 +4,7 @@ import {Chat, ChatRoom} from 'apis/chat/types';
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_WIDTH} from 'constants/dimension';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React from 'react';
 import {Pressable, View} from 'react-native';
 import {formatDay, formatAmPmTime} from 'utils/format';

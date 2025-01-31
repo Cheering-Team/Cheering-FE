@@ -4,7 +4,7 @@ import {MatchDetail} from 'apis/match/types';
 import {useGetUnfinishedMatches} from 'apis/match/useMatches';
 import CustomText from 'components/common/CustomText';
 import StackHeader from 'components/common/StackHeader';
-import {AdminStackParamList} from 'navigations/AdminStackNavigator';
+import {AdminStackParamList} from 'navigations/adminStack/AdminStackNavigator';
 import React from 'react';
 import {
   FlatList,

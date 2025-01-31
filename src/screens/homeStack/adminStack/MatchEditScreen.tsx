@@ -3,7 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useEditMatch, useGetMatchDetail} from 'apis/match/useMatches';
 import CustomText from 'components/common/CustomText';
 import StackHeader from 'components/common/StackHeader';
-import {AdminStackParamList} from 'navigations/AdminStackNavigator';
+import {AdminStackParamList} from 'navigations/adminStack/AdminStackNavigator';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   ActivityIndicator,

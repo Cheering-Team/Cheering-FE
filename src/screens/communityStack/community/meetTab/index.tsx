@@ -4,7 +4,7 @@ import {Community} from 'apis/community/types';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
 import {useMainTabScroll} from 'context/useMainTabScroll';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {MutableRefObject, useRef, useState} from 'react';
 import {
   FlatList,
@@ -181,7 +181,10 @@ const MeetTab = ({
       <MeetCard
         meet={item}
         onPress={() => {
-          navigation.navigate('MeetRecruit', {meetId: item.id, community});
+          navigation.navigate('MeetRecruit', {
+            meetId: item.id,
+            communityId: community.id,
+          });
         }}
       />
     );
@@ -215,6 +218,7 @@ const MeetTab = ({
           marginTop: HEADER_HEIGHT,
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
           paddingBottom: insets.bottom + 200,
+          paddingHorizontal: 10,
         }}
         scrollIndicatorInsets={{
           top: 110 + insets.top,
@@ -240,7 +244,7 @@ const MeetTab = ({
         }
         ListHeaderComponent={
           <View>
-            <View className="bg-[#ececec] mx-[10] my-2 border border-slate-300 rounded-t-[6px] rounded-b-[6px]">
+            <View className="bg-[#ececec] my-2 border border-slate-300 rounded-t-[6px] rounded-b-[6px]">
               <View className="flex-row">
                 <Pressable
                   className="flex-1 justify-center items-center py-[3] border-r border-slate-300 rounded-tl-[4px]"
@@ -315,7 +319,6 @@ const MeetTab = ({
               style={{marginBottom: 5}}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{
-                paddingHorizontal: 10,
                 alignItems: 'center',
               }}>
               {(match ||
@@ -567,11 +570,11 @@ const MeetTab = ({
       <Animated.View style={{opacity: buttonOpacity}}>
         <Pressable
           onPress={handleMyButton}
-          className="absolute rounded-full z-50 w-[43] h-[43] justify-center items-center border border-gray-200 shadow-sm shadow-gray-200"
+          className="absolute rounded-full z-50 w-[44] h-[44] justify-center items-center border border-gray-200 shadow-sm shadow-gray-200"
           style={{
             backgroundColor: 'white',
-            bottom: insets.bottom + 112,
-            right: 12,
+            bottom: insets.bottom + 162,
+            right: 12.5,
           }}>
           <CustomText
             fontWeight="600"
@@ -585,8 +588,8 @@ const MeetTab = ({
           className="absolute rounded-full z-50 w-[43] h-[43] justify-center items-center"
           style={{
             backgroundColor: community.color,
-            bottom: insets.bottom + 57,
-            right: 12,
+            bottom: insets.bottom + 112,
+            right: 13,
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.3,

@@ -3,7 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {ChatRoom} from 'apis/chat/types';
 import ChatCard from 'components/common/ChatCard';
 import CustomText from 'components/common/CustomText';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React from 'react';
 import {View} from 'react-native';
 

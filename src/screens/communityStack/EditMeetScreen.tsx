@@ -5,7 +5,7 @@ import {useEditMeet, useGetMeetById} from 'apis/meet/useMeets';
 import BasicTextInput from 'components/common/BasicTextInput';
 import CCHeader from 'components/common/CCHeader';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';

@@ -1,41 +1,51 @@
 import CustomText from 'components/common/CustomText';
 import React, {useRef} from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {Animated, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MoreSvg from '../../../assets/images/three-dots-vertical-white.svg';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import OptionModal from 'components/common/OptionModal';
-import {useGetNextMatch} from 'apis/match/useMatches';
 import {Community} from 'apis/community/types';
-import {formatDate} from 'utils/format';
+import {HomeStackParamList} from 'navigations/authSwitch/mainTab/homeStack/HomeStackNavigator';
+import {WINDOW_WIDTH} from 'constants/dimension';
 interface MyStarCardProps {
   community: Community;
+  index: number;
+  scrollX: Animated.Value;
 }
 
-const MyStarCard = ({community}: MyStarCardProps) => {
+const MyStarCard = ({community, index, scrollX}: MyStarCardProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
-
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const {data: match} = useGetNextMatch(community.id);
+  const inputRange = [
+    (index - 1) * (WINDOW_WIDTH * 0.9),
+    index * (WINDOW_WIDTH * 0.9),
+    (index + 1) * (WINDOW_WIDTH * 0.9),
+  ];
+
+  const scale = scrollX.interpolate({
+    inputRange,
+    outputRange: [0.95, 1, 0.95],
+  });
 
   return (
-    <>
+    <Animated.View style={[{transform: [{scale}]}]}>
       <TouchableOpacity
         activeOpacity={1}
-        className="bg-white rounded-2xl p-5 w-full h-full justify-between"
+        className="bg-white rounded-2xl p-[14] pb-[10] w-full h-full justify-between"
         style={{
           shadowColor: '#464646',
           shadowOffset: {width: 2, height: 2},
           shadowOpacity: 0.7,
           shadowRadius: 4,
           elevation: 5,
+          width: WINDOW_WIDTH * 0.9,
         }}
         onPress={() =>
           navigation.navigate('CommunityStack', {
@@ -50,14 +60,14 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           <View className="flex-1">
             {community.type === 'PLAYER' ? (
               <CustomText
-                className="text-white text-[16px] ml-[2] mb-[5]"
-                fontWeight="600">
+                className="text-white text-[13px] mb-[4]"
+                fontWeight="500">
                 {community.englishName}
               </CustomText>
             ) : (
               <CustomText
-                className="text-white text-[16px] ml-[2] mb-[5]"
-                fontWeight="600">
+                className="text-white text-[13px] mb-[4]"
+                fontWeight="500">
                 {`${community.sportName} / ${community.leagueName}`}
               </CustomText>
             )}
@@ -65,7 +75,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
             <View className="flex-row items-center">
               <CustomText
                 numberOfLines={2}
-                className="text-white text-[26px]"
+                className="text-white text-[20px]"
                 style={{bottom: 3}}
                 type="titleCenter">
                 {community.koreanName}
@@ -216,7 +226,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 })
               }>
               <CustomText
-                className="text-white text-center text-base"
+                className="text-white text-center text-[14px]"
                 fontWeight="500">
                 글 작성
               </CustomText>
@@ -237,7 +247,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
                 }
               }}>
               <CustomText
-                className="text-white text-center text-base"
+                className="text-white text-center text-[14px]"
                 fontWeight="500">
                 대표 채팅
               </CustomText>
@@ -250,13 +260,13 @@ const MyStarCard = ({community}: MyStarCardProps) => {
               onPress={() => {
                 if (community.curFan) {
                   navigation.navigate('CommunityStack', {
-                    screen: 'Schedule',
-                    params: {communityId: community.id},
+                    screen: 'Community',
+                    params: {communityId: community.id, initialIndex: 3},
                   });
                 }
               }}>
               <CustomText
-                className="text-white text-center text-base"
+                className="text-white text-center text-[14px]"
                 fontWeight="500">
                 경기 일정
               </CustomText>
@@ -283,7 +293,7 @@ const MyStarCard = ({community}: MyStarCardProps) => {
           />
         )}
         <LinearGradient
-          colors={['rgba(0, 0, 0, 0.6)', 'rgba(0, 0, 0, 0.6)']}
+          colors={['rgba(0, 0, 0, 0.65)', 'rgba(0, 0, 0, 0.65)']}
           className="rounded-2xl"
           style={{
             ...StyleSheet.absoluteFillObject,
@@ -317,13 +327,13 @@ const MyStarCard = ({community}: MyStarCardProps) => {
         thirdOnPress={() => {
           if (community.curFan) {
             navigation.navigate('CommunityStack', {
-              screen: 'DeleteFan',
-              params: {fanId: community.curFan.id},
+              screen: 'LeaveCommunity',
+              params: {communityId: community.id},
             });
           }
         }}
       />
-    </>
+    </Animated.View>
   );
 };
 

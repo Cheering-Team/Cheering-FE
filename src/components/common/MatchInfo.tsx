@@ -40,8 +40,7 @@ const MatchInfo = ({
         />
         <CustomText
           type="title"
-          className="absolute text-white left-[6] bottom-0 text-lg"
-          style={{width: match.status !== 'not_started' ? 100 : 140}}>
+          className="absolute text-white left-[6] bottom-0 text-lg">
           {match.homeTeam.shortName}
         </CustomText>
         <View
@@ -82,8 +81,7 @@ const MatchInfo = ({
         />
         <CustomText
           type="title"
-          className="absolute text-white right-[6] bottom-0 text-lg text-right"
-          style={{width: match.status !== 'not_started' ? 100 : 140}}>
+          className="absolute text-white right-[6] bottom-0 text-lg text-right flex-1">
           {match.awayTeam.shortName}
         </CustomText>
         <CustomText

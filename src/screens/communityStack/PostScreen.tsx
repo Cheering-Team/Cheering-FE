@@ -21,7 +21,7 @@ import PostImage from '../../components/post/PostImage';
 import {useGetComments} from '../../apis/comment/useComments';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import {useGetPostById} from 'apis/post/usePosts';
 import CommentSkeleton from 'components/skeleton/CommentSkeleton';

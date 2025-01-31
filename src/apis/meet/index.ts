@@ -51,6 +51,20 @@ export const getAllMeetsByCommunity = async ({
   return response.data.result;
 };
 
+export const getAllMeetsByCommunityAndMatch = async ({
+  queryKey,
+  pageParam = 0,
+}: {
+  queryKey: ReturnType<typeof meetKeys.listByCommunityAndMatch>;
+  pageParam: number;
+}) => {
+  const [, , {communityId, matchId}] = queryKey;
+  const response = await axiosInstance.get<ApiResponse<GetMeetsResponse>>(
+    `/communities/${communityId}/matches/${matchId}/meets?page=${pageParam}&size=20`,
+  );
+  return response.data.result;
+};
+
 export const getMeetMembers = async ({
   queryKey,
 }: {

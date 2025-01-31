@@ -8,7 +8,7 @@ import {View} from 'react-native';
 import {formatBarDate, formatMonthDay} from 'utils/format';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 
 interface DailyCardProps {
   daily: Post;

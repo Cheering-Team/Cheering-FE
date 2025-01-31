@@ -4,7 +4,7 @@ import {useGetMeetMembers} from 'apis/meet/useMeets';
 import CCHeader from 'components/common/CCHeader';
 import CustomText from 'components/common/CustomText';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React from 'react';
 import {
   SectionList,

@@ -13,7 +13,7 @@ import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../../../constants/dimension';
 import WriteHeader from '../../../components/post/write/WriteHeader';
 import WriteFooter from '../../../components/post/write/WriteFooter';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from '../../../navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from '../../../navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {RouteProp} from '@react-navigation/native';
 import {TagType, VotePayload} from '../../../apis/post/types';
 import {useEditPost, useWritePost} from '../../../apis/post/usePosts';

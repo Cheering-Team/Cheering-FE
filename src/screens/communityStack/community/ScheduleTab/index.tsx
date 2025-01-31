@@ -171,7 +171,6 @@ const ScheduleTab = ({
       onMomentumScrollEnd={onMomentumScrollEnd}
       onScrollEndDrag={onScrollEndDrag}
       contentContainerStyle={{
-        backgroundColor: '#F5F4F5',
         paddingTop: HEADER_HEIGHT,
         minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
       }}

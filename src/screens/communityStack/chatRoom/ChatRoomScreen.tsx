@@ -25,7 +25,7 @@ import {
 import {Chat, ChatResponse} from 'apis/chat/types';
 import {Drawer} from 'react-native-drawer-layout';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import ChatRoomDrawerContent from './components/ChatRoomDrawerContent';
 import ChatRoomHeader from './components/ChatRoomHeader';
 import ChatRoomFooter from './components/ChatRoomFooter';

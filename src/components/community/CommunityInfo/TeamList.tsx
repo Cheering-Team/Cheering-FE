@@ -3,7 +3,7 @@ import {FlatList, Pressable, StyleSheet, View} from 'react-native';
 import CustomText from '../../common/CustomText';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import FastImage from 'react-native-fast-image';
 import {useGetTeamsByPlayer} from 'apis/team/useTeams';
 

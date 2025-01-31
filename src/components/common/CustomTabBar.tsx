@@ -8,8 +8,6 @@ import ChatGraySvg from '../../assets/images/chat-gray.svg';
 import ChatBlackSvg from '../../assets/images/chat-black.svg';
 import MoreGraySvg from '../../assets/images/more-gray.svg';
 import MoreBlackSvg from '../../assets/images/more-black.svg';
-import AlertBlackSvg from 'assets/images/alert.svg';
-import AlertGraySvg from 'assets/images/alert-gray.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CustomText from './CustomText';
 import {getActiveRouteName} from '../../utils/getActiveRouteName';
@@ -52,10 +50,10 @@ function CustomTabBar({state, descriptors, navigation}) {
           routeName === 'Post' ||
           routeName === 'Search' ||
           routeName === 'EditName' ||
-          routeName === 'DeleteUser' ||
+          routeName === 'LeaveCommunity' ||
           routeName === 'Profile' ||
           routeName === 'ProfileEdit' ||
-          routeName === 'DeleteFan' ||
+          routeName === 'DeleteUser' ||
           routeName === 'ChatRoom' ||
           routeName === 'CreateChatRoom' ||
           routeName === 'ChatRoomEnter' ||

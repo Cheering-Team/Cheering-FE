@@ -3,7 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Community} from 'apis/community/types';
 import {MatchSchedule} from 'apis/match/types';
 import CustomText from 'components/common/CustomText';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {memo} from 'react';
 import {Dimensions, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -52,13 +52,13 @@ const CustomDay = ({data, dateString, day, community}: CustomDayProps) => {
               });
             }}
             key={match.id}
-            className="rounded-[3px]"
+            className="rounded-[8px]"
             style={{
               backgroundColor: match.isHome
-                ? `${community.color}40`
+                ? `${community.color}0C`
                 : undefined,
               borderWidth: match.isHome ? 1 : 0,
-              borderColor: `${community.color}60`,
+              borderColor: `${community.color}`,
             }}>
             <FastImage
               source={{uri: match.opponentImage}}

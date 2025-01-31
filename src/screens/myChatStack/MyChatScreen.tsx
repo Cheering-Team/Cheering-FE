@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {FlatList, ListRenderItem, StatusBar, View} from 'react-native';
+import {FlatList, ListRenderItem, View} from 'react-native';
 import {SafeAreaView} from 'react-native';
 import {
   useGetMyChatRooms,
@@ -22,7 +22,6 @@ import {
 } from 'react-native-reanimated';
 import {PanGesture} from 'react-native-gesture-handler';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {MyChatStackParamList} from 'navigations/MyChatStackNavigator';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {useWebSocket} from 'context/useWebSocket';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
@@ -31,6 +30,7 @@ import {chatKeys, chatRoomKeys} from 'apis/chat/queries';
 import {useIsMutating} from '@tanstack/react-query';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
+import {MyChatStackParamList} from 'navigations/authSwitch/mainTab/myChatStack/MyChatStackNavigator';
 
 const MyChatScreen = () => {
   useDarkStatusBar();

@@ -1,4 +1,9 @@
-import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueries,
+  useQuery,
+} from '@tanstack/react-query';
 import {
   changeCommunityOrder,
   getCommunityById,
@@ -7,12 +12,18 @@ import {
   getRandomCommunity,
   joinCommunities,
   joinCommunity,
+  leaveCommunity,
   searchPlayers,
 } from './index';
 import {communityKeys} from './queries';
 import {queryClient} from '../../../App';
 import {useNavigation} from '@react-navigation/native';
 import {showTopToast} from 'utils/toast';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {HomeStackParamList} from 'navigations/authSwitch/mainTab/homeStack/HomeStackNavigator';
+import {matchKeys} from 'apis/match/queries';
+import {meetKeys} from 'apis/meet/queries';
+import {postKeys} from 'apis/post/queries';
 
 // 커뮤니티 조회
 export const useGetCommunityById = (communityId: number) => {
@@ -20,6 +31,16 @@ export const useGetCommunityById = (communityId: number) => {
     queryKey: communityKeys.detail(communityId),
     queryFn: getCommunityById,
     retry: false,
+  });
+};
+
+export const useGetCommunitiesByIds = (communityIds: number[] | null) => {
+  return useQueries({
+    queries: (communityIds ?? []).map(id => ({
+      queryKey: communityKeys.detail(id),
+      queryFn: getCommunityById,
+      retry: false,
+    })),
   });
 };
 
@@ -46,9 +67,23 @@ export const useJoinCommunity = () => {
   return useMutation({
     mutationFn: joinCommunity,
     onSuccess: (_, {communityId}) => {
+      const today = new Date();
       queryClient.invalidateQueries({queryKey: communityKeys.lists()});
       queryClient.invalidateQueries({
         queryKey: communityKeys.detail(communityId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: matchKeys.listByDate(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate(),
+        ),
+      });
+      queryClient.invalidateQueries({
+        queryKey: meetKeys.randomFive(0),
+      });
+      queryClient.invalidateQueries({
+        queryKey: postKeys.listMyHot(),
       });
     },
   });
@@ -100,5 +135,19 @@ export const useGetPopularPlayers = () => {
   return useQuery({
     queryKey: communityKeys.popularList(),
     queryFn: getPopularPlayers,
+  });
+};
+
+// 커뮤니티 탈퇴하기
+export const useLeaveCommunity = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+  return useMutation({
+    mutationFn: leaveCommunity,
+    onSuccess: () => {
+      showTopToast({message: '탈퇴 완료'});
+      navigation.navigate('Home');
+      queryClient.invalidateQueries();
+    },
   });
 };

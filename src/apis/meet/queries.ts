@@ -4,6 +4,8 @@ export const meetKeys = {
   all: ['meets'] as const,
   lists: () => [...meetKeys.all, 'list'] as const,
   list: (filter: GetMeesPayload) => [...meetKeys.lists(), filter] as const,
+  listByCommunityAndMatch: (communityId: number, matchId: number) =>
+    [...meetKeys.lists(), {communityId, matchId}] as const,
   my: (communityId: number, pastFiltering: boolean) =>
     [...meetKeys.lists(), 'my', {communityId, pastFiltering}] as const,
   randomFive: (communityId: number) =>

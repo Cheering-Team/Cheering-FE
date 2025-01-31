@@ -3,7 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useFindAllMyMeets} from 'apis/meet/useMeets';
 import CCHeader from 'components/common/CCHeader';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {useState} from 'react';
 import {
   ActivityIndicator,
@@ -160,7 +160,7 @@ const MyMeetScreen = () => {
         }
         renderSectionHeader={({section: {title}}) => (
           <CustomText
-            className="text-[16px] text-slate-800 mt-3 mb-2 mx-3"
+            className="text-[16px] text-slate-800 mt-3 mb-2 mx-1"
             fontWeight="600">
             {title}
           </CustomText>
@@ -187,7 +187,7 @@ const MyMeetScreen = () => {
               } else {
                 navigation.navigate('MeetRecruit', {
                   meetId: item.id,
-                  community,
+                  communityId: community.id,
                 });
               }
             }}
@@ -196,6 +196,7 @@ const MyMeetScreen = () => {
         contentContainerStyle={{
           paddingTop: insets.top + 45,
           paddingBottom: 100,
+          paddingHorizontal: 10,
         }}
       />
     </View>

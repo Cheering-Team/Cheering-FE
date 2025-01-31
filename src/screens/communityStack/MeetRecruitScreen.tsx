@@ -2,7 +2,7 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import CustomText from 'components/common/CustomText';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {useState} from 'react';
 import {Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -17,24 +17,15 @@ import MatchInfo from 'components/common/MatchInfo';
 import {useIsAgeAndGenderSet} from 'apis/user/useUsers';
 import MeetProfileModal from './community/meetTab/components/MeetProfileModal';
 import OneButtonModal from 'components/common/OneButtonModal';
+import {useGetCommunityById} from 'apis/community/useCommunities';
 
 const MeetRecruitScreen = () => {
   useDarkStatusBar();
-  const {meetId, community} =
+  const {meetId, communityId} =
     useRoute<RouteProp<CommunityStackParamList, 'MeetRecruit'>>().params;
   const navigation =
     useNavigation<NativeStackNavigationProp<CommunityStackParamList>>();
   const insets = useSafeAreaInsets();
-
-  const [isAgeGenderModalOpen, setIsAgeGenderModalOpen] = useState(false);
-  const [isExceeded, setIsExceeded] = useState(false);
-  const [initialStep, setInitialStep] = useState<'info' | 'profile'>('info');
-  const [isRestrictedMatchModal, setIsRestrictedMatchModal] = useState(false);
-
-  const {data: meet} = useGetMeetById(meetId);
-  const {mutateAsync: register} = useCreatePrivateChatRoom();
-  const {refetch: isAgeGenderSetRefetch} = useIsAgeAndGenderSet(community.id);
-
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
@@ -42,11 +33,21 @@ const MeetRecruitScreen = () => {
     },
   });
 
+  const [isAgeGenderModalOpen, setIsAgeGenderModalOpen] = useState(false);
+  const [isExceeded, setIsExceeded] = useState(false);
+  const [initialStep, setInitialStep] = useState<'info' | 'profile'>('info');
+  const [isRestrictedMatchModal, setIsRestrictedMatchModal] = useState(false);
+
+  const {data: community} = useGetCommunityById(communityId);
+  const {data: meet} = useGetMeetById(meetId);
+  const {mutateAsync: register} = useCreatePrivateChatRoom();
+  const {refetch: isAgeGenderSetRefetch} = useIsAgeAndGenderSet(communityId);
+
   const handleRegister = async () => {
     const response = await isAgeGenderSetRefetch();
     if (response.data === 'BOTH') {
       try {
-        const data = await register({communityId: community.id, meetId});
+        const data = await register({communityId, meetId});
         navigation.navigate('ChatRoom', {
           chatRoomId: data.chatRoomId,
           type: 'PRIVATE',
@@ -124,7 +125,7 @@ const MeetRecruitScreen = () => {
             onPress={() => {
               navigation.navigate('Match', {
                 matchId: meet.match.id,
-                communityId: community.id,
+                communityId: communityId,
               });
             }}>
             <MatchInfo match={meet.match} height={65} radius={3} />
@@ -181,7 +182,7 @@ const MeetRecruitScreen = () => {
           onPress={() => {
             navigation.navigate('Meet', {
               meetId: meet.id,
-              communityId: community.id,
+              communityId: communityId,
             });
           }}>
           <CustomText className="text-white text-[17px]" fontWeight="500">
@@ -201,15 +202,15 @@ const MeetRecruitScreen = () => {
 
       {isAgeGenderModalOpen && (
         <MeetProfileModal
-          communityId={community.id}
+          communityId={communityId}
           initialStep={initialStep}
-          initialName={community.curFan?.name}
+          initialName={community?.curFan?.name}
           firstCallback={() => {
             setIsAgeGenderModalOpen(false);
           }}
           secondCallback={async () => {
             try {
-              const data = await register({communityId: community.id, meetId});
+              const data = await register({communityId: communityId, meetId});
               navigation.navigate('ChatRoom', {
                 chatRoomId: data.chatRoomId,
                 type: 'PRIVATE',

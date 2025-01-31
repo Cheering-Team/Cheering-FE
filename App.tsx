@@ -1,6 +1,6 @@
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import AuthSwitch from './src/navigations/AuthSwitch';
+import AuthSwitch from './src/navigations/authSwitch/AuthSwitch';
 import {StatusBar, Text, TextInput} from 'react-native';
 import {navigationRef} from './src/navigations/RootNavigation';
 import Toast, {ToastConfigParams} from 'react-native-toast-message';

@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Avatar from '../../common/Avatar';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {Community} from 'apis/community/types';
 import Animated, {
   Extrapolation,

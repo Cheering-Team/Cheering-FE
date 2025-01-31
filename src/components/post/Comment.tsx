@@ -16,7 +16,7 @@ import CommentWriter from '../comment/CommentWriter';
 import {Comment as CommentType} from '../../apis/comment/types';
 import {IdName} from 'apis/types';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {queryClient} from '../../../App';
 import {commentKeys} from 'apis/comment/queries';
