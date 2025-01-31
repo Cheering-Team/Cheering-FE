@@ -17,7 +17,7 @@ const HotVote = ({community, vote}: HotVoteProps) => {
         지금 핫한 투표
       </CustomText>
       {vote ? (
-        <View className="bg-white px-1 rounded-sm border border-[#eeeeee]">
+        <View className="bg-white px-1 rounded-lg border border-[#eeeeee] shadow-sm shadow-gray-100">
           <Vote vote={vote} community={community} />
         </View>
       ) : (

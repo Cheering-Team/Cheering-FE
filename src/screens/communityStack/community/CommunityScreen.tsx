@@ -8,7 +8,7 @@ import CustomText from 'components/common/CustomText';
 import CommunityHeader from 'components/community/CommunityInfo/CommunityHeader';
 import CommunityProfile from 'components/community/CommunityInfo/CommunityProfile';
 import FeedTab from 'screens/communityStack/community/feedTab';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {useCallback, useEffect, useRef} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -32,6 +32,7 @@ import MainTab from './mainTab';
 import ScheduleTab from './ScheduleTab';
 import {useLightStatusBar} from 'hooks/useLightStatusBar';
 import MeetTab from './meetTab';
+import CommunitySelector from '../components/CommunitySelector';
 
 const CommunityScreen = () => {
   useLightStatusBar();
@@ -249,7 +250,7 @@ const CommunityScreen = () => {
     <View
       className="flex-1"
       style={{
-        backgroundColor: tabIndex === 1 || tabIndex === 4 ? 'white' : '#F5F4F5',
+        backgroundColor: tabIndex === 0 ? 'white' : 'white',
       }}>
       <CommunityHeader community={community} scrollY={scrollY} />
       <TabView
@@ -283,6 +284,7 @@ const CommunityScreen = () => {
           />
         </BottomSheetView>
       </BottomSheetModal>
+      <CommunitySelector community={community} />
     </View>
   );
 };

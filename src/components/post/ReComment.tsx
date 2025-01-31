@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import CommentWriter from '../comment/CommentWriter';
 import {ReComment as ReCommentType} from '../../apis/comment/types';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {IdName} from 'apis/types';
 

@@ -3,13 +3,13 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useGetRandomCommunity} from 'apis/community/useCommunities';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_HEIGHT, WINDOW_WIDTH} from 'constants/dimension';
-import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import React from 'react';
-import {Platform, Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import RefreshSvg from 'assets/images/refresh-white.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {HomeStackParamList} from 'navigations/authSwitch/mainTab/homeStack/HomeStackNavigator';
 
 const RandomCommunityCard = () => {
   const navigation =
@@ -29,7 +29,7 @@ const RandomCommunityCard = () => {
           shadowRadius: 4,
           elevation: 5,
           width: WINDOW_WIDTH,
-          height: WINDOW_HEIGHT - 90 - insets.top - insets.bottom - 45,
+          height: WINDOW_HEIGHT - 91 - insets.top - insets.bottom,
           transform: [{scale: 0.87}],
         }}
         onPress={() =>

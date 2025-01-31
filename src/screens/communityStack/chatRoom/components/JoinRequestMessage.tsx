@@ -7,7 +7,7 @@ import {useAcceptJoinRequest, useGetMeetById} from 'apis/meet/useMeets';
 import Avatar from 'components/common/Avatar';
 import CustomText from 'components/common/CustomText';
 import {WINDOW_WIDTH} from 'constants/dimension';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {MutableRefObject, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import DuplicateMatchModal from 'screens/communityStack/community/meetTab/components/DuplicateMatchModal';

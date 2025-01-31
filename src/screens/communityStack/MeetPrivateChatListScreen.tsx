@@ -9,7 +9,7 @@ import {useGetPrivateChatRoomIdsForManager} from 'apis/chat/useChats';
 import CCHeader from 'components/common/CCHeader';
 import ChatCard from 'components/common/ChatCard';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import Animated, {

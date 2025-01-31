@@ -1,8 +1,13 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import CustomText from 'components/common/CustomText';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import React, {useRef, useState} from 'react';
-import {Keyboard, Pressable, View} from 'react-native';
+import {BackHandler, Keyboard, Pressable, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDarkStatusBar} from 'hooks/useDarkStatusBar';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -128,6 +133,30 @@ const CreateMeetScreen = () => {
     }
   };
 
+  useFocusEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => null,
+      gestureEnabled: false,
+    });
+
+    navigation.getParent()?.setOptions({gestureEnabled: false});
+
+    const hardwareBackPressHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        return true;
+      },
+    );
+
+    return () => {
+      navigation.getParent()?.setOptions({gestureEnabled: true});
+      navigation.setOptions({
+        gestureEnabled: true,
+      });
+      hardwareBackPressHandler.remove();
+    };
+  });
+
   return (
     <View className="flex-1">
       <CCHeader
@@ -147,6 +176,7 @@ const CreateMeetScreen = () => {
           paddingTop: insets.top + 55 + 15,
           paddingBottom: 40,
         }}
+        keyboardShouldPersistTaps="handled"
         onScroll={scrollHandler}>
         <View className="flex-row">
           <RadioButton

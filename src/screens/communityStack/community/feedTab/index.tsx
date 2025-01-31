@@ -22,7 +22,7 @@ import PenSvg from 'assets/images/pencil-white.svg';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import {useMainTabScroll} from 'context/useMainTabScroll';
@@ -179,11 +179,11 @@ const FeedTab = ({
       <Animated.View style={{opacity: buttonOpacity}}>
         <Pressable
           onPress={() => navigation.navigate('PostWrite', {community})}
-          className="absolute p-[11] rounded-full z-50"
+          className="absolute w-[43] h-[43] justify-center items-center rounded-full z-50"
           style={{
             backgroundColor: community.color,
-            bottom: insets.bottom + 57,
-            right: 12,
+            bottom: insets.bottom + 112,
+            right: 13,
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.3,

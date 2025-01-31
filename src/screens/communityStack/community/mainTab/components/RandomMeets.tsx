@@ -5,7 +5,7 @@ import React from 'react';
 import {Pressable, View} from 'react-native';
 import MeetCard from '../../meetTab/components/MeetCard';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {useNavigation} from '@react-navigation/native';
 import {Community} from 'apis/community/types';
 
@@ -46,16 +46,22 @@ const RandomMeets = ({
         </Pressable>
       </View>
 
-      {meets?.slice(0, 3).map(meet => (
-        <MeetCard
-          key={meet.id}
-          meet={meet}
-          type="MAIN"
-          onPress={() => {
-            navigation.navigate('MeetRecruit', {meetId: meet.id, community});
-          }}
-        />
-      ))}
+      <View className="mx-[14]">
+        {meets?.slice(0, 3).map(meet => (
+          <MeetCard
+            key={meet.id}
+            meet={meet}
+            type="MAIN"
+            onPress={() => {
+              navigation.navigate('MeetRecruit', {
+                meetId: meet.id,
+                communityId: community.id,
+              });
+            }}
+          />
+        ))}
+      </View>
+
       {meets?.length === 0 && (
         <View className="h-[80] justify-center items-center">
           <CustomText className="text-slate-700">

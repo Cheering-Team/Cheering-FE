@@ -13,6 +13,7 @@ export interface FanProfile {
   meetName: string;
   meetImage: string;
   isUser: boolean;
+  communityId: number;
 }
 
 // 요청

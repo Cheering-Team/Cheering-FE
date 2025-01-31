@@ -1,7 +1,6 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   blockFan,
-  deleteFan,
   getBlockedFans,
   getFanInfo,
   unblockFan,
@@ -62,21 +61,6 @@ export const useUpdateFanName = () => {
       queryClient.invalidateQueries({
         queryKey: fanKeys.detail(fanId),
       });
-    },
-  });
-};
-
-// 커뮤니티 탈퇴하기
-export const useDeleteFan = () => {
-  const navigation = useNavigation();
-  return useMutation({
-    mutationFn: deleteFan,
-    onSuccess: () => {
-      showTopToast({message: '탈퇴 완료'});
-      navigation.navigate('HomeStack', {
-        screen: 'HomeTab',
-      });
-      queryClient.invalidateQueries();
     },
   });
 };

@@ -17,7 +17,7 @@ import {
 } from '../../../apis/comment/useComments';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {queryClient} from '../../../../App';
 import {commentKeys} from 'apis/comment/queries';
 import {postKeys} from 'apis/post/queries';

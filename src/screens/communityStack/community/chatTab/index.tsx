@@ -27,7 +27,7 @@ import {debounce} from 'lodash';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import PlusSvg from 'assets/images/plus-white.svg';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import ChatRoomSkeleton from 'components/skeleton/ChatRoomSkeleton';
@@ -178,7 +178,7 @@ const ChatTab = ({
           />
         )}
         contentContainerStyle={{
-          backgroundColor: '#F5F4F5',
+          backgroundColor: 'white',
           marginTop: HEADER_HEIGHT,
           minHeight: WINDOW_HEIGHT + HEADER_HEIGHT - 40,
           paddingBottom: insets.bottom + 200,
@@ -276,11 +276,11 @@ const ChatTab = ({
       <Animated.View style={{opacity: buttonOpacity}}>
         <Pressable
           onPress={() => navigation.navigate('CreateChatRoom', {community})}
-          className="absolute p-[12] rounded-full z-50"
+          className="absolute w-[43] h-[43] justify-center items-center rounded-full z-50"
           style={{
             backgroundColor: community.color,
-            bottom: insets.bottom + 57,
-            right: 12,
+            bottom: insets.bottom + 112,
+            right: 13,
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 0},
             shadowOpacity: 0.3,

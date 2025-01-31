@@ -19,7 +19,7 @@ import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import PenSvg from 'assets/images/pencil-white.svg';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 
 interface VoteListProps {
   matchId: number;
@@ -71,9 +71,7 @@ const VoteList = ({matchId, community}: VoteListProps) => {
         contentContainerStyle={{paddingBottom: insets.bottom + 100}}
         onEndReachedThreshold={1}
         ListHeaderComponent={
-          posts?.pages.flatMap(page => page.posts).length === 0 ? (
-            <View className="h-[52]" />
-          ) : (
+          posts?.pages.flatMap(page => page.posts).length === 0 ? null : (
             <View>
               <Pressable
                 className="flex-row self-end items-center mr-4 mt-3"

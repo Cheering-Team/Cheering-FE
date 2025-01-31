@@ -12,7 +12,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import FeedSkeleton from 'components/skeleton/FeedSkeleton';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import Viewer from 'components/post/Viewer';
 import NotFound from 'components/notfound';
 import {useBlockUser, useGetFanInfo} from 'apis/fan/useFans';
@@ -225,8 +225,8 @@ const ProfileScreen = () => {
             secondColor="#ff2626"
             secondSvg="exit"
             secondOnPress={() => {
-              navigation.navigate('DeleteFan', {
-                fanId: fanId,
+              navigation.navigate('LeaveCommunity', {
+                communityId: profile.communityId,
               });
             }}
           />

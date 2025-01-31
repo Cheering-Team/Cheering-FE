@@ -181,7 +181,7 @@ const Vote = ({vote, community}: VoteProps) => {
               },
             })
           }
-          className="flex-row items-center border border-gray-200 rounded-[6xpx] ml-2 pl-[6] pr-[2] my-[1] py-[2]">
+          className="flex-row items-center border border-gray-200 rounded-[6px] ml-2 pl-[6] pr-[2] my-[2] py-[2]">
           <CustomText className="text-[13px] mr-[3]">
             {`${formatMonthDaySlash(vote.match.time)} vs ${vote.match.shortName}`}
           </CustomText>

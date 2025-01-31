@@ -31,6 +31,7 @@ axiosInstance.interceptors.response.use(
       const statusCode = error.response.status;
       const errorCode = error.response.data?.code;
       const message = error.response.data?.message;
+
       if (statusCode === 400) {
         if (errorCode === 2002) {
           showTopToast({
@@ -52,6 +53,7 @@ axiosInstance.interceptors.response.use(
           } else {
             const data = await reIssueToken();
             const {accessToken, refreshToken} = data.result;
+
             await EncryptedStorage.setItem('accessToken', accessToken);
             await EncryptedStorage.setItem('refreshToken', refreshToken);
             return axiosInstance(error.config);

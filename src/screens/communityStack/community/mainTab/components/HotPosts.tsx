@@ -29,7 +29,7 @@ const HotPosts = ({onTabPress, posts}: HotPostsProps) => {
       </View>
 
       <View
-        className={`px-[14] ${posts?.pages.flatMap(page => page.posts).length !== 0 && 'rounded-sm border border-[#eeeeee]'}`}>
+        className={`mx-[14] ${posts?.pages.flatMap(page => page.posts).length !== 0 && 'rounded-lg overflow-hidden border border-[#eeeeee] shadow-sm shadow-gray-100 bg-white'}`}>
         {posts?.pages
           .flatMap(page => page.posts)
           .slice(0, 3)
@@ -47,7 +47,7 @@ const HotPosts = ({onTabPress, posts}: HotPostsProps) => {
         ) : (
           <Pressable
             onPress={() => onTabPress(1)}
-            className="justify-center items-center py-3 mt-[1] bg-white">
+            className="justify-center items-center py-3 bg-white">
             <CustomText className="text-gray-700">게시글 전체보기</CustomText>
           </Pressable>
         )}

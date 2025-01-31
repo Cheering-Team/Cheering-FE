@@ -8,6 +8,7 @@ import {matchKeys} from './queries';
 import {
   editMatch,
   getMatchDetail,
+  getMatchesByDate,
   getMatchSchedule,
   getNearMatch,
   getNextMatch,
@@ -79,6 +80,18 @@ export const useGetTwoWeeksMatches = (communityId: number) => {
   return useQuery({
     queryKey: matchKeys.twoWeeksList(communityId),
     queryFn: getTwoWeeksMatches,
+    retry: false,
+  });
+};
+
+export const useGetMatchesByDate = (
+  year: number,
+  month: number,
+  day: number,
+) => {
+  return useQuery({
+    queryKey: matchKeys.listByDate(year, month, day),
+    queryFn: getMatchesByDate,
     retry: false,
   });
 };

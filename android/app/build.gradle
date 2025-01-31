@@ -32,8 +32,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         vectorDrawables.useSupportLibrary = true
-        versionCode 11
-        versionName "4.6.1"
+        versionCode 12
+        versionName "4.7.0"
     }
     signingConfigs {
         debug {

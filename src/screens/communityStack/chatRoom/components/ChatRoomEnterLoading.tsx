@@ -4,7 +4,7 @@ import {ActivityIndicator, Pressable, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import CloseSvg from 'assets/images/close-black.svg';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {useNavigation} from '@react-navigation/native';
 
 const ChatRoomEnterLoading = () => {

@@ -20,8 +20,10 @@ interface ListEmptyProps {
     | 'vote'
     | 'booking'
     | 'live'
+    | 'meet'
     | 'myMeet'
-    | 'meetPrivate';
+    | 'meetPrivate'
+    | 'matchStarted';
 }
 
 const ListEmpty = (props: ListEmptyProps) => {
@@ -48,8 +50,10 @@ const ListEmpty = (props: ListEmptyProps) => {
         {type === 'vote' && '아직 투표가 없어요'}
         {type === 'booking' && '아직 모관 모임이 없어요'}
         {type === 'live' && '아직 직관 모임이 없어요'}
+        {type === 'meet' && '아직 모임이 없어요'}
         {type === 'myMeet' && '아직 가입한 모임이 없어요'}
         {type === 'meetPrivate' && '아직 신청자가 없어요'}
+        {type === 'matchStarted' && '이미 시작된 경기입니다'}
       </CustomText>
       <CustomText className="text-[13px] text-gray-500">
         {type === 'feed' && '가장 먼저 글을 작성해보세요'}
@@ -63,8 +67,10 @@ const ListEmpty = (props: ListEmptyProps) => {
         {type === 'vote' && '가장 먼저 글을 작성해보세요'}
         {(type === 'booking' || type === 'live') &&
           '가장 먼저 모임을 만들어보세요'}
+        {type === 'meet' && '직접 모임을 만들어보세요'}
         {type === 'myMeet' && '사람들과 모임 약속을 잡아보세요'}
         {type === 'meetPrivate' && ''}
+        {type === 'matchStarted' && ''}
       </CustomText>
     </View>
   );

@@ -1,6 +1,6 @@
 import {Community} from 'apis/community/types';
 import {WINDOW_HEIGHT} from 'constants/dimension';
-import React, {MutableRefObject, useState} from 'react';
+import React, {MutableRefObject, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,

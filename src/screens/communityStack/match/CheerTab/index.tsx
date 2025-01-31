@@ -13,7 +13,7 @@ import ArrowSvg from 'assets/images/arrow_up.svg';
 import {useGetCheers, useWriteCheer} from 'apis/cheer/useCheers';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {matchKeys} from 'apis/match/queries';
 import ListEmpty from 'components/common/ListEmpty/ListEmpty';
 import CommentSkeleton from 'components/skeleton/CommentSkeleton';

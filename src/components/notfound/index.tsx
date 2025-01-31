@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import CustomText from 'components/common/CustomText';
 import StackHeader from 'components/common/StackHeader';
-import {CommunityStackParamList} from 'navigations/CommunityStackNavigator';
+import {CommunityStackParamList} from 'navigations/authSwitch/mainTab/CommunityStackNavigator';
 import {HomeStackParamList} from 'navigations/HomeStackNavigator';
 import React from 'react';
 import {Pressable, SafeAreaView, View} from 'react-native';
