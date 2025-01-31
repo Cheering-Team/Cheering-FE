@@ -20,7 +20,7 @@ const TodayMatches = () => {
     useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
   const today = new Date();
   const matchModalRef = useRef<BottomSheetModal>(null);
-  const snapPoints = useMemo(() => ['70%', '90%'], []);
+  const snapPoints = useMemo(() => ['90%'], []);
   const insets = useSafeAreaInsets();
 
   const [curMatchId, setCurMatchId] = useState<number | null>(null);
@@ -88,7 +88,7 @@ const TodayMatches = () => {
       <BottomSheetModal
         ref={matchModalRef}
         backdropComponent={renderBackdrop}
-        enableDynamicSizing={false}
+        enableDynamicSizing={true}
         snapPoints={snapPoints}>
         <BottomSheetFlatList
           data={communities.map(query => query.data)}

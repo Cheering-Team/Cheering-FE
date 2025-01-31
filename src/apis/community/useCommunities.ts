@@ -24,6 +24,7 @@ import {HomeStackParamList} from 'navigations/authSwitch/mainTab/homeStack/HomeS
 import {matchKeys} from 'apis/match/queries';
 import {meetKeys} from 'apis/meet/queries';
 import {postKeys} from 'apis/post/queries';
+import {chatRoomKeys} from 'apis/chat/queries';
 
 // 커뮤니티 조회
 export const useGetCommunityById = (communityId: number) => {
@@ -75,7 +76,7 @@ export const useJoinCommunity = () => {
       queryClient.invalidateQueries({
         queryKey: matchKeys.listByDate(
           today.getFullYear(),
-          today.getMonth(),
+          today.getMonth() + 1,
           today.getDate(),
         ),
       });
@@ -84,6 +85,9 @@ export const useJoinCommunity = () => {
       });
       queryClient.invalidateQueries({
         queryKey: postKeys.listMyHot(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: chatRoomKeys.my('OFFICIAL'),
       });
     },
   });
@@ -148,7 +152,11 @@ export const useLeaveCommunity = () => {
       showTopToast({message: '탈퇴 완료'});
       navigation.navigate('Home');
       queryClient.removeQueries({queryKey: communityKeys.details()});
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({queryKey: communityKeys.listByMy()});
+      queryClient.invalidateQueries({queryKey: matchKeys.lists()});
+      queryClient.invalidateQueries({
+        queryKey: chatRoomKeys.lists(),
+      });
     },
   });
 };
